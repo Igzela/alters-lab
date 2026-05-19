@@ -245,3 +245,18 @@
 **Goal**: Fix contract issues identified in P3-001 review: approval_token hash-only storage, dry_run support, dependency injection for paths, strengthened schemas
 **Depends on**: P3-001 (done)
 **Completed**: approval_token stored as sha256 hash only in audit records, dry_run mode returns 200 without writing, dependency-injected paths for testability, strengthened request/response schemas with boundary_confirmations. 149 tests passing.
+**Review note**: P3-001R failed review because: (1) magic approval token `p3-001-approved` still existed in tests, (2) persist_snapshot_to_disk still rejected non-magic tokens, (3) endpoint hardcoded target path, (4) boundary_confirmations too coarse, (5) tests used weak hash assertions.
+
+### P3-001R2: Controlled Snapshot Write API Final Contract Repair
+
+**Status**: done
+**Goal**: Final contract repair: remove magic token, add write_snapshot_with_audit, fix path helpers, strengthen boundary confirmations, full test coverage
+**Depends on**: P3-001R (done)
+**Completed**: Magic approval token removed. Any non-empty token accepted as approval evidence. write_snapshot_with_audit replaces persist_snapshot_to_disk. Path helpers monkeypatchable. Boundary confirmations enumerate all forbidden mutation surfaces. 164 tests passing.
+
+### P3-002: Controlled Branches Write API
+
+**Status**: blocked
+**Goal**: Implement controlled branches write API
+**Depends on**: P3-001R2 (must pass human review first)
+**Notes**: Blocked until human review accepts P3-001R2.

@@ -199,3 +199,12 @@
 **Decision**: P1-004 through P1-009 titles and descriptions are corrected to "Controlled YAML Write". They implemented file-based artifact generation and validation — not runtime backend services. The governance docs (PROJECT_BOARD, TASK_QUEUE, QUALITY_GATES) are updated to reflect the actual scope. This is a documentation accuracy fix, not a scope change.
 **Consequences**: Governance docs now accurately describe what was implemented. Future readers will not mistake controlled YAML writes for live backend services. No code changes required — only documentation corrections.
 **Alternatives**: Leave original "Backend Service + API" titles (rejected — creates false impression of runtime capability, undermines governance doc trustworthiness).
+
+### Decision P3-001R2-01: Controlled mutation approval tokens are evidence signals, not shared secrets
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-001 introduced a fixed magic approval token (`p3-001-approved`) that was compared as a shared secret. This conflated approval evidence with authentication. The system needs to record that a human approved a mutation, not that a caller knows a secret.
+**Decision**: Approval tokens are evidence signals. Any non-empty, non-whitespace token is accepted as approval evidence. The token is hashed (SHA-256) before storage. The raw token is never stored, logged, or exposed in API responses. Governance relies on explicit human confirmation plus audit trail, not on token matching.
+**Consequences**: No hardcoded secret to leak. Audit trail records approval evidence (hash) without exposing the token. The system is simpler and more honest about what approval tokens represent.
+**Alternatives**: Keep fixed magic token (rejected — conflates auth with governance, creates false sense of security). Require token to match a stored value (rejected — introduces secret management complexity inappropriate for a personal tool).

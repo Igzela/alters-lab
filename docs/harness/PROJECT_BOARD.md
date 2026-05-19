@@ -77,6 +77,8 @@ Phase 2 Final Gate: **PASS**
 | P3-000 | Phase 3 Scope and Boundary Plan | **done** |
 | P3-001 | Controlled Snapshot Write API | **done** |
 | P3-001R | Controlled Snapshot Write API Contract Repair | **done** |
+| P3-001R2 | Controlled Snapshot Write API Final Contract Repair | **done** |
+| P3-002 | Controlled Branches Write API | **blocked** |
 
 ## Quality Gates
 

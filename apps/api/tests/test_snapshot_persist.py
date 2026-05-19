@@ -14,12 +14,13 @@ from alters_lab.schemas.snapshot import (
     SnapshotIntakeStatus,
 )
 from alters_lab.services.snapshot_persist import (
-    APPROVAL_TOKEN,
     build_snapshot_persist_payload,
-    persist_snapshot_to_disk,
+    hash_approval_token,
+    preview_snapshot_persist,
     sha256_file,
     sha256_text,
     validate_snapshot_persist_governance,
+    write_snapshot_with_audit,
 )
 
 
@@ -67,6 +68,35 @@ def test_sha256_file_returns_hash_for_existing_file(tmp_path):
     assert h == sha256_text("hello")
 
 
+# --- hash_approval_token ---
+
+
+def test_hash_approval_token_returns_exact_sha256():
+    token = "human-approval-token-123"
+    h = hash_approval_token(token)
+    assert h == sha256_text(token)
+    assert len(h) == 64
+
+
+def test_hash_approval_token_rejects_empty():
+    with pytest.raises(ValueError, match="approval_token"):
+        hash_approval_token("")
+
+
+def test_hash_approval_token_rejects_whitespace():
+    with pytest.raises(ValueError, match="approval_token"):
+        hash_approval_token("   ")
+
+
+# --- no magic token import ---
+
+
+def test_no_approval_token_constant():
+    import alters_lab.services.snapshot_persist as mod
+
+    assert not hasattr(mod, "APPROVAL_TOKEN")
+
+
 # --- build_snapshot_persist_payload ---
 
 
@@ -91,27 +121,7 @@ def test_validate_governance_passes_for_valid_snapshot():
     assert result["errors"] == []
 
 
-def test_validate_governance_catches_missing_anchors():
-    snapshot = _completed_snapshot()
-    result = validate_snapshot_persist_governance(snapshot)
-    assert result["valid"] is True
-
-    bad_snapshot = snapshot.model_copy(
-        update={"evidence_policy": EvidencePolicy(source_mode="self_report_only_phase0")}
-    )
-    result = validate_snapshot_persist_governance(bad_snapshot)
-    assert result["valid"] is False
-    assert any("source_mode" in e for e in result["errors"])
-
-    bad_phase = snapshot.model_copy(
-        update={"intake_status": snapshot.intake_status.model_copy(update={"phase": IntakePhase.not_started})}
-    )
-    result = validate_snapshot_persist_governance(bad_phase)
-    assert result["valid"] is False
-    assert any("phase" in e for e in result["errors"])
-
-
-def test_validate_governance_catches_non_completed_phase():
+def test_validate_governance_rejects_incomplete_phase():
     snapshot = Snapshot(
         anchors=SnapshotAnchors(
             heaviest_constraint="c1",
@@ -130,7 +140,7 @@ def test_validate_governance_catches_non_completed_phase():
     assert any("phase" in e for e in result["errors"])
 
 
-def test_validate_governance_catches_wrong_source_mode():
+def test_validate_governance_rejects_wrong_source_mode():
     snapshot = _completed_snapshot()
     snapshot.evidence_policy.source_mode = "self_report_only_phase0"
     result = validate_snapshot_persist_governance(snapshot)
@@ -138,187 +148,168 @@ def test_validate_governance_catches_wrong_source_mode():
     assert any("source_mode" in e for e in result["errors"])
 
 
-# --- persist_snapshot_to_disk ---
+# --- preview_snapshot_persist ---
 
 
-def test_persist_rejects_invalid_approval_token(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
+def test_preview_does_not_write_target(tmp_path):
+    snapshot = _completed_snapshot()
     target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-    result = persist_snapshot_to_disk(payload, target, "wrong-token", audit_path=audit)
-    assert result["status"] == "rejected"
-    assert "approval_token" in result["reason"]
-    assert not target.exists()
-
-
-def test_persist_writes_and_produces_audit_record(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
-    assert result["status"] == "persisted"
-    assert Path(result["path"]) == target
-    assert result["sha256_before"] is None
-    assert result["sha256_after"] is not None
-    assert target.exists()
-    assert target.read_text(encoding="utf-8") == payload["yaml_content"]
-    assert audit.exists()
-    lines = audit.read_text().strip().splitlines()
-    assert len(lines) == 1
-    record = json.loads(lines[0])
-    assert record["action"] == "snapshot_persist"
-
-
-def test_persist_overwrites_existing_file(tmp_path):
-    target = tmp_path / "snapshot.yaml"
-    target.write_text("old content", encoding="utf-8")
-    sha_before = sha256_text("old content")
-
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    audit = tmp_path / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
-    assert result["sha256_before"] == sha_before
-    assert result["sha256_after"] != sha_before
-    assert target.read_text(encoding="utf-8") == payload["yaml_content"]
-
-
-# --- P3-001R contract repairs ---
-
-
-def test_audit_record_stores_approval_token_hash_not_raw_token(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
-    record = result["audit_record"]
-    assert "approval_token_hash" in record
-    assert "approval_token" not in record or record.get("approval_token") is None
-    assert record["approval_token_hash"] == sha256_text(APPROVAL_TOKEN)
-
-
-def test_audit_file_stores_approval_token_hash_not_raw(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-
-    persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
-    lines = audit.read_text().strip().splitlines()
-    record = json.loads(lines[0])
-    assert "approval_token_hash" in record
-    assert record["approval_token_hash"] == sha256_text(APPROVAL_TOKEN)
-
-
-def test_dry_run_returns_200_without_writing_file(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(
-        payload, target, APPROVAL_TOKEN, dry_run=True, audit_path=audit
-    )
+    result = preview_snapshot_persist(snapshot, target)
     assert result["status"] == "dry_run"
-    assert result["path"] is None
     assert not target.exists()
+
+
+def test_preview_does_not_append_audit(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    preview_snapshot_persist(snapshot, target)
     assert not audit.exists()
 
 
-def test_dry_run_response_includes_would_write(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(
-        payload, target, APPROVAL_TOKEN, dry_run=True, audit_path=audit
-    )
-    assert "would_write" in result
-    assert result["would_write"] == payload["yaml_content"]
-
-
-def test_dry_run_preserves_sha256_before(tmp_path):
+def test_preview_preserves_pre_write_hash(tmp_path):
+    snapshot = _completed_snapshot()
     target = tmp_path / "snapshot.yaml"
     target.write_text("existing", encoding="utf-8")
-    expected_sha = sha256_text("existing")
-
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    audit = tmp_path / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(
-        payload, target, APPROVAL_TOKEN, dry_run=True, audit_path=audit
-    )
-    assert result["sha256_before"] == expected_sha
+    expected = sha256_text("existing")
+    result = preview_snapshot_persist(snapshot, target)
+    assert result["pre_write_hash"] == expected
 
 
-def test_active_yaml_hash_unchanged_after_persist(tmp_path):
-    """When persisting to a temp path, the original active YAML must not change."""
-    active_yaml = tmp_path / "alters" / "current" / "snapshot.yaml"
-    active_yaml.parent.mkdir(parents=True)
-    original_content = "original snapshot content"
-    active_yaml.write_text(original_content, encoding="utf-8")
-    original_hash = sha256_file(active_yaml)
-
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    audit = tmp_path / "audit.jsonl"
-
-    # Persist to a different path — active YAML must remain untouched
-    persist_target = tmp_path / "other" / "snapshot.yaml"
-    persist_snapshot_to_disk(payload, persist_target, APPROVAL_TOKEN, audit_path=audit)
-
-    assert sha256_file(active_yaml) == original_hash
-    assert active_yaml.read_text(encoding="utf-8") == original_content
+# --- write_snapshot_with_audit ---
 
 
-def test_score_yaml_not_created(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
+def test_write_accepts_arbitrary_nonempty_token(tmp_path):
+    snapshot = _completed_snapshot()
     target = tmp_path / "snapshot.yaml"
     audit = tmp_path / "audit.jsonl"
-
-    persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
-
-    score_files = list(tmp_path.rglob("score_*.yaml"))
-    assert score_files == []
-
-
-def test_archive_folders_not_created(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "snapshot.yaml"
-    audit = tmp_path / "audit.jsonl"
-
-    persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
-
-    archive_dirs = list(tmp_path.rglob("archive"))
-    assert archive_dirs == []
-
-
-def test_persist_uses_dependency_injected_paths(tmp_path):
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = tmp_path / "custom" / "snapshot.yaml"
-    audit = tmp_path / "custom" / "audit.jsonl"
-
-    result = persist_snapshot_to_disk(payload, target, APPROVAL_TOKEN, audit_path=audit)
+    result = write_snapshot_with_audit(snapshot, target, audit, "any-token-here")
     assert result["status"] == "persisted"
+
+
+def test_write_rejects_empty_token(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    with pytest.raises(ValueError, match="approval_token"):
+        write_snapshot_with_audit(snapshot, target, audit, "")
+
+
+def test_write_rejects_whitespace_token(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    with pytest.raises(ValueError, match="approval_token"):
+        write_snapshot_with_audit(snapshot, target, audit, "   ")
+
+
+def test_write_writes_canonical_yaml(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    write_snapshot_with_audit(snapshot, target, audit, "test-token")
     assert target.exists()
-    assert audit.exists()
+    content = target.read_text(encoding="utf-8")
+    assert "snapshot:" in content
+    payload = build_snapshot_persist_payload(snapshot)
+    assert content == payload["yaml_content"]
 
 
-def test_persist_defaults_to_standard_paths(monkeypatch):
-    """When no audit_path is provided, uses DEFAULT_AUDIT_PATH."""
-    import alters_lab.services.snapshot_persist as mod
+def test_write_audit_includes_exact_token_hash(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    raw_token = "human-approval-token-123"
+    write_snapshot_with_audit(snapshot, target, audit, raw_token)
+    lines = audit.read_text().strip().splitlines()
+    record = json.loads(lines[0])
+    assert record["approval_token_hash"] == sha256_text(raw_token)
 
-    called_paths = []
-    original_mkdir = Path.mkdir
 
-    def capturing_mkdir(self, *args, **kwargs):
-        called_paths.append(str(self))
-        return original_mkdir(self, *args, **kwargs)
+def test_write_audit_does_not_contain_raw_token(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    raw_token = "human-approval-token-123"
+    write_snapshot_with_audit(snapshot, target, audit, raw_token)
+    content = audit.read_text()
+    assert raw_token not in content
 
-    monkeypatch.setattr(Path, "mkdir", capturing_mkdir)
 
-    payload = build_snapshot_persist_payload(_completed_snapshot())
-    target = Path("/tmp/test_p3_001r_default/snapshot.yaml")
+def test_write_audit_does_not_contain_approval_token_key(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    write_snapshot_with_audit(snapshot, target, audit, "test-token")
+    lines = audit.read_text().strip().splitlines()
+    record = json.loads(lines[0])
+    assert "approval_token" not in record
 
-    # This will use DEFAULT_AUDIT_PATH — just verify the function accepts no audit_path
-    result = persist_snapshot_to_disk(payload, target, "wrong-token")
+
+def test_write_audit_does_not_contain_magic_token(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    write_snapshot_with_audit(snapshot, target, audit, "test-token")
+    content = audit.read_text()
+    assert "p3-001-approved" not in content
+
+
+def test_backup_created_under_backup_dir(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    target.write_text("old content", encoding="utf-8")
+    audit = tmp_path / "audit.jsonl"
+    backup_dir = tmp_path / "backups"
+    write_snapshot_with_audit(
+        snapshot, target, audit, "test-token",
+        create_backup=True, backup_dir=backup_dir,
+    )
+    backups = list(backup_dir.glob("snapshot_*.yaml"))
+    assert len(backups) == 1
+    assert backups[0].read_text(encoding="utf-8") == "old content"
+
+
+def test_backup_not_inside_alters_current(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    target.write_text("old content", encoding="utf-8")
+    audit = tmp_path / "audit.jsonl"
+    write_snapshot_with_audit(snapshot, target, audit, "test-token")
+    alters_current = tmp_path / "alters" / "current"
+    assert not alters_current.exists()
+
+
+def test_governance_failure_does_not_write_target(tmp_path):
+    snapshot = Snapshot(
+        anchors=SnapshotAnchors(),
+        intake_status=SnapshotIntakeStatus(phase=IntakePhase.not_started),
+        evidence_policy=EvidencePolicy(source_mode="self_report_only_phase0"),
+    )
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    result = write_snapshot_with_audit(snapshot, target, audit, "test-token")
     assert result["status"] == "rejected"
+    assert not target.exists()
+
+
+def test_governance_failure_does_not_append_pass_audit(tmp_path):
+    snapshot = Snapshot(
+        anchors=SnapshotAnchors(),
+        intake_status=SnapshotIntakeStatus(phase=IntakePhase.not_started),
+        evidence_policy=EvidencePolicy(source_mode="self_report_only_phase0"),
+    )
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    write_snapshot_with_audit(snapshot, target, audit, "test-token")
+    assert not audit.exists()
+
+
+def test_no_branch_alter_dialogue_value_calibration_archive_files(tmp_path):
+    snapshot = _completed_snapshot()
+    target = tmp_path / "snapshot.yaml"
+    audit = tmp_path / "audit.jsonl"
+    write_snapshot_with_audit(snapshot, target, audit, "test-token")
+    for pattern in ["score_*.yaml", "archive", "alter_*.yaml", "dialogue_*.yaml", "alignment_*.yaml", "branches.yaml"]:
+        matches = list(tmp_path.rglob(pattern))
+        assert matches == [], f"Unexpected files matching {pattern}: {matches}"

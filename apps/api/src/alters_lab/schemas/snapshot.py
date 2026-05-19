@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 
 class IntakePhase(str, Enum):
@@ -114,15 +114,21 @@ class SnapshotConfirmationResponse(BaseModel):
 class SnapshotPersistRequest(BaseModel):
     approval_token: str
     dry_run: bool = False
-    caller: str = "unknown"
+    caller: str = "api"
+
+    @model_validator(mode="after")
+    def validate_approval_token(self) -> SnapshotPersistRequest:
+        if not self.approval_token or not self.approval_token.strip():
+            raise ValueError("approval_token must not be empty or whitespace-only")
+        return self
 
 
 class SnapshotPersistResponse(BaseModel):
     status: str
-    path: str | None
-    sha256_before: str | None
-    sha256_after: str | None
-    audit_record: dict
+    target_path: str | None
+    pre_write_hash: str | None
+    post_write_hash: str | None
+    audit_log_path: str | None
+    backup_path: str | None
     governance_check: dict
     boundary_confirmations: dict
-    would_write: str | None = None
