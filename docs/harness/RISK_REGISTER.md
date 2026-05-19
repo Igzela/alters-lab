@@ -25,6 +25,8 @@
 | R-019 | Schema drift between Phase 0 templates and Phase 1 active artifacts | Medium | High | Phase 0 templates remain inactive_template_only; Phase 1 uses flat active schema with source_refs/quality_status; governance docs updated to reflect both; DECISION_RECORD.md P1-010-01 documents the divergence | Active |
 | R-020 | Governance docs lagging behind active implementation | Medium | Medium | This governance docs update (P1-011 blocker) aligns PROJECT_BOARD, TASK_QUEUE, QUALITY_GATES, DECISION_RECORD, and RISK_REGISTER with P1-004 through P1-010 completion; periodic governance review recommended | Active |
 | R-021 | Quality gates contradicting current phase artifacts | Medium | High | QUALITY_GATES.md updated to accept active alignment files after human confirmation and flat active Alter schema with source_refs/quality_status; gates now match Phase 1 reality | Active |
+| R-022 | Governance docs overstating runtime capability | Medium | Medium | Titles corrected to "Controlled YAML Write" for P1-004 through P1-009; decision record documents the clarification; periodic review recommended | Active |
+| R-023 | Static YAML writes confused with backend automation | Medium | Medium | P1-004 through P1-009 are file-based artifact generation, not running services; QUALITY_GATES updated to reflect actual scope; integration (P1-011) will clarify runtime vs. static boundary | Active |
 
 ## Risk Assessment
 
