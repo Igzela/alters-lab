@@ -1,7 +1,9 @@
 branch_discovery:
-  status: "confirmed"
+  status: "completed"
   source_snapshot_ref: "alters/current/snapshot.yaml"
   requires_snapshot_phase: "completed"
+  confirmed_by: "human_owner"
+  confirmation_note: "CYCLE-001 branches confirmed by human owner after Branch Discovery review."
 
   pipeline:
     step_1_tension_extraction:
