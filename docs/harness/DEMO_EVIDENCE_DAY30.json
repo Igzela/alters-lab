@@ -1,0 +1,92 @@
+{
+  "steps": [
+    {
+      "step": "health_check",
+      "pass": true,
+      "status_code": 200
+    },
+    {
+      "step": "create_session",
+      "pass": true,
+      "status_code": 201,
+      "session_id": "72c6146b-5871-4ef8-ab4c-888876862dfa"
+    },
+    {
+      "step": "submit_anchors",
+      "pass": true,
+      "results": [
+        {
+          "anchor": "heaviest_constraint",
+          "status_code": 200
+        },
+        {
+          "anchor": "most_unclear",
+          "status_code": 200
+        },
+        {
+          "anchor": "unwilling_to_give_up",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "step": "confirm",
+      "pass": true,
+      "status_code": 200,
+      "phase": "completed"
+    },
+    {
+      "step": "confirm_no_yaml_write",
+      "pass": true
+    },
+    {
+      "step": "export_to_temp",
+      "pass": true,
+      "export_path": "/tmp/demo_export_snapshot_b90a3416.yaml"
+    }
+  ],
+  "validations": {
+    "active_yaml_chain": {
+      "all_pass": true,
+      "checks": {
+        "snapshot_yaml_exists": true,
+        "snapshot_phase_completed": true,
+        "branches_yaml_exists": true,
+        "branches_discovery_completed": true,
+        "alter_A.yaml_exists": true,
+        "alter_A.yaml_has_source_refs": true,
+        "alter_A.yaml_has_quality_status": true,
+        "alter_B.yaml_exists": true,
+        "alter_B.yaml_has_source_refs": true,
+        "alter_B.yaml_has_quality_status": true,
+        "alter_C.yaml_exists": true,
+        "alter_C.yaml_has_source_refs": true,
+        "alter_C.yaml_has_quality_status": true,
+        "alter_D.yaml_exists": true,
+        "alter_D.yaml_has_source_refs": true,
+        "alter_D.yaml_has_quality_status": true,
+        "alignment_file_exists": true,
+        "dialogue_file_exists": true,
+        "reality_trace_yaml_exists": true,
+        "reality_trace_status_active": true
+      }
+    },
+    "no_forbidden_components": {
+      "all_pass": true,
+      "checks": {
+        "no_env_file": true,
+        "no_openai_config": true,
+        "no_anthropic_config": true,
+        "no_ollama_config": true,
+        "no_llm_provider_config": true,
+        "no_database_config": true,
+        "no_sqlalchemy_config": true,
+        "no_frontend_code": true,
+        "no_dialogue_runtime": true,
+        "no_calibration_runtime": true,
+        "no_archive_runtime": true
+      }
+    }
+  },
+  "all_pass": true
+}
