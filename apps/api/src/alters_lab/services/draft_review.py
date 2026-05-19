@@ -105,6 +105,10 @@ def build_branches_promotion_payload(
         raise ValueError(f"Exactly branch_A-D required, got {approved_branch_ids}")
 
     branch_drafts = draft_package.get("branch_drafts", [])
+    draft_ids = {b["id"] for b in branch_drafts}
+    if draft_ids != expected:
+        raise ValueError(f"Draft package missing branches: expected {expected}, found {draft_ids}")
+
     approved = [b for b in branch_drafts if b["id"] in approved_branch_ids]
     branches = []
     for b in approved:
@@ -131,6 +135,10 @@ def build_alters_promotion_payload(
         raise ValueError(f"Exactly alter_A-D required, got {approved_alter_ids}")
 
     alter_drafts = draft_package.get("alter_drafts", [])
+    draft_ids = {a["id"] for a in alter_drafts}
+    if draft_ids != expected:
+        raise ValueError(f"Draft package missing alters: expected {expected}, found {draft_ids}")
+
     approved = [a for a in alter_drafts if a["id"] in approved_alter_ids]
     alters = []
     for a in approved:
