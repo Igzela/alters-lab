@@ -336,7 +336,7 @@
 
 ### P3-M5: Controlled Promotion Execution Gate
 
-**Status**: blocked
-**Goal**: Implement controlled promotion execution that reads an approved orchestration plan and executes the promotion steps through controlled persist APIs
-**Depends on**: P3-M4 (done), human review
-**Completed**: Blocked pending human review of P3-M4 orchestration plan.
+**Status**: done
+**Goal**: Implement controlled execution gate that validates whether a promotion orchestration plan is eligible for future active execution
+**Depends on**: P3-M4 (done)
+**Completed**: Promotion execution gate schemas (8 models with ConfigDict(extra="forbid"): PromotionExecutionGateBoundaryConfirmations, ExecutionPrerequisiteCheck, DryRunCheckResult, ExecutionPacket, PromotionExecutionGateReport, PromotionExecutionGateRequest, PromotionExecutionGateResponse, PromotionExecutionGateListResponse). Promotion execution gate service (promotion_execution_gate_boundary_confirmations, validate_draft_id, load_gate_inputs, validate_orchestration_plan_for_execution_gate, validate_promotion_package_for_execution_gate, compare_package_and_plan, build_prerequisite_checks, run_dry_run_compatibility_checks, build_execution_packet, build_gate_report, save_gate_report, list_execution_gate_reports). Promotion execution gate API (GET /promotion-execution-gate/health, POST /promotion-execution-gate/{draft_id}/check, GET /promotion-execution-gate/list). main.py updated with promotion_execution_gate_router. 502 tests passing. No active YAML modified. Gate-only layer. Live execution requires P3-M6.

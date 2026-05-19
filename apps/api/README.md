@@ -41,6 +41,9 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/promotion-orchestration/health` | Promotion orchestration plan-only health |
 | POST | `/promotion-orchestration/{draft_id}/plan` | Create orchestration plan from promotion package |
 | GET | `/promotion-orchestration/list` | List orchestration plans |
+| GET | `/promotion-execution-gate/health` | Promotion execution gate health |
+| POST | `/promotion-execution-gate/{draft_id}/check` | Run execution gate check (dry-run, prerequisites, execution packet) |
+| GET | `/promotion-execution-gate/list` | List execution gate reports |
 
 ## Services
 
@@ -55,6 +58,7 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **generation_drafts** — Deterministic draft-only generation runtime
 - **draft_review** — Draft review and promotion boundary
 - **promotion_orchestration** — Promotion orchestration plan-only boundary
+- **promotion_execution_gate** — Promotion execution gate (dry-run, prerequisites, execution packet)
 
 ## Export
 
