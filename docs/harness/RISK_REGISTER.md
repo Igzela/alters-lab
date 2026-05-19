@@ -22,6 +22,9 @@
 | R-016 | Frontend or provider work starting before backend contract is stable | Medium | High | P1-002 forbids frontend and provider code; contract validated through 33 tests before any client integration | Active |
 | R-017 | Export functions accidentally called from confirm endpoint | Low | High | P1-003 export is service-only; confirm endpoint does not import or call snapshot_export; tests verify confirm remains in-memory | Active |
 | R-018 | write_snapshot_yaml writing to alters/current/snapshot.yaml by default | Low | High | write_snapshot_yaml requires explicit target_path; no hardcoded paths; tests use tmp_path only | Active |
+| R-019 | Schema drift between Phase 0 templates and Phase 1 active artifacts | Medium | High | Phase 0 templates remain inactive_template_only; Phase 1 uses flat active schema with source_refs/quality_status; governance docs updated to reflect both; DECISION_RECORD.md P1-010-01 documents the divergence | Active |
+| R-020 | Governance docs lagging behind active implementation | Medium | Medium | This governance docs update (P1-011 blocker) aligns PROJECT_BOARD, TASK_QUEUE, QUALITY_GATES, DECISION_RECORD, and RISK_REGISTER with P1-004 through P1-010 completion; periodic governance review recommended | Active |
+| R-021 | Quality gates contradicting current phase artifacts | Medium | High | QUALITY_GATES.md updated to accept active alignment files after human confirmation and flat active Alter schema with source_refs/quality_status; gates now match Phase 1 reality | Active |
 
 ## Risk Assessment
 
