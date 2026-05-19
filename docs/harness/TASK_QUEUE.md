@@ -195,7 +195,13 @@
 
 ### P2-002: Active YAML Chain Validator CLI
 
-**Status**: todo
+**Status**: done
 **Goal**: Expose validate_active_yaml_chain as a CLI command for standalone validation
 **Depends on**: P2-001 (done)
-**Notes**: Blocked by P2-001 completion. P2-001 now complete — P2-002 is ready.
+**Completed**: 84 tests passing, CLI returns exit 0 with PASS, JSON report generated.
+
+### P2-003: Read-only Cycle Summary API
+
+**Status**: todo/blocked
+**Goal**: Expose summarize_active_yaml_chain as a read-only API endpoint
+**Depends on**: P2-002 (done)
