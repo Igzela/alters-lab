@@ -1,0 +1,77 @@
+id: "alter_B"
+branch_ref: "branch_B"
+label: "Offer 保底 + 工程能力型 Charlie"
+generated_at: null
+time_horizon: "1.5–2年后"
+
+source_branch:
+  core_choice: "优先拿到工作 offer，把就业确定性和工程能力展示作为主线，考研降级为次级选项。"
+  structural_commitment: "围绕秋招、简历、面试、实习和可展示项目建立节奏。"
+  key_tension_resolved: "用工作保底降低不确定性，同时保留工程作品能力。"
+
+life_state:
+  daily_structure: "白天围绕简历、项目、面试题和岗位反馈推进，考研变成低配保留项。"
+  primary_tension: "稳定性增加，但学历跃迁窗口被压缩。"
+  social_context: "更接近工程岗位、实习、面试和职场评价体系。"
+  dominant_environment: "项目仓库、简历、面试、实习/工作场景。"
+
+personality_drift:
+  execution_discipline:
+    direction: "↑/mixed"
+    reason: "面试和投递会带来现实反馈，但如果没有系统计划也会变成新混乱源。"
+  exploration_freedom:
+    direction: "→/↓"
+    reason: "仍可做工程项目，但必须服务简历和岗位匹配，纯探索空间减少。"
+  identity_stability:
+    direction: "↑"
+    reason: "身份会从摇摆学生转向候选工程师。"
+  risk_tolerance:
+    direction: "→"
+    reason: "工作 offer 降低底线风险，但也可能让你更保守。"
+  engineering_closure:
+    direction: "↑"
+    reason: "为了拿 offer，你必须把项目做成能讲、能跑、能展示的状态。"
+
+tradeoffs:
+  gained:
+    - "现实安全垫"
+    - "工程项目展示压力"
+    - "面试和岗位反馈"
+    - "更快进入真实行业环境"
+  lost:
+    - "All in 考研深度"
+    - "985 CS 学历跃迁最大化机会"
+    - "完全自由探索时间"
+    - "纯长期主义的心理空间"
+
+skills_trajectory:
+  accelerated:
+    - "简历表达"
+    - "面试准备"
+    - "工程项目闭环"
+    - "后端/AI 工程可就业能力"
+  stagnated:
+    - "系统考研复习"
+    - "更理论化的 CS 学术训练"
+    - "长期研究型积累"
+
+likely_success_condition:
+  - "30 天内形成一版可投递简历和一个主打工程项目。"
+  - "考研优先级下降后，你没有陷入强烈后悔。"
+  - "offer 准备变成收束结构，而不是新的多线程混乱。"
+
+likely_failure_mode:
+  - "既舍不得考研，又没有认真投递，最后变成伪双轨。"
+  - "项目没有闭环，只是在简历里包装半成品。"
+  - "拿到普通 offer 后过早停止成长，变成只写业务 CRUD 的恐惧自证。"
+
+voice:
+  core_stance: "先让现实给你反馈。你不能一直在想象中的路径里比较自己。"
+  typical_concern: "如果没有 offer、没有项目、没有面试反馈，你对自己能力的判断都是悬空的。"
+  decision_style: "用可投递、可面试、可展示的东西压缩不确定性。"
+  self_warning: "不要把 offer 保底做成逃避深度学习的借口。"
+
+value_alignment:
+  alignment_score: null
+  alignment_notes: "待 Value Alignment Evaluator 评估。"
+  key_tradeoff_question: "你能否接受降低考研上限，换取更早的工程反馈和现实落点？"

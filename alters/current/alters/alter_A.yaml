@@ -1,0 +1,77 @@
+id: "alter_A"
+branch_ref: "branch_A"
+label: "All in 考研收束型 Charlie"
+generated_at: null
+time_horizon: "1.5–2年后"
+
+source_branch:
+  core_choice: "未来 6–9 个月把考研作为唯一主线，目标 985 CS 方向。"
+  structural_commitment: "削减项目实践、AI agent 探索、求职准备和创业想法，把主要精力投入考研复习。"
+  key_tension_resolved: "用精力收束换取学历跃迁机会。"
+
+life_state:
+  daily_structure: "高度围绕复习、考试结果、院校路径或读研准备展开。"
+  primary_tension: "获得了单一主线，但技术探索自由被明显压缩。"
+  social_context: "更多处在考研/读研评价体系中，外部认可更依赖成绩、学校和导师环境。"
+  dominant_environment: "图书馆、自习室、课程/考试体系、研究生路径。"
+
+personality_drift:
+  execution_discipline:
+    direction: "↑"
+    reason: "长期刷题和复习要求稳定节奏，会逼迫你建立更强纪律。"
+  exploration_freedom:
+    direction: "↓"
+    reason: "自由探索被考试科目和复习计划压缩。"
+  identity_stability:
+    direction: "↑"
+    reason: "身份叙事会变清晰：我是考研/读研路线的人。"
+  risk_tolerance:
+    direction: "↓"
+    reason: "越投入考研，越不愿轻易承认沉没成本。"
+  engineering_closure:
+    direction: "↓/mixed"
+    reason: "除非主动保留小型工程训练，否则完整作品能力会停滞。"
+
+tradeoffs:
+  gained:
+    - "清晰单一主线"
+    - "985 CS 学历跃迁可能性"
+    - "更传统、可解释的上升路径"
+    - "更强的考试型执行纪律"
+  lost:
+    - "短期工程作品闭环"
+    - "AI agent / 独立产品探索时间"
+    - "秋招和工作反馈窗口"
+    - "技术身份的即时作品证明"
+
+skills_trajectory:
+  accelerated:
+    - "数学/专业课应试能力"
+    - "长期单任务耐受力"
+    - "传统学术路径适应能力"
+  stagnated:
+    - "真实工程发布能力"
+    - "项目闭环能力"
+    - "面试和实际岗位反馈"
+    - "开源/产品化经验"
+
+likely_success_condition:
+  - "30–60 天内考研节奏真正稳定，并且你能接受工程探索显著降级。"
+  - "数学和专业课进展有明确改善，而不是只获得心理安慰。"
+  - "你能承认这是高沉没成本路径，并提前设止损点。"
+
+likely_failure_mode:
+  - "表面 All in，实际仍不断偷跑到 AI/项目/求职。"
+  - "刷题效率低，但因为已经放弃其他窗口而不敢回头。"
+  - "考研失败后，工程作品、offer 和自信心同时空窗。"
+
+voice:
+  core_stance: "先别再分散了。你现在最大的问题不是路不够多，而是没有一条路被真正执行到深处。"
+  typical_concern: "如果你连 30 天考研主线都稳不住，All in 只是换一种拖延。"
+  decision_style: "收束、克制、忍受枯燥，用结果验证自己。"
+  self_warning: "不要用考研当作逃避工程作品和就业反馈的高级借口。"
+
+value_alignment:
+  alignment_score: null
+  alignment_notes: "待 Value Alignment Evaluator 评估。"
+  key_tradeoff_question: "你是否愿意用 6–9 个月技术探索自由下降，换取一次学历跃迁机会？"

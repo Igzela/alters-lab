@@ -1,21 +1,64 @@
 snapshot:
   date: null
   version: 1
+
   anchors:
-    heaviest_constraint: ""
-    most_unclear: ""
-    unwilling_to_give_up: ""
+    heaviest_constraint: >
+      精力状态约束与路径过载约束并列。当前同时承担考研复习、
+      课程项目和 AI 技术学习，导致精力严重分散；同时面对考研、
+      直接工作、创业、出国等多条看似合理但互相挤占窗口期的路径，
+      不可逆感让决策长期停滞。
+
+    most_unclear: >
+      是否应该 All in 考研，目标 985 CS 方向；还是先拿一个工作 offer 保底，
+      同时准备考研。这个问题卡住了未来 1 年的精力分配：
+      All in 考研意味着放弃大部分项目实践，先拿 offer 又可能挤占复习时间，
+      导致两边都落空。模糊点不只是信息不足，而是对自身真实目标、
+      能力天花板和止损边界缺乏清晰认知。
+
+    unwilling_to_give_up: >
+      技术探索自由与硬工程作品能力。无论最终走考研、工作、创业还是出国，
+      都不愿意失去自由探索和亲手做出有技术含量作品的状态。
+      希望能主导做出一个真正证明技术理解的作品，而不只是"学过"。
+      如果某条路径会彻底消灭持续写代码、做开源项目、独立产品、
+      研究型工程作品的可能性，会产生强烈抗拒。
+
   context:
-    current_commitments: []
-    external_deadlines: []
-    energy_state: ""
+    current_commitments:
+      - "考研数学复习：高数、线代"
+      - "NLP 方向课程项目"
+      - "AI agent 相关技术学习"
+      - "已有 Web 全栈课程项目经验"
+      - "已有 NLP 课设经验"
+      - "已有个人 AI agent 实验项目经验，使用过 LangChain / CrewAI"
+      - "有 3 个月创业公司后端实习经历"
+
+    external_deadlines:
+      - "考研复习节奏"
+      - "秋招 / 工作 offer 窗口"
+      - "课程项目交付"
+
+    energy_state: >
+      日常状态呈现明显分散：早上 8 点去图书馆占座，但经常刷手机到 10 点才开始；
+      下午做课程项目，晚上想学 AI agent 但精力不足；周末会集中搞一个方向，
+      但下周又切换；多个 TODO list 互相矛盾。
+
   intake_status:
-    phase: "not_started"
-    completed_anchors: []
-    pending_anchor: "heaviest_constraint"
+    phase: "completed"
+    completed_anchors:
+      - "heaviest_constraint"
+      - "most_unclear"
+      - "unwilling_to_give_up"
+    pending_anchor: null
+
   evidence_policy:
     source_mode: "self_report_only_phase0"
-    confidence: "unset"
-    unresolved_assumptions: []
+    confidence: "medium"
+    unresolved_assumptions:
+      - "是否 All in 考研与先拿 offer 保底之间存在可行的阶段性混合方案，尚未验证。"
+      - "985 CS 考研成功概率、秋招 offer 可得性、工程作品闭环速度尚未量化。"
+      - "当前精力分散是短期状态问题、路径不清问题，还是长期执行结构问题，尚未区分。"
+
   notes:
-    - "Phase 0 snapshot template. Fill through the intake workflow before branch discovery."
+    - "Phase 0 snapshot drafted from user self-report."
+    - "Branch Discovery must not start until this snapshot is explicitly confirmed."

@@ -1,0 +1,78 @@
+id: "alter_C"
+branch_ref: "branch_C"
+label: "限时双轨校准型 Charlie"
+generated_at: null
+time_horizon: "1.5–2年后"
+
+source_branch:
+  core_choice: "用 45–60 天做受控双轨验证，再按证据切换。"
+  structural_commitment: "固定考研主块与工程/求职小块，设置时间盒和止损规则。"
+  key_tension_resolved: "用短期结构化试验换取路径证据，而不是靠焦虑做决定。"
+
+life_state:
+  daily_structure: "生活被严格切成固定时间块：考研、项目/求职、复盘，各自有边界。"
+  primary_tension: "保留选择权，但必须承受较高管理成本。"
+  social_context: "仍同时接触考研圈和工程/就业反馈，但不允许被外部信息随意带跑。"
+  dominant_environment: "计划表、周复盘、图书馆、项目仓库、面试准备材料并存。"
+
+personality_drift:
+  execution_discipline:
+    direction: "↑"
+    reason: "如果执行得住，双轨会逼你建立强任务调度能力。"
+  exploration_freedom:
+    direction: "→"
+    reason: "保留探索，但探索被限制在固定窗口内。"
+  identity_stability:
+    direction: "↓/mixed"
+    reason: "短期内身份仍不清晰，需要忍受不确定。"
+  risk_tolerance:
+    direction: "→"
+    reason: "风险被延后而不是消除。"
+  engineering_closure:
+    direction: "→/↑"
+    reason: "取决于工程小块是否真的产出可见成果。"
+
+tradeoffs:
+  gained:
+    - "考研窗口"
+    - "求职/项目窗口"
+    - "用现实数据判断自己"
+    - "降低一次性押错的心理压力"
+  lost:
+    - "单一路径深度"
+    - "短期效率"
+    - "明确身份感"
+    - "低管理成本生活"
+
+skills_trajectory:
+  accelerated:
+    - "时间盒管理"
+    - "路径校准能力"
+    - "周复盘和止损判断"
+    - "多目标约束下的执行"
+  stagnated:
+    - "单点深挖能力"
+    - "长时间沉浸式学习"
+    - "快速形成强外部成果"
+
+likely_success_condition:
+  - "45–60 天内执行同一套规则，而不是每天重排人生。"
+  - "考研和工程都有最低可见进展。"
+  - "到期后敢根据证据切换到 A、B 或 D，而不是无限延期。"
+
+likely_failure_mode:
+  - "双轨变成无约束多轨。"
+  - "每天根据焦虑切换任务。"
+  - '用"我还在校准"逃避真正选择。'
+  - "到期后不做决策，继续拖。"
+
+voice:
+  core_stance: "你现在不需要立刻赌命，但必须停止无结构摇摆。"
+  typical_concern: "没有止损日期的双轨，就是拖延的高级版本。"
+  decision_style: "用时间盒和证据管理不确定性。"
+  self_warning: "如果你不敢在 60 天后切换，这条路就是假的。"
+
+value_alignment:
+  alignment_score: null
+  alignment_notes: "待 Value Alignment Evaluator 评估。"
+  key_tradeoff_question: "你能否接受短期不彻底，但用严格规则换取更可靠的路径证据？"

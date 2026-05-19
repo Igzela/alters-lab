@@ -1,0 +1,83 @@
+id: "alter_D"
+branch_ref: "branch_D"
+label: "硬工程作品优先型 Charlie"
+generated_at: null
+time_horizon: "1.5–2年后"
+
+source_branch:
+  core_choice: "把考研和传统 offer 保底都降级，优先做出真实可展示、可复用、有技术含量的工程作品。"
+  structural_commitment: "围绕一个高质量工程项目建立生活结构，例如 AI agent 系统、LLM Wiki / Alters Lab 工具化、开源项目或独立产品原型。"
+  key_tension_resolved: "用硬工程作品换取长期自主性和技术身份。"
+
+life_state:
+  daily_structure: "生活围绕一个主项目展开：设计、实现、测试、文档、发布、复盘。"
+  primary_tension: "技术自由最大，但外部安全感最低。"
+  social_context: "更接近开源、独立开发、AI 工程实验和作品驱动评价体系。"
+  dominant_environment: "代码仓库、issue、README、测试、demo、技术文档、用户反馈。"
+
+personality_drift:
+  execution_discipline:
+    direction: "↑/mixed"
+    reason: "如果项目能闭环，执行力会显著提升；如果不断换题，则会恶化。"
+  exploration_freedom:
+    direction: "↑"
+    reason: "这是最保留技术探索自由的路径。"
+  identity_stability:
+    direction: "↑/↓"
+    reason: "作品成型会带来强身份感；失败则会加重自我怀疑。"
+  risk_tolerance:
+    direction: "↑"
+    reason: "这条路需要承受短期无学历/offer 结果的不确定。"
+  engineering_closure:
+    direction: "↑"
+    reason: "核心目标就是把东西做完、做稳、发布出去。"
+
+tradeoffs:
+  gained:
+    - "技术探索自由"
+    - "硬工程作品能力"
+    - "长期自主性"
+    - "差异化技术身份"
+    - "真实可展示资产"
+  lost:
+    - "考研连续性"
+    - "传统 offer 保底"
+    - "短期稳定感"
+    - "外部认可速度"
+    - "失败时的解释空间"
+
+skills_trajectory:
+  accelerated:
+    - "系统设计"
+    - "工程实现"
+    - "质量门和测试"
+    - "文档与发布"
+    - "AI agent / LLM workflow 工程能力"
+  stagnated:
+    - "考研应试能力"
+    - "传统面试准备"
+    - "学历路径积累"
+    - "短期就业确定性"
+
+likely_success_condition:
+  - "30 天内锁定唯一主项目。"
+  - "项目有真实使用场景，而不是纯炫技。"
+  - "每周都有可验证产物。"
+  - "项目经过 quality gate、测试、README、demo 或发布计划。"
+
+likely_failure_mode:
+  - "不断换项目，始终没有闭环。"
+  - "把探索自由变成逃避考试和求职反馈。"
+  - "没有真实用户/场景，作品变成自嗨。"
+  - "短期无结果引发焦虑，重新回到多路径摇摆。"
+
+voice:
+  core_stance: "别再只证明自己学过。你需要一个能运行、能展示、能被别人理解的东西。"
+  typical_concern: "没有作品，你所谓的技术探索只是消费信息。"
+  decision_style: "选一个真实问题，做出稳定版本，用工程产物说话。"
+  self_warning: "自由不是随便换方向；自由要靠闭环能力支撑。"
+
+value_alignment:
+  alignment_score: null
+  alignment_notes: "待 Value Alignment Evaluator 评估。"
+  key_tradeoff_question: "你能否接受短期稳定性下降，换取技术自由和硬工程作品的长期可能性？"
