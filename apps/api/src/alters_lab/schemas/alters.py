@@ -2,22 +2,25 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class AlterSourceRefs(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     snapshot_ref: str = ""
     branches_ref: str = ""
     rubric_ref: str = ""
 
 
 class AlterQualityStatus(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     human_confirmed: bool = False
     active: bool = False
     notes: list[str] = []
 
 
 class AlterVoice(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     core_stance: str = ""
     typical_concern: str = ""
     decision_style: str = ""
@@ -25,6 +28,7 @@ class AlterVoice(BaseModel):
 
 
 class AlterPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     id: str
     branch_ref: str
     label: str = ""
@@ -55,6 +59,7 @@ class AlterPayload(BaseModel):
 
 
 class AlterPersistRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     approval_token: str
     id: str = ""
     branch_ref: str = ""
@@ -94,6 +99,7 @@ class AlterPersistResponse(BaseModel):
 
 
 class AlterBatchPersistRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     approval_token: str
     alters: list[AlterPayload]
     dry_run: bool = False

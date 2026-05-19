@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from alters_lab.schemas.alters import AlterBatchPersistRequest, AlterPayload
+from alters_lab.schemas.alters import AlterBatchPersistRequest, AlterPersistRequest, AlterPayload
 from alters_lab.services.alters_persist import (
     alter_to_yaml,
     get_alter_target_path,
@@ -233,3 +233,46 @@ def test_batch_audit_operation_is_alters_batch_persist(tmp_path):
 def test_get_alter_target_path(tmp_path):
     p = get_alter_target_path("alter_A", tmp_path)
     assert p == tmp_path / "alter_A.yaml"
+
+
+# --- schema-level extra="forbid" defense ---
+
+
+def test_alter_source_refs_rejects_extra_fields():
+    with pytest.raises(Exception):
+        AlterSourceRefs(
+            snapshot_ref="alters/current/snapshot.yaml",
+            dialogue=True,
+        )
+
+
+def test_alter_payload_rejects_extra_fields():
+    with pytest.raises(Exception):
+        AlterPayload(
+            id="alter_A", branch_ref="branch_A",
+            source_refs={
+                "snapshot_ref": "alters/current/snapshot.yaml",
+                "branches_ref": "alters/current/branches.yaml",
+                "rubric_ref": "alters/calibration/rubric.yaml",
+            },
+            quality_status={"human_confirmed": True, "active": True},
+            voice={"core_stance": "Test"},
+            archive={"cycle": "2026-01"},
+        )
+
+
+def test_alter_persist_request_rejects_extra_fields():
+    with pytest.raises(Exception):
+        AlterPersistRequest(
+            approval_token="test",
+            provider={"name": "openai"},
+        )
+
+
+def test_alter_batch_persist_request_rejects_extra_fields():
+    with pytest.raises(Exception):
+        AlterBatchPersistRequest(
+            approval_token="test",
+            alters=[],
+            database={"engine": "postgres"},
+        )

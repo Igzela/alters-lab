@@ -36,7 +36,7 @@ def get_branches_persist_backup_dir() -> Path:
 
 @router.get("/health")
 def health():
-    return {"status": "ok", "component": "branches"}
+    return {"status": "ok", "component": "branches", "mode": "controlled_write"}
 
 
 @router.post(

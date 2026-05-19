@@ -64,7 +64,10 @@ def _all_valid_alters_batch(**overrides) -> list[dict]:
 def test_alters_health():
     r = client.get("/alters/health")
     assert r.status_code == 200
-    assert r.json()["status"] == "ok"
+    body = r.json()
+    assert body["status"] == "ok"
+    assert body["component"] == "alters"
+    assert body["mode"] == "controlled_write"
 
 
 # --- single persist ---
@@ -245,6 +248,90 @@ def test_batch_response_no_raw_token(monkeypatch, tmp_path):
     )
     body_str = json.dumps(r.json())
     assert raw_token not in body_str
+
+
+# --- forbidden field smuggling ---
+
+
+def test_rejects_top_level_provider():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(provider={"name": "openai"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_dialogue():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(dialogue={"session": "test"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_archive():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(archive={"cycle": "2026-01"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_database():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(database={"engine": "postgres"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_frontend():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(frontend={"framework": "react"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_generation():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(generation={"model": "gpt-4"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_calibration_scoring():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(calibration_scoring={"score": 0.9}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_drift():
+    r = client.post(
+        "/alters/persist/alter_A",
+        json=_valid_alter_request(drift={"value": 0.1}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_nested_voice_extra_field():
+    req = _valid_alter_request()
+    req["voice"]["dialogue"] = True
+    r = client.post("/alters/persist/alter_A", json=req)
+    assert r.status_code == 422
+
+
+def test_rejects_batch_alter_with_extra_field():
+    alters = _all_valid_alters_batch()
+    alters[0]["archive"] = True
+    r = client.post(
+        "/alters/persist-batch",
+        json={"approval_token": "test-token", "alters": alters},
+    )
+    assert r.status_code == 422
 
 
 # --- no generation runtime ---

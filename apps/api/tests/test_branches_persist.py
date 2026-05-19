@@ -9,6 +9,7 @@ from alters_lab.schemas.branches import (
     Branch,
     BranchDiscoveryPayload,
     BranchDiscoveryStatus,
+    BranchesPersistRequest,
 )
 from alters_lab.services.branches_persist import (
     branches_to_yaml,
@@ -260,3 +261,37 @@ def test_no_alter_dialogue_value_calibration_archive_files(tmp_path):
     for pattern in ["score_*.yaml", "archive", "alter_*.yaml", "dialogue_*.yaml", "alignment_*.yaml", "snapshot.yaml"]:
         matches = list(tmp_path.rglob(pattern))
         assert matches == [], f"Unexpected files matching {pattern}: {matches}"
+
+
+# --- schema-level extra="forbid" defense ---
+
+
+def test_branch_discovery_status_rejects_extra_fields():
+    with pytest.raises(Exception):
+        BranchDiscoveryStatus(status="not_started", runtime=True)
+
+
+def test_branch_rejects_extra_fields():
+    with pytest.raises(Exception):
+        Branch(
+            id="branch_A", label="A", core_choice="c",
+            structural_commitment="s", key_tension_resolved="t",
+            incompatible_with=["branch_B"], calibration={"score": 0.9},
+        )
+
+
+def test_branch_discovery_payload_rejects_extra_fields():
+    with pytest.raises(Exception):
+        BranchDiscoveryPayload(
+            branch_discovery=BranchDiscoveryStatus(status="not_started"),
+            archive={"cycle": "2026-01"},
+        )
+
+
+def test_branches_persist_request_rejects_extra_fields():
+    with pytest.raises(Exception):
+        BranchesPersistRequest(
+            approval_token="test",
+            branch_discovery=BranchDiscoveryStatus(status="not_started"),
+            provider={"name": "openai"},
+        )

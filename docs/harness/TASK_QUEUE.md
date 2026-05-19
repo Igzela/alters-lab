@@ -282,3 +282,18 @@
 **Goal**: Expand controlled write surface from snapshot-only to branches and alters using shared helpers
 **Depends on**: P3-001R3 (done)
 **Completed**: Shared controlled_write module (sha256_text, sha256_file, hash_approval_token, reject_blank_token, safe_backup_path, append_jsonl_audit, create_backup_if_exists). Branches write API (P3-002) and Alter write API (P3-003) implemented. main.py updated with branches_router and alters_router. 242 tests passing. No active YAML modified.
+
+### P3-M1R: Controlled Write Surface Contract Hardening
+
+**Status**: done
+**Goal**: Harden Branches and Alters controlled write APIs so forbidden runtime/generation/calibration/archive/provider fields cannot be silently ignored or smuggled through request payloads
+**Depends on**: P3-M1 (done)
+**Completed**: Added `model_config = ConfigDict(extra="forbid")` to all Branches schemas (BranchDiscoveryStatus, Branch, BranchDiscoveryPayload, BranchesPersistRequest) and all Alters schemas (AlterSourceRefs, AlterQualityStatus, AlterVoice, AlterPayload, AlterPersistRequest, AlterBatchPersistRequest). Health endpoints return `mode: "controlled_write"`. Added 7 branches API smuggling tests and 10 alters API smuggling tests proving forbidden fields are rejected with 422. Added 4 branches schema defense tests and 4 alters schema defense tests documenting schema-level as first defense. Batch alter persist validates all alters before writing — filesystem failure midway is not fully transactional (risk noted). P3-M2 remains blocked.
+**Review note**: P3-M1 failed review because schemas did not forbid extra fields, making forbidden-field smuggling ineffective. P3-M1R fixes the contract.
+
+### P3-M2: Controlled Generation Runtime
+
+**Status**: blocked
+**Goal**: Implement controlled generation runtime for branch discovery and alter generation
+**Depends on**: P3-M1R (done)
+**Notes**: Blocked pending human review. P3-M1R must pass review first.
