@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "phase": "Phase 3",
+  "report_type": "controlled_mutation_closeout",
+  "status": "BLOCKED",
+  "baseline_commit": "unknown",
+  "test_count": null,
+  "checks": [
+    {
+      "name": "active_yaml_chain",
+      "status": "PASS",
+      "severity": "info",
+      "message": "Active YAML chain valid",
+      "evidence_ref": null
+    },
+    {
+      "name": "phase3_evidence_files",
+      "status": "PASS",
+      "severity": "info",
+      "message": "All required Phase 3 evidence files present",
+      "evidence_ref": null
+    },
+    {
+      "name": "p3_m7_semantic_noop_evidence",
+      "status": "PASS",
+      "severity": "info",
+      "message": "P3-M7 semantic no-op evidence validated",
+      "evidence_ref": null
+    },
+    {
+      "name": "smuggling_boundary_restored",
+      "status": "PASS",
+      "severity": "info",
+      "message": "All API boundary models use extra='forbid'",
+      "evidence_ref": null
+    },
+    {
+      "name": "raw_dict_repersist_path_exists",
+      "status": "PASS",
+      "severity": "info",
+      "message": "Raw dict re-persist path functions exist",
+      "evidence_ref": null
+    },
+    {
+      "name": "live_execution_default_safe",
+      "status": "PASS",
+      "severity": "info",
+      "message": "Live execution disabled by default",
+      "evidence_ref": null
+    },
+    {
+      "name": "no_runtime_artifacts_committed",
+      "status": "WARN",
+      "severity": "warning",
+      "message": "Runtime drafts exist locally (12 files); ensure ignored/not committed",
+      "evidence_ref": "/home/igzela/Projects/alters-lab/alters/drafts"
+    },
+    {
+      "name": "no_raw_audit_logs_committed",
+      "status": "FAIL",
+      "severity": "blocking",
+      "message": "Raw audit logs found: ['phase3_write_audit.jsonl']",
+      "evidence_ref": null
+    },
+    {
+      "name": "phase3_governance_status",
+      "status": "PASS",
+      "severity": "info",
+      "message": "Phase 3 governance docs complete",
+      "evidence_ref": null
+    }
+  ],
+  "summary": {
+    "phase": "Phase 3",
+    "status": "BLOCKED",
+    "total_checks": 9,
+    "passed_checks": 7,
+    "warning_checks": 1,
+    "failed_checks": 1,
+    "sealed_baseline_candidate": false,
+    "next_phase_status": "blocked"
+  },
+  "boundary_confirmations": {
+    "read_only": true,
+    "active_yaml_modified": false,
+    "snapshot_yaml_modified": false,
+    "branches_yaml_modified": false,
+    "alters_modified": false,
+    "value_alignment_modified": false,
+    "dialogue_modified": false,
+    "reality_trace_modified": false,
+    "calibration_score_created": false,
+    "drift_computed": false,
+    "archive_created": false,
+    "provider_used": false,
+    "frontend_added": false,
+    "database_added": false,
+    "controlled_persist_called": false,
+    "live_execution_called": false,
+    "raw_audit_committed": false,
+    "runtime_drafts_committed": false
+  },
+  "created_at": "2026-05-19T14:07:41.055485+00:00"
+}

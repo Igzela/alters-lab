@@ -368,3 +368,10 @@
 **Goal**: Preserve active YAML extra fields during re-persist without weakening API smuggling boundary
 **Depends on**: P3-M6R (done), P3-M7 (done)
 **Completed**: Reverted AlterPayload, BranchDiscoveryPayload, BranchDiscoveryStatus to extra="forbid" (supersedes P3-M6R-01). Added validate_alter_raw_dict (dict-level required field + forbidden field validation). Added write_alter_raw_batch_with_audit (raw dict batch write via yaml.safe_dump). Added write_branches_raw_with_audit (raw dict branches write via yaml.safe_dump). Updated execute_promotion_live to use raw dict paths instead of Pydantic model path. All API smuggling boundary models remain extra="forbid". 8 new tests added. 576 tests passing. No active YAML modified. Decision P3-M6R2-01 recorded.
+
+### P3-M8: Phase 3 Controlled Mutation Closeout Gate
+
+**Status**: done
+**Goal**: Read-only closeout gate verifying controlled mutation system is safe to seal as baseline
+**Depends on**: P3-M6R2 (done), P3-M7 (done)
+**Completed**: Phase 3 closeout schemas (6 models, all extra="forbid"), service with 9 verification checks (active YAML chain, evidence files, P3-M7 evidence, smuggling boundary, raw dict path, live execution safety, runtime artifacts, audit logs, governance status), API router (3 endpoints: health, report, evidence), 30 tests, governance docs updated. 606 tests passing. No active YAML modified. No live execution. No persist services called. Read-only verification only. Phase 3 sealed baseline candidate pending GPT review. P4-000 blocked.

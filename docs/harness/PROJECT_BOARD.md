@@ -94,6 +94,8 @@ Phase 2 Final Gate: **PASS**
 | P3-M6R | Live Executor Persist Signature Repair | **done** |
 | P3-M6R2 | Raw Dict Re-persist Preserves Extras Without Weakening API Schemas | **done** |
 | P3-M7 | First Human-Approved Live Promotion Run | **done** |
+| P3-M8 | Phase 3 Controlled Mutation Closeout Gate | **done** |
+| P4-000 | Phase 4 Scope and Boundary Plan | **blocked** |
 
 ## Quality Gates
 
