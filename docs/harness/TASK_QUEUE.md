@@ -202,6 +202,7 @@
 
 ### P2-003: Read-only Cycle Summary API
 
-**Status**: todo/blocked
-**Goal**: Expose summarize_active_yaml_chain as a read-only API endpoint
+**Status**: done
+**Goal**: Expose sealed active YAML chain summary and validation through read-only FastAPI endpoints
 **Depends on**: P2-002 (done)
+**Completed**: 101 tests passing, 4 read-only endpoints, no YAML modified, no forbidden routers.

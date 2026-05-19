@@ -55,7 +55,7 @@ Phase 1 Final Gate: **PASS**
 |----|-------|--------|
 | P2-001 | Sealed Baseline Verification + Active YAML Loader | **done** |
 | P2-002 | Active YAML Chain Validator CLI | **done** |
-| P2-003 | Read-only Cycle Summary API | blocked/todo |
+| P2-003 | Read-only Cycle Summary API | **done** |
 
 ## Quality Gates
 
