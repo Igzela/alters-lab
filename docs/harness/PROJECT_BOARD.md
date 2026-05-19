@@ -22,6 +22,19 @@ todo → ready → running → review → done/failed
 | ALT-008 | Archive system | done |
 | CYCLE-001A | First real Snapshot Intake cycle | ready-with-approval |
 
+## Phase 1 — Controlled Implementation
+
+| ID | Title | Status |
+|----|-------|--------|
+| P1-001 | Backend Foundation + Snapshot Intake Contract | done |
+| P1-002 | Snapshot Intake API Endpoints | todo |
+
+## Quality Gates
+
+**day_14 gate**: "FastAPI backend can run Snapshot Intake contract and tests."
+
+**day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and calibration template."
+
 ## Notes
 
 - COC-001 is complete (repo skeleton). All COC-* tasks after 001 are paused/retired.
@@ -29,3 +42,4 @@ todo → ready → running → review → done/failed
 - All new work uses ALT-* task IDs.
 - ALT-001 through ALT-008 are complete. Phase 0 workspace final gate review passed.
 - CYCLE-001A (First real Snapshot Intake) is ready-with-approval — awaiting human decision to begin.
+- P1-001 complete. Phase 1 has started with backend foundation.
