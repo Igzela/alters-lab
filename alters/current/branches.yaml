@@ -1,32 +1,31 @@
 # Alters System — Branch Definitions
-# Phase 0: This is a template. Branches are generated from snapshot anchors.
+# Phase 0: Canonical structure. Branches are generated from confirmed snapshot anchors.
 
-# Quality rules for valid branches
-quality_rules:
-  structural_difference: |
-    Branches must differ in KIND, not degree.
-    "More money" is not a branch. "Corporate vs independent" is a branch.
-    Each branch must be mutually incompatible with all others.
-  time_horizon: "1.5-2 years"
-  min_branches: 2
-  max_branches: 5
+branch_discovery:
+  status: "not_started"
+  source_snapshot_ref: "alters/current/snapshot.yaml"
+  requires_snapshot_phase: "completed"
+  pipeline:
+    step_1_tension_extraction: { output: [] }
+    step_2_structural_branch_identification: { output: [] }
+    step_3_convergence: { output: [] }
+  quality_rules:
+    reject_result_differences: true
+    reject_parameter_differences: true
+    require_mutual_incompatibility: true
+    require_incompatible_with: true
+    min_branches: 3
+    max_branches: 4
 
 branches: []
-# Example structure (uncomment when ready):
-# - id: branch-001
-#   name: "Stay and Build"
-#   description: "Remain in current role, push for promotion, build internal influence"
-#   structural_difference: "Committed to organisational path — security and status over autonomy"
-#   tradeoffs:
-#     - gain: "Stability, institutional knowledge, team relationships"
-#     - lose: "Autonomy, speed, direct ownership of outcomes"
-#   time_horizon: "1.5-2 years"
-#
-# - id: branch-002
-#   name: "Leave and Start"
-#   description: "Quit role, start independent practice or company"
-#   structural_difference: "Committed to independent path — autonomy and risk over security"
-#   tradeoffs:
-#     - gain: "Autonomy, speed, direct ownership"
-#     - lose: "Stability, institutional support, predictable income"
-#   time_horizon: "1.5-2 years"
+
+branch_template:
+  id: ""
+  core_choice: ""
+  structural_commitment: ""
+  key_tension_resolved: ""
+  incompatible_with: []
+  preserves: []
+  sacrifices: []
+  validation_signal_30d: []
+  invalid_if: []

@@ -31,19 +31,20 @@
 
 ### ALT-002: Snapshot intake workflow
 
-**Status**: running
+**Status**: done
 **Goal**: Define and implement snapshot capture process: constraints, uncertainties, anchors
 **Depends on**: ALT-001
+**Notes**: Complete. Canonical snapshot.yaml, intake-workflow.md, quality gate added.
 
 ### ALT-003: Branch discovery engine
 
-**Status**: blocked
+**Status**: running
 **Goal**: Define rules for identifying structural, mutually incompatible branches from a snapshot
-**Depends on**: ALT-002 (blocked until snapshot completion)
+**Depends on**: ALT-002
 
 ### ALT-004: Alter generation
 
-**Status**: todo
+**Status**: blocked
 **Goal**: Generate coherent alter versions per branch with values, narrative, and tradeoffs
 **Depends on**: ALT-003
 
