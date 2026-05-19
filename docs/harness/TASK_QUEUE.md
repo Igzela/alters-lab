@@ -24,22 +24,22 @@
 
 ### ALT-001: Reset project direction to Alters System + Phase 0 workspace
 
-**Status**: running
+**Status**: done
 **Goal**: Replace content-calibration direction with Alters System. Create file-based Phase 0 workspace.
 **Allowed files**: README.md, AGENTS.md, docs/**, alters/**
 **Forbidden**: apps/**, packages/**, .env, pyproject.toml, package.json, any business code, any frontend/backend code
 
 ### ALT-002: Snapshot intake workflow
 
-**Status**: todo
+**Status**: running
 **Goal**: Define and implement snapshot capture process: constraints, uncertainties, anchors
 **Depends on**: ALT-001
 
 ### ALT-003: Branch discovery engine
 
-**Status**: todo
+**Status**: blocked
 **Goal**: Define rules for identifying structural, mutually incompatible branches from a snapshot
-**Depends on**: ALT-002
+**Depends on**: ALT-002 (blocked until snapshot completion)
 
 ### ALT-004: Alter generation
 

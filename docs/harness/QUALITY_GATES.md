@@ -26,6 +26,12 @@ The rubric cannot modify itself. All rubric changes require explicit human revie
 
 Any unknown_error during system operation requires human review. Automated retry or silent failure is not permitted. Quality gate: unknown_error events are logged and escalated to human.
 
+### Snapshot Intake
+
+The snapshot must use canonical Phase 0 structure with all required fields present. Quality gate:
+- **Pass**: snapshot.yaml has canonical structure, all three anchors exist (heaviest_constraint, most_unclear, unwilling_to_give_up), intake_status exists, empty fields are empty strings/lists (not invented content).
+- **Fail**: multiple questions asked at once, branches generated before snapshot confirmation, alters generated during intake, snapshot contains invented placeholder data.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -34,3 +40,6 @@ Any unknown_error during system operation requires human review. Automated retry
 - [ ] Dialogue injects full alter.yaml
 - [ ] Rubric auto_modify is false
 - [ ] Unknown errors escalate to human review
+- [ ] Snapshot uses canonical Phase 0 structure
+- [ ] All three anchors present in snapshot
+- [ ] No branches or alters before snapshot confirmation

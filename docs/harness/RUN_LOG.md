@@ -8,4 +8,4 @@
 
 ## Execution History
 
-_No entries yet._
+| ALT-002 | 2026-05-19 | claude | done | Snapshot intake workflow. Canonical snapshot.yaml, intake-workflow.md, quality gate added. Phase 0 remains file-based. |
