@@ -12,11 +12,11 @@ todo → ready → running → review → done/failed
 |----|-------|--------|
 | COC-001 | Repo skeleton + governance docs (content calibration) | done |
 | COC-002 | Backend schema definitions (content calibration) | **paused** |
-| ALT-001 | Reset project direction to Alters System + Phase 0 workspace | running |
-| ALT-002 | Snapshot intake workflow | todo |
-| ALT-003 | Branch discovery engine | todo |
-| ALT-004 | Alter generation | todo |
-| ALT-005 | Dialogue engine | todo |
+| ALT-001 | Reset project direction to Alters System + Phase 0 workspace | done |
+| ALT-002 | Snapshot intake workflow | done |
+| ALT-003 | Branch discovery engine | done |
+| ALT-004 | Alter generation | done |
+| ALT-005 | Dialogue engine | blocked |
 | ALT-006 | Value alignment evaluator | todo |
 | ALT-007 | Calibration system + rubric | todo |
 | ALT-008 | Archive system | todo |

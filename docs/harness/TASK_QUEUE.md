@@ -38,21 +38,24 @@
 
 ### ALT-003: Branch discovery engine
 
-**Status**: running
+**Status**: done
 **Goal**: Define rules for identifying structural, mutually incompatible branches from a snapshot
 **Depends on**: ALT-002
+**Notes**: Complete. Canonical branches.yaml, branch-discovery-workflow.md, quality gate added.
 
 ### ALT-004: Alter generation
 
-**Status**: blocked
+**Status**: done
 **Goal**: Generate coherent alter versions per branch with values, narrative, and tradeoffs
 **Depends on**: ALT-003
+**Notes**: Complete. Canonical _template.yaml, alter-generation-workflow.md, quality gate added. No active alters — branches not yet confirmed.
 
 ### ALT-005: Dialogue engine
 
-**Status**: todo
+**Status**: blocked
 **Goal**: Facilitate dialogue between user and each Alter, injecting full alter.yaml
 **Depends on**: ALT-004
+**Notes**: Blocked. Requires ALT-004 confirmed and active alters generated.
 
 ### ALT-006: Value alignment evaluator
 

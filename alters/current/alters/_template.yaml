@@ -1,0 +1,53 @@
+# Alters System — Inactive Alter Template
+# ALT-004: Canonical template for inactive Alters. One Alter per confirmed branch.
+# Do NOT generate active alter_*.yaml files until branches are human-confirmed.
+
+alter_template:
+  template_status: "inactive_template_only"
+  generated_from:
+    snapshot_ref: "alters/current/snapshot.yaml"
+    branch_ref: ""
+    rubric_ref: "alters/calibration/rubric.yaml"
+  alter:
+    id: ""
+    branch_ref: ""
+    label: ""
+    generated_at: null
+    time_horizon: "1.5-2年后"
+    source_branch:
+      core_choice: ""
+      structural_commitment: ""
+      key_tension_resolved: ""
+    life_state:
+      location_or_environment: ""
+      daily_structure: ""
+      primary_tension: ""
+      social_context: ""
+      dominant_environment: ""
+    personality_drift:
+      execution_discipline: { direction: "", reason: "" }
+      exploration_freedom: { direction: "", reason: "" }
+      identity_stability: { direction: "", reason: "" }
+      risk_tolerance: { direction: "", reason: "" }
+      engineering_closure: { direction: "", reason: "" }
+    tradeoffs: { gained: [], lost: [] }
+    skills_trajectory: { accelerated: [], stagnated: [] }
+    likely_success_condition: []
+    likely_failure_mode: []
+    voice:
+      core_stance: ""
+      typical_concern: ""
+      decision_style: ""
+      self_warning: ""
+    value_alignment:
+      alignment_score: null
+      alignment_notes: ""
+      key_tradeoff_question: ""
+  quality_rules:
+    require_branch_ref: true
+    require_snapshot_ref: true
+    require_time_horizon: "1.5-2年后"
+    require_voice_perspective: true
+    reject_probability_prediction: true
+    reject_neutral_advice_bot: true
+    reject_active_generation_without_confirmed_branches: true
