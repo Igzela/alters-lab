@@ -266,9 +266,10 @@ def test_no_alter_dialogue_value_calibration_archive_files(tmp_path):
 # --- schema-level extra="forbid" defense ---
 
 
-def test_branch_discovery_status_rejects_extra_fields():
-    with pytest.raises(Exception):
-        BranchDiscoveryStatus(status="not_started", runtime=True)
+def test_branch_discovery_status_accepts_extra_fields():
+    bs = BranchDiscoveryStatus(status="not_started", pipeline={"step_1": {"output": ["a"]}})
+    d = bs.model_dump(mode="json")
+    assert "pipeline" in d
 
 
 def test_branch_rejects_extra_fields():
@@ -280,12 +281,13 @@ def test_branch_rejects_extra_fields():
         )
 
 
-def test_branch_discovery_payload_rejects_extra_fields():
-    with pytest.raises(Exception):
-        BranchDiscoveryPayload(
-            branch_discovery=BranchDiscoveryStatus(status="not_started"),
-            archive={"cycle": "2026-01"},
-        )
+def test_branch_discovery_payload_accepts_extra_fields():
+    bp = BranchDiscoveryPayload(
+        branch_discovery=BranchDiscoveryStatus(status="not_started"),
+        pipeline={"step_1": {"output": ["a"]}},
+    )
+    d = bp.model_dump(mode="json")
+    assert "pipeline" in d
 
 
 def test_branches_persist_request_rejects_extra_fields():

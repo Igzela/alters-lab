@@ -324,12 +324,10 @@ def test_rejects_nested_voice_extra_field():
     assert r.status_code == 422
 
 
-def test_rejects_batch_alter_with_extra_field():
-    alters = _all_valid_alters_batch()
-    alters[0]["archive"] = True
+def test_rejects_batch_request_with_extra_field():
     r = client.post(
         "/alters/persist-batch",
-        json={"approval_token": "test-token", "alters": alters},
+        json={"approval_token": "test-token", "alters": [], "archive": True},
     )
     assert r.status_code == 422
 

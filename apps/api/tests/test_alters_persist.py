@@ -246,19 +246,19 @@ def test_alter_source_refs_rejects_extra_fields():
         )
 
 
-def test_alter_payload_rejects_extra_fields():
-    with pytest.raises(Exception):
-        AlterPayload(
-            id="alter_A", branch_ref="branch_A",
-            source_refs={
-                "snapshot_ref": "alters/current/snapshot.yaml",
-                "branches_ref": "alters/current/branches.yaml",
-                "rubric_ref": "alters/calibration/rubric.yaml",
-            },
-            quality_status={"human_confirmed": True, "active": True},
-            voice={"core_stance": "Test"},
-            archive={"cycle": "2026-01"},
-        )
+def test_alter_payload_accepts_extra_fields():
+    ap = AlterPayload(
+        id="alter_A", branch_ref="branch_A",
+        source_refs={
+            "snapshot_ref": "alters/current/snapshot.yaml",
+            "branches_ref": "alters/current/branches.yaml",
+            "rubric_ref": "alters/calibration/rubric.yaml",
+        },
+        quality_status={"human_confirmed": True, "active": True},
+        voice={"core_stance": "Test"},
+        time_horizon="1.5-2年后",
+    )
+    assert ap.model_dump(mode="json").get("time_horizon") == "1.5-2年后"
 
 
 def test_alter_persist_request_rejects_extra_fields():

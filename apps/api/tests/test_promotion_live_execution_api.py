@@ -34,9 +34,9 @@ def _valid_package() -> dict:
             "boundary_confirmations": {"draft_only": True, "active_yaml_modified": False},
         },
         "branches_payload": {
-            "branch_discovery": {"status": "completed"},
+            "branch_discovery": {"status": "completed", "source_snapshot_ref": "alters/current/snapshot.yaml", "confirmed_by": "human_owner"},
             "branches": [
-                {"id": f"branch_{c}", "label": f"Branch {c}", "incompatible_with": [f"branch_{x}" for x in "ABCD" if x != c]}
+                {"id": f"branch_{c}", "label": f"Branch {c}", "core_choice": f"Choice {c}", "structural_commitment": f"SC {c}", "key_tension_resolved": f"KR {c}", "incompatible_with": [f"branch_{x}" for x in "ABCD" if x != c]}
                 for c in "ABCD"
             ],
         },

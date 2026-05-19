@@ -265,14 +265,16 @@ def execute_promotion_live(
                 if not target_path:
                     raise ValueError("branches_target_path not provided in path_overrides")
 
+                from alters_lab.schemas.branches import BranchDiscoveryPayload
                 from alters_lab.services.branches_persist import write_branches_with_audit
+                payload_model = BranchDiscoveryPayload(**branches_payload)
                 write_result = write_branches_with_audit(
-                    branches_payload=branches_payload,
+                    payload=payload_model,
                     target_path=target_path,
-                    approval_token=final_execution_token,
-                    backup_dir=path_overrides.get("backup_dir"),
                     audit_log_path=path_overrides.get("audit_log_path"),
+                    approval_token=final_execution_token,
                     caller=caller,
+                    backup_dir=path_overrides.get("backup_dir"),
                 )
                 branches_succeeded = True
                 results.append(LiveExecutionStepResult(
@@ -317,15 +319,20 @@ def execute_promotion_live(
                 if not alters_dir:
                     raise ValueError("alters_dir not provided in path_overrides")
 
+                from alters_lab.schemas.alters import AlterPayload
                 from alters_lab.services.alters_persist import write_alter_batch_with_audit
+                alters_models = [AlterPayload(**a) for a in alters_payload["alters"]]
                 write_result = write_alter_batch_with_audit(
-                    alters_payload=alters_payload,
-                    target_dir=alters_dir,
-                    approval_token=final_execution_token,
-                    backup_dir=path_overrides.get("backup_dir"),
+                    alters=alters_models,
+                    base_dir=alters_dir,
                     audit_log_path=path_overrides.get("audit_log_path"),
+                    approval_token=final_execution_token,
                     caller=caller,
+                    backup_dir=path_overrides.get("backup_dir"),
                 )
+                pre_hashes = write_result.get("pre_write_hashes", {})
+                post_hashes = write_result.get("post_write_hashes", {})
+                backup_paths_list = write_result.get("backup_paths", [])
                 results.append(LiveExecutionStepResult(
                     step_id=step_id,
                     target_api=target_api,
@@ -333,9 +340,9 @@ def execute_promotion_live(
                     dry_run=False,
                     status="executed",
                     target_path=str(alters_dir),
-                    pre_write_hash=write_result.get("pre_write_hash"),
-                    post_write_hash=write_result.get("post_write_hash"),
-                    backup_path=write_result.get("backup_path"),
+                    pre_write_hash=str(pre_hashes) if pre_hashes else None,
+                    post_write_hash=str(post_hashes) if post_hashes else None,
+                    backup_path=str(backup_paths_list) if backup_paths_list else None,
                     audit_log_path=write_result.get("audit_log_path"),
                     message="Alters batch persist executed successfully",
                 ))
