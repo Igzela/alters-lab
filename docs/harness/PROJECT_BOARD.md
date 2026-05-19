@@ -79,7 +79,9 @@ Phase 2 Final Gate: **PASS**
 | P3-001R | Controlled Snapshot Write API Contract Repair | **done** |
 | P3-001R2 | Controlled Snapshot Write API Final Contract Repair | **done** |
 | P3-001R3 | Audit Evidence Cleanup | **done** |
-| P3-002 | Controlled Branches Write API | **blocked** |
+| P3-002 | Controlled Branches Write API | **done** |
+| P3-003 | Controlled Alter Write API | **done** |
+| P3-M1 | Controlled YAML Write Surface Expansion | **done** |
 
 ## Quality Gates
 
