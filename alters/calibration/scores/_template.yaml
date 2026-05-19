@@ -1,0 +1,40 @@
+# Alters System — Calibration Score Template
+# INACTIVE TEMPLATE ONLY — Do not create active score files in Phase 0.
+# Active score files (score_*.yaml) are forbidden until checkpoints exist.
+
+id: score-TEMPLATE
+status: inactive_template_only
+created_at: "YYYY-MM-DDT00:00:00Z"
+
+input_refs:
+  snapshot_ref: null
+  branch_ref: null
+  alter_ref: null
+  dialogue_session_ref: null
+  alignment_ref: null
+
+cycle: 0
+checkpoint: 0
+
+predicted:
+  execution_discipline: null
+  exploration_freedom: null
+  life_state_match: null
+  energy_level: null
+
+actual:
+  execution_discipline: null
+  exploration_freedom: null
+  life_state_match: null
+  energy_level: null
+
+drift:
+  per_dimension: {}
+  overall: null
+  threshold_exceeded: false
+
+quality_rules:
+  - "Actual values must come from user-reported outcomes, not invented"
+  - "Predicted values must match the alter's personality_drift values"
+  - "No score file may be created without confirmed snapshot, branch, and alter"
+  - "No drift may be computed without both predicted and actual values"

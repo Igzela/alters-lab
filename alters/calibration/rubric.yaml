@@ -1,11 +1,17 @@
 # Alters System — Calibration Rubric
-# Phase 0: Template with 4 evaluation dimensions.
-# auto_modify is ALWAYS false — rubric cannot self-modify.
+# Phase 0: Cold-start rubric. No active scoring until checkpoints exist.
 
 id: rubric-001
 version: 1
-auto_modify: false
+mode: cold_start
+status: active
 created_at: "2026-05-19T00:00:00Z"
+
+purpose: >
+  Evaluate how well reality and confirmed Alters match over time.
+  This is NOT probability forecasting. This is NOT Brier scoring.
+  This measures the gap between predicted life-state and actual outcomes
+  across four fixed dimensions.
 
 dimensions:
   - name: execution_discipline
@@ -27,3 +33,28 @@ dimensions:
     description: "How sustainable is this branch given your current energy and capacity?"
     weight: 0.25
     scale: "1-5 (1=draining, 5=energising)"
+
+drift_formula:
+  description: >
+    Mean absolute normalised drift across all four dimensions.
+    For each dimension d: abs(predicted[d] - actual[d]) / 4.
+    Final drift = mean of all dimension drifts.
+  range: "0.0 - 1.0"
+  checkpoint_threshold: 0.6
+  meaning: >
+    0.0 = perfect match between predicted and actual.
+    1.0 = maximum divergence.
+    >= 0.6 triggers a checkpoint review.
+
+evolution_policy:
+  auto_modify: false
+  human_confirmation_required: true
+  trigger_conditions:
+    - "Drift exceeds checkpoint_threshold (0.6) for two consecutive checkpoints"
+    - "New life constraints emerge that alter dimension relevance"
+    - "User explicitly requests rubric review"
+  prohibited:
+    - "Rubric cannot add or remove dimensions without human decision"
+    - "Rubric cannot change scale range without human decision"
+    - "Rubric cannot modify drift formula without human decision"
+    - "Rubric cannot self-escalate auto_modify to true"

@@ -1,7 +1,13 @@
 {
   "status": "cold_start",
+  "mode": "cold_start",
   "cycle": 0,
   "last_scored_at": null,
   "total_cycles": 0,
-  "notes": "Phase 0 cold start. No cycles completed yet."
+  "checkpoints_completed": 0,
+  "last_checkpoint_at": null,
+  "current_drift": null,
+  "rubric_version": 1,
+  "rubric_last_modified_at": null,
+  "notes": "Phase 0 cold start. No cycles completed. No checkpoints. No drift computed. No active scores."
 }
