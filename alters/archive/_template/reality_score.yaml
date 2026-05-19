@@ -1,0 +1,32 @@
+# Alters System — Archive Reality Score Template
+# INACTIVE TEMPLATE ONLY — Do not use for active scoring.
+# Active scores belong in alters/calibration/scores/.
+
+archive_id: "YYYY-MM-DD_event"
+status: inactive_template_only
+created_at: null
+checkpoint: 0
+rubric_version: 1
+
+per_branch:
+  - branch_id: ""
+    dimensions:
+      execution_discipline: null
+      exploration_freedom: null
+      life_state_match: null
+      energy_level: null
+    drift:
+      per_dimension: {}
+      overall: null
+
+summary:
+  overall_drift: null
+  threshold_exceeded: false
+  branches_above_threshold: []
+
+quality_rules:
+  - "Archived score must match current calibration state at time of archive"
+  - "No fields may be modified after archival"
+  - "archive_id must match the parent folder name"
+  - "No invented content — archived score is a faithful copy"
+  - "No drift may be recomputed after archival"

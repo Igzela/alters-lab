@@ -111,3 +111,30 @@
 **Decision**: Rubric evolution requires explicit human review and confirmation. `auto_modify: false` is permanent. Drift observations inform but do not trigger rubric changes. All changes documented in decision records.
 **Consequences**: Prevents rubric gaming and ensures stability. The rubric remains a trusted reference point that only changes through deliberate human decisions.
 **Alternatives**: Auto-modify on high drift (rejected — invites gaming, destabilises rubric). Auto-modify with human override (rejected — still allows automatic changes, undermines trust).
+
+### Decision ALT-008-01: Archive is read-only faithful copy
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: ALT-008 defines the Archive System. The question was whether archives could modify state or were purely read-only snapshots.
+**Decision**: Archives are read-only faithful copies of current state. Once created, no archive content may be modified. Every file in the archive must match the current state at archive time with no invented or assumed fields.
+**Consequences**: Archives are reliable historical records. They can be trusted for comparison, learning, and audit. The constraint prevents drift or revisionism in archived data.
+**Alternatives**: Allow post-archival annotation (rejected — introduces revisionism risk). Allow archive updates (rejected — undermines archival integrity).
+
+### Decision ALT-008-02: No real archives in Phase 0
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: ALT-008 implements the Archive System workflow. The question was whether to create example archive folders.
+**Decision**: No real dated archive folders (e.g., `alters/archive/2026-05-19_*`) are created in Phase 0. Only the `_template` folder exists. Real archives require active cycles with confirmed snapshot, branches, and resolution — none of which exist yet.
+**Consequences**: Phase 0 remains documentation-only. The template provides the target structure without creating false artifacts. Real archives are deferred until the system has active cycles.
+**Alternatives**: Create example archive with placeholder data (rejected — violates no-invention rule, creates false artifacts).
+
+### Decision ALT-008-03: Rubric delta within archive is proposal-only with reject_auto_apply
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: ALT-008 defines how rubric changes interact with the archive. The question was whether archived rubric deltas should auto-apply.
+**Decision**: Rubric deltas within archives are proposal-only. `reject_auto_apply: true` is permanent. The proposal sits inactive until human explicitly confirms it. Every rubric change requires a linked decision record.
+**Consequences**: Prevents rubric drift through archive accumulation. The archive system cannot modify the rubric — it can only propose changes that require human approval. This preserves rubric stability.
+**Alternatives**: Allow archive-triggered rubric updates (rejected — undermines rubric stability, enables gaming through strategic archiving).

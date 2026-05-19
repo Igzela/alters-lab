@@ -1,0 +1,32 @@
+# Alters System — Archive Snapshot Template
+# INACTIVE TEMPLATE ONLY — Do not use for active snapshots.
+# Active snapshots belong in alters/current/snapshot.yaml.
+
+snapshot:
+  archive_id: "YYYY-MM-DD_event"
+  date: null
+  version: 1
+  status: inactive_template_only
+  anchors:
+    heaviest_constraint: ""
+    most_unclear: ""
+    unwilling_to_give_up: ""
+  context:
+    current_commitments: []
+    external_deadlines: []
+    energy_state: ""
+  intake_status:
+    phase: "not_started"
+    completed_anchors: []
+    pending_anchor: "heaviest_constraint"
+  evidence_policy:
+    source_mode: "self_report_only_phase0"
+    confidence: "unset"
+    unresolved_assumptions: []
+  notes: []
+
+quality_rules:
+  - "Archived snapshot must match current snapshot at time of archive"
+  - "No fields may be modified after archival"
+  - "archive_id must match the parent folder name"
+  - "No invented content — archived snapshot is a faithful copy"

@@ -1,0 +1,27 @@
+# Alters System — Archive Branches Template
+# INACTIVE TEMPLATE ONLY — Do not use for active branch discovery.
+# Active branches belong in alters/current/branches.yaml.
+
+archive_id: "YYYY-MM-DD_event"
+status: inactive_template_only
+created_at: null
+
+branch_discovery:
+  status: "not_started"
+  source_snapshot_ref: null
+  pipeline:
+    step_1_tension_extraction: { output: [] }
+    step_2_structural_branch_identification: { output: [] }
+    step_3_convergence: { output: [] }
+  quality_rules:
+    reject_result_differences: true
+    reject_parameter_differences: true
+    require_mutual_incompatibility: true
+
+branches: []
+
+quality_rules:
+  - "Archived branches must match current branches at time of archive"
+  - "No fields may be modified after archival"
+  - "archive_id must match the parent folder name"
+  - "No invented content — archived branches are a faithful copy"

@@ -1,0 +1,22 @@
+# Alters System — Archive Resolution Template
+# INACTIVE TEMPLATE ONLY — Do not use for active resolutions.
+# Resolutions are created at archive time for completed cycles.
+
+archive_id: "YYYY-MM-DD_event"
+status: inactive_template_only
+created_at: null
+
+resolution:
+  cycle: 0
+  branches_resolved: []
+  branch_chosen: null
+  resolution_type: ""
+  outcome_summary: ""
+  duration_days: 0
+
+quality_rules:
+  - "Resolution must reference real branches that existed in this cycle"
+  - "branch_chosen must be one of branches_resolved, or null if unresolved"
+  - "resolution_type must be: branch_chosen, branch_rejected, branch_stale, or unresolved"
+  - "No invented outcomes — resolution reflects actual events"
+  - "archive_id must match the parent folder name"

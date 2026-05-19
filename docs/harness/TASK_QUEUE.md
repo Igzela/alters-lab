@@ -66,13 +66,14 @@
 
 ### ALT-007: Calibration system + rubric
 
-**Status**: running
+**Status**: done
 **Goal**: Score branches, track scores, evolve rubric (human review only)
 **Depends on**: ALT-006
-**Notes**: In progress. Rubric normalized with canonical structure, state.json cold_start, scores template created (inactive), calibration-system-workflow.md defined. No active scores — no checkpoints exist.
+**Notes**: Complete. Rubric normalized with canonical structure, state.json cold_start, scores template created (inactive), calibration-system-workflow.md defined. No active scores — no checkpoints exist.
 
 ### ALT-008: Archive system
 
-**Status**: blocked
+**Status**: running
 **Goal**: Archive completed cycles with snapshot, branches, scores, and traces
 **Depends on**: ALT-007
+**Notes**: In progress. Archive template folder with 7 template files created (all inactive_template_only), archive-system-workflow.md defined with all 9 sections. No real archive folders created — no active cycles exist.

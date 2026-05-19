@@ -16,3 +16,5 @@
 | ALT-006 | 2026-05-19 | claude | running | Value alignment evaluator workflow. Canonical value_alignment/_template.yaml (inactive), value-alignment-workflow.md, quality gate added. No active alignment files — no confirmed alters exist. |
 | ALT-006 | 2026-05-19 | claude | done | Value alignment evaluator complete. Workflow and template finalized. |
 | ALT-007 | 2026-05-19 | claude | running | Calibration system + rubric. Rubric normalized (version, mode, status, dimensions, drift_formula, evolution_policy with auto_modify: false). state.json cold_start. scores/_template.yaml inactive. calibration-system-workflow.md with all 8 sections. Quality gate added. No active scores — cold start. |
+| ALT-007 | 2026-05-19 | claude | done | Calibration system complete. Rubric, state, template, workflow all finalized. |
+| ALT-008 | 2026-05-19 | claude | running | Archive system workflow. Archive _template folder with 7 files (snapshot, branches, reality_trace, reality_score, resolution, rubric_delta, alters/.gitkeep), all inactive_template_only. archive-system-workflow.md with 9 sections. Quality gate added. No real archive folders created. |
