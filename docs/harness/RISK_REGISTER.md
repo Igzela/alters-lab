@@ -37,6 +37,10 @@
 | R-031 | Dry-run response leaking full YAML | Low | Medium | P3-001R2 dry_run returns hashes/target/governance only; no full YAML in response; tested | Mitigated |
 | R-032 | Hardcoded active path causing test mutation | Medium | High | P3-001R2 uses monkeypatchable path helpers; tests use tmp_path; real active YAML verified unchanged | Mitigated |
 | R-033 | Audit record overexposing operational details | Low | Medium | P3-001R2 audit includes operation/timestamp/target/hashes/token_hash/caller/governance/backup; no raw token | Mitigated |
+| R-034 | Stale audit evidence mistaken for approved write | Medium | High | P3-001R3 removed old-schema audit entries; audit logs only committed for real approved persist operations | Mitigated |
+| R-035 | Old-schema audit logs mixed with new schema | Low | Medium | P3-001R3 removed all old-schema entries; new schema uses operation/pre_write_hash/post_write_hash/governance_check | Mitigated |
+| R-036 | Test-generated audit logs committed as governance evidence | Medium | High | P3-001R3 policy: only committed for explicitly approved real persist; tests use monkeypatched paths | Mitigated |
+| R-037 | Active YAML write traces left after rollback | Low | Medium | write_snapshot_with_audit creates backup before write; rollback_available flag in audit; backup under configurable dir | Active |
 
 ## Risk Assessment
 
