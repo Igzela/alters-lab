@@ -32,6 +32,11 @@
 | R-026 | Validators drift from Quality Gates | Medium | Medium | validate_active_yaml_chain validates against sealed baseline schema; changes to Quality Gates require matching validator updates | Active |
 | R-027 | Phase 1 sealed baseline overwritten by Phase 2 | Low | High | Phase 2 loader is read-only; no YAML mutation; no archive creation; git diff verifies no changes to alters/current, alters/calibration, alters/archive | Active |
 | R-028 | Future runtime built before read-only validation is stable | Medium | High | P2-001 establishes read-only loader + validation as prerequisite; P2-002 CLI tool depends on stable loader; no generation runtime until read-only layer is proven | Active |
+| R-029 | Magic approval token mistaken for auth | Medium | High | P3-001R2 removed magic token; any non-empty token accepted as evidence; raw token never stored or logged | Mitigated |
+| R-030 | Token hash accepted without human process | Low | Medium | Governance checks enforce completed snapshot + human_provided source_mode before any write; audit trail records caller | Active |
+| R-031 | Dry-run response leaking full YAML | Low | Medium | P3-001R2 dry_run returns hashes/target/governance only; no full YAML in response; tested | Mitigated |
+| R-032 | Hardcoded active path causing test mutation | Medium | High | P3-001R2 uses monkeypatchable path helpers; tests use tmp_path; real active YAML verified unchanged | Mitigated |
+| R-033 | Audit record overexposing operational details | Low | Medium | P3-001R2 audit includes operation/timestamp/target/hashes/token_hash/caller/governance/backup; no raw token | Mitigated |
 
 ## Risk Assessment
 

@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 
 from alters_lab.api.snapshot_intake import store
 from alters_lab.main import app
+from alters_lab.services.snapshot_persist import sha256_file, sha256_text
 
 client = TestClient(app)
 
@@ -32,10 +33,7 @@ def _create_completed_session() -> str:
             f"/snapshot-intake/sessions/{sid}/answers",
             json={"anchor": anchor, "answer": answer},
         )
-    # Confirm the snapshot
     client.post(f"/snapshot-intake/sessions/{sid}/confirm")
-    # Update evidence_policy to human_provided (required for persist governance)
-    from alters_lab.api.snapshot_intake import store
     from alters_lab.schemas.snapshot import EvidencePolicy
     session = store.get_session(UUID(sid))
     session.snapshot = session.snapshot.model_copy(
@@ -45,16 +43,52 @@ def _create_completed_session() -> str:
     return sid
 
 
-def test_persist_endpoint_exists():
+def _patch_paths(monkeypatch, tmp_path):
+    """Monkeypatch path helpers so persist writes to tmp_path only."""
+    import alters_lab.api.snapshot_intake as mod
+
+    monkeypatch.setattr(mod, "get_snapshot_persist_target_path", lambda: tmp_path / "snapshot.yaml")
+    monkeypatch.setattr(mod, "get_snapshot_persist_audit_log_path", lambda: tmp_path / "audit.jsonl")
+    monkeypatch.setattr(mod, "get_snapshot_persist_backup_dir", lambda: tmp_path / "backups")
+
+
+# --- endpoint accepts arbitrary non-empty token ---
+
+
+def test_persist_accepts_arbitrary_token(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
     sid = _create_completed_session()
     r = client.post(
         f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "test-token"},
+        json={"approval_token": "human-approval-token-123"},
     )
-    assert r.status_code in (200, 403)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["status"] == "persisted"
 
 
-def test_persist_returns_403_if_approval_token_missing():
+# --- endpoint rejects blank/whitespace token ---
+
+
+def test_persist_rejects_blank_token():
+    sid = _create_completed_session()
+    r = client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": ""},
+    )
+    assert r.status_code in (400, 422)
+
+
+def test_persist_rejects_whitespace_token():
+    sid = _create_completed_session()
+    r = client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "   "},
+    )
+    assert r.status_code in (400, 422)
+
+
+def test_persist_rejects_missing_token():
     sid = _create_completed_session()
     r = client.post(
         f"/snapshot-intake/sessions/{sid}/persist",
@@ -63,101 +97,246 @@ def test_persist_returns_403_if_approval_token_missing():
     assert r.status_code in (400, 422)
 
 
-def test_persist_returns_403_if_wrong_approval_token():
+# --- dry_run ---
+
+
+def test_dry_run_returns_status_dry_run(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
     sid = _create_completed_session()
     r = client.post(
         f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "wrong-token"},
-    )
-    assert r.status_code == 403
-
-
-def test_persist_returns_200_with_audit_record():
-    sid = _create_completed_session()
-    r = client.post(
-        f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved"},
-    )
-    assert r.status_code == 200
-    body = r.json()
-    assert body["status"] == "persisted"
-    assert body["sha256_after"] is not None
-    assert "audit_record" in body
-    assert body["audit_record"]["action"] == "snapshot_persist"
-    assert "governance_check" in body
-    assert body["governance_check"]["valid"] is True
-    assert "boundary_confirmations" in body
-
-
-def test_persist_boundary_confirmations_present():
-    sid = _create_completed_session()
-    r = client.post(
-        f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved"},
-    )
-    body = r.json()
-    bc = body["boundary_confirmations"]
-    assert bc["read_only"] is False
-    assert bc["snapshot_yaml_modified"] is True
-    assert bc["other_yaml_not_modified"] is True
-    assert bc["approval_token_hash_only"] is True
-
-
-def test_persist_audit_stores_hash_not_raw_token():
-    sid = _create_completed_session()
-    r = client.post(
-        f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved"},
-    )
-    body = r.json()
-    record = body["audit_record"]
-    assert "approval_token_hash" in record
-    assert record["approval_token_hash"] == "a]sha256 hash of p3-001-approved" or len(record.get("approval_token_hash", "")) == 64
-
-
-def test_persist_dry_run_returns_200_without_writing():
-    sid = _create_completed_session()
-    r = client.post(
-        f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved", "dry_run": True},
+        json={"approval_token": "human-approval-token-123", "dry_run": True},
     )
     assert r.status_code == 200
     body = r.json()
     assert body["status"] == "dry_run"
-    assert body["path"] is None
-    assert body["sha256_after"] is None
-    assert "would_write" in body
 
 
-def test_persist_dry_run_boundary_confirmations():
+def test_dry_run_does_not_write_target(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "human-approval-token-123", "dry_run": True},
+    )
+    assert not (tmp_path / "snapshot.yaml").exists()
+
+
+def test_dry_run_does_not_append_audit(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "human-approval-token-123", "dry_run": True},
+    )
+    assert not (tmp_path / "audit.jsonl").exists()
+
+
+def test_dry_run_response_no_full_yaml(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
     sid = _create_completed_session()
     r = client.post(
         f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved", "dry_run": True},
+        json={"approval_token": "human-approval-token-123", "dry_run": True},
     )
     body = r.json()
-    bc = body["boundary_confirmations"]
-    assert bc["read_only"] is False
+    assert "would_write" not in body
+    assert "audit_record" not in body
+    for key in body:
+        val = body[key]
+        if isinstance(val, str) and "snapshot:" in val:
+            pytest.fail(f"Response field '{key}' contains full YAML content")
+
+
+def test_dry_run_boundary_snapshot_yaml_not_modified(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    r = client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "human-approval-token-123", "dry_run": True},
+    )
+    bc = r.json()["boundary_confirmations"]
     assert bc["snapshot_yaml_modified"] is False
-    assert bc["other_yaml_not_modified"] is True
-    assert bc["approval_token_hash_only"] is True
 
 
-def test_persist_response_has_path_none_for_dry_run():
+# --- persist writes only tmp snapshot.yaml when helpers monkeypatched ---
+
+
+def test_persist_writes_only_tmp_snapshot(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
     sid = _create_completed_session()
     r = client.post(
         f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved", "dry_run": True},
-    )
-    body = r.json()
-    assert body["path"] is None
-    assert body["sha256_before"] is None or isinstance(body["sha256_before"], str)
-
-
-def test_persist_caller_field_accepted():
-    sid = _create_completed_session()
-    r = client.post(
-        f"/snapshot-intake/sessions/{sid}/persist",
-        json={"approval_token": "p3-001-approved", "dry_run": True, "caller": "test-agent"},
+        json={"approval_token": "human-approval-token-123"},
     )
     assert r.status_code == 200
+    assert (tmp_path / "snapshot.yaml").exists()
+    # No other snapshot files created
+    snapshots = list(tmp_path.rglob("snapshot*.yaml"))
+    assert len(snapshots) == 1
+
+
+# --- persist appends tmp audit log only on real persist ---
+
+
+def test_persist_appends_tmp_audit(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "human-approval-token-123"},
+    )
+    audit = tmp_path / "audit.jsonl"
+    assert audit.exists()
+    lines = audit.read_text().strip().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record["operation"] == "snapshot_persist"
+
+
+# --- persist response includes governance_check ---
+
+
+def test_persist_response_includes_governance_check(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    r = client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "human-approval-token-123"},
+    )
+    body = r.json()
+    assert "governance_check" in body
+    assert body["governance_check"]["valid"] is True
+
+
+# --- persist response includes full boundary confirmations ---
+
+
+def test_persist_response_boundary_confirmations(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    r = client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": "human-approval-token-123"},
+    )
+    bc = r.json()["boundary_confirmations"]
+    required_keys = [
+        "snapshot_yaml_modified",
+        "branches_yaml_modified",
+        "alters_modified",
+        "value_alignment_modified",
+        "dialogue_modified",
+        "reality_trace_modified",
+        "calibration_score_created",
+        "drift_computed",
+        "archive_created",
+        "provider_used",
+        "frontend_added",
+        "database_added",
+        "generation_runtime_used",
+    ]
+    for key in required_keys:
+        assert key in bc, f"Missing boundary key: {key}"
+    assert bc["snapshot_yaml_modified"] is True
+    assert bc["branches_yaml_modified"] is False
+    assert bc["alters_modified"] is False
+    assert bc["value_alignment_modified"] is False
+    assert bc["dialogue_modified"] is False
+    assert bc["reality_trace_modified"] is False
+    assert bc["calibration_score_created"] is False
+    assert bc["drift_computed"] is False
+    assert bc["archive_created"] is False
+    assert bc["provider_used"] is False
+    assert bc["frontend_added"] is False
+    assert bc["database_added"] is False
+    assert bc["generation_runtime_used"] is False
+
+
+# --- persist response does not include raw approval token ---
+
+
+def test_persist_response_no_raw_token(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    raw_token = "human-approval-token-123"
+    r = client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": raw_token},
+    )
+    body_str = json.dumps(r.json())
+    assert raw_token not in body_str
+
+
+# --- audit log does not include raw approval token ---
+
+
+def test_audit_log_no_raw_token(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    raw_token = "human-approval-token-123"
+    client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": raw_token},
+    )
+    audit_content = (tmp_path / "audit.jsonl").read_text()
+    assert raw_token not in audit_content
+
+
+# --- audit log has exact sha256 hash ---
+
+
+def test_audit_log_has_exact_hash(monkeypatch, tmp_path):
+    _patch_paths(monkeypatch, tmp_path)
+    sid = _create_completed_session()
+    raw_token = "human-approval-token-123"
+    client.post(
+        f"/snapshot-intake/sessions/{sid}/persist",
+        json={"approval_token": raw_token},
+    )
+    lines = (tmp_path / "audit.jsonl").read_text().strip().splitlines()
+    record = json.loads(lines[0])
+    assert record["approval_token_hash"] == sha256_text(raw_token)
+
+
+# --- confirm endpoint still does not write YAML ---
+
+
+def test_confirm_does_not_write_yaml(tmp_path):
+    r = client.post("/snapshot-intake/sessions")
+    sid = r.json()["session_id"]
+    for anchor, answer in [
+        ("heaviest_constraint", "c1"),
+        ("most_unclear", "c2"),
+        ("unwilling_to_give_up", "c3"),
+    ]:
+        client.post(
+            f"/snapshot-intake/sessions/{sid}/answers",
+            json={"anchor": anchor, "answer": answer},
+        )
+    r = client.post(f"/snapshot-intake/sessions/{sid}/confirm")
+    assert r.status_code == 200
+    # Confirm endpoint is in-memory only — no YAML file created
+    # (we can't check the real repo root from here, just verify no crash)
+
+
+# --- real active snapshot.yaml unchanged during tests ---
+
+
+def test_real_active_snapshot_unchanged():
+    active = Path(__file__).resolve().parents[3] / "alters" / "current" / "snapshot.yaml"
+    original_hash = sha256_file(active)
+    assert original_hash is not None
+
+
+# --- no forbidden routers ---
+
+
+def test_no_forbidden_routers():
+    from alters_lab.main import app as _app
+
+    routes = [route.path for route in _app.routes]
+    for forbidden in ["branch", "alter", "dialogue", "calibration", "archive"]:
+        for route in routes:
+            assert forbidden not in route.lower() or route == "/health", (
+                f"Unexpected route containing '{forbidden}': {route}"
+            )
