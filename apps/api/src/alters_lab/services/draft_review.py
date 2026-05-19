@@ -63,9 +63,13 @@ def validate_draft_package_for_review(draft_package: dict) -> dict:
     # Validate branch draft completeness and integrity
     expected_branches = {"branch_A", "branch_B", "branch_C", "branch_D"}
     if branch_drafts:
-        branch_ids = {b.get("id") for b in branch_drafts}
-        if branch_ids != expected_branches:
-            errors.append(f"branch drafts incomplete: expected {expected_branches}, found {branch_ids}")
+        if len(branch_drafts) != 4:
+            errors.append(f"branch drafts count != 4, got {len(branch_drafts)}")
+        branch_ids = [b.get("id") for b in branch_drafts]
+        if len(branch_ids) != len(set(branch_ids)):
+            errors.append("branch drafts contain duplicate IDs")
+        if set(branch_ids) != expected_branches:
+            errors.append(f"branch drafts incomplete: expected {expected_branches}, found {set(branch_ids)}")
         for bd in branch_drafts:
             if bd.get("draft_status") != "candidate":
                 errors.append(f"branch {bd.get('id')}: draft_status != 'candidate'")
@@ -77,9 +81,13 @@ def validate_draft_package_for_review(draft_package: dict) -> dict:
     # Validate alter draft completeness and integrity
     expected_alters = {"alter_A", "alter_B", "alter_C", "alter_D"}
     if alter_drafts:
-        alter_ids = {a.get("id") for a in alter_drafts}
-        if alter_ids != expected_alters:
-            errors.append(f"alter drafts incomplete: expected {expected_alters}, found {alter_ids}")
+        if len(alter_drafts) != 4:
+            errors.append(f"alter drafts count != 4, got {len(alter_drafts)}")
+        alter_ids = [a.get("id") for a in alter_drafts]
+        if len(alter_ids) != len(set(alter_ids)):
+            errors.append("alter drafts contain duplicate IDs")
+        if set(alter_ids) != expected_alters:
+            errors.append(f"alter drafts incomplete: expected {expected_alters}, found {set(alter_ids)}")
         for ad in alter_drafts:
             if ad.get("draft_status") != "candidate":
                 errors.append(f"alter {ad.get('id')}: draft_status != 'candidate'")
@@ -90,14 +98,20 @@ def validate_draft_package_for_review(draft_package: dict) -> dict:
                 errors.append(f"alter {ad.get('id')}: quality_status.human_confirmed != false")
             if qs.get("active") is not False:
                 errors.append(f"alter {ad.get('id')}: quality_status.active != false")
-            # Validate branch_ref matches alter id
             expected_branch = ad.get("id", "").replace("alter_", "branch_")
             if ad.get("branch_ref") != expected_branch:
                 errors.append(f"alter {ad.get('id')}: branch_ref != {expected_branch}")
-            # Validate voice.core_stance exists
             voice = ad.get("voice", {})
             if not voice.get("core_stance"):
                 errors.append(f"alter {ad.get('id')}: voice.core_stance is empty")
+            # Validate source_refs for persist compatibility
+            src = ad.get("source_refs", {})
+            if src.get("snapshot_ref") != "alters/current/snapshot.yaml":
+                errors.append(f"alter {ad.get('id')}: source_refs.snapshot_ref wrong")
+            if src.get("branches_ref") != "alters/current/branches.yaml":
+                errors.append(f"alter {ad.get('id')}: source_refs.branches_ref wrong")
+            if src.get("rubric_ref") != "alters/calibration/rubric.yaml":
+                errors.append(f"alter {ad.get('id')}: source_refs.rubric_ref wrong")
 
     return {"valid": len(errors) == 0, "errors": errors}
 
@@ -127,11 +141,13 @@ def build_branches_promotion_payload(
         raise ValueError(f"Exactly branch_A-D required, got {approved_branch_ids}")
 
     branch_drafts = draft_package.get("branch_drafts", [])
-    draft_ids = {b["id"] for b in branch_drafts}
-    if draft_ids != expected:
-        raise ValueError(f"Draft package missing branches: expected {expected}, found {draft_ids}")
+    draft_ids = [b["id"] for b in branch_drafts]
+    if len(draft_ids) != 4 or len(set(draft_ids)) != 4 or set(draft_ids) != expected:
+        raise ValueError(f"Draft package branches not exactly A-D unique: {draft_ids}")
 
-    approved = [b for b in branch_drafts if b["id"] in approved_branch_ids]
+    approved = [b for b in branch_drafts if b["id"] in set(approved_branch_ids)]
+    if len(approved) != 4:
+        raise ValueError(f"Expected 4 approved branches, got {len(approved)}")
     branches = []
     for b in approved:
         entry = {k: v for k, v in b.items() if k not in ("draft_status", "requires_human_review", "source_reasoning")}
@@ -157,30 +173,34 @@ def build_alters_promotion_payload(
         raise ValueError(f"Exactly alter_A-D required, got {approved_alter_ids}")
 
     alter_drafts = draft_package.get("alter_drafts", [])
-    draft_ids = {a["id"] for a in alter_drafts}
-    if draft_ids != expected:
-        raise ValueError(f"Draft package missing alters: expected {expected}, found {draft_ids}")
+    draft_ids = [a["id"] for a in alter_drafts]
+    if len(draft_ids) != 4 or len(set(draft_ids)) != 4 or set(draft_ids) != expected:
+        raise ValueError(f"Draft package alters not exactly A-D unique: {draft_ids}")
 
-    approved = [a for a in alter_drafts if a["id"] in approved_alter_ids]
+    approved = [a for a in alter_drafts if a["id"] in set(approved_alter_ids)]
+    if len(approved) != 4:
+        raise ValueError(f"Expected 4 approved alters, got {len(approved)}")
     alters = []
     for a in approved:
-        # Validate controlled persist compatibility
         expected_branch = a["id"].replace("alter_", "branch_")
         if a.get("branch_ref") != expected_branch:
             raise ValueError(f"alter {a['id']}: branch_ref != {expected_branch}")
         voice = a.get("voice", {})
         if not voice.get("core_stance"):
             raise ValueError(f"alter {a['id']}: voice.core_stance is empty")
+        src = a.get("source_refs", {})
+        if src.get("snapshot_ref") != "alters/current/snapshot.yaml":
+            raise ValueError(f"alter {a['id']}: source_refs.snapshot_ref wrong")
+        if src.get("branches_ref") != "alters/current/branches.yaml":
+            raise ValueError(f"alter {a['id']}: source_refs.branches_ref wrong")
+        if src.get("rubric_ref") != "alters/calibration/rubric.yaml":
+            raise ValueError(f"alter {a['id']}: source_refs.rubric_ref wrong")
 
         entry = {
             "id": a["id"],
             "branch_ref": a["branch_ref"],
             "label": a["label"],
-            "source_refs": a.get("source_refs", {
-                "snapshot_ref": "alters/current/snapshot.yaml",
-                "branches_ref": "alters/current/branches.yaml",
-                "rubric_ref": "alters/calibration/rubric.yaml",
-            }),
+            "source_refs": a["source_refs"],
             "quality_status": {
                 "human_confirmed": True,
                 "active": True,

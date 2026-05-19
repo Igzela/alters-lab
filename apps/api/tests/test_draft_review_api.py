@@ -31,7 +31,7 @@ def _valid_draft_package() -> dict:
             {"id": f"alter_{c}", "branch_ref": f"branch_{c}", "label": f"Alter {c}",
              "draft_status": "candidate", "requires_human_review": True,
              "quality_status": {"human_confirmed": False, "active": False},
-             "source_refs": {}, "voice": {"core_stance": "focused"}}
+             "source_refs": {"snapshot_ref": "alters/current/snapshot.yaml", "branches_ref": "alters/current/branches.yaml", "rubric_ref": "alters/calibration/rubric.yaml"}, "voice": {"core_stance": "focused"}}
             for c in "ABCD"
         ],
     }
