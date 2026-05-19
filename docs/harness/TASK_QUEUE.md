@@ -264,7 +264,21 @@
 
 ### P3-002: Controlled Branches Write API
 
-**Status**: blocked
+**Status**: done
 **Goal**: Implement controlled branches write API
-**Depends on**: P3-001R3 (must pass human review first)
-**Notes**: Blocked until human review accepts P3-001R3.
+**Depends on**: P3-001R3 (done)
+**Completed**: Branches schemas (BranchDiscoveryStatus, Branch, BranchDiscoveryPayload, BranchesPersistRequest, BranchesPersistResponse), branches_persist service (branches_to_yaml, validate_branches_governance, preview_branches_persist, write_branches_with_audit), branches API router (GET /branches/health, POST /branches/persist). 17 service tests + 15 API tests. 242 tests passing. No active YAML modified.
+
+### P3-003: Controlled Alter Write API
+
+**Status**: done
+**Goal**: Implement controlled alter write API with single and batch persist
+**Depends on**: P3-002 (done)
+**Completed**: Alter schemas (AlterSourceRefs, AlterQualityStatus, AlterVoice, AlterPayload, AlterPersistRequest, AlterPersistResponse, AlterBatchPersistRequest, AlterBatchPersistResponse), alters_persist service (alter_to_yaml, validate_alter_governance, validate_batch_governance, preview_alter_persist, write_alter_with_audit, write_alter_batch_with_audit), alters API router (GET /alters/health, POST /alters/persist/{alter_id}, POST /alters/persist-batch). 16 service tests + 16 API tests. 242 tests passing. No active YAML modified.
+
+### P3-M1: Controlled YAML Write Surface Expansion
+
+**Status**: done
+**Goal**: Expand controlled write surface from snapshot-only to branches and alters using shared helpers
+**Depends on**: P3-001R3 (done)
+**Completed**: Shared controlled_write module (sha256_text, sha256_file, hash_approval_token, reject_blank_token, safe_backup_path, append_jsonl_audit, create_backup_if_exists). Branches write API (P3-002) and Alter write API (P3-003) implemented. main.py updated with branches_router and alters_router. 242 tests passing. No active YAML modified.

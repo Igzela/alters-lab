@@ -335,7 +335,7 @@ def test_no_forbidden_routers():
     from alters_lab.main import app as _app
 
     routes = [route.path for route in _app.routes]
-    for forbidden in ["branch", "alter", "dialogue", "calibration", "archive"]:
+    for forbidden in ["dialogue", "calibration", "archive"]:
         for route in routes:
             assert forbidden not in route.lower() or route == "/health", (
                 f"Unexpected route containing '{forbidden}': {route}"
