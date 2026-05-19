@@ -36,13 +36,15 @@ todo → ready → running → review → done/failed
  P1-008 | Controlled Dialogue YAML Write | done |
  P1-009 | Reality Trace / Weekly Evidence Controlled Write | done |
  P1-010 | State Reconciliation + Active YAML Schema Normalization | done |
- P1-011 | Governance Truth Repair + Day 30 Demo Definition | done |
+| P1-011 | Governance Truth Repair + Day 30 Demo Definition | done |
+| P1-012 | Day 30 Evidence Harness + Schema Alignment | done |
+| P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **blocked** |
 
 ## Quality Gates
 
 **day_14 gate**: "FastAPI backend can run Snapshot Intake contract and tests." — **COMPLETED** (P1-001 through P1-003 passed)
 
- **day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and reality trace." — **PENDING** (P1-004 through P1-010 complete; integration pending in P1-011)
+ **day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and reality trace." — **PASSED** (P1-012 evidence harness confirms 9-step validation; Day 30 evidence review pending in P1-013)
 
 ## Notes
 
@@ -56,5 +58,6 @@ todo → ready → running → review → done/failed
 - P1-003 complete. Snapshot YAML persistence and export gate implemented. Day 14 gate passed.
  P1-004 through P1-009 complete. Controlled Snapshot YAML Write, Controlled Branches YAML Write, Controlled Alter YAML Write, Controlled Value Alignment YAML Write, Controlled Dialogue YAML Write, and Reality Trace / Weekly Evidence Controlled Write (not backend runtime implementations). See DECISION_RECORD.md.
  P1-010 complete. State Reconciliation + Active YAML Schema Normalization adopted. See DECISION_RECORD.md for rationale.
- P1-011 complete. Governance Truth Repair + Day 30 Demo Definition — all governance docs aligned with current phase state.
-- Day 14 gate completed. Day 30 gate pending — requires P1-011 integration to pass.
+- P1-011 complete. Governance Truth Repair + Day 30 Demo Definition — all governance docs aligned with current phase state.
+- P1-012 complete. Day 30 Evidence Harness + Schema Alignment — 9-step evidence schema validated, harness regenerated.
+- Day 14 gate completed. Day 30 gate passed (P1-012). Phase 1 closeout pending in P1-013.
