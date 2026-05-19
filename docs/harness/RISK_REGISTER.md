@@ -73,6 +73,11 @@
 | R-067 | Dialogue output mistaken for persistent user truth | Low | Medium | P4-000: dialogue is read-only by default; dialogue output must not write active YAML; saved session logs are evidence only | Active |
 | R-068 | Drift score triggering automatic regeneration | Low | High | P4-000: drift is evidence only; no automatic regeneration; checkpoint regeneration requires drift > 0.6 threshold AND explicit trigger | Active |
 | R-069 | Rubric suggestion auto-written without confirmation | Low | High | P4-000: rubric_delta_suggestion is suggestion only; rubric cannot be auto-written; requires explicit human action | Active |
+| R-070 | Dialogue output mistaken for active truth | Low | Medium | P4-M1: dialogue is read-only; prompt packets include persistence_policy=read_only_no_active_yaml_write; no active YAML write capability | Mitigated |
+| R-071 | Provider accidentally called from dialogue runtime | Low | High | P4-M1: provider_ready=false enforced; no provider imports in alter_dialogue service/API; grep check confirms no provider patterns | Mitigated |
+| R-072 | Alter persona drift from active YAML | Low | Medium | P4-M1: validate_active_alter_for_dialogue checks voice.core_stance, branch_ref, source_refs, quality_status; rejects invalid alters | Active |
+| R-073 | Prompt packet leaking full unrelated active YAML | Low | Medium | P4-M1: build_alter_dialogue_context extracts only voice fields, source_refs, quality_status; no full YAML content exposed | Mitigated |
+| R-074 | Frontend later triggering writes through dialogue endpoint | Low | High | P4-M1: boundary_confirmations read_only=true, controlled_persist_called=false; endpoint has no write capability | Mitigated |
 
 ## Risk Assessment
 

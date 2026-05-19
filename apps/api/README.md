@@ -47,6 +47,13 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/promotion-live-execution/health` | Promotion live execution health |
 | POST | `/promotion-live-execution/{draft_id}/run` | Run live execution (dry-run or live with path_overrides) |
 | GET | `/promotion-live-execution/list` | List live execution reports |
+| GET | `/phase3-closeout/health` | Phase 3 closeout health |
+| GET | `/phase3-closeout/report` | Phase 3 closeout report (read-only) |
+| GET | `/phase3-closeout/evidence` | Phase 3 closeout evidence (read-only) |
+| GET | `/alter-dialogue/health` | Alter dialogue runtime health |
+| GET | `/alter-dialogue/alters` | List active alter metadata (no full YAML) |
+| GET | `/alter-dialogue/{alter_id}/context` | Get dialogue context for an alter |
+| POST | `/alter-dialogue/{alter_id}/prompt` | Build prompt packet from alter + user message |
 
 ## Services
 
@@ -63,10 +70,21 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **promotion_orchestration** — Promotion orchestration plan-only boundary
 - **promotion_execution_gate** — Promotion execution gate (dry-run, prerequisites, execution packet)
 - **promotion_live_execution** — Controlled live execution runtime (dry-run/live, path_overrides, controlled persist)
+- **phase3_closeout** — Phase 3 read-only closeout verification gate
+- **alter_dialogue** — Read-only alter dialogue context builder (P4-M1, no provider)
 
 ## Export
 
 Export functions (`snapshot_to_canonical_dict`, `snapshot_to_yaml`, `write_snapshot_yaml`) require a completed snapshot. The API confirm endpoint remains in-memory only — it does not write files.
+
+## Alter Dialogue (P4-M1)
+
+The Alter Dialogue Runtime provides read-only dialogue context packaging. It loads an active alter YAML, validates its contract, and returns a prompt packet for downstream use.
+
+- **No LLM provider is called** — `provider_ready` is always `false`.
+- **No assistant replies are generated** — the endpoint returns context and prompt packets only.
+- **No active YAML is written** — dialogue is read-only and non-persistent.
+- **No dialogue logs are persisted** — session state is not saved to files.
 
 ## Run
 
