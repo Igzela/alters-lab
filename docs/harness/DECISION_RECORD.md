@@ -208,3 +208,12 @@
 **Decision**: Approval tokens are evidence signals. Any non-empty, non-whitespace token is accepted as approval evidence. The token is hashed (SHA-256) before storage. The raw token is never stored, logged, or exposed in API responses. Governance relies on explicit human confirmation plus audit trail, not on token matching.
 **Consequences**: No hardcoded secret to leak. Audit trail records approval evidence (hash) without exposing the token. The system is simpler and more honest about what approval tokens represent.
 **Alternatives**: Keep fixed magic token (rejected — conflates auth with governance, creates false sense of security). Require token to match a stored value (rejected — introduces secret management complexity inappropriate for a personal tool).
+
+### Decision P3-001R3-01: Runtime audit logs committed only for approved real persist operations
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-001R2 introduced write_snapshot_with_audit which appends JSONL audit records. Earlier test runs accidentally wrote old-schema audit entries to docs/harness/phase3_write_audit.jsonl. These stale entries used the old schema (action/sha256_before/sha256_after) and targeted alters/current/snapshot.yaml, falsely implying approved production writes.
+**Decision**: Runtime write audit logs are only committed when produced by an explicitly approved real persist operation. Test-generated or accidental audit logs must not be committed. The audit log file is not committed to the repository until a real human-approved persist occurs. Tests use monkeypatched paths to avoid writing to the committed audit log location.
+**Consequences**: Audit evidence in the repository is trustworthy. Stale or test-generated logs cannot be mistaken for governance evidence. The audit log file remains gitignored or untracked until a real persist event occurs.
+**Alternatives**: Commit all audit logs including test runs (rejected — pollutes governance evidence with non-approved entries). Delete audit log on every test run (rejected — test code should not modify production files).

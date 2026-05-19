@@ -253,10 +253,18 @@
 **Goal**: Final contract repair: remove magic token, add write_snapshot_with_audit, fix path helpers, strengthen boundary confirmations, full test coverage
 **Depends on**: P3-001R (done)
 **Completed**: Magic approval token removed. Any non-empty token accepted as approval evidence. write_snapshot_with_audit replaces persist_snapshot_to_disk. Path helpers monkeypatchable. Boundary confirmations enumerate all forbidden mutation surfaces. 164 tests passing.
+**Review note**: P3-001R2 code passed review, but stale old-schema audit evidence in phase3_write_audit.jsonl was flagged. The committed audit log contained 12 entries from accidental test writes using the old schema (action/sha256_before/sha256_after), targeting alters/current/snapshot.yaml, which falsely implied approved production writes.
+
+### P3-001R3: Audit Evidence Cleanup
+
+**Status**: done
+**Goal**: Remove stale/unapproved old-schema audit evidence and establish audit evidence policy
+**Depends on**: P3-001R2 (done)
+**Completed**: Removed stale phase3_write_audit.jsonl (12 old-schema entries). Decision added: audit logs only committed for approved real persist operations. Risks R-034 through R-037 added. No code changes. No active YAML changes. 164 tests passing.
 
 ### P3-002: Controlled Branches Write API
 
 **Status**: blocked
 **Goal**: Implement controlled branches write API
-**Depends on**: P3-001R2 (must pass human review first)
-**Notes**: Blocked until human review accepts P3-001R2.
+**Depends on**: P3-001R3 (must pass human review first)
+**Notes**: Blocked until human review accepts P3-001R3.
