@@ -66,6 +66,13 @@
 | R-060 | Missing prerequisites before live execution | Low | High | P3-M5 build_prerequisite_checks produces mandatory checks; gate cannot pass without all blocking prerequisites | Mitigated |
 | R-061 | Path traversal via draft_id in execution gate | Low | High | validate_draft_id rejects /, \\, .., empty string | Mitigated |
 | R-062 | Raw approval token stored in execution gate report | Low | Medium | save_gate_report rejects blank tokens; yaml.dump of model_dump excludes raw token; hash stored only | Mitigated |
+| R-063 | Stale closeout evidence causing false Phase 3 seal | Medium | High | P3-M8R2: closeout evidence now uses git ls-files to distinguish tracked vs untracked audit files; PASS_WITH_NOTES for ignored runtime artifacts | Mitigated |
+| R-064 | Raw audit file misclassified due to filesystem-only check | Medium | High | P3-M8R2: replaced filesystem glob with git ls-files tracking check; FAIL only for tracked files, WARN for local untracked | Mitigated |
+| R-065 | Phase 4 scope creep into broad frontend/product | Medium | High | P4-000: scope explicitly limits frontend to dialogue, reality score form, calibration history; broad product UI excluded | Active |
+| R-066 | LLM output promoted without pending_review | Medium | High | P4-000: promotion model requires schema validation → quality gate → pending_review → explicit human confirmation | Active |
+| R-067 | Dialogue output mistaken for persistent user truth | Low | Medium | P4-000: dialogue is read-only by default; dialogue output must not write active YAML; saved session logs are evidence only | Active |
+| R-068 | Drift score triggering automatic regeneration | Low | High | P4-000: drift is evidence only; no automatic regeneration; checkpoint regeneration requires drift > 0.6 threshold AND explicit trigger | Active |
+| R-069 | Rubric suggestion auto-written without confirmation | Low | High | P4-000: rubric_delta_suggestion is suggestion only; rubric cannot be auto-written; requires explicit human action | Active |
 
 ## Risk Assessment
 

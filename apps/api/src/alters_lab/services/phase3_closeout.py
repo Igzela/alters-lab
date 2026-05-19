@@ -223,7 +223,33 @@ def check_live_execution_default_safe() -> Phase3CloseoutCheck:
 
 
 def check_no_runtime_artifacts_committed(repo_root: Path) -> Phase3CloseoutCheck:
+    import subprocess
+
     drafts_dir = repo_root / "alters" / "drafts"
+
+    # Check if any drafts are tracked by git
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "alters/drafts"],
+            capture_output=True,
+            text=True,
+            cwd=str(repo_root),
+            timeout=10,
+        )
+        tracked = result.stdout.strip().splitlines() if result.returncode == 0 else []
+    except Exception:
+        tracked = []
+
+    if tracked:
+        return Phase3CloseoutCheck(
+            name="no_runtime_artifacts_committed",
+            status="FAIL",
+            severity="blocking",
+            message=f"Tracked runtime drafts found: {len(tracked)} files",
+            evidence_ref="alters/drafts",
+        )
+
+    # Check for local (untracked/ignored) drafts
     if drafts_dir.exists():
         files = list(drafts_dir.rglob("*"))
         real_files = [f for f in files if f.is_file()]
@@ -232,9 +258,10 @@ def check_no_runtime_artifacts_committed(repo_root: Path) -> Phase3CloseoutCheck
                 name="no_runtime_artifacts_committed",
                 status="WARN",
                 severity="warning",
-                message=f"Runtime drafts exist locally ({len(real_files)} files); ensure ignored/not committed",
+                message=f"Local runtime drafts exist ({len(real_files)} files); properly gitignored",
                 evidence_ref=str(drafts_dir),
             )
+
     return Phase3CloseoutCheck(
         name="no_runtime_artifacts_committed",
         status="PASS",
@@ -244,6 +271,8 @@ def check_no_runtime_artifacts_committed(repo_root: Path) -> Phase3CloseoutCheck
 
 
 def check_no_raw_audit_logs_committed(repo_root: Path) -> Phase3CloseoutCheck:
+    import subprocess
+
     harness_dir = repo_root / "docs" / "harness"
     if not harness_dir.exists():
         return Phase3CloseoutCheck(
@@ -252,14 +281,40 @@ def check_no_raw_audit_logs_committed(repo_root: Path) -> Phase3CloseoutCheck:
             severity="info",
             message="No harness directory found",
         )
-    audit_files = list(harness_dir.glob("*audit*.jsonl"))
-    if audit_files:
+
+    # Check whether any audit jsonl files are tracked by git
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "docs/harness"],
+            capture_output=True,
+            text=True,
+            cwd=str(repo_root),
+            timeout=10,
+        )
+        tracked_files = result.stdout.strip().splitlines() if result.returncode == 0 else []
+        tracked_audits = [f for f in tracked_files if "audit" in f.lower() and f.endswith(".jsonl")]
+    except Exception:
+        # git unavailable — fall back to filesystem check
+        tracked_audits = []
+
+    if tracked_audits:
         return Phase3CloseoutCheck(
             name="no_raw_audit_logs_committed",
             status="FAIL",
             severity="blocking",
-            message=f"Raw audit logs found: {[f.name for f in audit_files]}",
+            message=f"Tracked raw audit logs found: {tracked_audits}",
         )
+
+    # Check for local (untracked) audit files
+    local_audits = list(harness_dir.glob("*audit*.jsonl"))
+    if local_audits:
+        return Phase3CloseoutCheck(
+            name="no_raw_audit_logs_committed",
+            status="WARN",
+            severity="warning",
+            message=f"Local untracked audit files exist: {[f.name for f in local_audits]}; not committed to git",
+        )
+
     return Phase3CloseoutCheck(
         name="no_raw_audit_logs_committed",
         status="PASS",

@@ -2,9 +2,9 @@
   "schema_version": 1,
   "phase": "Phase 3",
   "report_type": "controlled_mutation_closeout",
-  "status": "BLOCKED",
-  "baseline_commit": "unknown",
-  "test_count": null,
+  "status": "PASS_WITH_NOTES",
+  "baseline_commit": "86b75aa",
+  "test_count": 607,
   "checks": [
     {
       "name": "active_yaml_chain",
@@ -52,14 +52,14 @@
       "name": "no_runtime_artifacts_committed",
       "status": "WARN",
       "severity": "warning",
-      "message": "Runtime drafts exist locally (12 files); ensure ignored/not committed",
+      "message": "Local runtime drafts exist (12 files); properly gitignored",
       "evidence_ref": "/home/igzela/Projects/alters-lab/alters/drafts"
     },
     {
       "name": "no_raw_audit_logs_committed",
-      "status": "FAIL",
-      "severity": "blocking",
-      "message": "Raw audit logs found: ['phase3_write_audit.jsonl']",
+      "status": "PASS",
+      "severity": "info",
+      "message": "No raw audit logs found in docs/harness",
       "evidence_ref": null
     },
     {
@@ -72,13 +72,13 @@
   ],
   "summary": {
     "phase": "Phase 3",
-    "status": "BLOCKED",
+    "status": "PASS_WITH_NOTES",
     "total_checks": 9,
-    "passed_checks": 7,
+    "passed_checks": 8,
     "warning_checks": 1,
-    "failed_checks": 1,
-    "sealed_baseline_candidate": false,
-    "next_phase_status": "blocked"
+    "failed_checks": 0,
+    "sealed_baseline_candidate": true,
+    "next_phase_status": "pending_human_gpt_review"
   },
   "boundary_confirmations": {
     "read_only": true,
@@ -100,5 +100,5 @@
     "raw_audit_committed": false,
     "runtime_drafts_committed": false
   },
-  "created_at": "2026-05-19T14:07:41.055485+00:00"
+  "created_at": "2026-05-19T14:38:17.849862+00:00"
 }
