@@ -1,0 +1,37 @@
+dialogue_template:
+  template_status: "inactive_template_only"
+  session:
+    id: ""
+    alter_ref: ""
+    branch_ref: ""
+    snapshot_ref: "alters/current/snapshot.yaml"
+    started_at: null
+    status: "not_started"
+  required_context:
+    full_alter_yaml_required: true
+    allow_summary_only: false
+    require_branch_ref: true
+    require_snapshot_ref: true
+  runtime_rules:
+    answer_as_future_self: true
+    remain_branch_specific: true
+    reject_generic_coach_voice: true
+    reject_probability_claims: true
+    reject_governance_authority: true
+    reject_value_alignment_scoring: true
+    reject_calibration_updates: true
+  messages: []
+  message_template:
+    - role: "user"
+      content: ""
+    - role: "alter"
+      content: ""
+      grounding:
+        alter_sections_used: []
+        branch_fields_used: []
+        snapshot_fields_used: []
+  completion:
+    summary: ""
+    unresolved_questions: []
+    recommended_next_action: ""
+    evidence_refs: []

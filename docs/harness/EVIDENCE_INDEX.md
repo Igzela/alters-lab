@@ -20,3 +20,7 @@
 | ALT-004 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Alter Generation quality gate with pass/fail criteria |
 | ALT-004 | Branch discovery fix | docs/branch-discovery-workflow.md | Fixed intake_status "confirmed" → "completed" to match canonical snapshot |
 | ALT-004 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-003 marked done, ALT-004 marked done, ALT-005 marked blocked |
+| ALT-005 | Canonical dialogue template | alters/current/dialogue/_template.yaml | Inactive template with dialogue structure: session, required_context, runtime_rules, messages, message_template, completion |
+| ALT-005 | Dialogue engine workflow | docs/dialogue-engine-workflow.md | Eight-section workflow: purpose, input requirements, full injection rule, dialogue behavior, lifecycle, valid/invalid criteria, human confirmation, hard prohibitions |
+| ALT-005 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Dialogue Engine quality gate with pass/fail criteria |
+| ALT-005 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-005 marked running, ALT-006 marked blocked |
