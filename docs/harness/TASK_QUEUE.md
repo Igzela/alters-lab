@@ -4,49 +4,69 @@
 
 ### COC-001: Repo skeleton + governance docs
 
-**Status**: running
+**Status**: done
 **Goal**: Initialize repository structure and governance documentation
-**Allowed files**: README.md, AGENTS.md, docs/**
-**Forbidden**: apps/**, packages/**, .env, pyproject.toml, package.json, any business code
+**Notes**: Complete. Repo skeleton created.
 
 ### COC-002: Backend schema definitions (Pydantic models)
 
-**Status**: todo
+**Status**: paused
 **Goal**: Define Pydantic v2 models for all domain entities
 **Depends on**: COC-001
+**Notes**: PAUSED. Content calibration direction has been replaced by Alters System. This task is retired.
 
-### COC-003: SQLite data layer
+### COC-003 through COC-008
 
-**Status**: todo
-**Goal**: Implement SQLite database layer with migrations
-**Depends on**: COC-002
+**Status**: retired
+**Notes**: All content calibration tasks after COC-002 are retired. See ALT-* tasks for new direction.
 
-### COC-004: Rubric & scoring service
+---
 
-**Status**: todo
-**Goal**: Build rubric management and content scoring service
-**Depends on**: COC-003
+### ALT-001: Reset project direction to Alters System + Phase 0 workspace
 
-### COC-005: Blind prediction service
+**Status**: running
+**Goal**: Replace content-calibration direction with Alters System. Create file-based Phase 0 workspace.
+**Allowed files**: README.md, AGENTS.md, docs/**, alters/**
+**Forbidden**: apps/**, packages/**, .env, pyproject.toml, package.json, any business code, any frontend/backend code
 
-**Status**: todo
-**Goal**: Implement blind prediction creation and storage
-**Depends on**: COC-004
-
-### COC-006: Publish + Retro service
+### ALT-002: Snapshot intake workflow
 
 **Status**: todo
-**Goal**: Build publish tracking and retrospective workflow
-**Depends on**: COC-005
+**Goal**: Define and implement snapshot capture process: constraints, uncertainties, anchors
+**Depends on**: ALT-001
 
-### COC-007: Calibration signal service
-
-**Status**: todo
-**Goal**: Implement calibration signal generation with human review
-**Depends on**: COC-006
-
-### COC-008: Minimal frontend
+### ALT-003: Branch discovery engine
 
 **Status**: todo
-**Goal**: Build minimal Next.js frontend for core workflow
-**Depends on**: COC-007
+**Goal**: Define rules for identifying structural, mutually incompatible branches from a snapshot
+**Depends on**: ALT-002
+
+### ALT-004: Alter generation
+
+**Status**: todo
+**Goal**: Generate coherent alter versions per branch with values, narrative, and tradeoffs
+**Depends on**: ALT-003
+
+### ALT-005: Dialogue engine
+
+**Status**: todo
+**Goal**: Facilitate dialogue between user and each Alter, injecting full alter.yaml
+**Depends on**: ALT-004
+
+### ALT-006: Value alignment evaluator
+
+**Status**: todo
+**Goal**: Evaluate branch fit against user values and rubric dimensions
+**Depends on**: ALT-005
+
+### ALT-007: Calibration system + rubric
+
+**Status**: todo
+**Goal**: Score branches, track scores, evolve rubric (human review only)
+**Depends on**: ALT-006
+
+### ALT-008: Archive system
+
+**Status**: todo
+**Goal**: Archive completed cycles with snapshot, branches, scores, and traces
+**Depends on**: ALT-007

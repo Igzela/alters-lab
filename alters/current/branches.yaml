@@ -1,0 +1,32 @@
+# Alters System — Branch Definitions
+# Phase 0: This is a template. Branches are generated from snapshot anchors.
+
+# Quality rules for valid branches
+quality_rules:
+  structural_difference: |
+    Branches must differ in KIND, not degree.
+    "More money" is not a branch. "Corporate vs independent" is a branch.
+    Each branch must be mutually incompatible with all others.
+  time_horizon: "1.5-2 years"
+  min_branches: 2
+  max_branches: 5
+
+branches: []
+# Example structure (uncomment when ready):
+# - id: branch-001
+#   name: "Stay and Build"
+#   description: "Remain in current role, push for promotion, build internal influence"
+#   structural_difference: "Committed to organisational path — security and status over autonomy"
+#   tradeoffs:
+#     - gain: "Stability, institutional knowledge, team relationships"
+#     - lose: "Autonomy, speed, direct ownership of outcomes"
+#   time_horizon: "1.5-2 years"
+#
+# - id: branch-002
+#   name: "Leave and Start"
+#   description: "Quit role, start independent practice or company"
+#   structural_difference: "Committed to independent path — autonomy and risk over security"
+#   tradeoffs:
+#     - gain: "Autonomy, speed, direct ownership"
+#     - lose: "Stability, institutional support, predictable income"
+#   time_horizon: "1.5-2 years"

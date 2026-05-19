@@ -4,6 +4,10 @@
 
 Claude Code operates as an **execution adapter** under the Token-Efficient Agent Harness. It is NOT the governance authority.
 
+## Source of Truth
+
+`alters-system-design.md` is the single source of truth for the Alters System. All design decisions, scope boundaries, and data models must derive from it.
+
 ## Responsibilities
 
 - Execute assigned execution slices
@@ -21,6 +25,7 @@ Claude Code MUST NOT:
 - Modify the task queue
 - Create PRs or merge changes
 - Connect real LLM providers
+- Act as governance authority
 
 ## Human Authority
 

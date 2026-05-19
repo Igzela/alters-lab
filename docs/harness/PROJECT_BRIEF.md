@@ -1,28 +1,41 @@
 # Project Brief
 
+## Project Name
+
+Alters System Lab
+
 ## Goals
 
-Build a calibration system that helps content creators improve content quality by:
+Build a personal future-branch simulation and calibration system that helps users:
 
-- Scoring content against a structured rubric
-- Making blind predictions about content performance
-- Comparing predictions to actual outcomes
-- Evolving the rubric based on retrospective evidence
+- Capture their current life state with clear anchor points
+- Discover structural branching decisions in their life
+- Generate coherent alter versions for each potential path
+- Engage in dialogue with those alters to evaluate tradeoffs
+- Calibrate decision-making against a personal rubric
+- Track how reality diverges from predicted branches over time
 
 ## Non-Goals
 
-- Real LLM integration (v0.1 uses mock data)
-- Multi-tenant SaaS
-- Content creation or editing
-- Social media posting automation
+- Multi-user or multi-tenant support
+- Real LLM integration (Phase 0 is file-based)
+- Content creation, editing, or publishing
+- Social media or external API integration
+- Database persistence (Phase 0)
+- API layer (Phase 0)
+
+## Phase 0 Scope
+
+File-based workflow using YAML and JSON files. No application code. This is the exploration and design phase.
 
 ## Boundaries
 
-- Single-user system (v0.1)
-- SQLite database (no external DB)
+- Single user
+- Local file storage only (YAML + JSON)
 - No real LLM provider connections
-- Local development only
+- No application code in Phase 0
+- alters-system-design.md is the source of truth
 
 ## Target Users
 
-Content creators who want to systematically improve content quality through data-driven calibration of their editorial judgment.
+Individuals who want to systematically explore and calibrate their life decisions through structured future-branch simulation.

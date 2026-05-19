@@ -1,0 +1,29 @@
+# Alters System — Calibration Rubric
+# Phase 0: Template with 4 evaluation dimensions.
+# auto_modify is ALWAYS false — rubric cannot self-modify.
+
+id: rubric-001
+version: 1
+auto_modify: false
+created_at: "2026-05-19T00:00:00Z"
+
+dimensions:
+  - name: execution_discipline
+    description: "How well does this branch align with your ability to follow through and execute consistently?"
+    weight: 0.25
+    scale: "1-5 (1=poor fit, 5=excellent fit)"
+
+  - name: exploration_freedom
+    description: "How much room does this branch leave for exploration, learning, and trying new things?"
+    weight: 0.25
+    scale: "1-5 (1=rigid, 5=highly open)"
+
+  - name: life_state_match
+    description: "How well does this branch match your current life constraints and commitments?"
+    weight: 0.25
+    scale: "1-5 (1=poor match, 5=excellent match)"
+
+  - name: energy_level
+    description: "How sustainable is this branch given your current energy and capacity?"
+    weight: 0.25
+    scale: "1-5 (1=draining, 5=energising)"

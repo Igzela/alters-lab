@@ -2,30 +2,35 @@
 
 ## Non-Negotiable Gates
 
-### Blind Prediction Immutability
+### Branch Structural Incompatibility
 
-Once a blind prediction is created, it CANNOT be modified. The prediction captures the creator's judgment at a specific moment in time.
+Branches must be structurally and mutually incompatible. They differ in kind, not degree. A branch that is "the same thing but more/less" is not a valid branch — it is a gradation. Quality gate: each branch must have a clear structural_difference that makes it incompatible with all other branches in the set.
 
-### Rubric Bump Evidence
+### Alter Branch Reference
 
-A rubric version bump requires evidence from at least 2 retrospectives showing consistent pattern. Single retros cannot drive rubric changes.
+Every Alter must reference a valid branch_ref. An Alter without a branch is invalid. Quality gate: alter.yaml must contain a branch_ref field pointing to an existing branch ID.
 
-### Retro Append-Only
+### Time Horizon Fixed
 
-Retrospectives are append-only. Once recorded, they cannot be modified or deleted. This ensures an immutable audit trail of performance data.
+Branch time horizon is fixed at 1.5-2 years. Branches that project beyond or fall short of this window are invalid. Quality gate: all branches must have a consistent time horizon within the 1.5-2 year range.
 
-### Calibration Signal Human Review
+### Dialogue Full Inject
 
-All calibration signals require human review before being acted upon. Automated signals are suggestions, not directives.
+Dialogue sessions must inject the full alter.yaml content. Summarised or truncated alter content invalidates the dialogue. Quality gate: dialogue input must contain complete alter data.
 
-### No Real LLM Provider (v0.1)
+### Rubric Cannot Auto-Modify
 
-v0.1 MUST NOT connect to any real LLM provider. All scoring and prediction uses deterministic algorithms or mock data.
+The rubric cannot modify itself. All rubric changes require explicit human review and approval. Quality gate: auto_modify field on rubric is always false; any rubric version bump requires documented human decision.
+
+### Unknown Error Requires Human Review
+
+Any unknown_error during system operation requires human review. Automated retry or silent failure is not permitted. Quality gate: unknown_error events are logged and escalated to human.
 
 ## Quality Checklist
 
-- [ ] All predictions are immutable after creation
-- [ ] Rubric changes are backed by multi-retro evidence
-- [ ] Retros are append-only
-- [ ] Calibration signals require human review
-- [ ] No external LLM API calls
+- [ ] All branches are structurally and mutually incompatible
+- [ ] All Alters reference a valid branch_ref
+- [ ] All branches have 1.5-2 year time horizon
+- [ ] Dialogue injects full alter.yaml
+- [ ] Rubric auto_modify is false
+- [ ] Unknown errors escalate to human review

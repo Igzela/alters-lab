@@ -1,0 +1,11 @@
+# Alters System — Reality Trace
+# Phase 0: This is a template. Traces record how reality diverges from branches.
+
+traces: []
+# Example structure (uncomment when ready):
+# - id: trace-001
+#   branch_id: branch-001
+#   observed_at: "2026-08-19T00:00:00Z"
+#   divergence: "Stayed in role but got lateral move instead of promotion"
+#   delta_magnitude: 0.3
+#   notes: " organisational restructure changed the promotion landscape"

@@ -1,91 +1,54 @@
-# API Contract - v0.1
+# API Contract
 
-## Base URL
+## v0.1 Status: DEFERRED
 
-`http://localhost:8000/api/v1`
+Phase 0 of Alters System is entirely file-based. No API layer is implemented or planned for v0.1.
 
-## Endpoints
+## Future API (Reference Only)
 
-### Projects
+When an API is eventually built, it will expose Alters System concepts:
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | /projects | List all projects |
-| POST | /projects | Create a project |
-| GET | /projects/{id} | Get project details |
-| PUT | /projects/{id} | Update a project |
-| DELETE | /projects/{id} | Delete a project |
-
-### Rubrics
+### Snapshots
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | /projects/{id}/rubrics | List rubrics for project |
-| POST | /projects/{id}/rubrics | Create a new rubric version |
-| GET | /rubrics/{id} | Get rubric details |
+| POST | /snapshots | Capture current snapshot |
+| GET | /snapshots/{id} | Get snapshot details |
 
-### Scripts
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | /projects/{id}/scripts | List scripts for project |
-| POST | /projects/{id}/scripts | Create a script |
-| GET | /scripts/{id} | Get script details |
-| PUT | /scripts/{id} | Update a script |
-
-### Scoring
+### Branches
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | /scripts/{id}/score | Score a script against rubric |
-| GET | /scripts/{id}/scores | Get scores for a script |
+| GET | /snapshots/{id}/branches | List branches for snapshot |
+| POST | /snapshots/{id}/branches | Create branch |
+| GET | /branches/{id} | Get branch details |
 
-### Predictions
-
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | /scores/{id}/predict | Create blind prediction |
-| GET | /scores/{id}/prediction | Get prediction (immutable) |
-
-### Publishing
+### Alters
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | /scripts/{id}/publish | Record publication |
-| GET | /scripts/{id}/publishes | Get publish history |
+| GET | /branches/{id}/alters | List alters for branch |
+| POST | /branches/{id}/alters | Generate alter |
+| GET | /alters/{id} | Get alter details |
 
-### Retrospectives
+### Dialogue
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | /predictions/{id}/retro | Record retro (append-only) |
-| GET | /predictions/{id}/retros | Get retros for prediction |
+| POST | /alters/{id}/dialogue | Start dialogue session |
+| GET | /alters/{id}/dialogue | Get dialogue history |
 
 ### Calibration
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | /projects/{id}/signals | Get calibration signals |
-| POST | /signals/{id}/review | Submit human review |
+| GET | /rubric | Get current rubric |
+| POST | /rubric/score | Score branches |
+| GET | /traces | Get reality traces |
 
-## Response Format
+## Notes
 
-```json
-{
-  "data": {},
-  "meta": {
-    "timestamp": "ISO8601"
-  }
-}
-```
-
-## Error Format
-
-```json
-{
-  "error": {
-    "code": "string",
-    "message": "string"
-  }
-}
-```
+- All endpoints return Alters System entities only
+- No content-project / script / publish / retro entities
+- No external LLM provider calls
+- Authentication: single-user, none required in v0.1
