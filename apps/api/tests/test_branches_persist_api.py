@@ -287,9 +287,9 @@ def test_rejects_top_level_runtime():
     assert r.status_code == 422
 
 
-def test_rejects_nested_branch_discovery_extra_field():
+def test_rejects_request_level_extra_field():
     req = _valid_branches_request()
-    req["branch_discovery"]["runtime"] = True
+    req["runtime"] = True
     r = client.post("/branches/persist", json=req)
     assert r.status_code == 422
 

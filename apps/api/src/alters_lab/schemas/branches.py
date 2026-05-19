@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class BranchDiscoveryStatus(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     status: str = "not_started"
     source_snapshot_ref: str = ""
     requires_snapshot_phase: str = "completed"
@@ -38,7 +38,7 @@ class Branch(BaseModel):
 
 
 class BranchDiscoveryPayload(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     branch_discovery: BranchDiscoveryStatus
     branches: list[Branch] = []
 

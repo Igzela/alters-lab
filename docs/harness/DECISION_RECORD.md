@@ -280,3 +280,19 @@
 **Decision**: Live execution defaults to dry_run mode. The API endpoint rejects live mode when LIVE_EXECUTION_ENABLED=false (HTTP 403). Live execution requires explicit path_overrides dict (branches_target_path, alters_dir, backup_dir, audit_log_path) — without them, the endpoint returns a rejected report. Token hash must match execution_packet.final_approval_token_hash when require_matching_gate_token=true (default). All persist calls go through controlled persist service functions — no direct file writes.
 **Consequences**: The five-step pipeline is complete: generate draft → review and prepare promotion → plan orchestration → execution gate → controlled live execution → controlled persist APIs. Each step is separate and requires different authorization. Accidental live execution is prevented by multiple layers: mode default, server flag, path_overrides requirement, and token hash matching.
 **Alternatives**: Default to live mode (rejected — too risky for accidental execution). Skip path_overrides requirement (rejected — allows writing to hardcoded paths, defeats testability). Disable token hash matching by default (rejected — weakens gate integrity).
+
+### Decision P3-M6R-01: Payload models use extra="allow" to preserve full active YAML data
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M7 live execution failed because AlterPayload(extra="forbid") and BranchDiscoveryPayload/Status(extra="forbid") stripped extra fields during re-persist, causing semantic diffs in active YAML files.
+**Decision**: Change AlterPayload, BranchDiscoveryPayload, and BranchDiscoveryStatus from extra="forbid" to extra="allow". API request models (AlterPersistRequest, AlterBatchPersistRequest, BranchesPersistRequest) retain extra="forbid" to reject smuggled fields at the API boundary. Payload models accept extra fields to preserve full alter/branch data during controlled re-persist.
+**Consequences**: Active YAML data is fully preserved during live execution. API boundary still rejects unknown fields. Test data for payload models must include all required fields.
+
+### Decision P3-M7-01: First live promotion run must be semantic no-op
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: Before using the live executor for new semantic content, the system must prove that controlled live mutation, backup, audit, validation, and rollback evidence work on existing active state.
+**Decision**: P3-M7 uses semantic no-op live promotion — the promotion package is built from the current active YAML without introducing new branch meaning. Active YAML may only change due to canonical controlled-persist formatting. Semantic YAML equivalence must be proven before and after.
+**Consequences**: Full controlled mutation chain validated end-to-end: active YAML → no-op promotion package → orchestration plan → execution gate → live execution runtime → controlled persist services → active YAML validation → evidence report.

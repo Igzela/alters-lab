@@ -1,0 +1,52 @@
+{
+  "p3_m7_run_id": "p3_m7_live_noop_20260519T134401Z",
+  "timestamp": "2026-05-19T13:44:01Z",
+  "head_before": "b65acc2",
+  "verdict": "PASS",
+  "baseline_hashes": {
+    "branches.yaml": "8e103bdc79ae16a55afbb122eb0bbdd953bd56c0a74cecdef20f2fc845c8865e",
+    "alter_A.yaml": "bf1d34775024bc5dec43e1a76130621e83a92442570bcc7e66dc3202f92f926a",
+    "alter_B.yaml": "ba323e57a457544bb8574207e86c86f3734982362247ba003790676d88605250",
+    "alter_C.yaml": "f9c10290ee0c67b94ac51b77eb6063795980bcfd4b29494c82537398cdbac1d5",
+    "alter_D.yaml": "07333f85d71a98d37555d54f3b0453c130aa5848982e8d28ad6cf2903ee649ff"
+  },
+  "post_live_hashes": {
+    "branches.yaml": "8e103bdc79ae16a55afbb122eb0bbdd953bd56c0a74cecdef20f2fc845c8865e",
+    "alter_A.yaml": "bf1d34775024bc5dec43e1a76130621e83a92442570bcc7e66dc3202f92f926a",
+    "alter_B.yaml": "ba323e57a457544bb8574207e86c86f3734982362247ba003790676d88605250",
+    "alter_C.yaml": "f9c10290ee0c67b94ac51b77eb6063795980bcfd4b29494c82537398cdbac1d5",
+    "alter_D.yaml": "07333f85d71a98d37555d54f3b0453c130aa5848982e8d28ad6cf2903ee649ff"
+  },
+  "semantic_noop_result": "PASS",
+  "active_chain_validation": "PASS",
+  "tests": {"count": 568, "result": "PASS"},
+  "execution_report_summary": {
+    "status": "live_executed",
+    "live_execution_performed": true,
+    "step_results": [
+      {"step_id": "step_01_branches_persist", "status": "executed"},
+      {"step_id": "step_02_alters_persist_batch", "status": "executed"}
+    ]
+  },
+  "boundary_confirmations": {
+    "first_controlled_live_promotion_run_completed": true,
+    "promotion_was_semantic_noop": true,
+    "no_generated_semantic_content_promoted": true,
+    "active_yaml_modified_only_through_controlled_persist_services": true,
+    "no_direct_active_yaml_writes_used": true,
+    "no_snapshot_yaml_modified": true,
+    "no_llm_provider_used": true,
+    "no_frontend_added": true,
+    "no_database_added": true,
+    "raw_final_execution_token_not_committed": true,
+    "raw_runtime_audit_logs_not_committed": true,
+    "runtime_draft_artifacts_not_committed": true,
+    "active_chain_validation_passed_after_live_run": true,
+    "full_tests_passed_after_live_run": true,
+    "p3_m8_remains_blocked": true
+  },
+  "rollback_status": "not_needed",
+  "raw_token_committed": false,
+  "raw_audit_committed": false,
+  "runtime_drafts_committed": false
+}

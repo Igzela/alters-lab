@@ -347,3 +347,17 @@
 **Goal**: Implement controlled live execution runtime that reads all promotion pipeline artifacts and performs safe, validated active promotion through controlled persist services
 **Depends on**: P3-M5 (done)
 **Completed**: Promotion live execution schemas (6 models with ConfigDict(extra="forbid"): PromotionLiveExecutionBoundaryConfirmations, LiveExecutionStepResult, PromotionLiveExecutionReport, PromotionLiveExecutionRequest, PromotionLiveExecutionResponse, PromotionLiveExecutionListResponse). Promotion live execution service (promotion_live_execution_boundary_confirmations, validate_draft_id, load_live_execution_inputs, validate_gate_for_live_execution, extract_branches_persist_payload, extract_alters_persist_payload, execute_promotion_dry_run, execute_promotion_live, build_live_execution_report, run_live_execution_gate, save_live_execution_report, list_live_execution_reports). Promotion live execution API (GET /promotion-live-execution/health, POST /promotion-live-execution/{draft_id}/run, GET /promotion-live-execution/list). main.py updated with promotion_live_execution_router. 565 tests passing. No active YAML modified. Live execution requires path_overrides and LIVE_EXECUTION_ENABLED=true. Default mode is dry_run. Token hash must match execution_packet.final_approval_token_hash.
+
+### P3-M6R: Live Executor Persist Signature Repair
+
+**Status**: done
+**Goal**: Fix execute_promotion_live() calling controlled persist services with wrong kwargs
+**Depends on**: P3-M6 (done)
+**Completed**: Fixed write_branches_with_audit() call: branches_payload= -> payload=, added BranchDiscoveryPayload conversion. Fixed write_alter_batch_with_audit() call: alters_payload= -> alters=, target_dir= -> base_dir=, added AlterPayload list conversion. Fixed pre_write_hashes/post_write_hashes handling for batch alters (plural keys). Changed AlterPayload and BranchDiscoveryPayload/Status from extra="forbid" to extra="allow" to preserve full alter/branch data during re-persist. Updated 6 tests. 568 tests passing.
+
+### P3-M7: First Human-Approved Live Promotion Run
+
+**Status**: done
+**Goal**: First controlled live promotion run using semantic no-op (re-persist current active YAML)
+**Depends on**: P3-M6R (done)
+**Completed**: Preflight (568 tests, clean tree). Active YAML baseline captured. Active chain validation passed. Promotion package built from current active YAML (semantic no-op). Orchestration plan, gate report, execution packet created with approval token hash. Dry-run passed. Live execution succeeded through controlled persist services. Post-live semantic comparison: all branch/alter files identical. snapshot.yaml and reality_trace.yaml unchanged. Active chain validation passed post-live. Full 568 tests pass post-live. Evidence produced: P3_M7_LIVE_PROMOTION_EVIDENCE.json. No raw tokens committed. No runtime artifacts committed.
