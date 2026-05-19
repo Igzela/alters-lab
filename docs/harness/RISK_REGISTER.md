@@ -47,6 +47,9 @@
 | R-041 | Deterministic templates overtrusted as intelligence | Medium | Medium | Templates produce candidate artifacts only; all drafts require human review; no claim of finality | Active |
 | R-042 | Provider integration added too early | Medium | High | P3-M2 uses no provider imports; tests grep for provider imports; provider integration deferred to explicit later phase | Mitigated |
 | R-043 | Draft audit logs committed as governance evidence | Low | Medium | Draft audit logs gitignored; only committed for explicitly approved real persist operations | Mitigated |
+| R-044 | Mocked loader shape hiding production failure | Medium | High | P3-M2R added normalize_active_chain to handle ActiveYamlChain dataclass and dict; real loader smoke test proves API works without monkeypatching | Mitigated |
+| R-045 | Wrapped YAML document shape mismatch | Medium | High | P3-M2R added extract_snapshot_body to handle {"snapshot": {...}} and unwrapped shapes; tests cover both | Mitigated |
+| R-046 | Generation drafts built from invalid active chain | Low | High | P3-M2R API validates inputs before generation; validation failure returns 400, no draft/audit written | Mitigated |
 
 ## Risk Assessment
 
