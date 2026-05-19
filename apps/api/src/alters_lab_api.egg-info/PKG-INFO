@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: alters-lab-api
+Version: 0.1.0
+Summary: Alters Lab API — personal future-branch simulation backend
+Requires-Python: >=3.11
+Requires-Dist: fastapi
+Requires-Dist: pydantic
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: uvicorn; extra == "dev"

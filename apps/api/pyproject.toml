@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alters-lab-api"
+version = "0.1.0"
+description = "Alters Lab API — personal future-branch simulation backend"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "pydantic",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "uvicorn",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

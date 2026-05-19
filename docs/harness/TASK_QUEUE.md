@@ -86,3 +86,21 @@
 **Goal**: Execute a real Snapshot Intake → Branch Discovery → Alter Generation → Dialogue → Value Alignment → Calibration cycle using actual user content
 **Depends on**: ALT-008 (complete)
 **Notes**: Ready for human approval. This is the first real cycle — requires human-provided snapshot content. Begins at Snapshot Intake (ALT-002 workflow). All templates and workflows are in place.
+
+---
+
+## Phase 1 — Controlled Implementation
+
+### P1-001: Backend Foundation + Snapshot Intake Contract
+
+**Status**: done
+**Goal**: Create minimal FastAPI backend, Pydantic contracts for Snapshot Intake, and pure state-transition helpers
+**Depends on**: Phase 0 complete
+**Notes**: Complete. FastAPI app with /health route, Snapshot Pydantic schemas with validation, Snapshot Intake service with pure functions, 13 pytest tests passing. No frontend, no database, no LLM provider, no branch/alter/dialogue/value/calibration/archive implementations.
+
+### P1-002: Snapshot Intake API Endpoints
+
+**Status**: todo
+**Goal**: Expose Snapshot Intake workflow as REST API endpoints
+**Depends on**: P1-001 (done)
+**Notes**: Blocked. Requires P1-001 backend foundation to be stable.

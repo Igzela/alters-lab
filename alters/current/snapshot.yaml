@@ -62,3 +62,16 @@ snapshot:
   notes:
     - "Phase 0 snapshot drafted from user self-report."
     - "Branch Discovery must not start until this snapshot is explicitly confirmed."
+
+# Observer note added during CYCLE-001D Value Alignment
+observer_note:
+  key_observation: >
+    当前 persona 的执行结构松散：经常刷手机到 10 点才开始，
+    周末集中搞一个方向但下周又换，多个 TODO list 互相矛盾。
+    因此 alter_C 虽然理论上最能产生路径证据，但它要求强自我管理能力，
+    而这正是当前最薄弱的地方。
+  adjusted_ranking:
+    - "D"
+    - "C_if_strict_stop_loss_exists"
+    - "B"
+    - "A"

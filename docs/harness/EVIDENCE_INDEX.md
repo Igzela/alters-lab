@@ -50,3 +50,13 @@
 | P0-CLOSEOUT | Decision record | docs/harness/DECISION_RECORD.md | P0-CLOSEOUT-01: Phase 0 workspace complete, ready for CYCLE-001A |
 | P0-CLOSEOUT | Project board update | docs/harness/PROJECT_BOARD.md | ALT-008 marked done, CYCLE-001A added as ready-with-approval |
 | P0-CLOSEOUT | Task queue update | docs/harness/TASK_QUEUE.md | ALT-008 marked done, CYCLE-001A added as ready-with-approval |
+| P1-001 | pyproject.toml | apps/api/pyproject.toml | Minimal project config: fastapi, pydantic, pytest, uvicorn |
+| P1-001 | FastAPI app | apps/api/src/alters_lab/main.py | FastAPI app with GET /health route returning status ok |
+| P1-001 | Snapshot schemas | apps/api/src/alters_lab/schemas/snapshot.py | IntakePhase, AnchorName enums; Snapshot, SnapshotAnchors, SnapshotContext, SnapshotIntakeStatus, EvidencePolicy models with completion validation |
+| P1-001 | Snapshot Intake service | apps/api/src/alters_lab/services/snapshot_intake.py | Pure functions: create_empty_snapshot, next_anchor, record_anchor_answer, ready_for_confirmation, mark_snapshot_completed |
+| P1-001 | Schema tests | apps/api/tests/test_snapshot_schema.py | 4 tests: empty valid, completed valid, completed missing rejected, version < 1 rejected |
+| P1-001 | Service tests | apps/api/tests/test_snapshot_intake.py | 9 tests: create empty, next anchor order, advance through anchors, ready confirmation, mark completed, empty rejected, no branch/alter artifacts |
+| P1-001 | Task queue update | docs/harness/TASK_QUEUE.md | P1-001 done, P1-002 todo |
+| P1-001 | Project board update | docs/harness/PROJECT_BOARD.md | Phase 1 section added, day_14 and day_30 gates, P1-001 done |
+| P1-001 | Decision record | docs/harness/DECISION_RECORD.md | P1-001-01: Phase 1 starts with Snapshot Intake backend contract |
+| P1-001 | Risk register update | docs/harness/RISK_REGISTER.md | R-007 through R-011 added for Phase 1 risks |
