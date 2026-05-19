@@ -83,7 +83,8 @@ Phase 2 Final Gate: **PASS**
 | P3-003 | Controlled Alter Write API | **done** |
 | P3-M1 | Controlled YAML Write Surface Expansion | **done** |
 | P3-M1R | Controlled Write Surface Contract Hardening | **done** |
-| P3-M2 | Controlled Generation Runtime | **blocked** |
+| P3-M2 | Controlled Generation Draft Runtime | **done** |
+| P3-M3 | Draft Review and Promotion Boundary | **blocked** |
 
 ## Quality Gates
 

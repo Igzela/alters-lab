@@ -218,6 +218,15 @@
 **Consequences**: Audit evidence in the repository is trustworthy. Stale or test-generated logs cannot be mistaken for governance evidence. The audit log file remains gitignored or untracked until a real persist event occurs.
 **Alternatives**: Commit all audit logs including test runs (rejected — pollutes governance evidence with non-approved entries). Delete audit log on every test run (rejected — test code should not modify production files).
 
+### Decision P3-M2-01: Generation runtime starts as deterministic draft-only output
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M2 introduces the first generation layer. The question was whether to start with provider-backed generation or deterministic template-based generation.
+**Decision**: Generation runtime starts as deterministic, template-based, draft-only output. No LLM provider calls. All generated artifacts are drafts requiring human review. Drafts are never promoted to active state without passing through the controlled persist APIs from P3-M1. This proves generation boundaries before provider integration.
+**Consequences**: Generation is predictable, testable, and auditable. Drafts are review inputs, not active state. Provider integration is deferred to a later phase with explicit approval.
+**Alternatives**: Start with provider-backed generation (rejected — too many untested boundaries). Skip draft stage and generate directly to active (rejected — violates controlled mutation principles).
+
 ### Decision P3-M1R-01: Controlled write schemas must forbid extra fields
 
 **Date**: 2026-05-19
