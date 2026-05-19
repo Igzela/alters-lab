@@ -293,10 +293,18 @@
 
 ### P3-M2: Controlled Generation Draft Runtime
 
-**Status**: done
+**Status**: done (repaired by P3-M2R)
 **Goal**: Implement controlled, deterministic, draft-only generation runtime for branch and alter candidate artifacts
 **Depends on**: P3-M1R (done)
 **Completed**: Generation draft schemas (GenerationSourceRefs, GenerationBoundaryConfirmations, DraftGeneratorInfo, BranchDraftCandidate, AlterDraftCandidate, GenerationDraftPackage, GenerationPreviewRequest, GenerationPreviewResponse, DraftListResponse) with ConfigDict(extra="forbid"). Generation draft service (generate_draft_id, generation_boundary_confirmations, validate_generation_inputs, generate_branch_drafts_from_snapshot, generate_alter_drafts_from_branches, build_generation_draft_package, save_generation_draft_package, preview_generation_draft, list_generation_drafts). Generation draft API (GET /generation-drafts/health, POST /generation-drafts/preview, GET /generation-drafts/list). main.py updated with generation_drafts_router. .gitignore updated for alters/drafts/ and generation draft audit. 313 tests passing. No active YAML modified. No provider added. Draft-only output.
+**Review note**: P3-M2 blocked because service used dict `.get()` on ActiveYamlChain dataclass, and real wrapped snapshot shape `{"snapshot": {"intake_status": {...}}}` was not handled. Tests used simplified dict fixture masking both issues. Repaired by P3-M2R.
+
+### P3-M2R: Real Loader Integration Repair
+
+**Status**: done
+**Goal**: Fix generation draft runtime to work with real ActiveYamlChain dataclass and real wrapped YAML snapshot shape
+**Depends on**: P3-M2 (done, blocked_with_notes)
+**Completed**: Added normalize_active_chain (handles ActiveYamlChain dataclass, dict, None), extract_snapshot_body (wrapped/unwrapped), extract_branch_list helpers. Service type hints accept ActiveYamlChain | dict | None. API returns HTTP 500 for loader failure, HTTP 400 for validation failure. 17 new tests: normalize (4), extract (3), real wrapped shape validation (2), dataclass build (2), real loader smoke (2), error responses (2), real shape verification (1), unwrapped dict build (1). 330 tests passing. No active YAML modified.
 
 ### P3-M3: Draft Review and Promotion Boundary
 

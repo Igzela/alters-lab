@@ -235,3 +235,12 @@
 **Decision**: All Branches and Alters request and nested schemas must use `model_config = ConfigDict(extra="forbid")`. This makes Pydantic reject any unrecognized fields at request validation time with a 422 error. Service-level validation remains as a second defense for already-parsed payloads.
 **Consequences**: Smuggled forbidden fields are rejected at the API input layer. The defense is layered: schema-level (first) + service-level (second). The contract is explicit and testable.
 **Alternatives**: Rely on service-level checks only (rejected — Pydantic swallows extra fields before service sees them). Add field allowlists manually (rejected — ConfigDict(extra="forbid") is idiomatic and comprehensive).
+
+### Decision P3-M2R-01: Generation draft runtime must integrate with real active YAML loader shape
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M2 review found that generation draft service used dict-style `.get("snapshot")` but the real `load_active_yaml_chain()` returns an `ActiveYamlChain` dataclass with `.snapshot`, `.branches`, etc. attributes. Additionally, real snapshot YAML is wrapped: `{"snapshot": {"intake_status": {...}}}`, so `snapshot["intake_status"]` fails on the real shape. API tests only monkeypatched a simplified dict fixture, masking both issues.
+**Decision**: Add `normalize_active_chain()` to handle both `ActiveYamlChain` dataclass and dict shapes. Add `extract_snapshot_body()` to handle wrapped/unwrapped snapshot YAML. Add `extract_branch_list()` to extract branches from real YAML structure. API now returns HTTP 500 for loader failure and HTTP 400 for validation failure. Service type hints accept `ActiveYamlChain | dict | None`. Tests include real loader smoke test that works without monkeypatching `load_active_yaml_chain`.
+**Consequences**: Generation draft runtime works with both test fixtures and real production loader. Validation catches wrapped snapshot shape. Error responses are structured by failure type.
+**Alternatives**: Require all callers to pass pre-normalized dict (rejected — forces callers to know internal shape). Only support dict shape (rejected — real loader returns dataclass, runtime would break).

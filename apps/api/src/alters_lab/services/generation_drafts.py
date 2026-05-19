@@ -14,7 +14,43 @@ from alters_lab.schemas.generation_drafts import (
     GenerationDraftPackage,
     GenerationSourceRefs,
 )
+from alters_lab.loaders.models import ActiveYamlChain
 from alters_lab.services.controlled_write import append_jsonl_audit, sha256_text
+
+
+def normalize_active_chain(active_chain: ActiveYamlChain | dict | None) -> dict:
+    """Normalize active chain to dict shape, handling dataclass and wrapped YAML."""
+    if active_chain is None:
+        return {}
+    if isinstance(active_chain, ActiveYamlChain):
+        return {
+            "snapshot": active_chain.snapshot,
+            "branches": active_chain.branches,
+            "alters": active_chain.alters,
+            "value_alignment": active_chain.value_alignment,
+            "dialogue": active_chain.dialogue,
+            "reality_trace": active_chain.reality_trace,
+        }
+    return dict(active_chain)
+
+
+def extract_snapshot_body(snapshot_doc: dict) -> dict:
+    """Extract snapshot body from possibly wrapped YAML shape.
+
+    Real YAML: {"snapshot": {"intake_status": {...}, "anchors": {...}, ...}}
+    Returns the inner snapshot dict.
+    """
+    if "snapshot" in snapshot_doc and isinstance(snapshot_doc["snapshot"], dict):
+        return snapshot_doc["snapshot"]
+    return snapshot_doc
+
+
+def extract_branch_list(branches_doc: dict) -> list[dict]:
+    """Extract branches list from branches YAML document.
+
+    Real YAML: {"branch_discovery": {...}, "branches": [...]}
+    """
+    return branches_doc.get("branches", [])
 
 
 def generate_draft_id(prefix: str = "draft") -> str:
@@ -27,22 +63,23 @@ def generation_boundary_confirmations() -> dict:
     return GenerationBoundaryConfirmations().model_dump()
 
 
-def validate_generation_inputs(active_chain: dict | None) -> dict:
+def validate_generation_inputs(active_chain: ActiveYamlChain | dict | None) -> dict:
     errors: list[str] = []
-    if active_chain is None:
+    chain = normalize_active_chain(active_chain)
+    if not chain:
         return {"valid": False, "errors": ["active_chain is None"]}
-    snapshot = active_chain.get("snapshot")
-    if not snapshot:
+    snapshot_doc = chain.get("snapshot", {})
+    snapshot_body = extract_snapshot_body(snapshot_doc)
+    if not snapshot_body:
         errors.append("snapshot missing")
     else:
-        intake = snapshot.get("intake_status", {})
+        intake = snapshot_body.get("intake_status", {})
         if intake.get("phase") != "completed":
             errors.append("snapshot intake phase not completed")
-    branches = active_chain.get("branches")
-    if branches:
-        branch_list = branches.get("branches", [])
-        if len(branch_list) != 4:
-            errors.append(f"expected 4 branches, got {len(branch_list)}")
+    branches_doc = chain.get("branches", {})
+    branch_list = extract_branch_list(branches_doc)
+    if branch_list and len(branch_list) != 4:
+        errors.append(f"expected 4 branches, got {len(branch_list)}")
     return {"valid": len(errors) == 0, "errors": errors}
 
 
@@ -103,6 +140,7 @@ BRANCH_TEMPLATES = [
 
 
 def generate_branch_drafts_from_snapshot(snapshot: dict) -> list[BranchDraftCandidate]:
+    """Generate branch draft candidates. Accepts raw snapshot dict or snapshot body."""
     drafts = []
     for tmpl in BRANCH_TEMPLATES:
         drafts.append(BranchDraftCandidate(**tmpl))
@@ -110,6 +148,7 @@ def generate_branch_drafts_from_snapshot(snapshot: dict) -> list[BranchDraftCand
 
 
 def generate_alter_drafts_from_branches(branches: list[dict]) -> list[AlterDraftCandidate]:
+    """Generate alter draft candidates from branch list."""
     alter_map = [
         ("alter_A", "branch_A", "Exam-Committed Alter"),
         ("alter_B", "branch_B", "Employment-First Alter"),
@@ -134,7 +173,7 @@ def generate_alter_drafts_from_branches(branches: list[dict]) -> list[AlterDraft
 
 
 def build_generation_draft_package(
-    active_chain: dict | None,
+    active_chain: ActiveYamlChain | dict | None,
     include_branches: bool,
     include_alters: bool,
     draft_id: str | None = None,
@@ -146,22 +185,20 @@ def build_generation_draft_package(
     if not include_branches and not include_alters:
         raise ValueError("At least one of include_branches or include_alters must be true")
 
-    snapshot = active_chain.get("snapshot", {}) if active_chain else {}
-    branches_data = active_chain.get("branches", {}) if active_chain else {}
-    branch_list = branches_data.get("branches", []) if branches_data else []
+    chain = normalize_active_chain(active_chain)
+    snapshot_doc = chain.get("snapshot", {})
+    snapshot_body = extract_snapshot_body(snapshot_doc)
+    branches_doc = chain.get("branches", {})
+    branch_list = extract_branch_list(branches_doc)
 
     branch_drafts = []
     alter_drafts = []
 
     if include_branches:
-        branch_drafts = generate_branch_drafts_from_snapshot(snapshot)
+        branch_drafts = generate_branch_drafts_from_snapshot(snapshot_body)
 
     if include_alters:
-        if branch_list:
-            alter_drafts = generate_alter_drafts_from_branches(branch_list)
-        else:
-            # Generate from templates even if active branches not loaded
-            alter_drafts = generate_alter_drafts_from_branches([])
+        alter_drafts = generate_alter_drafts_from_branches(branch_list)
 
     draft_type = "cycle_package" if (include_branches and include_alters) else ("branches" if include_branches else "alters")
 
@@ -210,7 +247,7 @@ def save_generation_draft_package(
 
 
 def preview_generation_draft(
-    active_chain: dict | None,
+    active_chain: ActiveYamlChain | dict | None,
     include_branches: bool,
     include_alters: bool,
 ) -> GenerationDraftPackage:

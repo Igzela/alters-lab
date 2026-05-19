@@ -225,3 +225,66 @@ def test_no_provider_imports():
                 for forbidden in ["openai", "anthropic", "openrouter", "litellm", "langchain", "crewai"]:
                     if forbidden in mod or any(forbidden in n for n in names):
                         pytest.fail(f"Provider import found: {forbidden}")
+
+
+# --- real loader integration ---
+
+
+def test_preview_with_real_loader_no_monkeypatch(monkeypatch, tmp_path):
+    """POST /generation-drafts/preview works with real load_active_yaml_chain."""
+    _patch_draft_paths(monkeypatch, tmp_path)
+    # Do NOT monkeypatch load_active_yaml_chain — use real loader
+    r = client.post("/generation-drafts/preview", json={"save_draft": False})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["status"] == "draft_generated"
+    assert len(body["draft_package"]["branch_drafts"]) == 4
+    assert len(body["draft_package"]["alter_drafts"]) == 4
+
+
+def test_preview_real_loader_real_wrapped_snapshot(monkeypatch, tmp_path):
+    """Real loader returns ActiveYamlChain with wrapped snapshot shape."""
+    _patch_draft_paths(monkeypatch, tmp_path)
+    # Load real chain to verify it passes validation
+    from alters_lab.loaders.active_yaml import load_active_yaml_chain
+    chain = load_active_yaml_chain()
+    # Verify real shape: snapshot is wrapped
+    assert "snapshot" in chain.snapshot
+    assert "intake_status" in chain.snapshot["snapshot"]
+    # Verify branches has real branch list
+    branch_list = chain.branches.get("branches", [])
+    assert len(branch_list) == 4
+    branch_ids = {b["id"] for b in branch_list}
+    assert branch_ids == {"branch_A", "branch_B", "branch_C", "branch_D"}
+
+
+def test_preview_validation_failure_returns_400(monkeypatch, tmp_path):
+    """Validation failure returns 400 without writing draft or audit."""
+    _patch_draft_paths(monkeypatch, tmp_path)
+    import alters_lab.api.generation_drafts as mod
+
+    def _broken_load():
+        return {
+            "snapshot": {"snapshot": {"intake_status": {"phase": "not_started"}}},
+            "branches": {"branches": []},
+        }
+
+    monkeypatch.setattr(mod, "load_active_yaml_chain", _broken_load)
+    r = client.post("/generation-drafts/preview", json={"save_draft": False})
+    assert r.status_code == 400
+    assert "validation failed" in r.json()["detail"]
+    assert not (tmp_path / "drafts").exists()
+
+
+def test_preview_loader_failure_returns_500(monkeypatch, tmp_path):
+    """Loader failure returns 500."""
+    _patch_draft_paths(monkeypatch, tmp_path)
+    import alters_lab.api.generation_drafts as mod
+
+    def _boom():
+        raise RuntimeError("file missing")
+
+    monkeypatch.setattr(mod, "load_active_yaml_chain", _boom)
+    r = client.post("/generation-drafts/preview", json={"save_draft": False})
+    assert r.status_code == 500
+    assert "load failed" in r.json()["detail"]

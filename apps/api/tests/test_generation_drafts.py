@@ -13,13 +13,17 @@ from alters_lab.schemas.generation_drafts import (
     GenerationDraftPackage,
     GenerationPreviewRequest,
 )
+from alters_lab.loaders.models import ActiveYamlChain
 from alters_lab.services.generation_drafts import (
     build_generation_draft_package,
+    extract_branch_list,
+    extract_snapshot_body,
     generate_alter_drafts_from_branches,
     generate_branch_drafts_from_snapshot,
     generation_boundary_confirmations,
     generate_draft_id,
     list_generation_drafts,
+    normalize_active_chain,
     preview_generation_draft,
     save_generation_draft_package,
     validate_generation_inputs,
@@ -258,3 +262,154 @@ def test_preview_request_rejects_extra_fields():
 def test_preview_request_rejects_save_without_token():
     with pytest.raises(Exception):
         GenerationPreviewRequest(save_draft=True)
+
+
+# --- normalize_active_chain ---
+
+
+def test_normalize_active_chain_none():
+    assert normalize_active_chain(None) == {}
+
+
+def test_normalize_active_chain_dict():
+    d = {"snapshot": {"a": 1}, "branches": {"b": 2}}
+    assert normalize_active_chain(d) == d
+
+
+def test_normalize_active_chain_dataclass():
+    chain = ActiveYamlChain(
+        snapshot={"snapshot": {"intake_status": {"phase": "completed"}}},
+        branches={"branches": [{"id": "branch_A"}, {"id": "branch_B"}, {"id": "branch_C"}, {"id": "branch_D"}]},
+        alters={"alter_A": {}, "alter_B": {}, "alter_C": {}, "alter_D": {}},
+        value_alignment={},
+        dialogue={},
+        reality_trace={},
+    )
+    result = normalize_active_chain(chain)
+    assert isinstance(result, dict)
+    assert result["snapshot"]["snapshot"]["intake_status"]["phase"] == "completed"
+    assert len(result["branches"]["branches"]) == 4
+
+
+def test_normalize_active_chain_preserves_all_fields():
+    chain = ActiveYamlChain(
+        snapshot={"s": 1}, branches={"b": 2}, alters={"a": 3},
+        value_alignment={"v": 4}, dialogue={"d": 5}, reality_trace={"r": 6},
+    )
+    result = normalize_active_chain(chain)
+    assert set(result.keys()) == {"snapshot", "branches", "alters", "value_alignment", "dialogue", "reality_trace"}
+
+
+# --- extract_snapshot_body ---
+
+
+def test_extract_snapshot_body_wrapped():
+    doc = {"snapshot": {"intake_status": {"phase": "completed"}, "anchors": {}}}
+    body = extract_snapshot_body(doc)
+    assert body["intake_status"]["phase"] == "completed"
+    assert "snapshot" not in body
+
+
+def test_extract_snapshot_body_unwrapped():
+    doc = {"intake_status": {"phase": "completed"}, "anchors": {}}
+    body = extract_snapshot_body(doc)
+    assert body["intake_status"]["phase"] == "completed"
+
+
+def test_extract_snapshot_body_empty():
+    assert extract_snapshot_body({}) == {}
+
+
+# --- extract_branch_list ---
+
+
+def test_extract_branch_list_normal():
+    doc = {"branches": [{"id": "branch_A"}, {"id": "branch_B"}]}
+    assert len(extract_branch_list(doc)) == 2
+
+
+def test_extract_branch_list_empty():
+    assert extract_branch_list({}) == []
+
+
+# --- validate with real wrapped snapshot ---
+
+
+def test_validate_inputs_real_wrapped_snapshot():
+    chain = {
+        "snapshot": {
+            "snapshot": {
+                "intake_status": {"phase": "completed"},
+                "anchors": {"heaviest_constraint": "x"},
+            },
+        },
+        "branches": {
+            "branches": [
+                {"id": "branch_A"}, {"id": "branch_B"},
+                {"id": "branch_C"}, {"id": "branch_D"},
+            ],
+        },
+    }
+    result = validate_generation_inputs(chain)
+    assert result["valid"] is True
+
+
+def test_validate_inputs_rejects_wrapped_snapshot_wrong_phase():
+    chain = {
+        "snapshot": {
+            "snapshot": {
+                "intake_status": {"phase": "not_started"},
+            },
+        },
+    }
+    result = validate_generation_inputs(chain)
+    assert result["valid"] is False
+    assert any("phase" in e for e in result["errors"])
+
+
+# --- build with real ActiveYamlChain ---
+
+
+def test_build_package_with_dataclass():
+    chain = ActiveYamlChain(
+        snapshot={
+            "snapshot": {
+                "intake_status": {"phase": "completed"},
+                "anchors": {"heaviest_constraint": "x"},
+            },
+        },
+        branches={
+            "branches": [
+                {"id": "branch_A"}, {"id": "branch_B"},
+                {"id": "branch_C"}, {"id": "branch_D"},
+            ],
+        },
+        alters={},
+        value_alignment={},
+        dialogue={},
+        reality_trace={},
+    )
+    pkg = build_generation_draft_package(chain, True, True)
+    assert pkg.status == "draft"
+    assert len(pkg.branch_drafts) == 4
+    assert len(pkg.alter_drafts) == 4
+    assert pkg.active_write_allowed is False
+
+
+def test_build_package_with_real_wrapped_dict():
+    chain = {
+        "snapshot": {
+            "snapshot": {
+                "intake_status": {"phase": "completed"},
+            },
+        },
+        "branches": {
+            "branches": [
+                {"id": "branch_A"}, {"id": "branch_B"},
+                {"id": "branch_C"}, {"id": "branch_D"},
+            ],
+        },
+    }
+    pkg = build_generation_draft_package(chain, True, False)
+    assert len(pkg.branch_drafts) == 4
+    assert len(pkg.alter_drafts) == 0

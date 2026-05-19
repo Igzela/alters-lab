@@ -55,8 +55,20 @@ def preview_generation(body: GenerationPreviewRequest):
     # Load active chain via existing loader
     try:
         active_chain = load_active_yaml_chain()
-    except Exception:
-        active_chain = None
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"active YAML chain load failed: {exc}",
+        )
+
+    # Validate inputs before any draft generation
+    from alters_lab.services.generation_drafts import validate_generation_inputs
+    validation = validate_generation_inputs(active_chain)
+    if not validation["valid"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"generation input validation failed: {'; '.join(validation['errors'])}",
+        )
 
     if body.save_draft:
         if not body.approval_token:
