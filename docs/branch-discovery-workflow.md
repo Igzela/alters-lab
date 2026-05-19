@@ -8,7 +8,7 @@ Branch Discovery transforms confirmed snapshot anchors into 3-4 structural, mutu
 
 Before Branch Discovery can begin, the following must be true:
 
-1. **Snapshot phase is completed**: `alters/current/snapshot.yaml` has `intake_status: "confirmed"`.
+1. **Snapshot phase is completed**: `alters/current/snapshot.yaml` has `intake_status.phase: "completed"`.
 2. **All three anchors are non-empty**: `heaviest_constraint`, `most_unclear`, and `unwilling_to_give_up` must contain real user content — not placeholders or empty strings.
 3. **Branch discovery status is `not_started`**: No branch generation has been attempted yet.
 
@@ -133,7 +133,7 @@ branch_template:
 
 ## H. Hard Prohibitions
 
-1. **No branches from empty snapshot**: If `snapshot.yaml` has empty anchors or `intake_status` is not `confirmed`, Branch Discovery must not run.
+1. **No branches from empty snapshot**: If `snapshot.yaml` has empty anchors or `intake_status.phase` is not `completed`, Branch Discovery must not run.
 2. **No invented data**: Every branch must trace back to real snapshot anchors. No fabricated tensions, constraints, or preferences.
 3. **No result/parameter-only branches**: Branches must differ in kind, not degree.
 4. **No branches before snapshot confirmation**: The pipeline must not be started until the snapshot is confirmed.

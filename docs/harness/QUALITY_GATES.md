@@ -38,6 +38,12 @@ Branch Discovery must produce 3-4 structural, mutually incompatible branches fro
 - **Pass**: branch_discovery.status is "completed", branches list has 3-4 entries, each branch has id, core_choice, structural_commitment, key_tension_resolved, incompatible_with (non-empty), preserves, sacrifices, validation_signal_30d, invalid_if; every branch in incompatible_with exists in branches list; no branch differs only in result or parameter from another.
 - **Fail**: fewer than 3 branches, more than 4 branches, any branch with empty incompatible_with, any branch pair that is compatible (not structurally conflicting), branches generated from unconfirmed snapshot, branches contain invented data not traced to snapshot anchors.
 
+### Alter Generation
+
+Alter Generation produces one Alter per confirmed branch with coherent voice, tradeoffs, and personality drift. Quality gate:
+- **Pass**: alter_*.yaml files exist only for human-confirmed branches; each alter has branch_ref pointing to existing branch, snapshot_ref pointing to current snapshot, time_horizon of "1.5-2年后", non-empty voice with core_stance (not neutral), concrete tradeoffs (gained and lost non-empty), personality_drift with direction and reason for each dimension, no probability predictions, no neutral advice-bot voice.
+- **Fail**: alter generated from unconfirmed/empty branch, missing branch_ref, voice is neutral/generic, contains probability prediction, empty tradeoffs, personality drift has no reason, generated without human confirmation.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -52,3 +58,7 @@ Branch Discovery must produce 3-4 structural, mutually incompatible branches fro
 - [ ] Branch Discovery produces 3-4 branches from confirmed snapshot
 - [ ] Every branch has non-empty incompatible_with
 - [ ] No result-only or parameter-only branch differences
+- [ ] Alter Generation produces valid alters only from confirmed branches
+- [ ] Each alter has branch_ref, voice with stance, concrete tradeoffs
+- [ ] No probability predictions or neutral advice-bot voice in alters
+- [ ] No active alter_*.yaml without human confirmation
