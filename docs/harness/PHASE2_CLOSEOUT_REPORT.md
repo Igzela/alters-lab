@@ -1,8 +1,9 @@
 # Phase 2 Closeout Report — Read-Only Runtime Foundation
 
 **Date:** 2026-05-19
-**Sealed Commit:** 272b39f
+**Sealed Commit:** a76ffae (P2-005R correction commit pending)
 **Gate Verdict:** PASS
+**Correction:** P2-005R — governance and API contract gaps fixed
 
 ---
 
@@ -150,7 +151,9 @@ Phase 2 established a read-only runtime foundation on top of the Phase 1 sealed 
 
 Phase 2 is ready to seal as a read-only runtime foundation baseline.
 
-All required P2 slices exist and are committed. The active YAML chain is validated (9 artifacts, PASS, selected_branch=branch_D). The API surface is bounded to read-only endpoints on cycle-summary and evidence routers. No forbidden runtime components (provider, database, frontend, runtime modules) exist. No active YAML mutation occurred during Phase 2. 110 tests pass.
+All required P2 slices exist and are committed. The active YAML chain is validated (9 artifacts, PASS, selected_branch=branch_D). The API surface is bounded to read-only endpoints on cycle-summary and evidence routers. No forbidden runtime components (provider, database, frontend, runtime modules) exist. No active YAML mutation occurred during Phase 2. 118 tests pass.
+
+P2-005R correction applied: governance docs updated, evidence API contract strengthened with boundary_confirmations, PASS/WARN/ERROR status, enriched phase1_closeout metadata, and read-only safety tests.
 
 ---
 

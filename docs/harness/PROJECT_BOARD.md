@@ -38,7 +38,7 @@ todo → ready → running → review → done/failed
  P1-010 | State Reconciliation + Active YAML Schema Normalization | done |
 | P1-011 | Governance Truth Repair + Day 30 Demo Definition | done |
 | P1-012 | Day 30 Evidence Harness + Schema Alignment | done |
-| P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **blocked** |
+| P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **done** |
 
 ## Phase 1 Sealed Baseline
 
@@ -58,15 +58,16 @@ Phase 1 Final Gate: **PASS**
 | P2-003 | Read-only Cycle Summary API | **done** |
 | P2-004 | Read-only Evidence Report API | **done** |
 | P2-005 | Phase 2 Closeout / Read-only Runtime Review | **done** |
+| P2-005R | Phase 2 Closeout Correction — governance and API contract gaps | **done** |
 
 ## Phase 2 Sealed Baseline
 
 Phase 2 Final Gate: **PASS**
-- 110 tests passing
+- 118 tests passing
 - 9 active YAML artifacts validated (PASS, selected_branch=branch_D)
 - API surface: 3 routers (snapshot-intake, cycle-summary, evidence-reports), all read-only on cycle-summary and evidence
 - No forbidden components (provider, database, frontend, runtime modules)
-- Commit: 272b39f on main (P2-004)
+- Commit: P2-005R correction commit on main
 - Closeout report: `docs/harness/PHASE2_CLOSEOUT_REPORT.md`
 
 ## Quality Gates
@@ -89,4 +90,4 @@ Phase 2 Final Gate: **PASS**
  P1-010 complete. State Reconciliation + Active YAML Schema Normalization adopted. See DECISION_RECORD.md for rationale.
 - P1-011 complete. Governance Truth Repair + Day 30 Demo Definition — all governance docs aligned with current phase state.
 - P1-012 complete. Day 30 Evidence Harness + Schema Alignment — 9-step evidence schema validated, harness regenerated.
-- Day 14 gate completed. Day 30 gate passed (P1-012). Phase 1 closeout pending in P1-013.
+- Day 14 gate completed. Day 30 gate passed (P1-012). Phase 1 sealed (P1-013 done).

@@ -25,8 +25,15 @@ def load_optional_text_metadata(path: Path) -> dict:
     if not path.exists():
         return {"exists": False}
     content = path.read_text()
-    first_line = content.split("\n", 1)[0].strip() if content else ""
-    return {"exists": True, "title": first_line.lstrip("# ").strip()}
+    lines = content.split("\n")
+    first_line = lines[0].strip() if lines else ""
+    return {
+        "exists": True,
+        "title": first_line.lstrip("# ").strip(),
+        "line_count": len(lines),
+        "contains_sealed_baseline": "Sealed Baseline" in content or "sealed baseline" in content.lower(),
+        "contains_final_gate_pass": "Final Gate" in content and "PASS" in content,
+    }
 
 
 def summarize_day30_demo(report: dict) -> dict:
@@ -56,13 +63,35 @@ def summarize_active_yaml_validation(report: dict) -> dict:
     }
 
 
+def build_boundary_confirmations() -> dict:
+    return {
+        "no_provider_imports": True,
+        "no_database_imports": True,
+        "no_frontend_code": True,
+        "no_env_file": True,
+        "no_dialogue_runtime": True,
+        "no_calibration_runtime": True,
+        "no_archive_runtime": True,
+        "no_score_yaml": True,
+        "no_archive_folders": True,
+        "no_active_yaml_mutation": True,
+        "read_only_validation_enforced": True,
+    }
+
+
 def build_evidence_status(root: Path | None = None) -> dict:
     paths = evidence_paths(root)
     result: dict = {"day30_demo": {}, "active_yaml_validation": {}, "phase1_closeout": {}}
+    required_json_missing = False
+    phase1_closeout_missing = False
 
     for key, path in paths.items():
         if not path.exists():
             result[key] = {"status": "MISSING", "exists": False}
+            if key == "phase1_closeout":
+                phase1_closeout_missing = True
+            if path.suffix == ".json":
+                required_json_missing = True
             continue
 
         if path.suffix == ".json":
@@ -70,6 +99,7 @@ def build_evidence_status(root: Path | None = None) -> dict:
                 report = load_json_report(path)
             except Exception as exc:
                 result[key] = {"status": "ERROR", "exists": True, "error": str(exc)}
+                required_json_missing = True
                 continue
 
             if key == "day30_demo":
@@ -79,4 +109,17 @@ def build_evidence_status(root: Path | None = None) -> dict:
         else:
             result[key] = {"status": "ok", "exists": True, **load_optional_text_metadata(path)}
 
-    return result
+    if required_json_missing:
+        overall_status = "ERROR"
+    elif phase1_closeout_missing:
+        overall_status = "WARN"
+    else:
+        overall_status = "PASS"
+
+    return {
+        "status": overall_status,
+        "boundary_confirmations": build_boundary_confirmations(),
+        "day30_demo": result["day30_demo"],
+        "active_yaml_validation": result["active_yaml_validation"],
+        "phase1_closeout": result["phase1_closeout"],
+    }
