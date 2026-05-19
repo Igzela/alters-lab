@@ -304,3 +304,11 @@
 **Context**: Before using the live executor for new semantic content, the system must prove that controlled live mutation, backup, audit, validation, and rollback evidence work on existing active state.
 **Decision**: P3-M7 uses semantic no-op live promotion — the promotion package is built from the current active YAML without introducing new branch meaning. Active YAML may only change due to canonical controlled-persist formatting. Semantic YAML equivalence must be proven before and after.
 **Consequences**: Full controlled mutation chain validated end-to-end: active YAML → no-op promotion package → orchestration plan → execution gate → live execution runtime → controlled persist services → active YAML validation → evidence report.
+
+### Decision P3-M8-01: Phase 3 closeout is read-only and evidence-based
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: After the first controlled live no-op run (P3-M7) and schema boundary repair (P3-M6R2), the Phase 3 mutation implementation chain is complete. The project must seal the mutation baseline by verifying evidence and boundaries, not by adding more mutation capability.
+**Decision**: P3-M8 implements a read-only closeout gate that runs 9 verification checks (active YAML chain, evidence files, P3-M7 evidence, smuggling boundary, raw dict path, live execution safety, runtime artifacts, audit logs, governance status). The closeout gate does not write active YAML, does not call live execution, does not call controlled persist services. It produces a closeout report and evidence artifact as the Phase 3 sealed baseline candidate. Final sealing requires human/GPT review.
+**Consequences**: Phase 3 is sealed with read-only evidence. P4-000 (Phase 4 scope) is blocked until human/GPT review confirms the closeout. No further mutations possible without explicit Phase 4 authorization.
