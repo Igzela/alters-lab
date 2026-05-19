@@ -3,52 +3,67 @@
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────┐
-│              Frontend (Next.js)          │
-│         TypeScript + Tailwind + shadcn  │
-└──────────────────┬──────────────────────┘
-                   │ HTTP
-┌──────────────────▼──────────────────────┐
-│              Backend (FastAPI)           │
-│            Python + Pydantic v2          │
-├─────────────────────────────────────────┤
-│  Services:                              │
-│  - Project Service                      │
-│  - Rubric Service                       │
-│  - Script Service                       │
-│  - Scoring Service                      │
-│  - Prediction Service                   │
-│  - Publish Service                      │
-│  - Retro Service                        │
-│  - Calibration Service                  │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│           Data Layer (SQLite)            │
-│            SQLAlchemy + Alembic          │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────┐
+│           Intake Layer               │
+│  Capture snapshot, constraints,      │
+│  uncertainties, anchors              │
+└──────────────┬───────────────────────┘
+               │
+┌──────────────▼───────────────────────┐
+│       Branch Discovery Engine        │
+│  Identify structural, mutually       │
+│  incompatible future branches        │
+└──────────────┬───────────────────────┘
+               │
+┌──────────────▼───────────────────────┐
+│        Alter Generator               │
+│  Generate coherent alter versions    │
+│  per branch with values & tradeoffs  │
+└──────────────┬───────────────────────┘
+               │
+┌──────────────▼───────────────────────┐
+│        Dialogue Engine               │
+│  Facilitate conversation between     │
+│  user and each Alter                 │
+└──────────────┬───────────────────────┘
+               │
+┌──────────────▼───────────────────────┐
+│     Value Alignment Evaluator        │
+│  Evaluate branch fit against         │
+│  user values and rubric              │
+└──────────────┬───────────────────────┘
+               │
+┌──────────────▼───────────────────────┐
+│       Calibration System             │
+│  Score branches, track reality       │
+│  traces, evolve rubric over time     │
+└──────────────┬───────────────────────┘
+               │
+┌──────────────▼───────────────────────┐
+│           Archive                    │
+│  Store completed cycle results       │
+└──────────────────────────────────────┘
 ```
 
 ## Module Breakdown
 
 | Module | Responsibility |
 |--------|---------------|
-| Project Service | Manage content projects |
-| Rubric Service | CRUD rubrics, version management |
-| Script Service | Manage content scripts |
-| Scoring Service | Score scripts against rubrics |
-| Prediction Service | Create immutable blind predictions |
-| Publish Service | Track content publication |
-| Retro Service | Record post-publication analysis |
-| Calibration Service | Generate calibration signals from retro data |
+| Intake Layer | Capture current snapshot with constraints, uncertainties, and anchors |
+| Branch Discovery Engine | Identify structurally distinct, mutually incompatible future branches |
+| Alter Generator | Generate coherent alter versions per branch |
+| Dialogue Engine | Facilitate dialogue between user and alters |
+| Value Alignment Evaluator | Evaluate branch fit against user values and rubric |
+| Calibration System | Score branches, track reality traces, refine rubric |
+| Archive | Store completed cycle results |
 
 ## Data Flow
 
-1. Creator creates a project and rubric
-2. Creator writes a script
-3. Script is scored against current rubric
-4. Blind prediction is created (immutable)
-5. Content is published
-6. After T+3 days, retro is recorded
-7. Calibration signals are generated
-8. Human reviews signals and evolves rubric
+1. User provides current Snapshot (constraints, uncertainties, anchors)
+2. Branch Discovery Engine identifies structural branches
+3. Alter Generator creates Alter YAML for each branch
+4. User engages in Dialogue with each Alter
+5. Value Alignment Evaluator scores branches against Rubric
+6. Calibration System records scores and reality traces
+7. Archive stores completed cycle
+8. Rubric evolves based on accumulated evidence (human review only)

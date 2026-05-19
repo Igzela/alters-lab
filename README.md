@@ -1,26 +1,42 @@
-# Cheat on Content Lab
+# Alters System Lab
 
-A calibration system for content creators.
+A personal future-branch simulation and calibration system.
 
 ## Overview
 
-Cheat on Content helps content creators improve their content quality through a structured calibration loop:
+Alters System helps you explore potential future paths by modelling branching life decisions, generating alter versions of yourself for each path, and calibrating which branches best align with your values and energy.
 
-1. **Score** - Evaluate content against a rubric
-2. **Blind Prediction** - Predict engagement before publishing
-3. **Publish** - Release the content
-4. **T+3d Retro** - Review actual performance vs prediction
-5. **Rubric Evolution** - Refine the rubric based on retrospective insights
+## Core Loop
 
-## Tech Stack
+```
+Intake → Branch Discovery → Alter Generation → Dialogue / Value Alignment → Calibration
+```
 
-- **Frontend**: Next.js + TypeScript + Tailwind + shadcn/ui
-- **Backend**: FastAPI + Python + Pydantic v2 + SQLite
-- **Testing**: pytest
+1. **Intake** - Capture a current Snapshot: constraints, uncertainties, and what you refuse to give up
+2. **Branch Discovery** - Identify structural, mutually incompatible future branches
+3. **Alter Generation** - For each branch, generate an Alter: a coherent version of you living that path
+4. **Dialogue / Value Alignment** - Converse with each Alter to evaluate fit, values, and tradeoffs
+5. **Calibration** - Score branches against a Rubric and refine over time
 
-## Getting Started
+## Phase 0: File-Based Workflow
 
-> Placeholder - implementation details will be added in subsequent execution slices.
+Phase 0 operates entirely on local files — YAML snapshots, YAML branch definitions, YAML alters, and a JSON calibration state. No application code, no database, no LLM providers. This is the exploration and design phase before any system is built.
+
+## Project Structure
+
+```
+alters/
+  current/
+    snapshot.yaml          # Current state: constraints, uncertainties, anchors
+    branches.yaml          # Discovered branches with quality rules
+    reality_trace.yaml     # How reality diverges from branches over time
+    alters/                # Alter YAML files per branch
+  calibration/
+    rubric.yaml            # Evaluation dimensions (4-axis rubric)
+    state.json             # Cold-start calibration state
+    scores/                # Per-cycle score records
+  archive/                 # Completed cycle archives
+```
 
 ## License
 

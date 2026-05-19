@@ -2,97 +2,107 @@
 
 ## Entities
 
-### Project
+### Snapshot
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | UUID | Primary key |
-| name | str | Project name |
-| description | str | Optional description |
+| id | string | Identifier |
+| heaviest_constraint | text | The biggest constraint currently shaping decisions |
+| most_unclear | text | The most uncertain direction or question |
+| unwilling_to_give_up | list[str] | Things you will not sacrifice regardless of branch |
+| captured_at | datetime | When the snapshot was taken |
+| cycle | int | Which calibration cycle this belongs to |
+
+### Branch
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Identifier |
+| snapshot_id | string | FK to Snapshot |
+| name | string | Branch label |
+| description | text | What this path looks like |
+| structural_difference | text | How this differs from other branches in kind, not degree |
+| tradeoffs | list[str] | What you gain and lose on this path |
 | created_at | datetime | Creation timestamp |
-| updated_at | datetime | Last update timestamp |
+
+### Alter
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Identifier |
+| branch_id | string | FK to Branch |
+| name | string | Alter's name or label |
+| values | list[str] | Core values on this branch |
+| narrative | text | Coherent life story for this path |
+| tradeoffs | list[str] | What this Alter has accepted or sacrificed |
+| created_at | datetime | Creation timestamp |
+
+### RealityTrace
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Identifier |
+| branch_id | string | FK to Branch |
+| observed_at | datetime | When this observation was recorded |
+| divergence | text | How reality differs from predicted branch |
+| delta_magnitude | float | How far reality has drifted (0-1) |
+| notes | text | Additional context |
+
+### RealityScore
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Identifier |
+| cycle | int | Calibration cycle |
+| branch_id | string | FK to Branch |
+| scores | JSON | Per-dimension scores |
+| total_score | float | Weighted total |
+| scored_at | datetime | When scored |
 
 ### Rubric
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | UUID | Primary key |
-| project_id | UUID | FK to Project |
+| id | string | Identifier |
 | version | int | Version number |
-| criteria | JSON | List of criteria with weights |
+| dimensions | list[RubricDimension] | Evaluation dimensions |
+| auto_modify | bool | Whether rubric can self-modify (always false) |
 | created_at | datetime | Creation timestamp |
 
-### Script
+### RubricDimension
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | UUID | Primary key |
-| project_id | UUID | FK to Project |
-| title | str | Script title |
-| content | text | Script content |
-| created_at | datetime | Creation timestamp |
+| name | string | Dimension identifier |
+| description | text | What this dimension measures |
+| weight | float | Relative weight (0-1) |
+| scale | string | Scoring scale description |
 
-### Scoring
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| script_id | UUID | FK to Script |
-| rubric_id | UUID | FK to Rubric |
-| scores | JSON | Per-criterion scores |
-| total_score | float | Weighted total |
-| created_at | datetime | Creation timestamp |
-
-### BlindPrediction
+### Archive
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | UUID | Primary key |
-| scoring_id | UUID | FK to Scoring |
-| predicted_metrics | JSON | Predicted performance metrics |
-| confidence | float | Confidence level (0-1) |
-| created_at | datetime | Creation timestamp |
-
-### Publish
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| script_id | UUID | FK to Script |
-| published_at | datetime | Publication timestamp |
-| platform | str | Publishing platform |
-| initial_metrics | JSON | Metrics at time of publish |
-
-### Retro
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| prediction_id | UUID | FK to BlindPrediction |
-| actual_metrics | JSON | Actual performance metrics |
-| delta_analysis | JSON | Predicted vs actual analysis |
-| notes | text | Creator notes |
-| created_at | datetime | Creation timestamp |
-
-### CalibrationSignal
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| project_id | UUID | FK to Project |
-| signal_type | str | Type of signal |
-| evidence | JSON | Supporting evidence |
-| suggested_rubric_change | JSON | Proposed rubric modification |
-| human_reviewed | bool | Whether human has reviewed |
-| human_verdict | str | Human's decision |
-| created_at | datetime | Creation timestamp |
+| id | string | Identifier |
+| cycle | int | Completed cycle number |
+| snapshot_snapshot | Snapshot | Archived snapshot |
+| branches | list[Branch] | Archived branches |
+| scores | list[RealityScore] | Archived scores |
+| reality_traces | list[RealityTrace] | Archived traces |
+| archived_at | datetime | When archived |
 
 ## Relationships
 
-- Project 1:N Rubric
-- Project 1:N Script
-- Script 1:N Scoring
-- Scoring 1:1 BlindPrediction
-- Script 1:N Publish
-- BlindPrediction 1:N Retro
-- Project 1:N CalibrationSignal
+- Snapshot 1:N Branch
+- Branch 1:N Alter
+- Branch 1:N RealityTrace
+- Branch 1:N RealityScore
+- Snapshot 1:1 Archive (per cycle)
+
+## Invariants
+
+- Branches must be structurally and mutually incompatible (not gradations)
+- Alter must reference a valid branch_ref
+- Time horizon for branches is fixed at 1.5-2 years
+- Dialogue must inject full alter.yaml content
+- Rubric auto_modify is always false
+- Any unknown_error requires human review
