@@ -35,3 +35,14 @@
 | ALT-007 | Calibration workflow | docs/calibration-system-workflow.md | Eight-section workflow: purpose, inputs, two-speed model, dimensions, cold-start policy, evolution policy, valid/invalid, hard prohibitions |
 | ALT-007 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Calibration + Rubric quality gate with pass/fail criteria |
 | ALT-007 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-006 marked done, ALT-007 marked running, ALT-008 marked blocked |
+| ALT-007 | Project board update | docs/harness/PROJECT_BOARD.md | ALT-007 marked done, ALT-008 marked running |
+| ALT-008 | Archive snapshot template | alters/archive/_template/snapshot.yaml | Inactive template with archive_id, snapshot structure, quality rules |
+| ALT-008 | Archive branches template | alters/archive/_template/branches.yaml | Inactive template with archive_id, branch discovery structure, quality rules |
+| ALT-008 | Archive alters .gitkeep | alters/archive/_template/alters/.gitkeep | Empty placeholder for archived alter files |
+| ALT-008 | Archive reality trace template | alters/archive/_template/reality_trace.yaml | Inactive template with archive_id, events list, event_template, quality rules |
+| ALT-008 | Archive reality score template | alters/archive/_template/reality_score.yaml | Inactive template with archive_id, per_branch scores, drift summary, quality rules |
+| ALT-008 | Archive resolution template | alters/archive/_template/resolution.yaml | Inactive template with archive_id, resolution structure, quality rules |
+| ALT-008 | Archive rubric delta template | alters/archive/_template/rubric_delta.yaml | Inactive template with archive_id, reject_auto_apply: true, quality rules |
+| ALT-008 | Archive workflow doc | docs/archive-system-workflow.md | Nine-section workflow: purpose, inputs, naming, contents, triggers, process, valid/invalid, rubric delta policy, hard prohibitions |
+| ALT-008 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Archive System quality gate with pass/fail criteria and checklist items |
+| ALT-008 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-007 marked done, ALT-008 marked running |

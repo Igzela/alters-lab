@@ -1,0 +1,29 @@
+# Alters System — Archive Rubric Delta Template
+# INACTIVE TEMPLATE ONLY — Do not use for active rubric changes.
+# Rubric changes require explicit human confirmation and a decision record.
+
+archive_id: "YYYY-MM-DD_event"
+status: inactive_template_only
+created_at: null
+
+rubric_delta:
+  proposal: null
+  reject_auto_apply: true
+  requires_human_confirmation: true
+
+proposal_template:
+  field: ""
+  current_value: null
+  proposed_value: null
+  reason: ""
+  drift_observation: ""
+  human_decision: null
+  decision_record_ref: null
+
+quality_rules:
+  - "reject_auto_apply is always true — no exceptions"
+  - "No rubric delta may be applied without explicit human confirmation"
+  - "Every rubric change requires a linked decision record"
+  - "No invented drift observations — must reference real calibration data"
+  - "archive_id must match the parent folder name"
+  - "proposal must be null until human creates it"

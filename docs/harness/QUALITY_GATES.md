@@ -62,6 +62,12 @@ Calibration scores branches against reality using a fixed rubric with four dimen
 - **Pass**: rubric.yaml has canonical structure (version, mode, status, dimensions, drift_formula, evolution_policy with auto_modify: false), state.json has cold_start state, scores/_template.yaml exists and is marked inactive_template_only, no active score_*.yaml files exist, no drift computed, no rubric evolution, calibration-system-workflow.md documents all sections (purpose, inputs, two-speed model, dimensions, cold-start policy, evolution policy, valid/invalid, hard prohibitions).
 - **Fail**: rubric auto_modify is true, active score files created without confirmed inputs, drift computed without both predicted and actual values, rubric modified without human confirmation, invented values used for scoring, Brier scoring used, cold-start scoring attempted before baseline established.
 
+### Archive System
+
+Archive System preserves historical system states at meaningful checkpoints. Quality gate:
+- **Pass**: archive/_template/ folder exists with all 7 template files (snapshot.yaml, branches.yaml, reality_trace.yaml, reality_score.yaml, resolution.yaml, rubric_delta.yaml, alters/.gitkeep); all templates marked inactive_template_only and status: inactive_template_only; archive-system-workflow.md exists with all 9 sections (purpose, input requirements, folder naming, archive contents, triggers, process, valid/invalid, rubric delta policy, hard prohibitions); no real dated archive folders created; no active current files mutated; no rubric delta applied; reject_auto_apply is true on rubric_delta template.
+- **Fail**: any archive template missing, any template not marked inactive_template_only, real dated archive folder created, active current files modified, rubric delta applied without human confirmation, reject_auto_apply is not true, archive created without snapshot or branches, archive created during active operations.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -99,3 +105,10 @@ Calibration scores branches against reality using a fixed rubric with four dimen
 - [ ] No rubric evolution without human confirmation
 - [ ] No Brier scoring used
 - [ ] Cold-start policy documented and followed
+- [ ] Archive _template folder has all 7 files
+- [ ] All archive templates marked inactive_template_only
+- [ ] No real dated archive folders created
+- [ ] No active current files mutated during archive
+- [ ] No rubric delta applied without human confirmation
+- [ ] reject_auto_apply is true on rubric_delta template
+- [ ] Archive process requires snapshot and branches to exist
