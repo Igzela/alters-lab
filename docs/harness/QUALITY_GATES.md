@@ -32,6 +32,12 @@ The snapshot must use canonical Phase 0 structure with all required fields prese
 - **Pass**: snapshot.yaml has canonical structure, all three anchors exist (heaviest_constraint, most_unclear, unwilling_to_give_up), intake_status exists, empty fields are empty strings/lists (not invented content).
 - **Fail**: multiple questions asked at once, branches generated before snapshot confirmation, alters generated during intake, snapshot contains invented placeholder data.
 
+### Branch Discovery
+
+Branch Discovery must produce 3-4 structural, mutually incompatible branches from confirmed snapshot anchors. Quality gate:
+- **Pass**: branch_discovery.status is "completed", branches list has 3-4 entries, each branch has id, core_choice, structural_commitment, key_tension_resolved, incompatible_with (non-empty), preserves, sacrifices, validation_signal_30d, invalid_if; every branch in incompatible_with exists in branches list; no branch differs only in result or parameter from another.
+- **Fail**: fewer than 3 branches, more than 4 branches, any branch with empty incompatible_with, any branch pair that is compatible (not structurally conflicting), branches generated from unconfirmed snapshot, branches contain invented data not traced to snapshot anchors.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -43,3 +49,6 @@ The snapshot must use canonical Phase 0 structure with all required fields prese
 - [ ] Snapshot uses canonical Phase 0 structure
 - [ ] All three anchors present in snapshot
 - [ ] No branches or alters before snapshot confirmation
+- [ ] Branch Discovery produces 3-4 branches from confirmed snapshot
+- [ ] Every branch has non-empty incompatible_with
+- [ ] No result-only or parameter-only branch differences
