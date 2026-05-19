@@ -231,3 +231,17 @@
 **Goal**: Define controlled mutation boundaries before any Phase 3 implementation
 **Depends on**: P2-005R (done)
 **Completed**: Scope plan produced with 10 sections: executive summary, objectives, allowed writes (9 types), forbidden writes (10 items), approval gates, rollback/recovery plan, evidence requirements, final gate criteria, execution slice map (P3-001 through P3-007), risks and mitigations (R-029 through R-038). No code changes.
+
+### P3-001: Controlled Snapshot Write API
+
+**Status**: done
+**Goal**: Implement controlled snapshot write API with governance checks and approval gates
+**Depends on**: P3-000 (done)
+**Completed**: Snapshot persist endpoint with approval_token validation, governance checks, audit trail. 133 tests passing.
+
+### P3-001R: Controlled Snapshot Write API Contract Repair
+
+**Status**: done
+**Goal**: Fix contract issues identified in P3-001 review: approval_token hash-only storage, dry_run support, dependency injection for paths, strengthened schemas
+**Depends on**: P3-001 (done)
+**Completed**: approval_token stored as sha256 hash only in audit records, dry_run mode returns 200 without writing, dependency-injected paths for testability, strengthened request/response schemas with boundary_confirmations. 149 tests passing.

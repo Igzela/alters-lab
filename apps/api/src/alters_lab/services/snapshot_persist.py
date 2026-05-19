@@ -15,6 +15,9 @@ AUDIT_FILE = AUDIT_DIR / "phase3_write_audit.jsonl"
 
 APPROVAL_TOKEN = "p3-001-approved"
 
+DEFAULT_TARGET_PATH = Path("alters/current/snapshot.yaml")
+DEFAULT_AUDIT_PATH = Path("docs/harness/phase3_write_audit.jsonl")
+
 
 def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -64,12 +67,27 @@ def persist_snapshot_to_disk(
     payload: dict,
     target_path: Path,
     approval_token: str,
+    *,
+    dry_run: bool = False,
+    audit_path: Path | None = None,
 ) -> dict:
     if approval_token != APPROVAL_TOKEN:
         return {"status": "rejected", "reason": "invalid approval_token"}
 
     target = Path(target_path)
+    audit = Path(audit_path) if audit_path else DEFAULT_AUDIT_PATH
+
     sha256_before = sha256_file(target)
+
+    if dry_run:
+        return {
+            "status": "dry_run",
+            "path": None,
+            "sha256_before": sha256_before,
+            "sha256_after": None,
+            "audit_record": {},
+            "would_write": payload["yaml_content"],
+        }
 
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(payload["yaml_content"], encoding="utf-8")
@@ -82,11 +100,11 @@ def persist_snapshot_to_disk(
         "target_path": str(target),
         "sha256_before": sha256_before,
         "sha256_after": sha256_after,
-        "approval_token": approval_token,
+        "approval_token_hash": sha256_text(approval_token),
     }
 
-    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
-    with open(AUDIT_FILE, "a", encoding="utf-8") as f:
+    audit.parent.mkdir(parents=True, exist_ok=True)
+    with open(audit, "a", encoding="utf-8") as f:
         f.write(json.dumps(audit_record) + "\n")
 
     return {

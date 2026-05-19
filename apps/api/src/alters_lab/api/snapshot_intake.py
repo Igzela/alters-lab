@@ -25,6 +25,7 @@ from alters_lab.services.snapshot_intake import (
 from alters_lab.services.snapshot_persist import (
     build_snapshot_persist_payload,
     persist_snapshot_to_disk,
+    sha256_file,
     validate_snapshot_persist_governance,
 )
 from alters_lab.services.snapshot_sessions import InMemorySnapshotSessionStore
@@ -157,9 +158,30 @@ def persist_snapshot(session_id: UUID, body: SnapshotPersistRequest):
 
     payload = build_snapshot_persist_payload(session.snapshot)
     target = Path("alters/current/snapshot.yaml")
-    result = persist_snapshot_to_disk(payload, target, body.approval_token)
+    result = persist_snapshot_to_disk(
+        payload,
+        target,
+        body.approval_token,
+        dry_run=body.dry_run,
+    )
 
     if result["status"] == "rejected":
         raise HTTPException(status_code=403, detail=result["reason"])
 
-    return SnapshotPersistResponse(**result)
+    yaml_before = sha256_file(target)
+
+    return SnapshotPersistResponse(
+        status=result["status"],
+        path=result["path"],
+        sha256_before=result["sha256_before"],
+        sha256_after=result["sha256_after"],
+        audit_record=result.get("audit_record", {}),
+        governance_check=governance,
+        boundary_confirmations={
+            "read_only": False,
+            "snapshot_yaml_modified": result["status"] == "persisted",
+            "other_yaml_not_modified": True,
+            "approval_token_hash_only": True,
+        },
+        would_write=result.get("would_write"),
+    )
