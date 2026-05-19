@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from alters_lab.api.cycle_summary import router as cycle_summary_router
 from alters_lab.api.snapshot_intake import router as snapshot_intake_router
 
 app = FastAPI(title="Alters Lab API")
@@ -11,3 +12,4 @@ def health():
 
 
 app.include_router(snapshot_intake_router)
+app.include_router(cycle_summary_router)

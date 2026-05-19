@@ -17,12 +17,17 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/snapshot-intake/sessions/{id}/next-anchor` | Get next pending anchor |
 | POST | `/snapshot-intake/sessions/{id}/answers` | Submit anchor answer |
 | POST | `/snapshot-intake/sessions/{id}/confirm` | Confirm completed snapshot |
+| GET | `/cycle-summary/health` | Cycle summary component health |
+| GET | `/cycle-summary/current` | Sealed active YAML chain summary |
+| GET | `/cycle-summary/validation` | Validation result and artifact count |
+| GET | `/cycle-summary/artifacts` | Artifact metadata (no YAML content) |
 
 ## Services
 
 - **snapshot_intake** — Pure state-transition functions for the intake workflow
 - **snapshot_sessions** — In-memory session store
 - **snapshot_export** — Serialize completed snapshots to canonical YAML
+- **cycle_summary** — Read-only endpoints over the sealed active YAML chain (Phase 2)
 
 ## Export
 
