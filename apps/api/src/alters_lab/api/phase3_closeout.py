@@ -16,7 +16,6 @@ from alters_lab.services.phase3_closeout import (
     get_repo_root,
     phase3_closeout_boundary_confirmations,
     safe_read_json,
-    write_phase3_closeout_artifacts,
 )
 
 router = APIRouter(prefix="/phase3-closeout", tags=["phase3-closeout"])
@@ -34,23 +33,11 @@ def health():
 @router.get("/report")
 def get_report():
     repo_root = get_repo_root()
-    evidence_path = repo_root / "docs" / "harness" / "PHASE3_CLOSEOUT_EVIDENCE.json"
-
-    if not evidence_path.exists():
-        report = build_phase3_closeout_report(
-            repo_root=repo_root,
-            baseline_commit="unknown",
-            test_count=None,
-        )
-        write_phase3_closeout_artifacts(report, repo_root)
-    else:
-        evidence = safe_read_json(evidence_path)
-        report_data = evidence.get("report", evidence)
-        report = build_phase3_closeout_report(
-            repo_root=repo_root,
-            baseline_commit=report_data.get("baseline_commit", "unknown"),
-            test_count=report_data.get("test_count"),
-        )
+    report = build_phase3_closeout_report(
+        repo_root=repo_root,
+        baseline_commit="unknown",
+        test_count=None,
+    )
 
     return Phase3CloseoutResponse(
         status=report.status,
