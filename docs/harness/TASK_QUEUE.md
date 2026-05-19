@@ -100,7 +100,7 @@
 
 ### P1-002: Snapshot Intake API Endpoints
 
-**Status**: todo
+**Status**: done
 **Goal**: Expose Snapshot Intake workflow as REST API endpoints
 **Depends on**: P1-001 (done)
-**Notes**: Blocked. Requires P1-001 backend foundation to be stable.
+**Notes**: Complete. In-memory session store, 6 API endpoints (health, create session, get session, next anchor, submit answer, confirm snapshot), 20 API tests + 13 existing tests = 33 total passing. Enforces one-question-at-a-time order. Rejects empty, duplicate, and out-of-order answers. Confirm only succeeds after all three anchors. No YAML writes, no Branch Discovery trigger.

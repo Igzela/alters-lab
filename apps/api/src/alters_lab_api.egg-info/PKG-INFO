@@ -7,4 +7,5 @@ Requires-Dist: fastapi
 Requires-Dist: pydantic
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
+Requires-Dist: httpx; extra == "dev"
 Requires-Dist: uvicorn; extra == "dev"
