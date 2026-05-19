@@ -14,3 +14,5 @@
 | ALT-005 | 2026-05-19 | claude | running | Dialogue engine workflow. Canonical dialogue/_template.yaml (inactive), dialogue-engine-workflow.md, quality gate added. No active sessions — no confirmed alters exist. |
 | ALT-005 | 2026-05-19 | claude | done | Dialogue engine complete. Workflow and template finalized. |
 | ALT-006 | 2026-05-19 | claude | running | Value alignment evaluator workflow. Canonical value_alignment/_template.yaml (inactive), value-alignment-workflow.md, quality gate added. No active alignment files — no confirmed alters exist. |
+| ALT-006 | 2026-05-19 | claude | done | Value alignment evaluator complete. Workflow and template finalized. |
+| ALT-007 | 2026-05-19 | claude | running | Calibration system + rubric. Rubric normalized (version, mode, status, dimensions, drift_formula, evolution_policy with auto_modify: false). state.json cold_start. scores/_template.yaml inactive. calibration-system-workflow.md with all 8 sections. Quality gate added. No active scores — cold start. |

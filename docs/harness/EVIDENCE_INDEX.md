@@ -29,3 +29,9 @@
 | ALT-006 | Value alignment workflow | docs/value-alignment-workflow.md | Eight-section workflow: purpose, input requirements, value extraction, alignment dimensions, evaluation pipeline, valid/invalid criteria, human confirmation, hard prohibitions |
 | ALT-006 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Value Alignment Evaluator quality gate with pass/fail criteria |
 | ALT-006 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-005 marked done, ALT-006 marked running, ALT-007 marked blocked |
+| ALT-007 | Normalized rubric | alters/calibration/rubric.yaml | Canonical structure: version, mode, status, purpose, 4 dimensions, drift_formula, evolution_policy with auto_modify: false |
+| ALT-007 | Cold-start state | alters/calibration/state.json | Cold-start state with checkpoints_completed, current_drift, rubric_version tracking |
+| ALT-007 | Score template | alters/calibration/scores/_template.yaml | Inactive template only with predicted/actual structure, drift computation, quality rules |
+| ALT-007 | Calibration workflow | docs/calibration-system-workflow.md | Eight-section workflow: purpose, inputs, two-speed model, dimensions, cold-start policy, evolution policy, valid/invalid, hard prohibitions |
+| ALT-007 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Calibration + Rubric quality gate with pass/fail criteria |
+| ALT-007 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-006 marked done, ALT-007 marked running, ALT-008 marked blocked |

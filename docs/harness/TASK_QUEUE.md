@@ -59,19 +59,20 @@
 
 ### ALT-006: Value alignment evaluator
 
-**Status**: running
+**Status**: done
 **Goal**: Compare Alters against user-confirmed values, not choose
 **Depends on**: ALT-005
-**Notes**: In progress. Value alignment workflow defined, template created (inactive). No active alignment files — no confirmed alters exist.
+**Notes**: Complete. Value alignment workflow defined, template created (inactive). No active alignment files — no confirmed alters exist.
 
 ### ALT-007: Calibration system + rubric
 
-**Status**: blocked
+**Status**: running
 **Goal**: Score branches, track scores, evolve rubric (human review only)
 **Depends on**: ALT-006
+**Notes**: In progress. Rubric normalized with canonical structure, state.json cold_start, scores template created (inactive), calibration-system-workflow.md defined. No active scores — no checkpoints exist.
 
 ### ALT-008: Archive system
 
-**Status**: todo
+**Status**: blocked
 **Goal**: Archive completed cycles with snapshot, branches, scores, and traces
 **Depends on**: ALT-007

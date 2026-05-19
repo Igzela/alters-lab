@@ -56,6 +56,12 @@ Value Alignment Evaluator compares Alters against user-confirmed values. Quality
 - **Pass**: snapshot completed (intake_status.phase: "completed"), branches confirmed (3-4 with non-empty incompatible_with), active alters exist (alter_*.yaml with branch_ref), value profile is user-confirmed only (no invented values), all five alignment dimensions assessed (autonomy, stability, exploration, engineering_output, relationship_life), comparison matrix produced (strongest, weakest, unresolved tradeoffs), requires_human_review is true, no active alignment_*.yaml files exist, no auto-choice, no rubric modification, no calibration update.
 - **Fail**: evaluator proceeds without confirmed snapshot/branches/alters, value profile contains invented data, any dimension skipped, auto-choice made without human review, alignment_*.yaml files created, rubric modified, calibration updated, incomplete comparison matrix.
 
+### Calibration + Rubric
+
+Calibration scores branches against reality using a fixed rubric with four dimensions. Quality gate:
+- **Pass**: rubric.yaml has canonical structure (version, mode, status, dimensions, drift_formula, evolution_policy with auto_modify: false), state.json has cold_start state, scores/_template.yaml exists and is marked inactive_template_only, no active score_*.yaml files exist, no drift computed, no rubric evolution, calibration-system-workflow.md documents all sections (purpose, inputs, two-speed model, dimensions, cold-start policy, evolution policy, valid/invalid, hard prohibitions).
+- **Fail**: rubric auto_modify is true, active score files created without confirmed inputs, drift computed without both predicted and actual values, rubric modified without human confirmation, invented values used for scoring, Brier scoring used, cold-start scoring attempted before baseline established.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -87,3 +93,9 @@ Value Alignment Evaluator compares Alters against user-confirmed values. Quality
 - [ ] requires_human_review is true on all alignment reports
 - [ ] No active alignment_*.yaml files created
 - [ ] No auto-choice, no rubric modification, no calibration update
+- [ ] Rubric auto_modify is false, mode is cold_start
+- [ ] No active score_*.yaml files in Phase 0
+- [ ] No drift computed without both predicted and actual values
+- [ ] No rubric evolution without human confirmation
+- [ ] No Brier scoring used
+- [ ] Cold-start policy documented and followed
