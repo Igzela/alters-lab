@@ -17,4 +17,5 @@
 | ALT-006 | 2026-05-19 | claude | done | Value alignment evaluator complete. Workflow and template finalized. |
 | ALT-007 | 2026-05-19 | claude | running | Calibration system + rubric. Rubric normalized (version, mode, status, dimensions, drift_formula, evolution_policy with auto_modify: false). state.json cold_start. scores/_template.yaml inactive. calibration-system-workflow.md with all 8 sections. Quality gate added. No active scores — cold start. |
 | ALT-007 | 2026-05-19 | claude | done | Calibration system complete. Rubric, state, template, workflow all finalized. |
-| ALT-008 | 2026-05-19 | claude | running | Archive system workflow. Archive _template folder with 7 files (snapshot, branches, reality_trace, reality_score, resolution, rubric_delta, alters/.gitkeep), all inactive_template_only. archive-system-workflow.md with 9 sections. Quality gate added. No real archive folders created. |
+| ALT-008 | 2026-05-19 | claude | done | Archive system complete. Workflow, template folder (7 files), quality gate all finalized. No real archives — no active cycles. |
+| P0-CLOSEOUT | 2026-05-19 | claude | done | Phase 0 workspace final gate review. All 5 checks passed: 7 workflow docs exist, 10 workspace templates exist, no forbidden active artifacts found, quality gates for all 7 systems, ALT-001-008 all done. Phase 0 complete — ready for CYCLE-001A. |

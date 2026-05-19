@@ -46,3 +46,7 @@
 | ALT-008 | Archive workflow doc | docs/archive-system-workflow.md | Nine-section workflow: purpose, inputs, naming, contents, triggers, process, valid/invalid, rubric delta policy, hard prohibitions |
 | ALT-008 | Quality gate update | docs/harness/QUALITY_GATES.md | Added Archive System quality gate with pass/fail criteria and checklist items |
 | ALT-008 | Task queue update | docs/harness/TASK_QUEUE.md | ALT-007 marked done, ALT-008 marked running |
+| P0-CLOSEOUT | Final gate review | docs/harness/RUN_LOG.md | Phase 0 closeout entry appended. All 5 checks passed. |
+| P0-CLOSEOUT | Decision record | docs/harness/DECISION_RECORD.md | P0-CLOSEOUT-01: Phase 0 workspace complete, ready for CYCLE-001A |
+| P0-CLOSEOUT | Project board update | docs/harness/PROJECT_BOARD.md | ALT-008 marked done, CYCLE-001A added as ready-with-approval |
+| P0-CLOSEOUT | Task queue update | docs/harness/TASK_QUEUE.md | ALT-008 marked done, CYCLE-001A added as ready-with-approval |
