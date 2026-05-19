@@ -312,3 +312,31 @@
 **Goal**: Implement controlled review boundary for generation drafts
 **Depends on**: P3-M2R (done)
 **Completed**: Draft review schemas (DraftReviewBoundaryConfirmations, DraftReviewDecision, DraftReviewRequest, PromotionBranchesPayload, PromotionAltersPayload, PromotionPackage, DraftReviewResponse, DraftReviewListResponse) with ConfigDict(extra="forbid"). Draft review service (draft_review_boundary_confirmations, load_draft_package, validate_draft_package_for_review, create_review_decision, build_branches_promotion_payload, build_alters_promotion_payload, build_promotion_package, save_review_decision, save_promotion_package, list_draft_reviews). Draft review API (GET /draft-review/health, POST /draft-review/{draft_id}/review, GET /draft-review/list). main.py updated with draft_review_router. 33 service tests + 16 API tests = 379 total passing. No active YAML modified. No persist API calls. No provider added. Promotion package is not active state.
+
+### P3-M3R: Promotion Package Contract Hardening
+
+**Status**: done
+**Goal**: Harden PromotionPackage schema with guard validators to enforce invariants at schema level
+**Depends on**: P3-M3 (done)
+**Completed**: PromotionPackage model_validator enforces active_write_allowed must be false, requires_controlled_persist_api must be true, target_persist_apis restricted to allowed set. validate_draft_package_for_review enforces complete branch_A-D/alter_A-D, branch_ref mapping, voice.core_stance, incompatible_with non-empty. build_alters_promotion_payload validates controlled persist compatibility.
+
+### P3-M3R2: Promotion Payload Exactness Repair
+
+**Status**: done
+**Goal**: Fix exactness validation for promotion payloads to catch duplicate IDs and incomplete sets
+**Depends on**: P3-M3R (done)
+**Completed**: validate_draft_package_for_review checks count==4, duplicate IDs, source_refs compatibility. build_branches/alters_promotion_payload verify exactly 4 unique items after filtering.
+
+### P3-M4: Controlled Active Promotion Orchestration Plan
+
+**Status**: done
+**Goal**: Implement controlled orchestration planning layer that reads a reviewed promotion package and produces an execution plan for active promotion
+**Depends on**: P3-M3R2 (done)
+**Completed**: Promotion orchestration schemas (8 models with ConfigDict(extra="forbid"): PromotionOrchestrationBoundaryConfirmations, PromotionPlanStep, PromotionEvidenceRequirement, PromotionRollbackPlan, PromotionOrchestrationPlan, PromotionOrchestrationRequest, PromotionOrchestrationResponse, PromotionOrchestrationListResponse). Promotion orchestration service (promotion_orchestration_boundary_confirmations, validate_draft_id, load_promotion_package, validate_promotion_package_for_orchestration, build_promotion_steps, build_evidence_requirements, build_rollback_plan, build_orchestration_plan, save_orchestration_plan, list_orchestration_plans). Promotion orchestration API (GET /promotion-orchestration/health, POST /promotion-orchestration/{draft_id}/plan, GET /promotion-orchestration/list). main.py updated with promotion_orchestration_router. 437 tests passing. No active YAML modified. Plan-only layer. P3-M5 remains blocked.
+
+### P3-M5: Controlled Promotion Execution Gate
+
+**Status**: blocked
+**Goal**: Implement controlled promotion execution that reads an approved orchestration plan and executes the promotion steps through controlled persist APIs
+**Depends on**: P3-M4 (done), human review
+**Completed**: Blocked pending human review of P3-M4 orchestration plan.

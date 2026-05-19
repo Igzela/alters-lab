@@ -54,6 +54,12 @@
 | R-048 | Review endpoint accidentally calling persist APIs | Low | High | P3-M3 service has no imports from branches_persist/alters_persist; grep check confirms no persist API calls | Mitigated |
 | R-049 | Path traversal via draft_id | Low | High | load_draft_package rejects draft_id containing /, \\, or .. | Mitigated |
 | R-050 | Raw approval token stored in review artifacts | Low | Medium | save_review_decision and save_promotion_package reject blank tokens; yaml.dump of model_dump excludes raw token | Mitigated |
+| R-051 | Orchestration plan mistaken for execution | Medium | High | P3-M4: plan is not execution; execution_allowed_in_p3_m4=false; human final approval required; plan-only mode documented | Mitigated |
+| R-052 | Plan endpoint accidentally calling persist APIs | Low | High | P3-M4 service has no imports from branches_persist/alters_persist; grep check confirms no persist API calls | Mitigated |
+| R-053 | Invalid promotion package producing unsafe execution plan | Medium | High | P3-M4 validate_promotion_package_for_orchestration rejects invalid packages; plan cannot be built from invalid package | Mitigated |
+| R-054 | Missing rollback/evidence requirements before active promotion | Low | High | P3-M4 build_evidence_requirements and build_rollback_plan produce mandatory requirements; plan includes evidence and rollback | Mitigated |
+| R-055 | Path traversal via draft_id in orchestration | Low | High | validate_draft_id rejects /, \\, .., empty string | Mitigated |
+| R-056 | Raw approval token stored in orchestration plan | Low | Medium | save_orchestration_plan rejects blank tokens; yaml.dump of model_dump excludes raw token; hash stored only | Mitigated |
 
 ## Risk Assessment
 
