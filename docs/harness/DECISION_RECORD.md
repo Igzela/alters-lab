@@ -175,7 +175,14 @@
 **Consequences**: Confirm remains in-memory and safe. Export is opt-in and explicit. The active snapshot.yaml is never mutated by the API. File writes only happen through deliberate function calls with explicit paths.
 **Alternatives**: Auto-write on confirm (rejected — violates the "no automatic active YAML mutation" rule). Expose export as API endpoint (deferred to later slice — P1-003 is service/export contract only).
 
-### Decision P1-010-01: Flat active Alter schema with source_refs and quality_status
+### Decision P2-001-01: Phase 2 starts with read-only loaders over the sealed Phase 1 active YAML chain
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: Phase 2 begins with a read-only runtime foundation. Before adding any generation, runtime automation, or interactive systems, the system must be able to reliably read and validate its current governed artifacts.
+**Decision**: Phase 2 starts with a read-only loader package that loads all 9 active YAML artifacts, validates them against the sealed baseline schema, and produces a summary — all without mutating any YAML file. The loader is testable from Python and returns ValidationResult (not exceptions) for semantic validation failures.
+**Consequences**: The system gains a verified read-only interface to its governed artifacts. Future slices (P2-002+) can build CLI tools, validators, and read-only dashboards on top of this foundation. No generation, no mutation, no provider integration. The loader serves as a trust boundary between read-only and write operations.
+**Alternatives**: Start with CLI tool (rejected — needs loader foundation first). Start with generation runtime (rejected — premature before read-only validation is stable). Start with database persistence (rejected — file-based governance is not yet validated for read access).
 
 **Date**: 2026-05-19
 **Status**: accepted

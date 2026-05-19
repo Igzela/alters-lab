@@ -27,6 +27,11 @@
 | R-021 | Quality gates contradicting current phase artifacts | Medium | High | QUALITY_GATES.md updated to accept active alignment files after human confirmation and flat active Alter schema with source_refs/quality_status; gates now match Phase 1 reality | Active |
 | R-022 | Governance docs overstating runtime capability | Medium | Medium | Titles corrected to "Controlled YAML Write" for P1-004 through P1-009; decision record documents the clarification; periodic review recommended | Active |
 | R-023 | Static YAML writes confused with backend automation | Medium | Medium | P1-004 through P1-009 are file-based artifact generation, not running services; QUALITY_GATES updated to reflect actual scope; integration (P1-011) will clarify runtime vs. static boundary | Active |
+| R-024 | Loader accidentally mutates active YAML | Low | High | Loader uses yaml.safe_load only; tests verify hash/text of snapshot.yaml, branches.yaml, reality_trace.yaml unchanged after load+validate+summarize | Active |
+| R-025 | Loader becomes hidden generation runtime | Low | High | Loader package is read-only by design; no write functions; no branch/alter/dialogue/value/calibration/archive generation; boundary tests verify no forbidden routers added | Active |
+| R-026 | Validators drift from Quality Gates | Medium | Medium | validate_active_yaml_chain validates against sealed baseline schema; changes to Quality Gates require matching validator updates | Active |
+| R-027 | Phase 1 sealed baseline overwritten by Phase 2 | Low | High | Phase 2 loader is read-only; no YAML mutation; no archive creation; git diff verifies no changes to alters/current, alters/calibration, alters/archive | Active |
+| R-028 | Future runtime built before read-only validation is stable | Medium | High | P2-001 establishes read-only loader + validation as prerequisite; P2-002 CLI tool depends on stable loader; no generation runtime until read-only layer is proven | Active |
 
 ## Risk Assessment
 

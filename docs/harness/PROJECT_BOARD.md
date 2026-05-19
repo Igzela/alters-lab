@@ -40,6 +40,22 @@ todo → ready → running → review → done/failed
 | P1-012 | Day 30 Evidence Harness + Schema Alignment | done |
 | P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **blocked** |
 
+## Phase 1 Sealed Baseline
+
+Phase 1 Final Gate: **PASS**
+- Day 14 gate: PASSED
+- Day 30 gate: PASSED
+- 62 tests passing
+- 9 active YAML artifacts validated
+- Commit: 9a59317 pushed to main
+
+## Phase 2 — Read-Only Runtime Foundation
+
+| ID | Title | Status |
+|----|-------|--------|
+| P2-001 | Sealed Baseline Verification + Active YAML Loader | **done** |
+| P2-002 | Active YAML Chain Validator CLI | blocked/todo |
+
 ## Quality Gates
 
 **day_14 gate**: "FastAPI backend can run Snapshot Intake contract and tests." — **COMPLETED** (P1-001 through P1-003 passed)
