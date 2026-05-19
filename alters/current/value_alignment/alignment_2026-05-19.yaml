@@ -1,0 +1,257 @@
+value_alignment_report:
+  id: "alignment_2026-05-19"
+  generated_at: "2026-05-19"
+  status: "human_confirmed"
+
+  source_refs:
+    snapshot_ref: "alters/current/snapshot.yaml"
+    branches_ref: "alters/current/branches.yaml"
+    alters:
+      - "alters/current/alters/alter_A.yaml"
+      - "alters/current/alters/alter_B.yaml"
+      - "alters/current/alters/alter_C.yaml"
+      - "alters/current/alters/alter_D.yaml"
+    rubric_ref: "alters/calibration/rubric.yaml"
+
+  value_profile:
+    primary_non_negotiables:
+      - "技术探索自由"
+      - "硬工程作品能力"
+    secondary_needs:
+      - "有依据的判断，而不是赌一把"
+      - "知道什么时候该止损或切方向"
+    unresolved:
+      - "愿意牺牲多少短期稳定性"
+      - "愿意牺牲多少考研/学历跃迁窗口"
+      - "对普通 offer 保底的最低可接受程度"
+
+  dimensions:
+    autonomy: "长期自主性 / 自主选择空间"
+    technical_exploration: "技术探索自由"
+    engineering_output: "硬工程作品能力"
+    stability: "短期稳定与现实安全垫"
+    evidence_based_decision: "是否能产生路径证据和止损信号"
+
+  alters:
+    - alter_ref: "alters/current/alters/alter_A.yaml"
+      branch_ref: "branch_A"
+      label: "All in 考研收束型 Charlie"
+      alignment_summary: "条件性对齐，但与最不愿放弃的东西冲突最大。"
+      alignment:
+        autonomy: "medium"
+        technical_exploration: "low"
+        engineering_output: "low"
+        stability: "medium"
+        evidence_based_decision: "medium"
+      preserved_values:
+        - "清晰单一主线"
+        - "学历跃迁机会"
+        - "传统路径认可度"
+        - "考试型执行纪律"
+      sacrificed_values:
+        - "技术探索自由"
+        - "硬工程作品能力"
+        - "真实工程反馈窗口"
+        - "短期作品资产积累"
+      core_exchange: >
+        alter_A 用 6-9 个月高度收束，换取一次 985 CS 学历跃迁机会；
+        代价是技术探索和硬工程作品会显著降级。
+      key_question: >
+        你能否接受未来半年到一年主要通过刷题和考试评价自己，
+        而不是通过工程作品证明自己？
+      evaluator_notes: >
+        这条路不是无效，但它必须满足一个前提：你真的愿意把"学历跃迁"放到
+        "技术探索自由"和"硬工程作品能力"之上至少 6-9 个月。
+        如果你内心无法接受工程能力停滞，这条路会不断反噬。
+
+    - alter_ref: "alters/current/alters/alter_B.yaml"
+      branch_ref: "branch_B"
+      label: "Offer 保底 + 工程能力型 Charlie"
+      alignment_summary: "中高对齐。它保留工程能力和现实安全垫，但会压缩考研上限。"
+      alignment:
+        autonomy: "medium"
+        technical_exploration: "medium"
+        engineering_output: "high"
+        stability: "high"
+        evidence_based_decision: "high"
+      preserved_values:
+        - "硬工程作品能力"
+        - "现实安全垫"
+        - "面试和岗位反馈"
+        - "部分技术探索空间"
+      sacrificed_values:
+        - "All in 考研深度"
+        - "985 CS 学历跃迁最大化机会"
+        - "纯粹自由探索时间"
+      core_exchange: >
+        alter_B 用 offer 和工程项目换取现实落点与能力反馈；
+        代价是考研不再是绝对主线，学历跃迁上限下降。
+      key_question: >
+        你能否接受"先成为一个可就业的工程候选人"，而不是先押注学历跃迁？
+      evaluator_notes: >
+        这条路和"硬工程作品能力"高度对齐，也能缓解路径焦虑。
+        风险在于：如果项目只是包装简历，而没有真正技术含量，
+        用户会觉得自己变成了只会 CRUD 的人。
+
+    - alter_ref: "alters/current/alters/alter_C.yaml"
+      branch_ref: "branch_C"
+      label: "限时双轨校准型 Charlie"
+      alignment_summary: "高条件对齐。它最符合有依据判断的需求，但执行失败率也最高。"
+      alignment:
+        autonomy: "medium"
+        technical_exploration: "medium"
+        engineering_output: "medium"
+        stability: "medium"
+        evidence_based_decision: "high"
+      preserved_values:
+        - "考研窗口"
+        - "工程/求职窗口"
+        - "路径证据"
+        - "止损机制"
+        - "心理缓冲"
+      sacrificed_values:
+        - "单一路径深度"
+        - "短期效率"
+        - "明确身份感"
+        - "低管理成本"
+      core_exchange: >
+        alter_C 用 45-60 天受控双轨，换取真实路径证据；
+        代价是短期内没有任何方向能获得最大化投入。
+      key_question: >
+        你能否严格执行时间盒，并在截止日期到来时真的切换，而不是继续拖？
+      evaluator_notes: >
+        这条路最符合"不需要 100% 确定，但需要有依据的判断"。
+        但它也是最容易伪装成拖延的路径。没有明确日程、止损指标和周复盘，
+        它就是无效分支。
+
+    - alter_ref: "alters/current/alters/alter_D.yaml"
+      branch_ref: "branch_D"
+      label: "硬工程作品优先型 Charlie"
+      alignment_summary: "价值对齐最高，但现实风险也最高。"
+      alignment:
+        autonomy: "high"
+        technical_exploration: "high"
+        engineering_output: "very_high"
+        stability: "low"
+        evidence_based_decision: "medium"
+      preserved_values:
+        - "技术探索自由"
+        - "硬工程作品能力"
+        - "长期自主性"
+        - "差异化技术身份"
+        - "真实可展示资产"
+      sacrificed_values:
+        - "考研连续性"
+        - "传统 offer 保底"
+        - "短期稳定感"
+        - "外部认可速度"
+      core_exchange: >
+        alter_D 用短期不稳定和外部认可延迟，换取最大化技术自由、
+        工程闭环能力和长期自主路径。
+      key_question: >
+        你能否在没有学历/offer 安全垫的情况下，连续 30-60 天把一个真实工程作品推进到可运行、可展示、可验证？
+      evaluator_notes: >
+        这条路最贴近用户的非放弃项，但也最容易失败。
+        它只有在"唯一主项目 + 真实使用场景 + 每周可验证产物 + quality gate"同时成立时才值得走。
+        如果只是自由探索，它会退化成信息消费和换题。
+
+  comparison:
+    strongest_value_alignment:
+      alter: "alter_D"
+      reason: "最强保留技术探索自由和硬工程作品能力。"
+    strongest_reality_safety:
+      alter: "alter_B"
+      reason: "最能提供现实安全垫和工程反馈。"
+    strongest_decision_calibration:
+      alter: "alter_C"
+      reason: "最符合用证据而不是赌博做判断的需求。"
+    weakest_against_primary_values:
+      alter: "alter_A"
+      reason: "最可能压缩技术探索自由和硬工程作品能力。"
+    unresolved_tradeoffs:
+      - "愿意牺牲多少短期稳定，来换硬工程作品？"
+      - "愿意牺牲多少学历跃迁概率，来换工程反馈？"
+      - "是否真的能执行 45-60 天限时双轨，而不是继续摇摆？"
+
+  observer_note:
+    key_observation: >
+      当前 persona 的执行结构松散：经常刷手机到 10 点才开始，
+      周末集中搞一个方向但下周又换，多个 TODO list 互相矛盾。
+      因此 alter_C 虽然理论上最能产生路径证据，但它要求强自我管理能力，
+      而这正是当前最薄弱的地方。
+    implication:
+      - "alter_C 的失败模式与当前状态高度重合：双轨变成无约束多轨。"
+      - "alter_D 的失败模式也是当前正在发生的问题，但 D 可以通过唯一主项目、quality gate、每周 commit 和可展示产物来结构化约束。"
+      - "alter_B 现实安全性强，但如果项目只是包装简历，会和技术探索自由/硬工程作品能力冲突。"
+      - "alter_A 与核心价值冲突最大。"
+    adjusted_ranking:
+      - "D"
+      - "C_if_strict_stop_loss_exists"
+      - "B"
+      - "A"
+
+  final_interpretation:
+    primary_candidate: "branch_D"
+    reason: >
+      D 最贴合技术探索自由和硬工程作品能力，而且它能把当前的"乱探索"
+      转化为"唯一主项目 + 闭环约束"。
+    conditional_candidate: "branch_C"
+    reason: >
+      C 只有在严格时间盒、止损日期、每周复盘和单一任务系统存在时才成立；
+      否则它会退化成当前问题的放大版。
+    pragmatic_fallback: "branch_B"
+    reason: >
+      B 提供现实安全垫，但必须绑定真正有技术含量的工程项目，
+      否则会滑向普通简历包装和 CRUD 路径。
+    low_alignment: "branch_A"
+    reason: >
+      A 与当前最不愿放弃的技术探索自由和硬工程作品能力冲突最大。
+
+  provisional_commitment:
+    selected_branch: "branch_D"
+    mode: "30-day controlled probe"
+    fallback_branch: "branch_B"
+    blocked_branch: "branch_A"
+    conditional_branch: "branch_C only as structure, not as equal dual-track"
+    commitment_statement: >
+      未来 30 天以硬工程作品优先路径为主线。
+      不 All in 考研，不开启无约束双轨。
+      考研/offer 只作为最低限度风险监控项，不允许反过来吞掉主项目。
+
+  branch_D_30_day_probe:
+    main_project: "Alters Lab"
+    only_one_project: true
+    real_use_case: "个人未来分支模拟、路径选择校准、现实轨迹复盘"
+    project_requirement:
+      - "真实使用场景"
+      - "可运行最小版本"
+      - "README / AGENTS / docs 治理文档"
+      - "质量门"
+      - "测试或验证记录"
+      - "每周可展示产物"
+    day_14_gate:
+      check: "FastAPI 后端能跑 Snapshot Intake 合约和测试。"
+      status: "completed"
+    day_30_gate:
+      check: "完整 CYCLE 能走通：snapshot -> branches -> alters -> dialogue/value alignment -> first calibration template。"
+      status: "pending"
+    weekly_gate:
+      - "本周是否有 commit / 文档 / demo / 测试证据"
+      - "是否仍围绕同一个主项目"
+      - "是否出现换题冲动"
+      - "是否因为他人 offer/考研信息导致路径摇摆"
+    stop_loss:
+      day_14:
+        check: "是否已经锁定唯一主项目，并形成最小结构。"
+        result: "passed"
+      day_30:
+        check: "是否有完整 cycle 走通，并有可运行或可展示成果。"
+        fail_action: "判定 D 当前不可执行，转入 B 或严格 C。"
+
+  quality_status:
+    human_confirmed: true
+    active: true
+    notes:
+      - "CYCLE-001 Value Alignment confirmed by human owner."
+      - "This report does not auto-trigger Dialogue, Calibration, Archive, or Rubric evolution."
+      - "This report does not choose for the user as governance authority; it records a human-confirmed provisional commitment."
