@@ -109,3 +109,15 @@ class SnapshotConfirmationResponse(BaseModel):
     session_id: UUID
     snapshot: Snapshot
     ready_for_branch_discovery: bool
+
+
+class SnapshotPersistRequest(BaseModel):
+    approval_token: str
+
+
+class SnapshotPersistResponse(BaseModel):
+    status: str
+    path: str
+    sha256_before: str | None
+    sha256_after: str | None
+    audit_record: dict

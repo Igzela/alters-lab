@@ -9,14 +9,23 @@ from alters_lab.schemas.snapshot import (
     AnchorName,
     NextAnchorResponse,
     SnapshotConfirmationResponse,
+    SnapshotPersistRequest,
+    SnapshotPersistResponse,
     SnapshotSessionRead,
 )
+from pathlib import Path
+
 from alters_lab.services.snapshot_intake import (
     create_empty_snapshot,
     mark_snapshot_completed,
     next_anchor,
     ready_for_confirmation,
     record_anchor_answer,
+)
+from alters_lab.services.snapshot_persist import (
+    build_snapshot_persist_payload,
+    persist_snapshot_to_disk,
+    validate_snapshot_persist_governance,
 )
 from alters_lab.services.snapshot_sessions import InMemorySnapshotSessionStore
 
@@ -125,3 +134,32 @@ def confirm_snapshot(session_id: UUID):
         snapshot=completed_snapshot,
         ready_for_branch_discovery=True,
     )
+
+
+@router.post(
+    "/sessions/{session_id}/persist",
+    response_model=SnapshotPersistResponse,
+)
+def persist_snapshot(session_id: UUID, body: SnapshotPersistRequest):
+    session = store.get_session(session_id)
+    if session is None:
+        raise HTTPException(status_code=404, detail="session not found")
+
+    governance = validate_snapshot_persist_governance(session.snapshot)
+    if not governance["valid"]:
+        raise HTTPException(
+            status_code=403,
+            detail=f"governance validation failed: {'; '.join(governance['errors'])}",
+        )
+
+    if not body.approval_token:
+        raise HTTPException(status_code=403, detail="approval_token is required")
+
+    payload = build_snapshot_persist_payload(session.snapshot)
+    target = Path("alters/current/snapshot.yaml")
+    result = persist_snapshot_to_disk(payload, target, body.approval_token)
+
+    if result["status"] == "rejected":
+        raise HTTPException(status_code=403, detail=result["reason"])
+
+    return SnapshotPersistResponse(**result)
