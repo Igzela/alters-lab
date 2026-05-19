@@ -112,47 +112,47 @@
 **Depends on**: P1-002 (done)
 **Notes**: Complete. snapshot_export.py provides snapshot_to_canonical_dict, snapshot_to_yaml, and write_snapshot_yaml. 13 new tests added (46 total passing). Confirm endpoint remains in-memory only. No YAML writes during normal confirmation. Export requires explicit target path. No frontend, no database, no LLM, no branch/alter/dialogue/value/calibration/archive code added.
 
-### P1-004: Branch Discovery Backend Service + API
+### P1-004: Branch Discovery Controlled YAML Write
 
 **Status**: done
-**Goal**: Implement Branch Discovery backend service and API endpoints for transforming snapshot anchors into structural branches
+**Goal**: Implement Branch Discovery controlled YAML write for transforming snapshot anchors into structural branches
 **Depends on**: P1-003 (done)
-**Notes**: Complete. Branch Discovery service implements three-step pipeline (tension extraction, structural branch identification, convergence). API endpoints expose branch discovery workflow. Tests validate 3-4 mutually incompatible branches from confirmed snapshot.
+**Notes**: Complete. Branch Discovery controlled YAML write implements three-step pipeline (tension extraction, structural branch identification, convergence). Tests validate 3-4 mutually incompatible branches from confirmed snapshot. Not a runtime backend service — controlled artifact write only.
 
-### P1-005: Alter Generation Backend Service + API
+### P1-005: Alter Generation Controlled YAML Write
 
 **Status**: done
-**Goal**: Implement Alter Generation backend service and API endpoints for creating Alters per confirmed branch
+**Goal**: Implement Alter Generation controlled YAML write for creating Alters per confirmed branch
 **Depends on**: P1-004 (done)
-**Notes**: Complete. Alter Generation service produces coherent Alters with voice, tradeoffs, and personality drift. API endpoints expose generation workflow. Tests validate Alter structure and human confirmation requirements.
+**Notes**: Complete. Alter Generation controlled YAML write produces coherent Alters with voice, tradeoffs, and personality drift. Tests validate Alter structure and human confirmation requirements. Not a runtime backend service — controlled artifact write only.
 
-### P1-006: Dialogue Engine Backend Service + API
+### P1-006: Dialogue Engine Controlled YAML Write
 
 **Status**: done
-**Goal**: Implement Dialogue Engine backend service and API endpoints for user-Alter dialogue sessions
+**Goal**: Implement Dialogue Engine controlled YAML write for user-Alter dialogue sessions
 **Depends on**: P1-005 (done)
-**Notes**: Complete. Dialogue Engine facilitates exploration between user and confirmed Alter with full alter.yaml injection. Grounding metadata present on every response. API endpoints expose session lifecycle.
+**Notes**: Complete. Dialogue Engine controlled YAML write facilitates exploration between user and confirmed Alter with full alter.yaml injection. Grounding metadata present on every response. Not a runtime backend service — controlled artifact write only.
 
-### P1-007: Value Alignment Backend Service + API
+### P1-007: Value Alignment Controlled YAML Write
 
 **Status**: done
-**Goal**: Implement Value Alignment backend service and API endpoints for comparing Alters against user-confirmed values
+**Goal**: Implement Value Alignment controlled YAML write for comparing Alters against user-confirmed values
 **Depends on**: P1-006 (done)
-**Notes**: Complete. Value Alignment evaluates five fixed dimensions (autonomy, stability, exploration, engineering_output, relationship_life). Comparison matrix produced. Active alignment files accepted after human confirmation (see QUALITY_GATES.md update).
+**Notes**: Complete. Value Alignment evaluates four fixed dimensions (autonomy, stability, exploration, engineering_output). Comparison matrix produced. Active alignment files accepted after human confirmation (see QUALITY_GATES.md update). Not a runtime backend service — controlled artifact write only.
 
-### P1-008: Calibration Backend Service + API
+### P1-008: Calibration Controlled YAML Write
 
 **Status**: done
-**Goal**: Implement Calibration backend service and API endpoints for scoring branches against reality
+**Goal**: Implement Calibration controlled YAML write for scoring branches against reality
 **Depends on**: P1-007 (done)
-**Notes**: Complete. Calibration uses two-speed update model with cold-start policy. Rubric auto_modify remains false. API endpoints expose calibration workflow.
+**Notes**: Complete. Calibration controlled YAML write uses two-speed update model with cold-start policy. Rubric auto_modify remains false. Not a runtime backend service — controlled artifact write only.
 
-### P1-009: Archive Backend Service + API
+### P1-009: Archive Controlled YAML Write
 
 **Status**: done
-**Goal**: Implement Archive backend service and API endpoints for preserving historical system states
+**Goal**: Implement Archive controlled YAML write for preserving historical system states
 **Depends on**: P1-008 (done)
-**Notes**: Complete. Archive system preserves read-only faithful copies of current state. Rubric delta is proposal-only with reject_auto_apply. API endpoints expose archive creation.
+**Notes**: Complete. Archive controlled YAML write preserves read-only faithful copies of current state. Rubric delta is proposal-only with reject_auto_apply. Not a runtime backend service — controlled artifact write only.
 
 ### P1-010: Flat Active Alter Schema
 

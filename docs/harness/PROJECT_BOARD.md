@@ -29,12 +29,12 @@ todo → ready → running → review → done/failed
 | P1-001 | Backend Foundation + Snapshot Intake Contract | done |
 | P1-002 | Snapshot Intake API Endpoints | done |
 | P1-003 | Snapshot YAML Persistence / Export Gate | done |
-| P1-004 | Branch Discovery Backend Service + API | done |
-| P1-005 | Alter Generation Backend Service + API | done |
-| P1-006 | Dialogue Engine Backend Service + API | done |
-| P1-007 | Value Alignment Backend Service + API | done |
-| P1-008 | Calibration Backend Service + API | done |
-| P1-009 | Archive Backend Service + API | done |
+| P1-004 | Branch Discovery Controlled YAML Write | done |
+| P1-005 | Alter Generation Controlled YAML Write | done |
+| P1-006 | Dialogue Engine Controlled YAML Write | done |
+| P1-007 | Value Alignment Controlled YAML Write | done |
+| P1-008 | Calibration Controlled YAML Write | done |
+| P1-009 | Archive Controlled YAML Write | done |
 | P1-010 | Flat Active Alter Schema (source_refs, quality_status) | done |
 | P1-011 | End-to-End Integration + CYCLE-001A Trigger | **blocked** |
 
@@ -54,7 +54,7 @@ todo → ready → running → review → done/failed
 - P1-001 complete. Phase 1 has started with backend foundation.
 - P1-002 complete. Snapshot Intake API endpoints exposed via in-memory FastAPI backend. Day 14 gate moved closer but YAML persistence remains future slice.
 - P1-003 complete. Snapshot YAML persistence and export gate implemented. Day 14 gate passed.
-- P1-004 through P1-009 complete. Branch Discovery, Alter Generation, Dialogue, Value Alignment, Calibration, and Archive backend services and API endpoints implemented.
+- P1-004 through P1-009 complete. Branch Discovery, Alter Generation, Dialogue, Value Alignment, Calibration, and Archive were controlled YAML writes (not backend runtime implementations). See DECISION_RECORD.md.
 - P1-010 complete. Flat active Alter schema adopted with source_refs and quality_status fields. See DECISION_RECORD.md for rationale.
 - P1-011 blocked. End-to-end integration and CYCLE-001A trigger pending — waiting on governance docs alignment (this update).
 - Day 14 gate completed. Day 30 gate pending — requires P1-011 integration to pass.
