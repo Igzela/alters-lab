@@ -50,6 +50,12 @@ Dialogue Engine facilitates exploration between user and confirmed Alter. Qualit
 - **Pass**: dialogue session references existing alter_*.yaml with full injection (not summary), alter speaks from future-self perspective with branch-specific grounding, grounding metadata present on every response (alter_sections_used, branch_fields_used, snapshot_fields_used), no probability claims, no generic advice-bot voice, no governance authority claims, no rubric modifications, no invented content, session created only after human confirmation, no active sessions from empty alters.
 - **Fail**: summary-only alter injection, alter drifts into neutral voice, probability claims present, session created without confirmed alter, grounding metadata missing, dialogue content invented for nonexistent Alters, no human confirmation before session start.
 
+### Value Alignment Evaluator
+
+Value Alignment Evaluator compares Alters against user-confirmed values. Quality gate:
+- **Pass**: snapshot completed (intake_status.phase: "completed"), branches confirmed (3-4 with non-empty incompatible_with), active alters exist (alter_*.yaml with branch_ref), value profile is user-confirmed only (no invented values), all five alignment dimensions assessed (autonomy, stability, exploration, engineering_output, relationship_life), comparison matrix produced (strongest, weakest, unresolved tradeoffs), requires_human_review is true, no active alignment_*.yaml files exist, no auto-choice, no rubric modification, no calibration update.
+- **Fail**: evaluator proceeds without confirmed snapshot/branches/alters, value profile contains invented data, any dimension skipped, auto-choice made without human review, alignment_*.yaml files created, rubric modified, calibration updated, incomplete comparison matrix.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -74,3 +80,10 @@ Dialogue Engine facilitates exploration between user and confirmed Alter. Qualit
 - [ ] No probability claims or generic advice-bot voice in dialogue
 - [ ] No active dialogue sessions from empty alters
 - [ ] No invented content in dialogue
+- [ ] Value Alignment proceeds only with confirmed snapshot, branches, and alters
+- [ ] Value profile is user-confirmed only, no invented values
+- [ ] All five alignment dimensions assessed per Alter
+- [ ] Comparison matrix produced with strongest, weakest, unresolved
+- [ ] requires_human_review is true on all alignment reports
+- [ ] No active alignment_*.yaml files created
+- [ ] No auto-choice, no rubric modification, no calibration update

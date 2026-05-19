@@ -1,0 +1,34 @@
+value_alignment_template:
+  template_status: "inactive_template_only"
+  input_refs:
+    snapshot_ref: "alters/current/snapshot.yaml"
+    branches_ref: "alters/current/branches.yaml"
+    alters_ref: "alters/current/alters/"
+    rubric_ref: "alters/calibration/rubric.yaml"
+    dialogue_refs: []
+  value_profile:
+    source_mode: "user_confirmed_only"
+    status: "not_started"
+    primary_non_negotiable: ""
+    secondary_non_negotiables: []
+    willing_to_sacrifice: []
+    weak_fit_paths: []
+    value_priority_notes: []
+  alignment_report:
+    id: ""
+    generated_at: null
+    status: "not_started"
+    alters: []
+  comparison:
+    strongest_alignment: null
+    weakest_alignment: null
+    unresolved_tradeoffs: []
+    requires_human_review: true
+  quality_rules:
+    require_active_alters: true
+    require_user_confirmed_values: true
+    reject_auto_choice: true
+    reject_unconfirmed_value_inference: true
+    reject_rubric_modification: true
+    reject_calibration_update: true
+    require_human_review: true
