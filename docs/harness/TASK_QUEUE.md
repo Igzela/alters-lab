@@ -206,3 +206,17 @@
 **Goal**: Expose sealed active YAML chain summary and validation through read-only FastAPI endpoints
 **Depends on**: P2-002 (done)
 **Completed**: 101 tests passing, 4 read-only endpoints, no YAML modified, no forbidden routers.
+
+### P2-004: Read-only Evidence Report API
+
+**Status**: done
+**Goal**: Expose evidence status, reports, and Day 30 demo summary through read-only FastAPI endpoints
+**Depends on**: P2-003 (done)
+**Completed**: 110 tests passing, 6 read-only endpoints, no YAML modified, no forbidden routers.
+
+### P2-005: Phase 2 Closeout / Read-only Runtime Review
+
+**Status**: done
+**Goal**: Produce Phase 2 closeout report and seal read-only runtime foundation baseline
+**Depends on**: P2-004 (done)
+**Completed**: Closeout report produced, all boundary confirmations PASS, 110 tests passing.

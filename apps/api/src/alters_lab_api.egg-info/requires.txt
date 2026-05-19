@@ -1,5 +1,6 @@
 fastapi
 pydantic
+pyyaml
 
 [dev]
 pytest

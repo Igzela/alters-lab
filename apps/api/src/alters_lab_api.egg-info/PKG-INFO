@@ -5,6 +5,7 @@ Summary: Alters Lab API — personal future-branch simulation backend
 Requires-Python: >=3.11
 Requires-Dist: fastapi
 Requires-Dist: pydantic
+Requires-Dist: pyyaml
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: httpx; extra == "dev"

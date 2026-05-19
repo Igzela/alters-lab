@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from alters_lab.schemas.evidence_reports import (
     ActiveYamlValidationSummary,
     Day30DemoSummary,
+    EvidenceBoundaryConfirmations,
     EvidenceHealthResponse,
     EvidenceReportInfo,
     EvidenceReportsResponse,
@@ -32,6 +33,8 @@ def health():
 def status():
     raw = build_evidence_status()
     return EvidenceStatusResponse(
+        status=raw["status"],
+        boundary_confirmations=EvidenceBoundaryConfirmations(**raw["boundary_confirmations"]),
         day30_demo=Day30DemoSummary(**raw["day30_demo"]),
         active_yaml_validation=ActiveYamlValidationSummary(**raw["active_yaml_validation"]),
         phase1_closeout=Phase1CloseoutSummary(**raw["phase1_closeout"]),
