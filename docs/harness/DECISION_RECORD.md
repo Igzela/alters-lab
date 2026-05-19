@@ -253,3 +253,12 @@
 **Decision**: Promotion package is a review artifact, not active state. Draft review can prepare branches and alters payloads, but cannot itself mutate active YAML. Actual active YAML mutation must still happen through previously approved controlled persist APIs (/branches/persist, /alters/persist/{alter_id}, /alters/persist-batch). This preserves separation between generation/review and active-state mutation.
 **Consequences**: Three-step pipeline: generate draft → review and prepare promotion → controlled persist. No single step can both prepare and write active state.
 **Alternatives**: Allow promotion package to directly write active YAML (rejected — violates controlled mutation principles). Skip promotion package and review directly writes (rejected — no separation between review and mutation).
+
+### Decision P3-M4-01: Promotion orchestration plan is not promotion execution
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M4 introduces an orchestration planning layer. The question was whether this layer should execute promotion or only plan it.
+**Decision**: Promotion orchestration plan is not promotion execution. The system can plan active promotion steps, evidence requirements, and rollback requirements without mutating active state. This preserves the separation between review, planning, and execution. All steps have execution_allowed_in_p3_m4=false. Human final approval is required before any future execution.
+**Consequences**: Four-step pipeline: generate draft → review and prepare promotion → plan orchestration → controlled persist. Each step is separate and requires different authorization. Planning is auditable without risk.
+**Alternatives**: Allow orchestration plan to execute directly (rejected — violates controlled mutation principles). Skip planning and execute directly from promotion package (rejected — no separation between review and execution planning).

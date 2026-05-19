@@ -21,6 +21,26 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/cycle-summary/current` | Sealed active YAML chain summary |
 | GET | `/cycle-summary/validation` | Validation result and artifact count |
 | GET | `/cycle-summary/artifacts` | Artifact metadata (no YAML content) |
+| GET | `/evidence/health` | Evidence reports component health |
+| GET | `/evidence/status` | Evidence status summary |
+| GET | `/evidence/reports` | Evidence report list |
+| GET | `/evidence/active-yaml-validation` | Active YAML validation result |
+| GET | `/evidence/day30-demo` | Day 30 demo evidence |
+| GET | `/evidence/phase1-closeout` | Phase 1 closeout evidence |
+| GET | `/branches/health` | Branches controlled write health |
+| POST | `/branches/persist` | Persist reviewed branches payload through controlled write API |
+| GET | `/alters/health` | Alters controlled write health |
+| POST | `/alters/persist/{alter_id}` | Persist single alter through controlled write API |
+| POST | `/alters/persist-batch` | Persist all 4 alters through controlled write API |
+| GET | `/generation-drafts/health` | Generation drafts component health |
+| POST | `/generation-drafts/preview` | Preview generation draft (draft-only, no active write) |
+| GET | `/generation-drafts/list` | List generation drafts |
+| GET | `/draft-review/health` | Draft review boundary health |
+| POST | `/draft-review/{draft_id}/review` | Review draft and prepare promotion package |
+| GET | `/draft-review/list` | List draft reviews |
+| GET | `/promotion-orchestration/health` | Promotion orchestration plan-only health |
+| POST | `/promotion-orchestration/{draft_id}/plan` | Create orchestration plan from promotion package |
+| GET | `/promotion-orchestration/list` | List orchestration plans |
 
 ## Services
 
@@ -28,6 +48,13 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **snapshot_sessions** — In-memory session store
 - **snapshot_export** — Serialize completed snapshots to canonical YAML
 - **cycle_summary** — Read-only endpoints over the sealed active YAML chain (Phase 2)
+- **evidence_reports** — Read-only evidence status, reports, and Day 30 demo
+- **controlled_write** — Shared helpers for controlled YAML persistence
+- **branches_persist** — Branches controlled write service
+- **alters_persist** — Alters controlled write service
+- **generation_drafts** — Deterministic draft-only generation runtime
+- **draft_review** — Draft review and promotion boundary
+- **promotion_orchestration** — Promotion orchestration plan-only boundary
 
 ## Export
 
