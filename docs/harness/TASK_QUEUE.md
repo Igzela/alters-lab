@@ -177,10 +177,10 @@
 
 ### P1-013: Phase 1 Closeout / Day 30 Evidence Review
 
-**Status**: blocked
+**Status**: done
 **Goal**: Final review and sign-off of Day 30 evidence and Phase 1 closeout
 **Depends on**: P1-012 (done)
-**Notes**: Blocked. Awaiting human review of Day 30 evidence report and Phase 1 closeout decision.
+**Notes**: Complete. Phase 1 sealed. Day 30 evidence report reviewed, Phase 1 closeout PASS.
 
 ---
 
@@ -212,11 +212,11 @@
 **Status**: done
 **Goal**: Expose evidence status, reports, and Day 30 demo summary through read-only FastAPI endpoints
 **Depends on**: P2-003 (done)
-**Completed**: 110 tests passing, 6 read-only endpoints, no YAML modified, no forbidden routers.
+**Completed**: 118 tests passing, 6 read-only endpoints, no YAML modified, no forbidden routers.
 
 ### P2-005: Phase 2 Closeout / Read-only Runtime Review
 
 **Status**: done
 **Goal**: Produce Phase 2 closeout report and seal read-only runtime foundation baseline
 **Depends on**: P2-004 (done)
-**Completed**: Closeout report produced, all boundary confirmations PASS, 110 tests passing.
+**Completed**: Closeout report produced, all boundary confirmations PASS, 118 tests passing.

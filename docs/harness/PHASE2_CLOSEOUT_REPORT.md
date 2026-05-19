@@ -1,7 +1,7 @@
 # Phase 2 Closeout Report — Read-Only Runtime Foundation
 
 **Date:** 2026-05-19
-**Sealed Commit:** a76ffae (P2-005R correction commit pending)
+**Sealed Commit:** fcfcbe2
 **Gate Verdict:** PASS
 **Correction:** P2-005R — governance and API contract gaps fixed
 
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Phase 2 established a read-only runtime foundation on top of the Phase 1 sealed baseline. All 4 slices (P2-001 through P2-004) completed successfully. The active YAML chain is validated, the API surface is bounded to read-only endpoints, no forbidden runtime components exist, and 110 tests pass. Phase 2 is sealed as a read-only runtime foundation baseline.
+Phase 2 established a read-only runtime foundation on top of the Phase 1 sealed baseline. All 4 slices (P2-001 through P2-004) completed successfully. The active YAML chain is validated, the API surface is bounded to read-only endpoints, no forbidden runtime components exist, and 118 tests pass. Phase 2 is sealed as a read-only runtime foundation baseline.
 
 ---
 
@@ -33,6 +33,7 @@ Phase 2 established a read-only runtime foundation on top of the Phase 1 sealed 
 | P2-003 | Read-only Cycle Summary API | 4a8fd15 | 101 | done |
 | P2-004 | Read-only Evidence Report API | 272b39f | 110 | done |
 | P2-005 | Phase 2 Closeout / Read-only Runtime Review | — | — | done |
+| P2-005R | Phase 2 Closeout Correction — governance and API contract gaps | fcfcbe2 | 118 | done |
 
 ---
 
@@ -105,7 +106,7 @@ Phase 2 established a read-only runtime foundation on top of the Phase 1 sealed 
 | test_evidence_reports_api.py | evidence reports API tests |
 | test_day30_harness.py | Day 30 demo harness tests |
 
-**Total: 110 tests passing**
+**Total: 118 tests passing**
 
 ---
 
@@ -140,7 +141,7 @@ Phase 2 established a read-only runtime foundation on top of the Phase 1 sealed 
 ## Known Notes / Non-blocking Issues
 
 - Snapshot Intake router POST endpoints exist for the P1 intake contract but are not part of Phase 2's read-only scope. They are accepted as legacy contract routes.
-- P1-013 status shows "blocked" on PROJECT_BOARD.md — this is a tracking artifact from before Phase 2 started. Not a functional issue.
+- P1-013 is confirmed done. Phase 1 sealed.
 - The `validate_active_yaml.py` boundary confirmation dict declares `read_only_validation: True` and all mutation flags as `False`. Confirmed correct.
 
 ---
@@ -154,6 +155,7 @@ Phase 2 is ready to seal as a read-only runtime foundation baseline.
 All required P2 slices exist and are committed. The active YAML chain is validated (9 artifacts, PASS, selected_branch=branch_D). The API surface is bounded to read-only endpoints on cycle-summary and evidence routers. No forbidden runtime components (provider, database, frontend, runtime modules) exist. No active YAML mutation occurred during Phase 2. 118 tests pass.
 
 P2-005R correction applied: governance docs updated, evidence API contract strengthened with boundary_confirmations, PASS/WARN/ERROR status, enriched phase1_closeout metadata, and read-only safety tests.
+P2-005R2 doc consistency patch applied: sealed commit updated to fcfcbe2, stale references cleared, test total corrected.
 
 ---
 
