@@ -26,11 +26,18 @@ def _clear_store():
 
 def test_run_day30_demo_returns_evidence_with_all_steps_passing(tmp_path: Path):
     evidence = run_day30_demo(output_path=tmp_path / "evidence.json")
-    assert evidence["all_pass"] is True
+    assert evidence["overall"] == "PASS"
     for step in evidence["steps"]:
-        assert step["pass"] is True, f"Step {step['step']} failed: {step}"
-    assert "active_yaml_chain" in evidence["validations"]
-    assert "no_forbidden_components" in evidence["validations"]
+        passed = step.get("pass") is True or step.get("all_pass") is True
+        assert passed, f"Step {step['step']} failed: {step}"
+    # New schema: steps list contains all 9 steps
+    step_names = [s["step"] for s in evidence["steps"]]
+    assert "validate_active_yaml_chain" in step_names
+    assert "verify_no_forbidden_components" in step_names
+    # pass_criteria and overall
+    assert "pass_criteria" in evidence
+    assert "fail_criteria_triggered" in evidence
+    assert evidence["fail_criteria_triggered"] == []
 
 
 def test_validate_active_yaml_chain_passes():

@@ -167,3 +167,17 @@
 **Goal**: Align all governance docs with current phase state and define Day 30 demo criteria
 **Depends on**: P1-010 (done)
 **Notes**: Complete. Governance docs repaired to match current phase state. Day 30 demo definition documented.
+
+### P1-012: Day 30 Evidence Harness + Schema Alignment
+
+**Status**: done
+**Goal**: Align Day 30 evidence harness with 9-step schema and regenerate evidence report
+**Depends on**: P1-011 (done)
+**Notes**: Complete. Harness updated to emit 9-step evidence (app_import, health_check, create_session, submit_three_anchors, confirm_snapshot_in_memory, confirm_no_yaml_write, export_to_explicit_temp_yaml, validate_active_yaml_chain, verify_no_forbidden_components). Added checks for score_*.yaml and alters/archive/20* folders. Evidence report regenerated with pass_criteria, fail_criteria_triggered, test_evidence, and overall fields.
+
+### P1-013: Phase 1 Closeout / Day 30 Evidence Review
+
+**Status**: blocked
+**Goal**: Final review and sign-off of Day 30 evidence and Phase 1 closeout
+**Depends on**: P1-012 (done)
+**Notes**: Blocked. Awaiting human review of Day 30 evidence report and Phase 1 closeout decision.

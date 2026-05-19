@@ -24,6 +24,15 @@ ALERTS_DIR = PROJECT_ROOT / "apps" / "api" / "src"
 # Step helpers
 # ---------------------------------------------------------------------------
 
+def _step_app_import() -> dict:
+    """Step 0: Verify the alters_lab package can be imported."""
+    try:
+        importlib.import_module("alters_lab")
+        return {"step": "app_import", "pass": True}
+    except Exception as exc:
+        return {"step": "app_import", "pass": False, "error": str(exc)}
+
+
 def _step_health(client: TestClient) -> dict:
     r = client.get("/health")
     return {"step": "health_check", "pass": r.status_code == 200, "status_code": r.status_code}
@@ -53,13 +62,13 @@ def _step_submit_anchors(client: TestClient, session_id: str) -> dict:
         )
         results.append({"anchor": anchor, "status_code": r.status_code})
     all_ok = all(res["status_code"] == 200 for res in results)
-    return {"step": "submit_anchors", "pass": all_ok, "results": results}
+    return {"step": "submit_three_anchors", "pass": all_ok, "results": results}
 
 
 def _step_confirm(client: TestClient, session_id: str) -> dict:
     r = client.post(f"/snapshot-intake/sessions/{session_id}/confirm")
     return {
-        "step": "confirm",
+        "step": "confirm_snapshot_in_memory",
         "pass": r.status_code == 200,
         "status_code": r.status_code,
         "phase": r.json().get("snapshot", {}).get("intake_status", {}).get("phase"),
@@ -113,7 +122,7 @@ def _step_export_to_temp(client: TestClient, session_id: str, export_dir: Path |
         ),
     )
     written = write_snapshot_yaml(snapshot, export_path)
-    return {"step": "export_to_temp", "pass": written.exists(), "export_path": str(written)}
+    return {"step": "export_to_explicit_temp_yaml", "pass": written.exists(), "export_path": str(written)}
 
 
 def validate_active_yaml_chain() -> dict:
@@ -208,6 +217,16 @@ def validate_no_forbidden_components() -> dict:
         found = list(api_src.rglob(f"*{mod_name}*"))
         checks[f"no_{mod_name}"] = len(found) == 0
 
+    # score_*.yaml files (forbidden — scores are not allowed in Phase 1 demo)
+    alters_current_dir = PROJECT_ROOT / "alters" / "current"
+    score_files = list(alters_current_dir.rglob("score_*.yaml")) if alters_current_dir.exists() else []
+    checks["no_score_yaml_files"] = len(score_files) == 0
+
+    # alters/archive/20* folders (forbidden — no archive folders in Phase 1 demo)
+    archive_dir = alters_current_dir / "archive"
+    archive_folders = list(archive_dir.glob("20*")) if archive_dir.exists() else []
+    checks["no_archive_20xx_folders"] = len(archive_folders) == 0
+
     all_pass = all(v is True for v in checks.values())
     return {"all_pass": all_pass, "checks": checks}
 
@@ -224,7 +243,16 @@ def run_day30_demo(
     client = TestClient(app)
     store.clear()
 
-    evidence: dict[str, Any] = {"steps": [], "validations": {}}
+    evidence: dict[str, Any] = {
+        "steps": [],
+        "pass_criteria": {},
+        "fail_criteria_triggered": [],
+        "test_evidence": {},
+        "overall": "FAIL",
+    }
+
+    # Step 0: app import
+    evidence["steps"].append(_step_app_import())
 
     # Step 1: health
     evidence["steps"].append(_step_health(client))
@@ -234,33 +262,58 @@ def run_day30_demo(
     evidence["steps"].append(create_result)
     session_id = create_result.get("session_id")
     if not session_id:
-        evidence["all_pass"] = False
+        evidence["fail_criteria_triggered"].append("create_session")
+        if output_path:
+            output_path = Path(output_path)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(json.dumps(evidence, indent=2, ensure_ascii=False), encoding="utf-8")
         return evidence
 
-    # Step 3: submit anchors in order
+    # Step 3: submit three anchors in order
     evidence["steps"].append(_step_submit_anchors(client, session_id))
 
-    # Step 4: confirm
+    # Step 4: confirm snapshot in memory
     evidence["steps"].append(_step_confirm(client, session_id))
 
     # Step 5: confirm does not write active YAML
     evidence["steps"].append(_step_confirm_no_yaml_write(client, session_id))
 
-    # Step 6: export to temp YAML
+    # Step 6: export to explicit temp YAML
     evidence["steps"].append(_step_export_to_temp(client, session_id, export_dir))
 
     # Step 7: validate active YAML chain
-    evidence["validations"]["active_yaml_chain"] = validate_active_yaml_chain()
+    yaml_chain_result = validate_active_yaml_chain()
+    yaml_chain_result["step"] = "validate_active_yaml_chain"
+    evidence["steps"].append(yaml_chain_result)
 
-    # Step 8: validate no forbidden components
-    evidence["validations"]["no_forbidden_components"] = validate_no_forbidden_components()
+    # Step 8: verify no forbidden components
+    forbidden_result = validate_no_forbidden_components()
+    forbidden_result["step"] = "verify_no_forbidden_components"
+    evidence["steps"].append(forbidden_result)
 
-    all_pass = (
-        all(s["pass"] for s in evidence["steps"])
-        and evidence["validations"]["active_yaml_chain"]["all_pass"]
-        and evidence["validations"]["no_forbidden_components"]["all_pass"]
+    # Determine pass/fail
+    all_pass = all(
+        s.get("pass") is True or s.get("all_pass") is True for s in evidence["steps"]
     )
-    evidence["all_pass"] = all_pass
+
+    # Build pass_criteria from the 9 step results
+    for s in evidence["steps"]:
+        step_name = s.get("step", "unknown")
+        evidence["pass_criteria"][step_name] = s.get("pass") or s.get("all_pass", False)
+
+    # Build fail_criteria_triggered
+    for s in evidence["steps"]:
+        step_name = s.get("step", "unknown")
+        passed = s.get("pass") or s.get("all_pass", False)
+        if not passed:
+            evidence["fail_criteria_triggered"].append(step_name)
+
+    # test_evidence — summary of detailed checks
+    evidence["test_evidence"]["step_count"] = len(evidence["steps"])
+    evidence["test_evidence"]["session_id"] = session_id
+    evidence["test_evidence"]["all_steps_pass"] = all_pass
+
+    evidence["overall"] = "PASS" if all_pass else "FAIL"
 
     # Write evidence report
     if output_path:
