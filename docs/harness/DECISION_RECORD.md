@@ -174,3 +174,12 @@
 **Decision**: Export is service-only. snapshot_export.py provides functions (snapshot_to_canonical_dict, snapshot_to_yaml, write_snapshot_yaml) but none are called by the confirm endpoint. write_snapshot_yaml requires an explicit target_path — no hardcoded alters/current/snapshot.yaml.
 **Consequences**: Confirm remains in-memory and safe. Export is opt-in and explicit. The active snapshot.yaml is never mutated by the API. File writes only happen through deliberate function calls with explicit paths.
 **Alternatives**: Auto-write on confirm (rejected — violates the "no automatic active YAML mutation" rule). Expose export as API endpoint (deferred to later slice — P1-003 is service/export contract only).
+
+### Decision P1-010-01: Flat active Alter schema with source_refs and quality_status
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P1-010 redesigns the Alter schema for active Phase 1 use. The Phase 0 template used nested structure (branch_ref as simple string, snapshot_ref as simple string). As backend services were implemented (P1-004 through P1-009), the nested structure proved awkward for API validation, database mapping, and cross-service references. The question was whether to keep the Phase 0 nested structure or flatten the schema.
+**Decision**: Alter schema is flattened to active format. source_refs is a structured object containing branch_ref, snapshot_ref (and any future refs). quality_status is a top-level field tracking Alter quality state (e.g., "draft", "confirmed", "stale"). The Phase 0 _template.yaml remains inactive_template_only and is not modified. Active alters in Phase 1 use the flat schema exclusively.
+**Consequences**: Flat schema is easier to validate, serialize, and reference across services. source_refs groups all references in one place, making dependency tracking explicit. quality_status enables lifecycle management without scanning nested fields. Phase 0 template remains as historical reference. Governance docs (QUALITY_GATES.md) updated to accept flat schema with source_refs/quality_status.
+**Alternatives**: Keep nested Phase 0 structure (rejected — awkward for API validation and cross-service use). Separate source_refs into individual top-level fields (rejected — scatters references, harder to track). Remove quality_status (rejected — no lifecycle visibility without it).

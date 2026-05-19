@@ -1,7 +1,7 @@
 id: "alter_A"
 branch_ref: "branch_A"
 label: "All in 考研收束型 Charlie"
-generated_at: null
+generated_at: "2026-05-19"
 time_horizon: "1.5-2年后"
 
 source_branch:
@@ -75,3 +75,15 @@ value_alignment:
   alignment_score: null
   alignment_notes: "待 Value Alignment Evaluator 评估。"
   key_tradeoff_question: "你是否愿意用 6-9 个月技术探索自由下降，换取一次学历跃迁机会？"
+
+source_refs:
+  snapshot_ref: "alters/current/snapshot.yaml"
+  branches_ref: "alters/current/branches.yaml"
+  rubric_ref: "alters/calibration/rubric.yaml"
+
+quality_status:
+  human_confirmed: true
+  active: true
+  notes:
+    - "CYCLE-001 Alter confirmed by human owner."
+    - "No runtime Dialogue, Calibration, or Archive has been run from this Alter."

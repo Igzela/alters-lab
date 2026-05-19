@@ -1,7 +1,7 @@
 id: "alter_C"
 branch_ref: "branch_C"
 label: "限时双轨校准型 Charlie"
-generated_at: null
+generated_at: "2026-05-19"
 time_horizon: "1.5-2年后"
 
 source_branch:
@@ -76,3 +76,15 @@ value_alignment:
   alignment_score: null
   alignment_notes: "待 Value Alignment Evaluator 评估。"
   key_tradeoff_question: "你能否接受短期不彻底，但用严格规则换取更可靠的路径证据？"
+
+source_refs:
+  snapshot_ref: "alters/current/snapshot.yaml"
+  branches_ref: "alters/current/branches.yaml"
+  rubric_ref: "alters/calibration/rubric.yaml"
+
+quality_status:
+  human_confirmed: true
+  active: true
+  notes:
+    - "CYCLE-001 Alter confirmed by human owner."
+    - "No runtime Dialogue, Calibration, or Archive has been run from this Alter."

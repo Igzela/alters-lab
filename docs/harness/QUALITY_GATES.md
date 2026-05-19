@@ -41,8 +41,8 @@ Branch Discovery must produce 3-4 structural, mutually incompatible branches fro
 ### Alter Generation
 
 Alter Generation produces one Alter per confirmed branch with coherent voice, tradeoffs, and personality drift. Quality gate:
-- **Pass**: alter_*.yaml files exist only for human-confirmed branches; each alter has branch_ref pointing to existing branch, snapshot_ref pointing to current snapshot, time_horizon of "1.5-2年后", non-empty voice with core_stance (not neutral), concrete tradeoffs (gained and lost non-empty), personality_drift with direction and reason for each dimension, no probability predictions, no neutral advice-bot voice.
-- **Fail**: alter generated from unconfirmed/empty branch, missing branch_ref, voice is neutral/generic, contains probability prediction, empty tradeoffs, personality drift has no reason, generated without human confirmation.
+- **Pass**: alter_*.yaml files exist only for human-confirmed branches; each alter uses flat active schema with source_refs (branch_ref, snapshot_ref) and quality_status fields; each alter has time_horizon of "1.5-2年后", non-empty voice with core_stance (not neutral), concrete tradeoffs (gained and lost non-empty), personality_drift with direction and reason for each dimension, no probability predictions, no neutral advice-bot voice. Phase 0 _template.yaml remains inactive_template_only.
+- **Fail**: alter generated from unconfirmed/empty branch, missing source_refs, voice is neutral/generic, contains probability prediction, empty tradeoffs, personality drift has no reason, generated without human confirmation, Phase 0 template modified.
 
 ### Dialogue Engine
 
@@ -53,8 +53,8 @@ Dialogue Engine facilitates exploration between user and confirmed Alter. Qualit
 ### Value Alignment Evaluator
 
 Value Alignment Evaluator compares Alters against user-confirmed values. Quality gate:
-- **Pass**: snapshot completed (intake_status.phase: "completed"), branches confirmed (3-4 with non-empty incompatible_with), active alters exist (alter_*.yaml with branch_ref), value profile is user-confirmed only (no invented values), all five alignment dimensions assessed (autonomy, stability, exploration, engineering_output, relationship_life), comparison matrix produced (strongest, weakest, unresolved tradeoffs), requires_human_review is true, no active alignment_*.yaml files exist, no auto-choice, no rubric modification, no calibration update.
-- **Fail**: evaluator proceeds without confirmed snapshot/branches/alters, value profile contains invented data, any dimension skipped, auto-choice made without human review, alignment_*.yaml files created, rubric modified, calibration updated, incomplete comparison matrix.
+- **Pass**: snapshot completed (intake_status.phase: "completed"), branches confirmed (3-4 with non-empty incompatible_with), active alters exist (alter_*.yaml with source_refs), value profile is user-confirmed only (no invented values), all five alignment dimensions assessed (autonomy, stability, exploration, engineering_output, relationship_life), comparison matrix produced (strongest, weakest, unresolved tradeoffs), requires_human_review is true, alignment_*.yaml files accepted after explicit human confirmation, no auto-choice, no rubric modification, no calibration update.
+- **Fail**: evaluator proceeds without confirmed snapshot/branches/alters, value profile contains invented data, any dimension skipped, auto-choice made without human review, alignment files created without human confirmation, rubric modified, calibration updated, incomplete comparison matrix.
 
 ### Calibration + Rubric
 
@@ -85,7 +85,7 @@ Archive System preserves historical system states at meaningful checkpoints. Qua
 - [ ] Alter Generation produces valid alters only from confirmed branches
 - [ ] Each alter has branch_ref, voice with stance, concrete tradeoffs
 - [ ] No probability predictions or neutral advice-bot voice in alters
-- [ ] No active alter_*.yaml without human confirmation
+- [ ] No active alter_*.yaml without human confirmation; flat active schema with source_refs/quality_status
 - [ ] Dialogue injects full alter.yaml (not summary)
 - [ ] Alter speaks from future-self with branch-specific grounding
 - [ ] Grounding metadata present on every Alter response
@@ -97,7 +97,7 @@ Archive System preserves historical system states at meaningful checkpoints. Qua
 - [ ] All five alignment dimensions assessed per Alter
 - [ ] Comparison matrix produced with strongest, weakest, unresolved
 - [ ] requires_human_review is true on all alignment reports
-- [ ] No active alignment_*.yaml files created
+- [ ] Active alignment_*.yaml files accepted only after human confirmation
 - [ ] No auto-choice, no rubric modification, no calibration update
 - [ ] Rubric auto_modify is false, mode is cold_start
 - [ ] No active score_*.yaml files in Phase 0

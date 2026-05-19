@@ -111,3 +111,59 @@
 **Goal**: Add controlled export path that serializes confirmed in-memory Snapshot into canonical Phase 0 YAML shape
 **Depends on**: P1-002 (done)
 **Notes**: Complete. snapshot_export.py provides snapshot_to_canonical_dict, snapshot_to_yaml, and write_snapshot_yaml. 13 new tests added (46 total passing). Confirm endpoint remains in-memory only. No YAML writes during normal confirmation. Export requires explicit target path. No frontend, no database, no LLM, no branch/alter/dialogue/value/calibration/archive code added.
+
+### P1-004: Branch Discovery Backend Service + API
+
+**Status**: done
+**Goal**: Implement Branch Discovery backend service and API endpoints for transforming snapshot anchors into structural branches
+**Depends on**: P1-003 (done)
+**Notes**: Complete. Branch Discovery service implements three-step pipeline (tension extraction, structural branch identification, convergence). API endpoints expose branch discovery workflow. Tests validate 3-4 mutually incompatible branches from confirmed snapshot.
+
+### P1-005: Alter Generation Backend Service + API
+
+**Status**: done
+**Goal**: Implement Alter Generation backend service and API endpoints for creating Alters per confirmed branch
+**Depends on**: P1-004 (done)
+**Notes**: Complete. Alter Generation service produces coherent Alters with voice, tradeoffs, and personality drift. API endpoints expose generation workflow. Tests validate Alter structure and human confirmation requirements.
+
+### P1-006: Dialogue Engine Backend Service + API
+
+**Status**: done
+**Goal**: Implement Dialogue Engine backend service and API endpoints for user-Alter dialogue sessions
+**Depends on**: P1-005 (done)
+**Notes**: Complete. Dialogue Engine facilitates exploration between user and confirmed Alter with full alter.yaml injection. Grounding metadata present on every response. API endpoints expose session lifecycle.
+
+### P1-007: Value Alignment Backend Service + API
+
+**Status**: done
+**Goal**: Implement Value Alignment backend service and API endpoints for comparing Alters against user-confirmed values
+**Depends on**: P1-006 (done)
+**Notes**: Complete. Value Alignment evaluates five fixed dimensions (autonomy, stability, exploration, engineering_output, relationship_life). Comparison matrix produced. Active alignment files accepted after human confirmation (see QUALITY_GATES.md update).
+
+### P1-008: Calibration Backend Service + API
+
+**Status**: done
+**Goal**: Implement Calibration backend service and API endpoints for scoring branches against reality
+**Depends on**: P1-007 (done)
+**Notes**: Complete. Calibration uses two-speed update model with cold-start policy. Rubric auto_modify remains false. API endpoints expose calibration workflow.
+
+### P1-009: Archive Backend Service + API
+
+**Status**: done
+**Goal**: Implement Archive backend service and API endpoints for preserving historical system states
+**Depends on**: P1-008 (done)
+**Notes**: Complete. Archive system preserves read-only faithful copies of current state. Rubric delta is proposal-only with reject_auto_apply. API endpoints expose archive creation.
+
+### P1-010: Flat Active Alter Schema
+
+**Status**: done
+**Goal**: Redesign Alter schema to flat active format with source_refs and quality_status fields
+**Depends on**: P1-009 (done)
+**Notes**: Complete. Alter schema flattened from nested structure to active flat format. Added source_refs (branch_ref, snapshot_ref) and quality_status fields. Phase 0 template marked inactive_template_only; active alters now use flat schema. See DECISION_RECORD.md Decision P1-010-01.
+
+### P1-011: End-to-End Integration + CYCLE-001A Trigger
+
+**Status**: blocked
+**Goal**: Wire all backend services into end-to-end flow and trigger first real CYCLE-001A execution
+**Depends on**: P1-010 (done), governance docs alignment
+**Notes**: Blocked. Waiting for governance docs (PROJECT_BOARD, TASK_QUEUE, QUALITY_GATES, DECISION_RECORD, RISK_REGISTER) to be updated to reflect current phase state. Cannot proceed until quality gates and decision records match active artifacts.
