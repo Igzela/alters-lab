@@ -271,3 +271,12 @@
 **Decision**: Execution gate is not live execution. The system can validate whether a promotion orchestration plan is eligible for future active execution — checking prerequisites, running dry-run compatibility checks, generating execution packets — without mutating active state. execution_allowed_now=false, live_execution_allowed_in_p3_m5=false, requires_p3_m6_live_execution=true. P3-M6 is required for actual live execution.
 **Consequences**: Five-step pipeline: generate draft → review and prepare promotion → plan orchestration → execution gate → controlled persist. Each step is separate and requires different authorization. The gate provides auditable evidence of readiness without risk.
 **Alternatives**: Allow execution gate to perform live promotion (rejected — violates controlled mutation principles). Skip gate and execute directly from orchestration plan (rejected — no validation of readiness before execution).
+
+### Decision P3-M6-01: Live execution defaults to dry_run and requires explicit safe configuration
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M6 introduces the first layer that CAN call controlled persist services (write_branches_with_audit, write_alter_batch_with_audit). The question was how to prevent accidental live execution while still enabling the full pipeline.
+**Decision**: Live execution defaults to dry_run mode. The API endpoint rejects live mode when LIVE_EXECUTION_ENABLED=false (HTTP 403). Live execution requires explicit path_overrides dict (branches_target_path, alters_dir, backup_dir, audit_log_path) — without them, the endpoint returns a rejected report. Token hash must match execution_packet.final_approval_token_hash when require_matching_gate_token=true (default). All persist calls go through controlled persist service functions — no direct file writes.
+**Consequences**: The five-step pipeline is complete: generate draft → review and prepare promotion → plan orchestration → execution gate → controlled live execution → controlled persist APIs. Each step is separate and requires different authorization. Accidental live execution is prevented by multiple layers: mode default, server flag, path_overrides requirement, and token hash matching.
+**Alternatives**: Default to live mode (rejected — too risky for accidental execution). Skip path_overrides requirement (rejected — allows writing to hardcoded paths, defeats testability). Disable token hash matching by default (rejected — weakens gate integrity).
