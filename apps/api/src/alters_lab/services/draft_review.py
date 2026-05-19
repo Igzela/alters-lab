@@ -60,22 +60,44 @@ def validate_draft_package_for_review(draft_package: dict) -> dict:
     if not branch_drafts and not alter_drafts:
         errors.append("no branch_drafts or alter_drafts")
 
-    for bd in branch_drafts:
-        if bd.get("draft_status") != "candidate":
-            errors.append(f"branch {bd.get('id')}: draft_status != 'candidate'")
-        if bd.get("requires_human_review") is not True:
-            errors.append(f"branch {bd.get('id')}: requires_human_review != true")
+    # Validate branch draft completeness and integrity
+    expected_branches = {"branch_A", "branch_B", "branch_C", "branch_D"}
+    if branch_drafts:
+        branch_ids = {b.get("id") for b in branch_drafts}
+        if branch_ids != expected_branches:
+            errors.append(f"branch drafts incomplete: expected {expected_branches}, found {branch_ids}")
+        for bd in branch_drafts:
+            if bd.get("draft_status") != "candidate":
+                errors.append(f"branch {bd.get('id')}: draft_status != 'candidate'")
+            if bd.get("requires_human_review") is not True:
+                errors.append(f"branch {bd.get('id')}: requires_human_review != true")
+            if not bd.get("incompatible_with"):
+                errors.append(f"branch {bd.get('id')}: incompatible_with is empty")
 
-    for ad in alter_drafts:
-        if ad.get("draft_status") != "candidate":
-            errors.append(f"alter {ad.get('id')}: draft_status != 'candidate'")
-        if ad.get("requires_human_review") is not True:
-            errors.append(f"alter {ad.get('id')}: requires_human_review != true")
-        qs = ad.get("quality_status", {})
-        if qs.get("human_confirmed") is not False:
-            errors.append(f"alter {ad.get('id')}: quality_status.human_confirmed != false")
-        if qs.get("active") is not False:
-            errors.append(f"alter {ad.get('id')}: quality_status.active != false")
+    # Validate alter draft completeness and integrity
+    expected_alters = {"alter_A", "alter_B", "alter_C", "alter_D"}
+    if alter_drafts:
+        alter_ids = {a.get("id") for a in alter_drafts}
+        if alter_ids != expected_alters:
+            errors.append(f"alter drafts incomplete: expected {expected_alters}, found {alter_ids}")
+        for ad in alter_drafts:
+            if ad.get("draft_status") != "candidate":
+                errors.append(f"alter {ad.get('id')}: draft_status != 'candidate'")
+            if ad.get("requires_human_review") is not True:
+                errors.append(f"alter {ad.get('id')}: requires_human_review != true")
+            qs = ad.get("quality_status", {})
+            if qs.get("human_confirmed") is not False:
+                errors.append(f"alter {ad.get('id')}: quality_status.human_confirmed != false")
+            if qs.get("active") is not False:
+                errors.append(f"alter {ad.get('id')}: quality_status.active != false")
+            # Validate branch_ref matches alter id
+            expected_branch = ad.get("id", "").replace("alter_", "branch_")
+            if ad.get("branch_ref") != expected_branch:
+                errors.append(f"alter {ad.get('id')}: branch_ref != {expected_branch}")
+            # Validate voice.core_stance exists
+            voice = ad.get("voice", {})
+            if not voice.get("core_stance"):
+                errors.append(f"alter {ad.get('id')}: voice.core_stance is empty")
 
     return {"valid": len(errors) == 0, "errors": errors}
 
@@ -142,6 +164,14 @@ def build_alters_promotion_payload(
     approved = [a for a in alter_drafts if a["id"] in approved_alter_ids]
     alters = []
     for a in approved:
+        # Validate controlled persist compatibility
+        expected_branch = a["id"].replace("alter_", "branch_")
+        if a.get("branch_ref") != expected_branch:
+            raise ValueError(f"alter {a['id']}: branch_ref != {expected_branch}")
+        voice = a.get("voice", {})
+        if not voice.get("core_stance"):
+            raise ValueError(f"alter {a['id']}: voice.core_stance is empty")
+
         entry = {
             "id": a["id"],
             "branch_ref": a["branch_ref"],
