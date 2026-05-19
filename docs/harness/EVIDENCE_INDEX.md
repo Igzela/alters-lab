@@ -80,3 +80,13 @@
 | P1-003 | Decision record | docs/harness/DECISION_RECORD.md | P1-003-01: export path is service-only, not wired to confirm endpoint |
 | P1-003 | Risk register update | docs/harness/RISK_REGISTER.md | R-017 and R-018 added for export path risks |
 | P1-003 | Run log update | docs/harness/RUN_LOG.md | P1-003 entry appended |
+| P2-001 | Loader models | apps/api/src/alters_lab/loaders/models.py | ActiveYamlPaths, ActiveYamlChain, ValidationResult dataclasses |
+| P2-001 | Loader implementation | apps/api/src/alters_lab/loaders/active_yaml.py | default_project_root, active_yaml_paths, load_yaml_file, load_active_yaml_chain, validate_active_yaml_chain, summarize_active_yaml_chain |
+| P2-001 | Loader package init | apps/api/src/alters_lab/loaders/__init__.py | Public API exports for loader package |
+| P2-001 | Loader tests | apps/api/tests/test_active_yaml_loader.py | 11 tests: paths, load, validate, summarize, immutability, error cases |
+| P2-001 | Project board update | docs/harness/PROJECT_BOARD.md | Phase 2 section added, P2-001 done, P2-002 blocked/todo |
+| P2-001 | Task queue update | docs/harness/TASK_QUEUE.md | Phase 2 section added, P2-001 done, P2-002 blocked/todo |
+| P2-001 | Decision record | docs/harness/DECISION_RECORD.md | P2-001-01: Phase 2 starts with read-only loaders |
+| P2-001 | Risk register update | docs/harness/RISK_REGISTER.md | R-024 through R-028 added for Phase 2 loader risks |
+| P2-001 | Run log update | docs/harness/RUN_LOG.md | P2-001 entry appended |
+| P2-001 | Evidence index update | docs/harness/EVIDENCE_INDEX.md | P2-001 entry appended |

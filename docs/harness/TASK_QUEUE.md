@@ -181,3 +181,21 @@
 **Goal**: Final review and sign-off of Day 30 evidence and Phase 1 closeout
 **Depends on**: P1-012 (done)
 **Notes**: Blocked. Awaiting human review of Day 30 evidence report and Phase 1 closeout decision.
+
+---
+
+## Phase 2 — Read-Only Runtime Foundation
+
+### P2-001: Sealed Baseline Verification + Active YAML Loader
+
+**Status**: done
+**Goal**: Create read-only Python loaders and validation helpers for the sealed Phase 1 active YAML chain
+**Depends on**: P1-013 (done/sealed baseline)
+**Notes**: Complete. Loader package created (loaders/__init__.py, loaders/models.py, loaders/active_yaml.py) with read-only loading, validation, and summarization of all 9 active YAML artifacts. 11 new tests added (62 total passing). Active YAML unchanged. No forbidden runtime added.
+
+### P2-002: Active YAML Chain Validator CLI
+
+**Status**: todo
+**Goal**: Expose validate_active_yaml_chain as a CLI command for standalone validation
+**Depends on**: P2-001 (done)
+**Notes**: Blocked by P2-001 completion. P2-001 now complete — P2-002 is ready.
