@@ -50,6 +50,10 @@
 | R-044 | Mocked loader shape hiding production failure | Medium | High | P3-M2R added normalize_active_chain to handle ActiveYamlChain dataclass and dict; real loader smoke test proves API works without monkeypatching | Mitigated |
 | R-045 | Wrapped YAML document shape mismatch | Medium | High | P3-M2R added extract_snapshot_body to handle {"snapshot": {...}} and unwrapped shapes; tests cover both | Mitigated |
 | R-046 | Generation drafts built from invalid active chain | Low | High | P3-M2R API validates inputs before generation; validation failure returns 400, no draft/audit written | Mitigated |
+| R-047 | Promotion package mistaken for active state | Medium | High | P3-M3 decision: promotion package is review artifact, not active state; active_write_allowed=false; requires_controlled_persist_api=true | Mitigated |
+| R-048 | Review endpoint accidentally calling persist APIs | Low | High | P3-M3 service has no imports from branches_persist/alters_persist; grep check confirms no persist API calls | Mitigated |
+| R-049 | Path traversal via draft_id | Low | High | load_draft_package rejects draft_id containing /, \\, or .. | Mitigated |
+| R-050 | Raw approval token stored in review artifacts | Low | Medium | save_review_decision and save_promotion_package reject blank tokens; yaml.dump of model_dump excludes raw token | Mitigated |
 
 ## Risk Assessment
 
