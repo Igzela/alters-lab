@@ -70,6 +70,12 @@ Phase 2 Final Gate: **PASS**
 - Commit: 38ffcc2 (Phase 2 sealed baseline)
 - Closeout report: `docs/harness/PHASE2_CLOSEOUT_REPORT.md`
 
+## Phase 3 — Controlled Mutation
+
+| ID | Title | Status |
+|----|-------|--------|
+| P3-000 | Phase 3 Scope and Boundary Plan | **done** |
+
 ## Quality Gates
 
 **day_14 gate**: "FastAPI backend can run Snapshot Intake contract and tests." — **COMPLETED** (P1-001 through P1-003 passed)
