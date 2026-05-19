@@ -265,11 +265,9 @@ def execute_promotion_live(
                 if not target_path:
                     raise ValueError("branches_target_path not provided in path_overrides")
 
-                from alters_lab.schemas.branches import BranchDiscoveryPayload
-                from alters_lab.services.branches_persist import write_branches_with_audit
-                payload_model = BranchDiscoveryPayload(**branches_payload)
-                write_result = write_branches_with_audit(
-                    payload=payload_model,
+                from alters_lab.services.branches_persist import write_branches_raw_with_audit
+                write_result = write_branches_raw_with_audit(
+                    payload=branches_payload,
                     target_path=target_path,
                     audit_log_path=path_overrides.get("audit_log_path"),
                     approval_token=final_execution_token,
@@ -319,11 +317,9 @@ def execute_promotion_live(
                 if not alters_dir:
                     raise ValueError("alters_dir not provided in path_overrides")
 
-                from alters_lab.schemas.alters import AlterPayload
-                from alters_lab.services.alters_persist import write_alter_batch_with_audit
-                alters_models = [AlterPayload(**a) for a in alters_payload["alters"]]
-                write_result = write_alter_batch_with_audit(
-                    alters=alters_models,
+                from alters_lab.services.alters_persist import write_alter_raw_batch_with_audit
+                write_result = write_alter_raw_batch_with_audit(
+                    alters=alters_payload["alters"],
                     base_dir=alters_dir,
                     audit_log_path=path_overrides.get("audit_log_path"),
                     approval_token=final_execution_token,

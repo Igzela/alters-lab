@@ -15,6 +15,7 @@ from alters_lab.services.branches_persist import (
     branches_to_yaml,
     preview_branches_persist,
     validate_branches_governance,
+    write_branches_raw_with_audit,
     write_branches_with_audit,
 )
 from alters_lab.services.controlled_write import sha256_text
@@ -266,10 +267,9 @@ def test_no_alter_dialogue_value_calibration_archive_files(tmp_path):
 # --- schema-level extra="forbid" defense ---
 
 
-def test_branch_discovery_status_accepts_extra_fields():
-    bs = BranchDiscoveryStatus(status="not_started", pipeline={"step_1": {"output": ["a"]}})
-    d = bs.model_dump(mode="json")
-    assert "pipeline" in d
+def test_branch_discovery_status_rejects_extra_fields():
+    with pytest.raises(Exception):
+        BranchDiscoveryStatus(status="not_started", pipeline={"step_1": {"output": ["a"]}})
 
 
 def test_branch_rejects_extra_fields():
@@ -281,13 +281,12 @@ def test_branch_rejects_extra_fields():
         )
 
 
-def test_branch_discovery_payload_accepts_extra_fields():
-    bp = BranchDiscoveryPayload(
-        branch_discovery=BranchDiscoveryStatus(status="not_started"),
-        pipeline={"step_1": {"output": ["a"]}},
-    )
-    d = bp.model_dump(mode="json")
-    assert "pipeline" in d
+def test_branch_discovery_payload_rejects_extra_fields():
+    with pytest.raises(Exception):
+        BranchDiscoveryPayload(
+            branch_discovery=BranchDiscoveryStatus(status="not_started"),
+            pipeline={"step_1": {"output": ["a"]}},
+        )
 
 
 def test_branches_persist_request_rejects_extra_fields():
@@ -297,3 +296,76 @@ def test_branches_persist_request_rejects_extra_fields():
             branch_discovery=BranchDiscoveryStatus(status="not_started"),
             provider={"name": "openai"},
         )
+
+
+# --- raw dict write ---
+
+
+def _valid_branches_raw_dict() -> dict:
+    return {
+        "branch_discovery": {
+            "status": "completed",
+            "source_snapshot_ref": "alters/current/snapshot.yaml",
+            "requires_snapshot_phase": "completed",
+            "confirmed_by": "human_owner",
+            "confirmation_note": "Test",
+            "pipeline": {"step_1": {"output": ["a"]}},
+            "quality_rules": {"min_branches": 3},
+        },
+        "branches": [
+            {
+                "id": f"branch_{c}", "label": f"Branch {c}",
+                "core_choice": f"Choice {c}", "structural_commitment": f"SC {c}",
+                "key_tension_resolved": f"KR {c}",
+                "incompatible_with": [f"branch_{x}" for x in "ABCD" if x != c],
+            }
+            for c in "ABCD"
+        ],
+    }
+
+
+def test_write_branches_raw_preserves_extra_fields(tmp_path):
+    payload = _valid_branches_raw_dict()
+    audit_path = tmp_path / "audit.jsonl"
+    result = write_branches_raw_with_audit(
+        payload=payload,
+        target_path=tmp_path / "branches.yaml",
+        audit_log_path=audit_path,
+        approval_token="test-token-123",
+        caller="test",
+        create_backup=False,
+    )
+    assert result["status"] == "persisted"
+    content = (tmp_path / "branches.yaml").read_text()
+    assert "pipeline" in content
+    assert "quality_rules" in content
+
+
+def test_write_branches_raw_rejects_missing_status(tmp_path):
+    payload = _valid_branches_raw_dict()
+    payload["branch_discovery"]["status"] = "in_progress"
+    audit_path = tmp_path / "audit.jsonl"
+    result = write_branches_raw_with_audit(
+        payload=payload,
+        target_path=tmp_path / "branches.yaml",
+        audit_log_path=audit_path,
+        approval_token="test-token-123",
+        caller="test",
+        create_backup=False,
+    )
+    assert result["status"] == "rejected"
+
+
+def test_write_branches_raw_rejects_forbidden_field(tmp_path):
+    payload = _valid_branches_raw_dict()
+    payload["dialogue"] = {"sessions": []}
+    audit_path = tmp_path / "audit.jsonl"
+    result = write_branches_raw_with_audit(
+        payload=payload,
+        target_path=tmp_path / "branches.yaml",
+        audit_log_path=audit_path,
+        approval_token="test-token-123",
+        caller="test",
+        create_backup=False,
+    )
+    assert result["status"] == "rejected"

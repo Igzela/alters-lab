@@ -146,6 +146,109 @@ def write_alter_with_audit(
     }
 
 
+def validate_alter_raw_dict(alter: dict) -> dict:
+    """Validate required fields on a raw alter dict without Pydantic model."""
+    errors: list[str] = []
+    alter_id = alter.get("id", "")
+    if alter_id not in VALID_ALTER_IDS:
+        errors.append(f"alter id must be one of {VALID_ALTER_IDS}")
+    expected_branch = alter_id.replace("alter_", "branch_")
+    if alter.get("branch_ref") != expected_branch:
+        errors.append(f"branch_ref must be {expected_branch}")
+    src = alter.get("source_refs", {})
+    if src.get("snapshot_ref") != "alters/current/snapshot.yaml":
+        errors.append("source_refs.snapshot_ref must be 'alters/current/snapshot.yaml'")
+    if src.get("branches_ref") != "alters/current/branches.yaml":
+        errors.append("source_refs.branches_ref must be 'alters/current/branches.yaml'")
+    if src.get("rubric_ref") != "alters/calibration/rubric.yaml":
+        errors.append("source_refs.rubric_ref must be 'alters/calibration/rubric.yaml'")
+    qs = alter.get("quality_status", {})
+    if qs.get("human_confirmed") is not True:
+        errors.append("quality_status.human_confirmed must be true")
+    if qs.get("active") is not True:
+        errors.append("quality_status.active must be true")
+    voice = alter.get("voice", {})
+    if not voice.get("core_stance"):
+        errors.append("voice.core_stance must be non-empty")
+    forbidden_fields = ["dialogue", "calibration_scoring", "drift", "archive", "provider", "database", "frontend", "generation"]
+    for field in forbidden_fields:
+        if field in alter:
+            errors.append(f"alter must not contain forbidden field: {field}")
+    return {"valid": len(errors) == 0, "errors": errors}
+
+
+def write_alter_raw_batch_with_audit(
+    alters: list[dict],
+    base_dir: Path,
+    audit_log_path: Path,
+    approval_token: str,
+    caller: str = "api",
+    create_backup: bool = True,
+    backup_dir: Path | None = None,
+) -> dict:
+    """Write alter batch from raw dicts, preserving all YAML fields."""
+    reject_blank_token(approval_token)
+
+    all_errors: list[str] = []
+    for a in alters:
+        result = validate_alter_raw_dict(a)
+        if not result["valid"]:
+            all_errors.extend(result["errors"])
+    if all_errors:
+        return {
+            "status": "rejected",
+            "reason": "; ".join(all_errors),
+            "governance_check": {"valid": False, "errors": all_errors},
+        }
+
+    token_hash = hash_approval_token(approval_token)
+    pre_write_hashes: dict[str, str] = {}
+    post_write_hashes: dict[str, str] = {}
+    written_paths: list[str] = []
+    backup_paths: list[str] = []
+
+    for alter in alters:
+        alter_id = alter["id"]
+        target = get_alter_target_path(alter_id, base_dir)
+        pre_write_hashes[alter_id] = sha256_file(target)
+
+        yaml_content = yaml.safe_dump(alter, sort_keys=False, allow_unicode=True)
+
+        if create_backup and backup_dir:
+            bp = create_backup_if_exists(target, Path(backup_dir), alter_id)
+            if bp:
+                backup_paths.append(bp)
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(yaml_content, encoding="utf-8")
+
+        post_write_hashes[alter_id] = sha256_file(target)
+        written_paths.append(str(target))
+
+    audit_record = {
+        "operation": "alters_raw_batch_persist",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "written_paths": written_paths,
+        "pre_write_hashes": pre_write_hashes,
+        "post_write_hashes": post_write_hashes,
+        "approval_token_hash": token_hash,
+        "caller": caller,
+        "rollback_available": len(backup_paths) > 0,
+        "backup_paths": backup_paths,
+    }
+
+    append_jsonl_audit(audit_log_path, audit_record)
+
+    return {
+        "status": "persisted",
+        "written_paths": written_paths,
+        "pre_write_hashes": pre_write_hashes,
+        "post_write_hashes": post_write_hashes,
+        "backup_paths": backup_paths,
+        "audit_log_path": str(audit_log_path),
+    }
+
+
 def write_alter_batch_with_audit(
     alters: list[AlterPayload],
     base_dir: Path,

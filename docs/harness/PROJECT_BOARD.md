@@ -92,6 +92,7 @@ Phase 2 Final Gate: **PASS**
 | P3-M5 | Controlled Promotion Execution Gate | **done** |
 | P3-M6 | Controlled Promotion Live Execution | **done** |
 | P3-M6R | Live Executor Persist Signature Repair | **done** |
+| P3-M6R2 | Raw Dict Re-persist Preserves Extras Without Weakening API Schemas | **done** |
 | P3-M7 | First Human-Approved Live Promotion Run | **done** |
 
 ## Quality Gates

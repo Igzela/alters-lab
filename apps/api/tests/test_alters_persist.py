@@ -11,8 +11,10 @@ from alters_lab.services.alters_persist import (
     get_alter_target_path,
     preview_alter_persist,
     validate_alter_governance,
+    validate_alter_raw_dict,
     validate_batch_governance,
     write_alter_batch_with_audit,
+    write_alter_raw_batch_with_audit,
     write_alter_with_audit,
 )
 from alters_lab.services.controlled_write import sha256_text
@@ -246,19 +248,19 @@ def test_alter_source_refs_rejects_extra_fields():
         )
 
 
-def test_alter_payload_accepts_extra_fields():
-    ap = AlterPayload(
-        id="alter_A", branch_ref="branch_A",
-        source_refs={
-            "snapshot_ref": "alters/current/snapshot.yaml",
-            "branches_ref": "alters/current/branches.yaml",
-            "rubric_ref": "alters/calibration/rubric.yaml",
-        },
-        quality_status={"human_confirmed": True, "active": True},
-        voice={"core_stance": "Test"},
-        time_horizon="1.5-2年后",
-    )
-    assert ap.model_dump(mode="json").get("time_horizon") == "1.5-2年后"
+def test_alter_payload_rejects_extra_fields():
+    with pytest.raises(Exception):
+        AlterPayload(
+            id="alter_A", branch_ref="branch_A",
+            source_refs={
+                "snapshot_ref": "alters/current/snapshot.yaml",
+                "branches_ref": "alters/current/branches.yaml",
+                "rubric_ref": "alters/calibration/rubric.yaml",
+            },
+            quality_status={"human_confirmed": True, "active": True},
+            voice={"core_stance": "Test"},
+            time_horizon="1.5-2年后",
+        )
 
 
 def test_alter_persist_request_rejects_extra_fields():
@@ -276,3 +278,76 @@ def test_alter_batch_persist_request_rejects_extra_fields():
             alters=[],
             database={"engine": "postgres"},
         )
+
+
+# --- raw dict validation and write ---
+
+
+def _valid_alter_raw_dict(alter_id: str = "alter_A") -> dict:
+    branch_ref = alter_id.replace("alter_", "branch_")
+    return {
+        "id": alter_id,
+        "branch_ref": branch_ref,
+        "label": f"Test {alter_id}",
+        "generated_at": "2026-05-19",
+        "time_horizon": "1.5-2年后",
+        "source_branch": {"core_choice": "test", "structural_commitment": "test", "key_tension_resolved": "test"},
+        "life_state": {"daily_structure": "test", "primary_tension": "test", "social_context": "test", "dominant_environment": "test"},
+        "source_refs": {
+            "snapshot_ref": "alters/current/snapshot.yaml",
+            "branches_ref": "alters/current/branches.yaml",
+            "rubric_ref": "alters/calibration/rubric.yaml",
+        },
+        "quality_status": {"human_confirmed": True, "active": True, "notes": []},
+        "voice": {"core_stance": "Test stance", "typical_concern": "", "decision_style": "", "self_warning": ""},
+    }
+
+
+def test_validate_alter_raw_dict_valid():
+    result = validate_alter_raw_dict(_valid_alter_raw_dict())
+    assert result["valid"] is True
+    assert result["errors"] == []
+
+
+def test_validate_alter_raw_dict_preserves_extra_fields():
+    d = _valid_alter_raw_dict()
+    d["time_horizon"] = "3-5年"
+    d["personality_drift"] = {"risk_tolerance": {"direction": "↓", "reason": "test"}}
+    result = validate_alter_raw_dict(d)
+    assert result["valid"] is True
+
+
+def test_validate_alter_raw_dict_rejects_forbidden_field():
+    d = _valid_alter_raw_dict()
+    d["dialogue"] = {"sessions": []}
+    result = validate_alter_raw_dict(d)
+    assert result["valid"] is False
+    assert any("dialogue" in e for e in result["errors"])
+
+
+def test_validate_alter_raw_dict_rejects_wrong_id():
+    d = _valid_alter_raw_dict()
+    d["id"] = "alter_E"
+    result = validate_alter_raw_dict(d)
+    assert result["valid"] is False
+
+
+def test_write_alter_raw_batch_preserves_extra_fields(tmp_path):
+    alters = [_valid_alter_raw_dict(f"alter_{c}") for c in "ABCD"]
+    audit_path = tmp_path / "audit.jsonl"
+    result = write_alter_raw_batch_with_audit(
+        alters=alters,
+        base_dir=tmp_path,
+        audit_log_path=audit_path,
+        approval_token="test-token-123",
+        caller="test",
+        create_backup=False,
+    )
+    assert result["status"] == "persisted"
+    for c in "ABCD":
+        alter_file = tmp_path / f"alter_{c}.yaml"
+        assert alter_file.exists()
+        content = alter_file.read_text()
+        assert "time_horizon" in content
+        assert "source_branch" in content
+        assert "life_state" in content

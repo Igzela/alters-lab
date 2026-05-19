@@ -284,10 +284,18 @@
 ### Decision P3-M6R-01: Payload models use extra="allow" to preserve full active YAML data
 
 **Date**: 2026-05-19
-**Status**: accepted
+**Status**: superseded by P3-M6R2-01
 **Context**: P3-M7 live execution failed because AlterPayload(extra="forbid") and BranchDiscoveryPayload/Status(extra="forbid") stripped extra fields during re-persist, causing semantic diffs in active YAML files.
 **Decision**: Change AlterPayload, BranchDiscoveryPayload, and BranchDiscoveryStatus from extra="forbid" to extra="allow". API request models (AlterPersistRequest, AlterBatchPersistRequest, BranchesPersistRequest) retain extra="forbid" to reject smuggled fields at the API boundary. Payload models accept extra fields to preserve full alter/branch data during controlled re-persist.
 **Consequences**: Active YAML data is fully preserved during live execution. API boundary still rejects unknown fields. Test data for payload models must include all required fields.
+
+### Decision P3-M6R2-01: Raw dict re-persist preserves extras without weakening API schemas
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M6R changed AlterPayload/BranchDiscoveryPayload/BranchDiscoveryStatus from extra="forbid" to extra="allow", which weakened the API smuggling boundary from P3-M1R. GPT BLOCKED the commit because extra="allow" on nested payload models allows smuggled fields to pass through the API boundary.
+**Decision**: Revert all payload models to extra="forbid". Use raw dict functions (write_alter_raw_batch_with_audit, write_branches_raw_with_audit) for the re-persist path in execute_promotion_live(). These functions validate required fields via dict checks, then write the raw dict directly to YAML via yaml.safe_dump(), preserving all extra fields without going through Pydantic model serialization (which strips extras via model_dump()). API boundary models remain extra="forbid".
+**Consequences**: API smuggling boundary preserved (all models extra="forbid"). Active YAML extras preserved during live execution (raw dict round-trip). Governance validation still enforced on raw dicts (required fields, forbidden fields). No Pydantic model needed for re-persist path.
 
 ### Decision P3-M7-01: First live promotion run must be semantic no-op
 
