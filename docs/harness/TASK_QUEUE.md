@@ -112,58 +112,58 @@
 **Depends on**: P1-002 (done)
 **Notes**: Complete. snapshot_export.py provides snapshot_to_canonical_dict, snapshot_to_yaml, and write_snapshot_yaml. 13 new tests added (46 total passing). Confirm endpoint remains in-memory only. No YAML writes during normal confirmation. Export requires explicit target path. No frontend, no database, no LLM, no branch/alter/dialogue/value/calibration/archive code added.
 
-### P1-004: Branch Discovery Controlled YAML Write
+### P1-004: Controlled Snapshot YAML Write
 
 **Status**: done
-**Goal**: Implement Branch Discovery controlled YAML write for transforming snapshot anchors into structural branches
+**Goal**: Implement Controlled Snapshot YAML Write for persisting confirmed snapshots as canonical YAML
 **Depends on**: P1-003 (done)
-**Notes**: Complete. Branch Discovery controlled YAML write implements three-step pipeline (tension extraction, structural branch identification, convergence). Tests validate 3-4 mutually incompatible branches from confirmed snapshot. Not a runtime backend service — controlled artifact write only.
+**Notes**: Complete. Controlled Snapshot YAML Write persists confirmed snapshot as canonical YAML artifact. Not a runtime backend service — controlled artifact write only.
 
-### P1-005: Alter Generation Controlled YAML Write
+### P1-005: Controlled Branches YAML Write
 
 **Status**: done
-**Goal**: Implement Alter Generation controlled YAML write for creating Alters per confirmed branch
+**Goal**: Implement Controlled Branches YAML Write for persisting branch discovery output as canonical YAML
 **Depends on**: P1-004 (done)
-**Notes**: Complete. Alter Generation controlled YAML write produces coherent Alters with voice, tradeoffs, and personality drift. Tests validate Alter structure and human confirmation requirements. Not a runtime backend service — controlled artifact write only.
+**Notes**: Complete. Controlled Branches YAML Write persists branch discovery output as canonical YAML artifact. Not a runtime backend service — controlled artifact write only.
 
-### P1-006: Dialogue Engine Controlled YAML Write
+### P1-006: Controlled Alter YAML Write
 
 **Status**: done
-**Goal**: Implement Dialogue Engine controlled YAML write for user-Alter dialogue sessions
+**Goal**: Implement Controlled Alter YAML Write for persisting alter definitions as canonical YAML
 **Depends on**: P1-005 (done)
-**Notes**: Complete. Dialogue Engine controlled YAML write facilitates exploration between user and confirmed Alter with full alter.yaml injection. Grounding metadata present on every response. Not a runtime backend service — controlled artifact write only.
+**Notes**: Complete. Controlled Alter YAML Write persists alter definitions as canonical YAML artifact. Not a runtime backend service — controlled artifact write only.
 
 ### P1-007: Value Alignment Controlled YAML Write
 
 **Status**: done
 **Goal**: Implement Value Alignment controlled YAML write for comparing Alters against user-confirmed values
 **Depends on**: P1-006 (done)
-**Notes**: Complete. Value Alignment evaluates four fixed dimensions (autonomy, stability, exploration, engineering_output). Comparison matrix produced. Active alignment files accepted after human confirmation (see QUALITY_GATES.md update). Not a runtime backend service — controlled artifact write only.
+**Notes**: Complete. Value Alignment evaluates five fixed dimensions (autonomy, technical_exploration, engineering_output, stability, evidence_based_decision). Comparison matrix produced. Active alignment files accepted after human confirmation (see QUALITY_GATES.md update). Not a runtime backend service — controlled artifact write only.
 
-### P1-008: Calibration Controlled YAML Write
+### P1-008: Controlled Dialogue YAML Write
 
 **Status**: done
-**Goal**: Implement Calibration controlled YAML write for scoring branches against reality
+**Goal**: Implement Controlled Dialogue YAML Write for persisting dialogue session artifacts as canonical YAML
 **Depends on**: P1-007 (done)
-**Notes**: Complete. Calibration controlled YAML write uses two-speed update model with cold-start policy. Rubric auto_modify remains false. Not a runtime backend service — controlled artifact write only.
+**Notes**: Complete. Controlled Dialogue YAML Write persists dialogue session artifacts as canonical YAML. Not a runtime backend service — controlled artifact write only.
 
-### P1-009: Archive Controlled YAML Write
+### P1-009: Reality Trace / Weekly Evidence Controlled Write
 
 **Status**: done
-**Goal**: Implement Archive controlled YAML write for preserving historical system states
+**Goal**: Implement Reality Trace / Weekly Evidence Controlled Write for persisting evidence trail as canonical YAML
 **Depends on**: P1-008 (done)
-**Notes**: Complete. Archive controlled YAML write preserves read-only faithful copies of current state. Rubric delta is proposal-only with reject_auto_apply. Not a runtime backend service — controlled artifact write only.
+**Notes**: Complete. Reality Trace / Weekly Evidence Controlled Write persists evidence trail as canonical YAML artifact. Not a runtime backend service — controlled artifact write only.
 
-### P1-010: Flat Active Alter Schema
+### P1-010: State Reconciliation + Active YAML Schema Normalization
 
 **Status**: done
 **Goal**: Redesign Alter schema to flat active format with source_refs and quality_status fields
 **Depends on**: P1-009 (done)
 **Notes**: Complete. Alter schema flattened from nested structure to active flat format. Added source_refs (branch_ref, snapshot_ref) and quality_status fields. Phase 0 template marked inactive_template_only; active alters now use flat schema. See DECISION_RECORD.md Decision P1-010-01.
 
-### P1-011: End-to-End Integration + CYCLE-001A Trigger
+### P1-011: Governance Truth Repair + Day 30 Demo Definition
 
-**Status**: blocked
-**Goal**: Wire all backend services into end-to-end flow and trigger first real CYCLE-001A execution
-**Depends on**: P1-010 (done), governance docs alignment
-**Notes**: Blocked. Waiting for governance docs (PROJECT_BOARD, TASK_QUEUE, QUALITY_GATES, DECISION_RECORD, RISK_REGISTER) to be updated to reflect current phase state. Cannot proceed until quality gates and decision records match active artifacts.
+**Status**: done
+**Goal**: Align all governance docs with current phase state and define Day 30 demo criteria
+**Depends on**: P1-010 (done)
+**Notes**: Complete. Governance docs repaired to match current phase state. Day 30 demo definition documented.

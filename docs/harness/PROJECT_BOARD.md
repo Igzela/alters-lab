@@ -29,20 +29,20 @@ todo → ready → running → review → done/failed
 | P1-001 | Backend Foundation + Snapshot Intake Contract | done |
 | P1-002 | Snapshot Intake API Endpoints | done |
 | P1-003 | Snapshot YAML Persistence / Export Gate | done |
-| P1-004 | Branch Discovery Controlled YAML Write | done |
-| P1-005 | Alter Generation Controlled YAML Write | done |
-| P1-006 | Dialogue Engine Controlled YAML Write | done |
+ P1-004 | Controlled Snapshot YAML Write | done |
+ P1-005 | Controlled Branches YAML Write | done |
+ P1-006 | Controlled Alter YAML Write | done |
 | P1-007 | Value Alignment Controlled YAML Write | done |
-| P1-008 | Calibration Controlled YAML Write | done |
-| P1-009 | Archive Controlled YAML Write | done |
-| P1-010 | Flat Active Alter Schema (source_refs, quality_status) | done |
-| P1-011 | End-to-End Integration + CYCLE-001A Trigger | **blocked** |
+ P1-008 | Controlled Dialogue YAML Write | done |
+ P1-009 | Reality Trace / Weekly Evidence Controlled Write | done |
+ P1-010 | State Reconciliation + Active YAML Schema Normalization | done |
+ P1-011 | Governance Truth Repair + Day 30 Demo Definition | done |
 
 ## Quality Gates
 
 **day_14 gate**: "FastAPI backend can run Snapshot Intake contract and tests." — **COMPLETED** (P1-001 through P1-003 passed)
 
-**day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and calibration template." — **PENDING** (P1-004 through P1-010 complete; integration pending in P1-011)
+ **day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and reality trace." — **PENDING** (P1-004 through P1-010 complete; integration pending in P1-011)
 
 ## Notes
 
@@ -54,7 +54,7 @@ todo → ready → running → review → done/failed
 - P1-001 complete. Phase 1 has started with backend foundation.
 - P1-002 complete. Snapshot Intake API endpoints exposed via in-memory FastAPI backend. Day 14 gate moved closer but YAML persistence remains future slice.
 - P1-003 complete. Snapshot YAML persistence and export gate implemented. Day 14 gate passed.
-- P1-004 through P1-009 complete. Branch Discovery, Alter Generation, Dialogue, Value Alignment, Calibration, and Archive were controlled YAML writes (not backend runtime implementations). See DECISION_RECORD.md.
-- P1-010 complete. Flat active Alter schema adopted with source_refs and quality_status fields. See DECISION_RECORD.md for rationale.
-- P1-011 blocked. End-to-end integration and CYCLE-001A trigger pending — waiting on governance docs alignment (this update).
+ P1-004 through P1-009 complete. Controlled Snapshot YAML Write, Controlled Branches YAML Write, Controlled Alter YAML Write, Controlled Value Alignment YAML Write, Controlled Dialogue YAML Write, and Reality Trace / Weekly Evidence Controlled Write (not backend runtime implementations). See DECISION_RECORD.md.
+ P1-010 complete. State Reconciliation + Active YAML Schema Normalization adopted. See DECISION_RECORD.md for rationale.
+ P1-011 complete. Governance Truth Repair + Day 30 Demo Definition — all governance docs aligned with current phase state.
 - Day 14 gate completed. Day 30 gate pending — requires P1-011 integration to pass.

@@ -100,7 +100,7 @@ curl http://localhost:8000/health
 curl -X POST http://localhost:8000/snapshot-intake/sessions
 ```
 
-**Expected**: 201 with `session_id` (UUID), empty anchors, `intake_status.phase: "intake"`.
+**Expected**: 201 with `session_id` (UUID), empty anchors, `intake_status.phase: "asking_heaviest_constraint"`.
 
 **Pass**: Session created, `pending_anchor: "heaviest_constraint"`.
 
@@ -191,7 +191,7 @@ Generate a summary document (or stdout output) listing:
 3. 3 anchors submitted: ✅
 4. Snapshot confirmed in-memory: ✅
 5. YAML export to explicit path: ✅ (`/tmp/demo_snapshot_export.yaml`)
-6. Active YAML chain present: ✅ (7 artifacts in `alters/current/`)
+6. Active YAML chain present: ✅ (9 artifacts in `alters/current/`)
 7. Reality trace active: ✅ (`reality_trace.yaml`, `status: "active"`)
 8. Tests passing: ✅ (46/46)
 9. No forbidden components used: ✅ (no LLM, no DB, no frontend, no calibration)
@@ -212,7 +212,7 @@ The Day 30 demo **passes** if and only if ALL of the following are true:
 | P4 | Snapshot confirms in-memory | `POST .../confirm` returns `phase: "completed"` |
 | P5 | Export produces YAML at explicit target path | `write_snapshot_yaml(snapshot, path)` writes valid file |
 | P6 | Exported YAML matches canonical snapshot shape | `snapshot:` top-level key, all fields present |
-| P7 | Active YAML chain is complete and consistent | 7+ artifacts in `alters/current/`, cross-references valid |
+| P7 | Active YAML chain is complete and consistent | 9 artifacts in `alters/current/`, cross-references valid |
 | P8 | Reality trace is active and references real evidence | `reality_trace.yaml` with `status: "active"`, evidence_refs point to real files |
 | P9 | 46 pytest tests pass | `pytest -v` shows 46 passed |
 | P10 | No calibration, drift, LLM, frontend, or database used | Audit trail: no `score_*.yaml` written, no provider config, no DB connection, no UI files |
