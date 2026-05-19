@@ -67,14 +67,14 @@ Phase 2 Final Gate: **PASS**
 - 9 active YAML artifacts validated (PASS, selected_branch=branch_D)
 - API surface: 3 routers (snapshot-intake, cycle-summary, evidence-reports), all read-only on cycle-summary and evidence
 - No forbidden components (provider, database, frontend, runtime modules)
-- Commit: P2-005R correction commit on main
+- Commit: 38ffcc2 (Phase 2 sealed baseline)
 - Closeout report: `docs/harness/PHASE2_CLOSEOUT_REPORT.md`
 
 ## Quality Gates
 
 **day_14 gate**: "FastAPI backend can run Snapshot Intake contract and tests." — **COMPLETED** (P1-001 through P1-003 passed)
 
- **day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and reality trace." — **PASSED** (P1-012 evidence harness confirms 9-step validation; Day 30 evidence review pending in P1-013)
+ **day_30 gate**: "Complete CYCLE-001 flow can run through at least one real snapshot, branches, alters, dialogue/value alignment, and reality trace." — **PASSED** (P1-012 evidence harness confirms 9-step validation; Day 30 evidence review completed (P1-012R, P1-013 sealed))
 
 ## Notes
 
