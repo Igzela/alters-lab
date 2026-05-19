@@ -90,6 +90,7 @@ Phase 2 Final Gate: **PASS**
 | P3-M3R2 | Promotion Payload Exactness Repair | **done** |
 | P3-M4 | Controlled Active Promotion Orchestration Plan | **done** |
 | P3-M5 | Controlled Promotion Execution Gate | **done** |
+| P3-M6 | Controlled Promotion Live Execution | **done** |
 
 ## Quality Gates
 

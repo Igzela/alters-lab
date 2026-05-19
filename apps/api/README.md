@@ -44,6 +44,9 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/promotion-execution-gate/health` | Promotion execution gate health |
 | POST | `/promotion-execution-gate/{draft_id}/check` | Run execution gate check (dry-run, prerequisites, execution packet) |
 | GET | `/promotion-execution-gate/list` | List execution gate reports |
+| GET | `/promotion-live-execution/health` | Promotion live execution health |
+| POST | `/promotion-live-execution/{draft_id}/run` | Run live execution (dry-run or live with path_overrides) |
+| GET | `/promotion-live-execution/list` | List live execution reports |
 
 ## Services
 
@@ -59,6 +62,7 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **draft_review** — Draft review and promotion boundary
 - **promotion_orchestration** — Promotion orchestration plan-only boundary
 - **promotion_execution_gate** — Promotion execution gate (dry-run, prerequisites, execution packet)
+- **promotion_live_execution** — Controlled live execution runtime (dry-run/live, path_overrides, controlled persist)
 
 ## Export
 
