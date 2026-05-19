@@ -28,6 +28,7 @@ todo → ready → running → review → done/failed
 |----|-------|--------|
 | P1-001 | Backend Foundation + Snapshot Intake Contract | done |
 | P1-002 | Snapshot Intake API Endpoints | done |
+| P1-003 | Snapshot YAML Persistence / Export Gate | done |
 
 ## Quality Gates
 

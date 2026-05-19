@@ -165,3 +165,12 @@
 **Decision**: P1-002 uses in-memory session store only. No YAML writes, no database, no file persistence. The API validates the contract and enforces the one-question-at-a-time rule, but all state lives in process memory.
 **Consequences**: The API is testable and demonstrates the full intake workflow. Data is lost on process restart, which is acceptable for v0.1 local use. File persistence is deferred to a later slice (P1-003+). Prevents accidental active YAML mutation and premature persistence complexity.
 **Alternatives**: Add YAML persistence in P1-002 (rejected — adds write-path complexity before API contract is validated; risk of accidental active YAML mutation). Add database persistence (rejected — premature, no multi-user need).
+
+### Decision P1-003-01: Export path is service-only, not wired to API confirm endpoint
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P1-003 adds YAML export capability. The question was whether the confirm endpoint should automatically write YAML or whether export should be a separate, explicit operation.
+**Decision**: Export is service-only. snapshot_export.py provides functions (snapshot_to_canonical_dict, snapshot_to_yaml, write_snapshot_yaml) but none are called by the confirm endpoint. write_snapshot_yaml requires an explicit target_path — no hardcoded alters/current/snapshot.yaml.
+**Consequences**: Confirm remains in-memory and safe. Export is opt-in and explicit. The active snapshot.yaml is never mutated by the API. File writes only happen through deliberate function calls with explicit paths.
+**Alternatives**: Auto-write on confirm (rejected — violates the "no automatic active YAML mutation" rule). Expose export as API endpoint (deferred to later slice — P1-003 is service/export contract only).
