@@ -1,24 +1,21 @@
-# Alters System — Current Snapshot
-# Phase 0: This is a template. Fill in with real data when ready.
-
-id: snapshot-001
-cycle: 0
-captured_at: "2026-05-19T00:00:00Z"
-
-# Anchor points for branch generation
-heaviest_constraint: |
-  # What is the biggest constraint currently shaping your decisions?
-  # Example: "I have 6 months of runway before I need to make a career change"
-  # This is the weight that everything else must work around.
-
-most_unclear: |
-  # What is the most uncertain direction or question in your life right now?
-  # Example: "Whether to stay in my current role or take the startup offer"
-  # This is the branch point — the thing that could go multiple ways.
-
-unwilling_to_give_up:
-  # Things you will NOT sacrifice regardless of which branch you take.
-  # These are non-negotiable anchors.
-  - # Example: "Time with my kids on weekends"
-  - # Example: "Working on something technically challenging"
-  - # Example: "Living in a walkable neighbourhood"
+snapshot:
+  date: null
+  version: 1
+  anchors:
+    heaviest_constraint: ""
+    most_unclear: ""
+    unwilling_to_give_up: ""
+  context:
+    current_commitments: []
+    external_deadlines: []
+    energy_state: ""
+  intake_status:
+    phase: "not_started"
+    completed_anchors: []
+    pending_anchor: "heaviest_constraint"
+  evidence_policy:
+    source_mode: "self_report_only_phase0"
+    confidence: "unset"
+    unresolved_assumptions: []
+  notes:
+    - "Phase 0 snapshot template. Fill through the intake workflow before branch discovery."
