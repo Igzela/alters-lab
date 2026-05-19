@@ -1,11 +1,135 @@
-# Alters System — Reality Trace
-# Phase 0: This is a template. Traces record how reality diverges from branches.
+reality_trace:
+  status: "active"
+  cycle: "CYCLE-001"
+  current_probe:
+    selected_branch: "branch_D"
+    selected_alter: "alter_D"
+    mode: "30-day controlled probe"
+    main_project: "Alters Lab"
+    real_use_case: "个人未来分支模拟、路径选择校准、现实轨迹复盘"
+    started_at: "2026-05-19"
+    day_14_gate:
+      status: "completed"
+      check: "FastAPI 后端能跑 Snapshot Intake 合约和测试。"
+      evidence_refs:
+        - "apps/api/src/alters_lab/main.py"
+        - "apps/api/src/alters_lab/schemas/snapshot.py"
+        - "apps/api/src/alters_lab/services/snapshot_intake.py"
+        - "apps/api/src/alters_lab/api/snapshot_intake.py"
+        - "apps/api/tests/test_snapshot_schema.py"
+        - "apps/api/tests/test_snapshot_intake.py"
+        - "apps/api/tests/test_snapshot_api.py"
+        - "apps/api/tests/test_snapshot_export.py"
+      test_evidence:
+        pytest_total: 46
+        status: "passing"
 
-traces: []
-# Example structure (uncomment when ready):
-# - id: trace-001
-#   branch_id: branch-001
-#   observed_at: "2026-08-19T00:00:00Z"
-#   divergence: "Stayed in role but got lateral move instead of promotion"
-#   delta_magnitude: 0.3
-#   notes: " organisational restructure changed the promotion landscape"
+    day_30_gate:
+      status: "pending"
+      check: "完整 CYCLE 能走通：snapshot → branches → alters → dialogue/value alignment → first calibration template。"
+
+  events:
+    - id: "rt_2026-05-19_001"
+      date: "2026-05-19"
+      event_type: "probe_started"
+      branch_ref: "branch_D"
+      alter_ref: "alters/current/alters/alter_D.yaml"
+      description: >
+        Human owner confirmed branch_D as the primary 30-day controlled probe.
+        Alters Lab was selected as the single main project for testing hard engineering closure.
+      evidence_refs:
+        - "alters/current/snapshot.yaml"
+        - "alters/current/branches.yaml"
+        - "alters/current/alters/alter_D.yaml"
+        - "alters/current/value_alignment/alignment_2026-05-19.yaml"
+      interpretation: >
+        This event marks the shift from simulation/planning into a real execution probe.
+        It is not a calibration score and does not compute drift.
+      affects:
+        selected_branch: "branch_D"
+        fallback_branch: "branch_B"
+        blocked_branch: "branch_A"
+        conditional_branch: "branch_C only as structure, not as equal dual-track"
+
+    - id: "rt_2026-05-19_002"
+      date: "2026-05-19"
+      event_type: "day_14_gate_completed"
+      branch_ref: "branch_D"
+      alter_ref: "alters/current/alters/alter_D.yaml"
+      description: >
+        Day 14 gate was reached: FastAPI backend can run Snapshot Intake contract and tests.
+        P1-001 through P1-003 established backend snapshot schemas, intake service, API layer,
+        and explicit YAML export contract. P1-004 through P1-008 wrote confirmed active YAML
+        artifacts for snapshot, branches, alters, value alignment, and one static dialogue artifact.
+      evidence_refs:
+        - "apps/api/src/alters_lab/main.py"
+        - "apps/api/src/alters_lab/api/snapshot_intake.py"
+        - "apps/api/src/alters_lab/services/snapshot_export.py"
+        - "alters/current/snapshot.yaml"
+        - "alters/current/branches.yaml"
+        - "alters/current/alters/alter_D.yaml"
+        - "alters/current/value_alignment/alignment_2026-05-19.yaml"
+        - "alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml"
+      test_evidence:
+        pytest_total: 46
+        status: "passing"
+      interpretation: >
+        The project is no longer only a Phase 0 scaffold. It has a working backend snapshot intake
+        contract and active YAML artifacts for the first real cycle. This supports continuing branch_D,
+        but does not yet justify calibration scoring.
+
+    - id: "rt_2026-05-19_003"
+      date: "2026-05-19"
+      event_type: "controlled_dialogue_artifact_created"
+      branch_ref: "branch_D"
+      alter_ref: "alters/current/alters/alter_D.yaml"
+      description: >
+        A static, human-confirmed dialogue artifact was created for alter_D without LLM provider or runtime.
+        The dialogue emphasized freezing Alters Lab as the only main project, avoiding new project switching,
+        preserving a minimal runnable backend flow, and requiring daily evidence.
+      evidence_refs:
+        - "alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml"
+      interpretation: >
+        This artifact provides execution guidance for the branch_D probe but is not a runtime Dialogue Engine,
+        Value Alignment score, Calibration score, or governance authority.
+
+  weekly_evidence:
+    - week: "week_0"
+      date_range: "2026-05-19/2026-05-19"
+      status: "initialized"
+      main_project: "Alters Lab"
+      evidence_refs:
+        - "commit: b75d3b7"
+        - "commit: 0030374"
+        - "commit: 9bde9f5"
+        - "commit: e008392"
+        - "commit: 1c10c1e"
+      checks:
+        stayed_on_single_project: true
+        active_yaml_written_under_control: true
+        tests_passing: true
+        llm_provider_used: false
+        calibration_started: false
+      notes:
+        - "Week 0 initializes the 30-day controlled probe."
+        - "This is evidence recording only; no drift or reality_score is computed."
+
+  calibration_readiness:
+    ready_for_reality_score: false
+    reason: >
+      Reality trace has initial evidence, but no two-week execution interval has elapsed.
+      Calibration requires lived reality evidence over time, not just initial setup completion.
+    earliest_candidate: "after first weekly evidence checkpoint or two-week review"
+    prohibited_now:
+      - "do not create score_*.yaml"
+      - "do not compute drift"
+      - "do not modify rubric"
+      - "do not unlock calibration"
+
+  quality_status:
+    human_confirmed: true
+    active: true
+    notes:
+      - "CYCLE-001 reality trace initialized after controlled active YAML writes."
+      - "This file records evidence only."
+      - "No Calibration, Archive, or Rubric evolution has been performed."
