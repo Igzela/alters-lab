@@ -220,3 +220,14 @@
 **Goal**: Produce Phase 2 closeout report and seal read-only runtime foundation baseline
 **Depends on**: P2-004 (done)
 **Completed**: Closeout report produced, all boundary confirmations PASS, 118 tests passing.
+
+---
+
+## Phase 3 — Controlled Mutation
+
+### P3-000: Phase 3 Scope and Boundary Plan
+
+**Status**: done
+**Goal**: Define controlled mutation boundaries before any Phase 3 implementation
+**Depends on**: P2-005R (done)
+**Completed**: Scope plan produced with 10 sections: executive summary, objectives, allowed writes (9 types), forbidden writes (10 items), approval gates, rollback/recovery plan, evidence requirements, final gate criteria, execution slice map (P3-001 through P3-007), risks and mitigations (R-029 through R-038). No code changes.
