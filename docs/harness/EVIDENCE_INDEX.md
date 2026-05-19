@@ -90,3 +90,4 @@
 | P2-001 | Risk register update | docs/harness/RISK_REGISTER.md | R-024 through R-028 added for Phase 2 loader risks |
 | P2-001 | Run log update | docs/harness/RUN_LOG.md | P2-001 entry appended |
 | P2-001 | Evidence index update | docs/harness/EVIDENCE_INDEX.md | P2-001 entry appended |
+| P2-005R2 | Doc consistency patch | docs/harness/TASK_QUEUE.md, docs/harness/PHASE2_CLOSEOUT_REPORT.md, docs/harness/RUN_LOG.md, docs/harness/EVIDENCE_INDEX.md | Documentation-only consistency patch: P1-013 status updated, sealed commit corrected to fcfcbe2, test total corrected to 118, P2-005R slice recorded. No code changes. |
