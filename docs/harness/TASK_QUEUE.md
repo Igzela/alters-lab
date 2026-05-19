@@ -291,9 +291,16 @@
 **Completed**: Added `model_config = ConfigDict(extra="forbid")` to all Branches schemas (BranchDiscoveryStatus, Branch, BranchDiscoveryPayload, BranchesPersistRequest) and all Alters schemas (AlterSourceRefs, AlterQualityStatus, AlterVoice, AlterPayload, AlterPersistRequest, AlterBatchPersistRequest). Health endpoints return `mode: "controlled_write"`. Added 7 branches API smuggling tests and 10 alters API smuggling tests proving forbidden fields are rejected with 422. Added 4 branches schema defense tests and 4 alters schema defense tests documenting schema-level as first defense. Batch alter persist validates all alters before writing — filesystem failure midway is not fully transactional (risk noted). P3-M2 remains blocked.
 **Review note**: P3-M1 failed review because schemas did not forbid extra fields, making forbidden-field smuggling ineffective. P3-M1R fixes the contract.
 
-### P3-M2: Controlled Generation Runtime
+### P3-M2: Controlled Generation Draft Runtime
+
+**Status**: done
+**Goal**: Implement controlled, deterministic, draft-only generation runtime for branch and alter candidate artifacts
+**Depends on**: P3-M1R (done)
+**Completed**: Generation draft schemas (GenerationSourceRefs, GenerationBoundaryConfirmations, DraftGeneratorInfo, BranchDraftCandidate, AlterDraftCandidate, GenerationDraftPackage, GenerationPreviewRequest, GenerationPreviewResponse, DraftListResponse) with ConfigDict(extra="forbid"). Generation draft service (generate_draft_id, generation_boundary_confirmations, validate_generation_inputs, generate_branch_drafts_from_snapshot, generate_alter_drafts_from_branches, build_generation_draft_package, save_generation_draft_package, preview_generation_draft, list_generation_drafts). Generation draft API (GET /generation-drafts/health, POST /generation-drafts/preview, GET /generation-drafts/list). main.py updated with generation_drafts_router. .gitignore updated for alters/drafts/ and generation draft audit. 313 tests passing. No active YAML modified. No provider added. Draft-only output.
+
+### P3-M3: Draft Review and Promotion Boundary
 
 **Status**: blocked
-**Goal**: Implement controlled generation runtime for branch discovery and alter generation
-**Depends on**: P3-M1R (done)
-**Notes**: Blocked pending human review. P3-M1R must pass review first.
+**Goal**: Define how drafts are reviewed, approved, and promoted to active via controlled persist APIs
+**Depends on**: P3-M2 (done)
+**Notes**: Blocked pending human review of P3-M2.

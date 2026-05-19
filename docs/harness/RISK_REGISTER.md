@@ -43,6 +43,10 @@
 | R-037 | Active YAML write traces left after rollback | Low | Medium | write_snapshot_with_audit creates backup before write; rollback_available flag in audit; backup under configurable dir | Active |
 | R-038 | Forbidden fields silently ignored by Pydantic before service validation | Medium | High | P3-M1R: all branches/alters schemas use ConfigDict(extra="forbid"); smuggled fields rejected at 422; tested at API and schema level | Mitigated |
 | R-039 | Batch alter persist not fully transactional on filesystem failure | Low | Medium | All alters validated before any write; filesystem failure midway leaves partial writes; future hardening may add temp-file atomic writes or rollback-on-error | Active |
+| R-040 | Draft output mistaken for active state | Medium | High | Drafts explicitly marked draft_only, active_write_allowed=false, human_review_required=true; active promotion requires separate controlled persist APIs | Mitigated |
+| R-041 | Deterministic templates overtrusted as intelligence | Medium | Medium | Templates produce candidate artifacts only; all drafts require human review; no claim of finality | Active |
+| R-042 | Provider integration added too early | Medium | High | P3-M2 uses no provider imports; tests grep for provider imports; provider integration deferred to explicit later phase | Mitigated |
+| R-043 | Draft audit logs committed as governance evidence | Low | Medium | Draft audit logs gitignored; only committed for explicitly approved real persist operations | Mitigated |
 
 ## Risk Assessment
 
