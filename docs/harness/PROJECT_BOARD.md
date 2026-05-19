@@ -56,6 +56,18 @@ Phase 1 Final Gate: **PASS**
 | P2-001 | Sealed Baseline Verification + Active YAML Loader | **done** |
 | P2-002 | Active YAML Chain Validator CLI | **done** |
 | P2-003 | Read-only Cycle Summary API | **done** |
+| P2-004 | Read-only Evidence Report API | **done** |
+| P2-005 | Phase 2 Closeout / Read-only Runtime Review | **done** |
+
+## Phase 2 Sealed Baseline
+
+Phase 2 Final Gate: **PASS**
+- 110 tests passing
+- 9 active YAML artifacts validated (PASS, selected_branch=branch_D)
+- API surface: 3 routers (snapshot-intake, cycle-summary, evidence-reports), all read-only on cycle-summary and evidence
+- No forbidden components (provider, database, frontend, runtime modules)
+- Commit: 272b39f on main (P2-004)
+- Closeout report: `docs/harness/PHASE2_CLOSEOUT_REPORT.md`
 
 ## Quality Gates
 
