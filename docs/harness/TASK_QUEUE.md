@@ -399,7 +399,14 @@
 
 ### P4-M1: Alter Dialogue Runtime
 
-**Status**: blocked
+**Status**: done
 **Goal**: Implement read-only alter dialogue runtime with full alter.yaml injection
-**Depends on**: P4-000 (done), GPT/human review (pending)
-**Notes**: Blocked pending GPT/human review of P4-000 scope. Dialogue is read-only by default. Must not write active YAML.
+**Depends on**: P4-000 (done), GPT/human review (done)
+**Completed**: Alter dialogue schemas (7 models, all extra="forbid"), service (boundary confirmations, validate_alter_id, load_active_alter, validate_active_alter_for_dialogue, build_alter_dialogue_context, build_system_instruction, build_prompt_packet, list_active_alters, build_dialogue_response), API router (4 endpoints: health, list alters, context, prompt), main.py router registration, 49 tests. 656 tests passing. Read-only, no provider, no active YAML write, no dialogue logs persisted. provider_ready=false.
+
+### P4-M2: Reality Score Form/API
+
+**Status**: blocked
+**Goal**: Implement reality score submission form/API
+**Depends on**: P4-M1 (done), GPT/human review (pending)
+**Notes**: Blocked pending GPT/human review. User-submitted reality scores only. No automatic score inference.

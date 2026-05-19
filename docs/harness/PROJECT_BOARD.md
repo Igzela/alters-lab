@@ -108,7 +108,8 @@ Phase 2 Final Gate: **PASS**
 | P3-M8R | Closeout API Read-Only Repair | **done** |
 | P3-M8R2 | Closeout Evidence Truth Repair | **done** |
 | P4-000 | Phase 4 Scope and Boundary Plan | **done** |
-| P4-M1 | Alter Dialogue Runtime | **blocked** |
+| P4-M1 | Alter Dialogue Runtime | **done** |
+| P4-M2 | Reality Score Form/API | **blocked** |
 
 ## Quality Gates
 
@@ -133,3 +134,4 @@ Phase 2 Final Gate: **PASS**
 - Day 14 gate completed. Day 30 gate passed (P1-012). Phase 1 sealed (P1-013 done).
 - P3-M8R2 complete. Closeout evidence truth repair — distinguishes tracked vs untracked audit files. Phase 3 sealed baseline established.
 - P4-000 complete. Phase 4 scope and boundary plan defined. P4-M1 blocked pending GPT/human review.
+- P4-M1 complete. Read-only alter dialogue runtime — no provider, no active YAML write, 656 tests passing. P4-M2 blocked.

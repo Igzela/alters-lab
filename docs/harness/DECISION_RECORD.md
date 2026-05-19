@@ -336,3 +336,11 @@
 **Context**: P3-M7 proved semantic no-op live mutation works. True semantic promotion (new branch/alter meaning entering active state) has different safety requirements.
 **Decision**: Direct replacement of active branch/alter semantics remains blocked until a later explicitly approved slice. No LLM output may jump directly to confirmed state. First allowed semantic writes are limited to reality_score records, calibration_history records, rubric_delta_suggestion records, archive/checkpoint metadata, and explicitly saved dialogue session logs.
 **Consequences**: Semantic promotion gets its own review and safety gate. This prevents accidental semantic drift through automated paths.
+
+### Decision P4-M1-01: Alter Dialogue Runtime is read-only and provider-free in first slice
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: Phase 4 begins with dialogue capability. The first question was whether to build full provider-backed dialogue immediately or establish safe context packaging first.
+**Decision**: P4-M1 implements read-only dialogue context and prompt packet building only. No LLM provider is called. No assistant replies are generated. No dialogue logs are persisted. provider_ready is always false. The runtime validates active alter contracts, builds dialogue context with scope boundaries, and returns prompt packets for downstream use.
+**Consequences**: Phase 4 establishes safe dialogue context packaging before provider-backed replies or saved dialogue logs. This prevents premature provider integration and ensures alter persona consistency is validated before any LLM interaction.
