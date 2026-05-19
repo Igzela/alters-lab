@@ -136,12 +136,35 @@ def test_check_no_raw_audit_logs_committed(tmp_path):
     assert check.status == "PASS"
 
 
-def test_check_no_raw_audit_logs_with_audit(tmp_path):
+def test_check_no_raw_audit_logs_with_local_audit(tmp_path):
+    """Local untracked audit file returns WARN, not FAIL."""
     harness = tmp_path / "docs" / "harness"
     harness.mkdir(parents=True)
     (harness / "test_audit.jsonl").write_text("test")
     check = check_no_raw_audit_logs_committed(tmp_path)
+    assert check.status == "WARN"
+    assert check.severity == "warning"
+
+
+def test_check_no_raw_audit_logs_with_tracked_audit(tmp_path, monkeypatch):
+    """Tracked audit file returns FAIL."""
+    import subprocess
+
+    harness = tmp_path / "docs" / "harness"
+    harness.mkdir(parents=True)
+    (harness / "test_audit.jsonl").write_text("test")
+
+    def fake_run(cmd, **kwargs):
+        class FakeResult:
+            returncode = 0
+            stdout = "docs/harness/test_audit.jsonl\n"
+            stderr = ""
+        return FakeResult()
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    check = check_no_raw_audit_logs_committed(tmp_path)
     assert check.status == "FAIL"
+    assert check.severity == "blocking"
 
 
 def test_check_phase3_governance_status(tmp_path):

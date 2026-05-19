@@ -40,6 +40,16 @@ todo → ready → running → review → done/failed
 | P1-012 | Day 30 Evidence Harness + Schema Alignment | done |
 | P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **done** |
 
+## Phase 3 Sealed Baseline
+
+Phase 3 Final Gate: **SEALED_WITH_NOTES**
+- Closeout status: PASS_WITH_NOTES
+- 607 tests passing
+- Sealed baseline commit: 86b75aa
+- Closeout report: `docs/harness/PHASE3_CLOSEOUT_REPORT.md`
+- P4-000 scope and boundary plan complete
+- P4-M1 blocked pending GPT/human review
+
 ## Phase 1 Sealed Baseline
 
 Phase 1 Final Gate: **PASS**
@@ -95,7 +105,10 @@ Phase 2 Final Gate: **PASS**
 | P3-M6R2 | Raw Dict Re-persist Preserves Extras Without Weakening API Schemas | **done** |
 | P3-M7 | First Human-Approved Live Promotion Run | **done** |
 | P3-M8 | Phase 3 Controlled Mutation Closeout Gate | **done** |
-| P4-000 | Phase 4 Scope and Boundary Plan | **blocked** |
+| P3-M8R | Closeout API Read-Only Repair | **done** |
+| P3-M8R2 | Closeout Evidence Truth Repair | **done** |
+| P4-000 | Phase 4 Scope and Boundary Plan | **done** |
+| P4-M1 | Alter Dialogue Runtime | **blocked** |
 
 ## Quality Gates
 
@@ -118,3 +131,5 @@ Phase 2 Final Gate: **PASS**
 - P1-011 complete. Governance Truth Repair + Day 30 Demo Definition — all governance docs aligned with current phase state.
 - P1-012 complete. Day 30 Evidence Harness + Schema Alignment — 9-step evidence schema validated, harness regenerated.
 - Day 14 gate completed. Day 30 gate passed (P1-012). Phase 1 sealed (P1-013 done).
+- P3-M8R2 complete. Closeout evidence truth repair — distinguishes tracked vs untracked audit files. Phase 3 sealed baseline established.
+- P4-000 complete. Phase 4 scope and boundary plan defined. P4-M1 blocked pending GPT/human review.

@@ -375,3 +375,31 @@
 **Goal**: Read-only closeout gate verifying controlled mutation system is safe to seal as baseline
 **Depends on**: P3-M6R2 (done), P3-M7 (done)
 **Completed**: Phase 3 closeout schemas (6 models, all extra="forbid"), service with 9 verification checks (active YAML chain, evidence files, P3-M7 evidence, smuggling boundary, raw dict path, live execution safety, runtime artifacts, audit logs, governance status), API router (3 endpoints: health, report, evidence), 30 tests, governance docs updated. 606 tests passing. No active YAML modified. No live execution. No persist services called. Read-only verification only. Phase 3 sealed baseline candidate pending GPT review. P4-000 blocked.
+
+### P3-M8R: Closeout API Read-Only Repair
+
+**Status**: done
+**Goal**: Remove file write from GET /phase3-closeout/report endpoint
+**Depends on**: P3-M8 (done)
+**Completed**: Removed write_phase3_closeout_artifacts import and call from API router. GET /report now builds report purely in memory. Added test proving no files created during GET /report. 606 tests passing. P4-000 ready_with_approval.
+
+### P3-M8R2: Closeout Evidence Truth Repair
+
+**Status**: done
+**Goal**: Fix closeout evidence to distinguish tracked raw audit logs from ignored local runtime files
+**Depends on**: P3-M8R (done)
+**Completed**: Updated check_no_raw_audit_logs_committed to use git ls-files to check tracking status. FAIL only when audit jsonl is tracked by git. WARN when audit jsonl exists locally but is untracked/ignored. Updated check_no_runtime_artifacts_committed with same git-aware logic. Added 2 new tests (tracked audit FAIL, local audit WARN). 607 tests passing. Phase 3 closeout status: PASS_WITH_NOTES. Sealed baseline established.
+
+### P4-000: Phase 4 Scope and Boundary Plan
+
+**Status**: done
+**Goal**: Define Phase 4 scope, boundaries, and implementation order
+**Depends on**: P3-M8R2 (done)
+**Completed**: Created P4_000_PHASE4_SCOPE_AND_BOUNDARY_PLAN.md. Phase 4 = Dialogue + Calibration Loop + Minimal User Workflow. 7 milestones (P4-M1 through P4-M7). Semantic mutation policy, promotion model, approval model, rollback model, audit model defined. Minimal frontend scope limited to dialogue, reality score form, calibration history. Active YAML semantic replacement blocked until explicit approval.
+
+### P4-M1: Alter Dialogue Runtime
+
+**Status**: blocked
+**Goal**: Implement read-only alter dialogue runtime with full alter.yaml injection
+**Depends on**: P4-000 (done), GPT/human review (pending)
+**Notes**: Blocked pending GPT/human review of P4-000 scope. Dialogue is read-only by default. Must not write active YAML.

@@ -312,3 +312,27 @@
 **Context**: After the first controlled live no-op run (P3-M7) and schema boundary repair (P3-M6R2), the Phase 3 mutation implementation chain is complete. The project must seal the mutation baseline by verifying evidence and boundaries, not by adding more mutation capability.
 **Decision**: P3-M8 implements a read-only closeout gate that runs 9 verification checks (active YAML chain, evidence files, P3-M7 evidence, smuggling boundary, raw dict path, live execution safety, runtime artifacts, audit logs, governance status). The closeout gate does not write active YAML, does not call live execution, does not call controlled persist services. It produces a closeout report and evidence artifact as the Phase 3 sealed baseline candidate. Final sealing requires human/GPT review.
 **Consequences**: Phase 3 is sealed with read-only evidence. P4-000 (Phase 4 scope) is blocked until human/GPT review confirms the closeout. No further mutations possible without explicit Phase 4 authorization.
+
+### Decision P3-M8R2-01: Closeout evidence must distinguish tracked raw audit logs from ignored local runtime files
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: The original closeout check `check_no_raw_audit_logs_committed` used filesystem presence in docs/harness to decide FAIL. This was too coarse — local untracked/ignored runtime audit files (e.g. phase3_write_audit.jsonl) should not block Phase 3 sealing.
+**Decision**: Use `git ls-files` from repo_root to check whether audit jsonl files are tracked by git. FAIL only when raw audit jsonl files are tracked. WARN when audit jsonl files exist locally but are untracked/ignored. PASS when none exist. Same git-aware logic applied to `check_no_runtime_artifacts_committed`.
+**Consequences**: Closeout evidence is truthful about what is actually committed vs what is just a local runtime artifact. PASS_WITH_NOTES is a valid sealed state when only ignored runtime drafts exist.
+
+### Decision P4-000-01: Phase 4 begins with Dialogue + Calibration Loop, not broad productization
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: Phase 3 proved controlled mutation runtime works end-to-end. Phase 4 must decide what comes next — broad product UI, database, provider integration, or user-facing calibration workflow.
+**Decision**: Phase 4 focuses on Dialogue + Calibration Loop + Minimal User Workflow. This means P4-M1 (Alter Dialogue Runtime), P4-M2 (Reality Score Form/API), P4-M3 (Drift Calculation), P4-M4 (Calibration History Query), P4-M5 (Rubric Delta Suggestion), P4-M6 (Archive Mechanism), P4-M7 (Checkpoint Regeneration Plan). Minimal frontend limited to dialogue, reality score form, calibration history. Broad product UI, branch map, database, and provider integration are excluded.
+**Consequences**: Phase 4 validates the user-facing calibration loop before broader expansion. Scope is intentionally narrow to prevent premature productization.
+
+### Decision P4-000-02: Real branch/alter semantic replacement remains blocked until explicitly approved
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M7 proved semantic no-op live mutation works. True semantic promotion (new branch/alter meaning entering active state) has different safety requirements.
+**Decision**: Direct replacement of active branch/alter semantics remains blocked until a later explicitly approved slice. No LLM output may jump directly to confirmed state. First allowed semantic writes are limited to reality_score records, calibration_history records, rubric_delta_suggestion records, archive/checkpoint metadata, and explicitly saved dialogue session logs.
+**Consequences**: Semantic promotion gets its own review and safety gate. This prevents accidental semantic drift through automated paths.

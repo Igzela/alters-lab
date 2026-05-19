@@ -1,9 +1,9 @@
 # Phase 3 Controlled Mutation Closeout Report
 
-**Baseline commit**: `unknown`
-**Test count**: unknown
-**Status**: BLOCKED
-**Sealed baseline candidate**: False
+**Baseline commit**: `86b75aa`
+**Test count**: 607
+**Status**: PASS_WITH_NOTES
+**Sealed baseline candidate**: True
 
 ## Checks
 
@@ -15,8 +15,8 @@
 | smuggling_boundary_restored | PASS | info | All API boundary models use extra='forbid' |
 | raw_dict_repersist_path_exists | PASS | info | Raw dict re-persist path functions exist |
 | live_execution_default_safe | PASS | info | Live execution disabled by default |
-| no_runtime_artifacts_committed | WARN | warning | Runtime drafts exist locally (12 files); ensure ignored/not committed |
-| no_raw_audit_logs_committed | FAIL | blocking | Raw audit logs found: ['phase3_write_audit.jsonl'] |
+| no_runtime_artifacts_committed | WARN | warning | Local runtime drafts exist (12 files); properly gitignored |
+| no_raw_audit_logs_committed | PASS | info | No raw audit logs found in docs/harness |
 | phase3_governance_status | PASS | info | Phase 3 governance docs complete |
 
 ## Boundary Confirmations
@@ -40,6 +40,6 @@
 - **raw_audit_committed**: False
 - **runtime_drafts_committed**: False
 
-## Verdict: BLOCKED
+## Verdict: PASS_WITH_NOTES
 
-Next phase status: blocked
+Next phase status: pending_human_gpt_review
