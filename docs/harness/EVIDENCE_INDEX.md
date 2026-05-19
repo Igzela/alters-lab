@@ -71,3 +71,12 @@
 | P1-002 | Decision record | docs/harness/DECISION_RECORD.md | P1-002-01: in-memory API before file persistence |
 | P1-002 | Risk register update | docs/harness/RISK_REGISTER.md | R-012 through R-016 added for API layer risks |
 | P1-002 | Run log update | docs/harness/RUN_LOG.md | P1-002 entry appended |
+| P1-003 | Snapshot export service | apps/api/src/alters_lab/services/snapshot_export.py | snapshot_to_canonical_dict, snapshot_to_yaml, write_snapshot_yaml functions for canonical YAML export |
+| P1-003 | PyYAML dependency | apps/api/pyproject.toml | pyyaml added to dependencies for YAML serialization |
+| P1-003 | Export tests | apps/api/tests/test_snapshot_export.py | 13 tests: canonical dict, YAML string, incomplete rejection, write to tmp_path, overwrite control, confirm boundary, no branch/alter artifacts |
+| P1-003 | API README | apps/api/README.md | Created with endpoints, services, export, and run instructions |
+| P1-003 | Task queue update | docs/harness/TASK_QUEUE.md | P1-003 marked done |
+| P1-003 | Project board update | docs/harness/PROJECT_BOARD.md | P1-003 marked done |
+| P1-003 | Decision record | docs/harness/DECISION_RECORD.md | P1-003-01: export path is service-only, not wired to confirm endpoint |
+| P1-003 | Risk register update | docs/harness/RISK_REGISTER.md | R-017 and R-018 added for export path risks |
+| P1-003 | Run log update | docs/harness/RUN_LOG.md | P1-003 entry appended |
