@@ -73,7 +73,16 @@
 
 ### ALT-008: Archive system
 
-**Status**: running
+**Status**: done
 **Goal**: Archive completed cycles with snapshot, branches, scores, and traces
 **Depends on**: ALT-007
-**Notes**: In progress. Archive template folder with 7 template files created (all inactive_template_only), archive-system-workflow.md defined with all 9 sections. No real archive folders created — no active cycles exist.
+**Notes**: Complete. Archive template folder with 7 template files (all inactive_template_only), archive-system-workflow.md with 9 sections, quality gate added. No real archive folders created — no active cycles exist.
+
+---
+
+### CYCLE-001A: First real Snapshot Intake cycle
+
+**Status**: ready-with-approval
+**Goal**: Execute a real Snapshot Intake → Branch Discovery → Alter Generation → Dialogue → Value Alignment → Calibration cycle using actual user content
+**Depends on**: ALT-008 (complete)
+**Notes**: Ready for human approval. This is the first real cycle — requires human-provided snapshot content. Begins at Snapshot Intake (ALT-002 workflow). All templates and workflows are in place.

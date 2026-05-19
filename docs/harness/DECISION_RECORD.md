@@ -130,6 +130,15 @@
 **Consequences**: Phase 0 remains documentation-only. The template provides the target structure without creating false artifacts. Real archives are deferred until the system has active cycles.
 **Alternatives**: Create example archive with placeholder data (rejected — violates no-invention rule, creates false artifacts).
 
+### Decision P0-CLOSEOUT-01: Phase 0 workspace complete, ready for first real Snapshot Intake
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P0-CLOSEOUT-001 performed the final gate review of the Phase 0 workspace. All 5 checks passed: 7 workflow docs exist, 10 workspace templates exist, no forbidden active artifacts found, quality gates exist for all 7 systems, and ALT-001 through ALT-008 are all complete.
+**Decision**: Phase 0 workspace is complete. The first real cycle (CYCLE-001A) is ready-with-approval. CYCLE-001A begins with a real Snapshot Intake using human-provided content, following the intake-workflow.md process.
+**Consequences**: The system has all templates, workflows, and quality gates needed to execute a real cycle. No further Phase 0 scaffolding is needed. The next action requires human initiative to provide snapshot content.
+**Alternatives**: Defer to a later date (no action needed — workspace is stable and ready).
+
 ### Decision ALT-008-03: Rubric delta within archive is proposal-only with reject_auto_apply
 
 **Date**: 2026-05-19
