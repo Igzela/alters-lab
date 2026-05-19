@@ -44,6 +44,12 @@ Alter Generation produces one Alter per confirmed branch with coherent voice, tr
 - **Pass**: alter_*.yaml files exist only for human-confirmed branches; each alter has branch_ref pointing to existing branch, snapshot_ref pointing to current snapshot, time_horizon of "1.5-2年后", non-empty voice with core_stance (not neutral), concrete tradeoffs (gained and lost non-empty), personality_drift with direction and reason for each dimension, no probability predictions, no neutral advice-bot voice.
 - **Fail**: alter generated from unconfirmed/empty branch, missing branch_ref, voice is neutral/generic, contains probability prediction, empty tradeoffs, personality drift has no reason, generated without human confirmation.
 
+### Dialogue Engine
+
+Dialogue Engine facilitates exploration between user and confirmed Alter. Quality gate:
+- **Pass**: dialogue session references existing alter_*.yaml with full injection (not summary), alter speaks from future-self perspective with branch-specific grounding, grounding metadata present on every response (alter_sections_used, branch_fields_used, snapshot_fields_used), no probability claims, no generic advice-bot voice, no governance authority claims, no rubric modifications, no invented content, session created only after human confirmation, no active sessions from empty alters.
+- **Fail**: summary-only alter injection, alter drifts into neutral voice, probability claims present, session created without confirmed alter, grounding metadata missing, dialogue content invented for nonexistent Alters, no human confirmation before session start.
+
 ## Quality Checklist
 
 - [ ] All branches are structurally and mutually incompatible
@@ -62,3 +68,9 @@ Alter Generation produces one Alter per confirmed branch with coherent voice, tr
 - [ ] Each alter has branch_ref, voice with stance, concrete tradeoffs
 - [ ] No probability predictions or neutral advice-bot voice in alters
 - [ ] No active alter_*.yaml without human confirmation
+- [ ] Dialogue injects full alter.yaml (not summary)
+- [ ] Alter speaks from future-self with branch-specific grounding
+- [ ] Grounding metadata present on every Alter response
+- [ ] No probability claims or generic advice-bot voice in dialogue
+- [ ] No active dialogue sessions from empty alters
+- [ ] No invented content in dialogue

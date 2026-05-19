@@ -52,14 +52,14 @@
 
 ### ALT-005: Dialogue engine
 
-**Status**: blocked
+**Status**: running
 **Goal**: Facilitate dialogue between user and each Alter, injecting full alter.yaml
 **Depends on**: ALT-004
-**Notes**: Blocked. Requires ALT-004 confirmed and active alters generated.
+**Notes**: In progress. Dialogue engine workflow defined, template created (inactive). No active sessions — no confirmed alters exist.
 
 ### ALT-006: Value alignment evaluator
 
-**Status**: todo
+**Status**: blocked
 **Goal**: Evaluate branch fit against user values and rubric dimensions
 **Depends on**: ALT-005
 
