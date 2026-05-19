@@ -24,14 +24,14 @@ def _valid_draft_package() -> dict:
         "branch_drafts": [
             {"id": f"branch_{c}", "label": f"Branch {c}", "draft_status": "candidate", "requires_human_review": True,
              "core_choice": "x", "structural_commitment": "x", "key_tension_resolved": "x",
-             "incompatible_with": [], "source_reasoning": []}
+             "incompatible_with": [f"branch_{x}" for x in "ABCD" if x != c], "source_reasoning": ["reason"]}
             for c in "ABCD"
         ],
         "alter_drafts": [
             {"id": f"alter_{c}", "branch_ref": f"branch_{c}", "label": f"Alter {c}",
              "draft_status": "candidate", "requires_human_review": True,
              "quality_status": {"human_confirmed": False, "active": False},
-             "source_refs": {}, "voice": {"core_stance": "x"}}
+             "source_refs": {}, "voice": {"core_stance": "focused"}}
             for c in "ABCD"
         ],
     }

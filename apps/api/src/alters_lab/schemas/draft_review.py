@@ -95,6 +95,18 @@ class PromotionPackage(BaseModel):
     boundary_confirmations: DraftReviewBoundaryConfirmations = DraftReviewBoundaryConfirmations()
     created_at: str = ""
 
+    @model_validator(mode="after")
+    def validate_promotion_invariants(self) -> PromotionPackage:
+        ALLOWED_APIS = {"/branches/persist", "/alters/persist/{alter_id}", "/alters/persist-batch"}
+        if self.active_write_allowed is not False:
+            raise ValueError("active_write_allowed must be false")
+        if self.requires_controlled_persist_api is not True:
+            raise ValueError("requires_controlled_persist_api must be true")
+        for api in self.target_persist_apis:
+            if api not in ALLOWED_APIS:
+                raise ValueError(f"target_persist_api '{api}' not in allowed: {ALLOWED_APIS}")
+        return self
+
 
 class DraftReviewResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
