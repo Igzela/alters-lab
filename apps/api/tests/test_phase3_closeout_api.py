@@ -30,9 +30,14 @@ def test_report_returns_report():
     assert "boundary_confirmations" in data
 
 
-def test_report_no_write_files():
+def test_report_no_write_files(tmp_path, monkeypatch):
+    monkeypatch.setattr("alters_lab.api.phase3_closeout.get_repo_root", lambda: tmp_path)
+    report_md = tmp_path / "docs" / "harness" / "PHASE3_CLOSEOUT_REPORT.md"
+    report_json = tmp_path / "docs" / "harness" / "PHASE3_CLOSEOUT_EVIDENCE.json"
     r = client.get("/phase3-closeout/report")
     assert r.status_code == 200
+    assert not report_md.exists(), "GET /report must not write files"
+    assert not report_json.exists(), "GET /report must not write files"
     data = r.json()
     bc = data["boundary_confirmations"]
     assert bc["read_only"] is True
