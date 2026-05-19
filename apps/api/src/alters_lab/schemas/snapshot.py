@@ -113,11 +113,16 @@ class SnapshotConfirmationResponse(BaseModel):
 
 class SnapshotPersistRequest(BaseModel):
     approval_token: str
+    dry_run: bool = False
+    caller: str = "unknown"
 
 
 class SnapshotPersistResponse(BaseModel):
     status: str
-    path: str
+    path: str | None
     sha256_before: str | None
     sha256_after: str | None
     audit_record: dict
+    governance_check: dict
+    boundary_confirmations: dict
+    would_write: str | None = None
