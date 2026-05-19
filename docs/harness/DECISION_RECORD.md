@@ -262,3 +262,12 @@
 **Decision**: Promotion orchestration plan is not promotion execution. The system can plan active promotion steps, evidence requirements, and rollback requirements without mutating active state. This preserves the separation between review, planning, and execution. All steps have execution_allowed_in_p3_m4=false. Human final approval is required before any future execution.
 **Consequences**: Four-step pipeline: generate draft → review and prepare promotion → plan orchestration → controlled persist. Each step is separate and requires different authorization. Planning is auditable without risk.
 **Alternatives**: Allow orchestration plan to execute directly (rejected — violates controlled mutation principles). Skip planning and execute directly from promotion package (rejected — no separation between review and execution planning).
+
+### Decision P3-M5-01: Execution gate is not live execution
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M5 introduces an execution gate layer. The question was whether this layer should perform live promotion or only validate readiness.
+**Decision**: Execution gate is not live execution. The system can validate whether a promotion orchestration plan is eligible for future active execution — checking prerequisites, running dry-run compatibility checks, generating execution packets — without mutating active state. execution_allowed_now=false, live_execution_allowed_in_p3_m5=false, requires_p3_m6_live_execution=true. P3-M6 is required for actual live execution.
+**Consequences**: Five-step pipeline: generate draft → review and prepare promotion → plan orchestration → execution gate → controlled persist. Each step is separate and requires different authorization. The gate provides auditable evidence of readiness without risk.
+**Alternatives**: Allow execution gate to perform live promotion (rejected — violates controlled mutation principles). Skip gate and execute directly from orchestration plan (rejected — no validation of readiness before execution).
