@@ -85,7 +85,7 @@ Phase 2 Final Gate: **PASS**
 | P3-M1R | Controlled Write Surface Contract Hardening | **done** |
 | P3-M2 | Controlled Generation Draft Runtime | **done** |
 | P3-M2R | Real Loader Integration Repair | **done** |
-| P3-M3 | Draft Review and Promotion Boundary | **blocked** |
+| P3-M3 | Draft Review and Promotion Boundary | **done** |
 
 ## Quality Gates
 

@@ -308,7 +308,7 @@
 
 ### P3-M3: Draft Review and Promotion Boundary
 
-**Status**: blocked
-**Goal**: Define how drafts are reviewed, approved, and promoted to active via controlled persist APIs
-**Depends on**: P3-M2 (done)
-**Notes**: Blocked pending human review of P3-M2.
+**Status**: done
+**Goal**: Implement controlled review boundary for generation drafts
+**Depends on**: P3-M2R (done)
+**Completed**: Draft review schemas (DraftReviewBoundaryConfirmations, DraftReviewDecision, DraftReviewRequest, PromotionBranchesPayload, PromotionAltersPayload, PromotionPackage, DraftReviewResponse, DraftReviewListResponse) with ConfigDict(extra="forbid"). Draft review service (draft_review_boundary_confirmations, load_draft_package, validate_draft_package_for_review, create_review_decision, build_branches_promotion_payload, build_alters_promotion_payload, build_promotion_package, save_review_decision, save_promotion_package, list_draft_reviews). Draft review API (GET /draft-review/health, POST /draft-review/{draft_id}/review, GET /draft-review/list). main.py updated with draft_review_router. 33 service tests + 16 API tests = 379 total passing. No active YAML modified. No persist API calls. No provider added. Promotion package is not active state.

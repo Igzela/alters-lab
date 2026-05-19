@@ -244,3 +244,12 @@
 **Decision**: Add `normalize_active_chain()` to handle both `ActiveYamlChain` dataclass and dict shapes. Add `extract_snapshot_body()` to handle wrapped/unwrapped snapshot YAML. Add `extract_branch_list()` to extract branches from real YAML structure. API now returns HTTP 500 for loader failure and HTTP 400 for validation failure. Service type hints accept `ActiveYamlChain | dict | None`. Tests include real loader smoke test that works without monkeypatching `load_active_yaml_chain`.
 **Consequences**: Generation draft runtime works with both test fixtures and real production loader. Validation catches wrapped snapshot shape. Error responses are structured by failure type.
 **Alternatives**: Require all callers to pass pre-normalized dict (rejected — forces callers to know internal shape). Only support dict shape (rejected — real loader returns dataclass, runtime would break).
+
+### Decision P3-M3-01: Promotion package is not active state
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: Draft review can prepare payloads for controlled persist APIs, but the question was whether the promotion package itself constitutes active state or requires separate controlled persist.
+**Decision**: Promotion package is a review artifact, not active state. Draft review can prepare branches and alters payloads, but cannot itself mutate active YAML. Actual active YAML mutation must still happen through previously approved controlled persist APIs (/branches/persist, /alters/persist/{alter_id}, /alters/persist-batch). This preserves separation between generation/review and active-state mutation.
+**Consequences**: Three-step pipeline: generate draft → review and prepare promotion → controlled persist. No single step can both prepare and write active state.
+**Alternatives**: Allow promotion package to directly write active YAML (rejected — violates controlled mutation principles). Skip promotion package and review directly writes (rejected — no separation between review and mutation).
