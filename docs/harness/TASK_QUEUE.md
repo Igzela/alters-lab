@@ -52,20 +52,21 @@
 
 ### ALT-005: Dialogue engine
 
-**Status**: running
+**Status**: done
 **Goal**: Facilitate dialogue between user and each Alter, injecting full alter.yaml
 **Depends on**: ALT-004
-**Notes**: In progress. Dialogue engine workflow defined, template created (inactive). No active sessions — no confirmed alters exist.
+**Notes**: Complete. Dialogue engine workflow defined, template created (inactive). No active sessions — no confirmed alters exist.
 
 ### ALT-006: Value alignment evaluator
 
-**Status**: blocked
-**Goal**: Evaluate branch fit against user values and rubric dimensions
+**Status**: running
+**Goal**: Compare Alters against user-confirmed values, not choose
 **Depends on**: ALT-005
+**Notes**: In progress. Value alignment workflow defined, template created (inactive). No active alignment files — no confirmed alters exist.
 
 ### ALT-007: Calibration system + rubric
 
-**Status**: todo
+**Status**: blocked
 **Goal**: Score branches, track scores, evolve rubric (human review only)
 **Depends on**: ALT-006
 
