@@ -3,4 +3,5 @@ pydantic
 
 [dev]
 pytest
+httpx
 uvicorn

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from datetime import datetime
 from enum import Enum
+from uuid import UUID
 
 from pydantic import BaseModel, model_validator
 
@@ -74,3 +76,36 @@ class Snapshot(BaseModel):
             if self.intake_status.pending_anchor is not None:
                 raise ValueError("completed snapshot must have null pending_anchor")
         return self
+
+
+# --- API request/response schemas ---
+
+
+class SnapshotSessionRead(BaseModel):
+    session_id: UUID
+    snapshot: Snapshot
+    created_at: datetime
+    updated_at: datetime
+
+
+class AnchorAnswerRequest(BaseModel):
+    anchor: AnchorName
+    answer: str
+
+    @model_validator(mode="after")
+    def validate_answer_not_empty(self) -> AnchorAnswerRequest:
+        if not self.answer or not self.answer.strip():
+            raise ValueError("answer must not be empty or whitespace-only")
+        return self
+
+
+class NextAnchorResponse(BaseModel):
+    session_id: UUID
+    next_anchor: AnchorName | None
+    phase: IntakePhase
+
+
+class SnapshotConfirmationResponse(BaseModel):
+    session_id: UUID
+    snapshot: Snapshot
+    ready_for_branch_discovery: bool

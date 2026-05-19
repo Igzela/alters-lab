@@ -27,7 +27,7 @@ todo → ready → running → review → done/failed
 | ID | Title | Status |
 |----|-------|--------|
 | P1-001 | Backend Foundation + Snapshot Intake Contract | done |
-| P1-002 | Snapshot Intake API Endpoints | todo |
+| P1-002 | Snapshot Intake API Endpoints | done |
 
 ## Quality Gates
 
@@ -43,3 +43,4 @@ todo → ready → running → review → done/failed
 - ALT-001 through ALT-008 are complete. Phase 0 workspace final gate review passed.
 - CYCLE-001A (First real Snapshot Intake) is ready-with-approval — awaiting human decision to begin.
 - P1-001 complete. Phase 1 has started with backend foundation.
+- P1-002 complete. Snapshot Intake API endpoints exposed via in-memory FastAPI backend. Day 14 gate moved closer but YAML persistence remains future slice.

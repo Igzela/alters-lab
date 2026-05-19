@@ -15,6 +15,11 @@
 | R-009 | Branch/alter generation before snapshot validation | Medium | High | Snapshot contract and validation rules are stable before any branch/alter code is written | Active |
 | R-010 | Provider/LLM integration before local contracts are stable | Medium | High | P1-001 has zero provider code; no external API calls; contracts validated locally first | Active |
 | R-011 | Mutating confirmed YAML without human approval | Medium | High | Active YAML files are forbidden territory in P1-001; only schemas and pure functions | Active |
+| R-012 | In-memory API mistaken for durable persistence | Medium | Medium | P1-002 explicitly uses in-memory store; README and docs state this is not durable; data lost on restart is expected | Active |
+| R-013 | Accidental active YAML mutation through API | Low | High | API performs zero file writes; confirm endpoint returns snapshot in-memory only; tests verify no YAML written | Active |
+| R-014 | Out-of-order intake answers corrupting snapshot | Low | High | API enforces one-question-at-a-time order; rejects out-of-order and duplicate answers with 409 | Active |
+| R-015 | Premature Branch Discovery trigger from API confirmation | Low | High | confirm endpoint does not trigger Branch Discovery; ready_for_branch_discovery is a flag only | Active |
+| R-016 | Frontend or provider work starting before backend contract is stable | Medium | High | P1-002 forbids frontend and provider code; contract validated through 33 tests before any client integration | Active |
 
 ## Risk Assessment
 

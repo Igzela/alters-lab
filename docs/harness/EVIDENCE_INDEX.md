@@ -60,3 +60,14 @@
 | P1-001 | Project board update | docs/harness/PROJECT_BOARD.md | Phase 1 section added, day_14 and day_30 gates, P1-001 done |
 | P1-001 | Decision record | docs/harness/DECISION_RECORD.md | P1-001-01: Phase 1 starts with Snapshot Intake backend contract |
 | P1-001 | Risk register update | docs/harness/RISK_REGISTER.md | R-007 through R-011 added for Phase 1 risks |
+| P1-002 | In-memory session store | apps/api/src/alters_lab/services/snapshot_sessions.py | SnapshotSession class, InMemorySnapshotSessionStore with create/get/update/clear |
+| P1-002 | API schemas | apps/api/src/alters_lab/schemas/snapshot.py | SnapshotSessionRead, AnchorAnswerRequest, NextAnchorResponse, SnapshotConfirmationResponse added |
+| P1-002 | API router | apps/api/src/alters_lab/api/snapshot_intake.py | 6 endpoints: health, create session, get session, next anchor, submit answer, confirm snapshot |
+| P1-002 | Updated main.py | apps/api/src/alters_lab/main.py | Snapshot intake router included |
+| P1-002 | Updated pyproject.toml | apps/api/pyproject.toml | httpx added to dev dependencies for TestClient |
+| P1-002 | API tests | apps/api/tests/test_snapshot_api.py | 20 tests: health, session CRUD, next anchor progression, answer validation, confirmation, YAML boundary checks |
+| P1-002 | Task queue update | docs/harness/TASK_QUEUE.md | P1-002 marked done |
+| P1-002 | Project board update | docs/harness/PROJECT_BOARD.md | P1-002 marked done, notes updated |
+| P1-002 | Decision record | docs/harness/DECISION_RECORD.md | P1-002-01: in-memory API before file persistence |
+| P1-002 | Risk register update | docs/harness/RISK_REGISTER.md | R-012 through R-016 added for API layer risks |
+| P1-002 | Run log update | docs/harness/RUN_LOG.md | P1-002 entry appended |
