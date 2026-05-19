@@ -2,10 +2,10 @@ id: "alter_A"
 branch_ref: "branch_A"
 label: "All in 考研收束型 Charlie"
 generated_at: null
-time_horizon: "1.5–2年后"
+time_horizon: "1.5-2年后"
 
 source_branch:
-  core_choice: "未来 6–9 个月把考研作为唯一主线，目标 985 CS 方向。"
+  core_choice: "未来 6-9 个月把考研作为唯一主线，目标 985 CS 方向。"
   structural_commitment: "削减项目实践、AI agent 探索、求职准备和创业想法，把主要精力投入考研复习。"
   key_tension_resolved: "用精力收束换取学历跃迁机会。"
 
@@ -56,7 +56,7 @@ skills_trajectory:
     - "开源/产品化经验"
 
 likely_success_condition:
-  - "30–60 天内考研节奏真正稳定，并且你能接受工程探索显著降级。"
+  - "30-60 天内考研节奏真正稳定，并且你能接受工程探索显著降级。"
   - "数学和专业课进展有明确改善，而不是只获得心理安慰。"
   - "你能承认这是高沉没成本路径，并提前设止损点。"
 
@@ -74,4 +74,4 @@ voice:
 value_alignment:
   alignment_score: null
   alignment_notes: "待 Value Alignment Evaluator 评估。"
-  key_tradeoff_question: "你是否愿意用 6–9 个月技术探索自由下降，换取一次学历跃迁机会？"
+  key_tradeoff_question: "你是否愿意用 6-9 个月技术探索自由下降，换取一次学历跃迁机会？"

@@ -2,7 +2,7 @@ id: "alter_B"
 branch_ref: "branch_B"
 label: "Offer 保底 + 工程能力型 Charlie"
 generated_at: null
-time_horizon: "1.5–2年后"
+time_horizon: "1.5-2年后"
 
 source_branch:
   core_choice: "优先拿到工作 offer，把就业确定性和工程能力展示作为主线，考研降级为次级选项。"

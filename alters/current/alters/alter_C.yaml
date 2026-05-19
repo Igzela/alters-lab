@@ -2,10 +2,10 @@ id: "alter_C"
 branch_ref: "branch_C"
 label: "限时双轨校准型 Charlie"
 generated_at: null
-time_horizon: "1.5–2年后"
+time_horizon: "1.5-2年后"
 
 source_branch:
-  core_choice: "用 45–60 天做受控双轨验证，再按证据切换。"
+  core_choice: "用 45-60 天做受控双轨验证，再按证据切换。"
   structural_commitment: "固定考研主块与工程/求职小块，设置时间盒和止损规则。"
   key_tension_resolved: "用短期结构化试验换取路径证据，而不是靠焦虑做决定。"
 
@@ -56,14 +56,14 @@ skills_trajectory:
     - "快速形成强外部成果"
 
 likely_success_condition:
-  - "45–60 天内执行同一套规则，而不是每天重排人生。"
+  - "45-60 天内执行同一套规则，而不是每天重排人生。"
   - "考研和工程都有最低可见进展。"
   - "到期后敢根据证据切换到 A、B 或 D，而不是无限延期。"
 
 likely_failure_mode:
   - "双轨变成无约束多轨。"
   - "每天根据焦虑切换任务。"
-  - '用"我还在校准"逃避真正选择。'
+  - "用'我还在校准'逃避真正选择。"
   - "到期后不做决策，继续拖。"
 
 voice:

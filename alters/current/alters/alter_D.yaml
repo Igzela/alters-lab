@@ -2,7 +2,7 @@ id: "alter_D"
 branch_ref: "branch_D"
 label: "硬工程作品优先型 Charlie"
 generated_at: null
-time_horizon: "1.5–2年后"
+time_horizon: "1.5-2年后"
 
 source_branch:
   core_choice: "把考研和传统 offer 保底都降级，优先做出真实可展示、可复用、有技术含量的工程作品。"
