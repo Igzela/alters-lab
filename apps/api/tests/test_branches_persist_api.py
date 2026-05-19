@@ -46,7 +46,10 @@ def _valid_branches_request(**overrides) -> dict:
 def test_branches_health():
     r = client.get("/branches/health")
     assert r.status_code == 200
-    assert r.json()["status"] == "ok"
+    body = r.json()
+    assert body["status"] == "ok"
+    assert body["component"] == "branches"
+    assert body["mode"] == "controlled_write"
 
 
 # --- persist accepts arbitrary token ---
@@ -239,6 +242,63 @@ def test_governance_rejects_incomplete_status():
         ),
     )
     assert r.status_code == 403
+
+
+# --- forbidden field smuggling ---
+
+
+def test_rejects_top_level_calibration():
+    r = client.post(
+        "/branches/persist",
+        json=_valid_branches_request(calibration={"score": 0.9}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_archive():
+    r = client.post(
+        "/branches/persist",
+        json=_valid_branches_request(archive={"cycle": "2026-01"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_provider():
+    r = client.post(
+        "/branches/persist",
+        json=_valid_branches_request(provider={"name": "openai"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_dialogue():
+    r = client.post(
+        "/branches/persist",
+        json=_valid_branches_request(dialogue={"session": "test"}),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_top_level_runtime():
+    r = client.post(
+        "/branches/persist",
+        json=_valid_branches_request(runtime=True),
+    )
+    assert r.status_code == 422
+
+
+def test_rejects_nested_branch_discovery_extra_field():
+    req = _valid_branches_request()
+    req["branch_discovery"]["runtime"] = True
+    r = client.post("/branches/persist", json=req)
+    assert r.status_code == 422
+
+
+def test_rejects_nested_branch_item_extra_field():
+    req = _valid_branches_request()
+    req["branches"][0]["alter_generation"] = True
+    r = client.post("/branches/persist", json=req)
+    assert r.status_code == 422
 
 
 # --- no generation runtime ---

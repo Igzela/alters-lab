@@ -217,3 +217,12 @@
 **Decision**: Runtime write audit logs are only committed when produced by an explicitly approved real persist operation. Test-generated or accidental audit logs must not be committed. The audit log file is not committed to the repository until a real human-approved persist occurs. Tests use monkeypatched paths to avoid writing to the committed audit log location.
 **Consequences**: Audit evidence in the repository is trustworthy. Stale or test-generated logs cannot be mistaken for governance evidence. The audit log file remains gitignored or untracked until a real persist event occurs.
 **Alternatives**: Commit all audit logs including test runs (rejected — pollutes governance evidence with non-approved entries). Delete audit log on every test run (rejected — test code should not modify production files).
+
+### Decision P3-M1R-01: Controlled write schemas must forbid extra fields
+
+**Date**: 2026-05-19
+**Status**: accepted
+**Context**: P3-M1 review found that Branches and Alters schemas used plain `BaseModel` without `extra="forbid"`. This meant Pydantic silently ignored smuggled fields (calibration, archive, provider, dialogue, runtime, alter_generation) before service-level validation could check them. The service-level forbidden-field checks were therefore ineffective as a first defense.
+**Decision**: All Branches and Alters request and nested schemas must use `model_config = ConfigDict(extra="forbid")`. This makes Pydantic reject any unrecognized fields at request validation time with a 422 error. Service-level validation remains as a second defense for already-parsed payloads.
+**Consequences**: Smuggled forbidden fields are rejected at the API input layer. The defense is layered: schema-level (first) + service-level (second). The contract is explicit and testable.
+**Alternatives**: Rely on service-level checks only (rejected — Pydantic swallows extra fields before service sees them). Add field allowlists manually (rejected — ConfigDict(extra="forbid") is idiomatic and comprehensive).

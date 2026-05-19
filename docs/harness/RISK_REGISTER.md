@@ -41,6 +41,8 @@
 | R-035 | Old-schema audit logs mixed with new schema | Low | Medium | P3-001R3 removed all old-schema entries; new schema uses operation/pre_write_hash/post_write_hash/governance_check | Mitigated |
 | R-036 | Test-generated audit logs committed as governance evidence | Medium | High | P3-001R3 policy: only committed for explicitly approved real persist; tests use monkeypatched paths | Mitigated |
 | R-037 | Active YAML write traces left after rollback | Low | Medium | write_snapshot_with_audit creates backup before write; rollback_available flag in audit; backup under configurable dir | Active |
+| R-038 | Forbidden fields silently ignored by Pydantic before service validation | Medium | High | P3-M1R: all branches/alters schemas use ConfigDict(extra="forbid"); smuggled fields rejected at 422; tested at API and schema level | Mitigated |
+| R-039 | Batch alter persist not fully transactional on filesystem failure | Low | Medium | All alters validated before any write; filesystem failure midway leaves partial writes; future hardening may add temp-file atomic writes or rollback-on-error | Active |
 
 ## Risk Assessment
 

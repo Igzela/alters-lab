@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class BranchDiscoveryStatus(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     status: str = "not_started"
     source_snapshot_ref: str = ""
     requires_snapshot_phase: str = "completed"
@@ -23,6 +24,7 @@ class BranchDiscoveryStatus(BaseModel):
 
 
 class Branch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     id: str
     label: str
     core_choice: str
@@ -36,6 +38,7 @@ class Branch(BaseModel):
 
 
 class BranchDiscoveryPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     branch_discovery: BranchDiscoveryStatus
     branches: list[Branch] = []
 
@@ -55,6 +58,7 @@ class BranchDiscoveryPayload(BaseModel):
 
 
 class BranchesPersistRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     approval_token: str
     branch_discovery: BranchDiscoveryStatus
     branches: list[Branch] = []

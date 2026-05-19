@@ -41,7 +41,7 @@ def get_alters_persist_backup_dir() -> Path:
 
 @router.get("/health")
 def health():
-    return {"status": "ok", "component": "alters"}
+    return {"status": "ok", "component": "alters", "mode": "controlled_write"}
 
 
 @router.post(
