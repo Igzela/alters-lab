@@ -28,7 +28,7 @@ class AlterVoice(BaseModel):
 
 
 class AlterPayload(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
     id: str
     branch_ref: str
     label: str = ""

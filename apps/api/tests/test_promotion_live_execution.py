@@ -564,8 +564,8 @@ def test_run_live_with_mocked_persist(tmp_path):
         "audit_log_path": str(tmp_path / "audit.yaml"),
     }
 
-    with patch("alters_lab.services.branches_persist.write_branches_with_audit") as mock_branches, \
-         patch("alters_lab.services.alters_persist.write_alter_batch_with_audit") as mock_alters:
+    with patch("alters_lab.services.branches_persist.write_branches_raw_with_audit") as mock_branches, \
+         patch("alters_lab.services.alters_persist.write_alter_raw_batch_with_audit") as mock_alters:
         mock_branches.return_value = {
             "pre_write_hash": "pre_b", "post_write_hash": "post_b",
             "backup_path": "/backup/branches.yaml", "audit_log_path": "/audit/branches.yaml",

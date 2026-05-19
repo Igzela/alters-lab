@@ -361,3 +361,10 @@
 **Goal**: First controlled live promotion run using semantic no-op (re-persist current active YAML)
 **Depends on**: P3-M6R (done)
 **Completed**: Preflight (568 tests, clean tree). Active YAML baseline captured. Active chain validation passed. Promotion package built from current active YAML (semantic no-op). Orchestration plan, gate report, execution packet created with approval token hash. Dry-run passed. Live execution succeeded through controlled persist services. Post-live semantic comparison: all branch/alter files identical. snapshot.yaml and reality_trace.yaml unchanged. Active chain validation passed post-live. Full 568 tests pass post-live. Evidence produced: P3_M7_LIVE_PROMOTION_EVIDENCE.json. No raw tokens committed. No runtime artifacts committed.
+
+### P3-M6R2: Raw Dict Re-persist Preserves Extras Without Weakening API Schemas
+
+**Status**: done
+**Goal**: Preserve active YAML extra fields during re-persist without weakening API smuggling boundary
+**Depends on**: P3-M6R (done), P3-M7 (done)
+**Completed**: Reverted AlterPayload, BranchDiscoveryPayload, BranchDiscoveryStatus to extra="forbid" (supersedes P3-M6R-01). Added validate_alter_raw_dict (dict-level required field + forbidden field validation). Added write_alter_raw_batch_with_audit (raw dict batch write via yaml.safe_dump). Added write_branches_raw_with_audit (raw dict branches write via yaml.safe_dump). Updated execute_promotion_live to use raw dict paths instead of Pydantic model path. All API smuggling boundary models remain extra="forbid". 8 new tests added. 576 tests passing. No active YAML modified. Decision P3-M6R2-01 recorded.
