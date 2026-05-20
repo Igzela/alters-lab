@@ -106,6 +106,13 @@
 | R-100 | Raw P6 runtime records accidentally committed | Medium | High | P6 runtime directories under alters/product are gitignored; only .gitkeep/template and sanitized evidence should be tracked. Phase 6 closeout checks git-tracked P6 runtime paths. | Active |
 | R-101 | Behavior validation forged with arbitrary IDs | Medium | Critical | P6-CODE-COMPLETE-R1 verifies persisted weekly review, calibration, and pattern records, requires a 4-week window, and makes closeout re-verify latest validation evidence. | Mitigated |
 | R-102 | Endgame automation mistaken for behavior validation | Medium | Critical | Keep code complete, validation, and closeout as separate states. Helper scripts print BLOCKED when evidence is incomplete and do not mark P6 sealed. | Active |
+| R-103 | Package install overwrites user data | Medium | Critical | `.deb` package installs app code only; config, secrets, runtime data, and logs remain user-owned and preserved on upgrade/uninstall. | Active |
+| R-104 | Provider secrets leaked through config, API, or logs | Medium | Critical | Provider defaults disabled/mock; real provider explicit; secrets stored in keyring or chmod 0600 fallback; API/status/logs redact keys. | Active |
+| R-105 | Frontend calls dangerous endpoints | Medium | Critical | Frontend policy forbids controlled persist, promotion live execution, and active mutation endpoints; P7-M2/M4 must include route safety checks. | Active |
+| R-106 | Packaged mode writes into repo paths | Medium | High | P7-M1 must add runtime path resolver; packaged mode writes to `~/.local/share/alters-lab`; dev mode compatibility remains separate. | Active |
+| R-107 | P7 mistaken for P6 behavior validation | Medium | Critical | P7 docs and governance state P7 enables real use only; P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED until verified real evidence exists. | Active |
+| R-108 | Local server exposed beyond localhost | Low | High | Packaged server binds to `127.0.0.1` by default; configurable host must be explicit and visible in doctor/status. | Active |
+| R-109 | Upgrade breaks existing user data | Medium | High | P7-M7 must define upgrade/uninstall data-safety checks and backup/export behavior before release candidate. | Active |
 
 ## Risk Assessment
 

@@ -76,7 +76,23 @@ todo → ready → running → review → done/failed
 | P6-M11 | P6 Closeout | **implemented_blocked_by_behavior_validation** |
 | P6-BEHAVIOR-VALIDATION | Real 4-week behavior validation | **blocked_by_real_use_window** |
 | P6-CLOSEOUT | Final Phase 6 closeout | **blocked** |
-| P7-000 | Future Phase 7 | **blocked** |
+
+P6 state remains: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED**.
+
+## Phase 7 — Local App Distribution / Debian Package / Independent Desktop Runtime
+
+| ID | Title | Status |
+|----|-------|--------|
+| P7-000 | Local App Distribution Boundary Plan | **done** |
+| P7-M1 | Runtime Layout Externalization | **ready_with_approval** |
+| P7-M2 | Unified Local Server | **blocked** |
+| P7-M3 | CLI Launcher | **blocked** |
+| P7-M4 | Provider Configuration UI/API | **blocked** |
+| P7-M5 | Debian Package Build | **blocked** |
+| P7-M6 | Desktop Integration | **blocked** |
+| P7-M7 | Upgrade / Uninstall / Data Safety | **blocked** |
+| P7-M8 | Local App Release Candidate | **blocked** |
+| P7-M9 | P7 Closeout | **blocked** |
 
 ## Phase 5 Sealed Baseline
 

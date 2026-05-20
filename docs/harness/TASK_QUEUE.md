@@ -643,9 +643,72 @@
 **Depends on**: P6-BEHAVIOR-VALIDATION
 **Notes**: Current expected closeout status is BLOCKED. Do not mark P6 sealed before verified behavior validation.
 
-### P7-000: Future Phase 7
+### P7-000: Local App Distribution Boundary Plan
+
+**Status**: done
+**Goal**: Define P7 as local app distribution for Linux/Debian-style systems without replacing P6 behavior validation.
+**Depends on**: P6 runtime CODE_COMPLETE; P6 behavior validation still blocked by real-use window
+**Notes**: Created P7 boundary plan, taskbook, runtime layout, and packaging boundary. P7 enables P6 real use without coding tools, but does not validate or seal P6. No runtime code, frontend code, packaging scripts, active YAML, rubric, provider config code, deb package, or raw runtime records changed.
+
+### P7-M1: Runtime Layout Externalization
+
+**Status**: ready_with_approval
+**Goal**: Refactor path handling so packaged mode writes runtime data to user data directories while dev mode remains repo-compatible.
+**Depends on**: P7-000 (done)
+**Notes**: Next recommended action. Must preserve active YAML/rubric protections and keep tests compatible with repo dev mode.
+
+### P7-M2: Unified Local Server
 
 **Status**: blocked
-**Goal**: TBD
-**Depends on**: P6-M11 (P6 closeout)
-**Notes**: Blocked. No P7 implementation may start.
+**Goal**: Serve built frontend from FastAPI and add local app health/status endpoints.
+**Depends on**: P7-M1
+**Notes**: Blocked until runtime layout externalization is complete.
+
+### P7-M3: CLI Launcher
+
+**Status**: blocked
+**Goal**: Add `alters-lab start`, `stop`, `status`, `open`, and `doctor`.
+**Depends on**: P7-M2
+**Notes**: Blocked until one local server can serve API and UI.
+
+### P7-M4: Provider Configuration UI/API
+
+**Status**: blocked
+**Goal**: Add local provider settings page/API with disabled/mock/openai-compatible-http modes and secret redaction.
+**Depends on**: P7-M3
+**Notes**: Blocked until launcher/status surface exists.
+
+### P7-M5: Debian Package Build
+
+**Status**: blocked
+**Goal**: Create packaging scaffold and build `.deb` installing app code to `/opt/alters-lab`.
+**Depends on**: P7-M4
+**Notes**: Blocked until local app startup and provider config boundaries are stable.
+
+### P7-M6: Desktop Integration
+
+**Status**: blocked
+**Goal**: Add desktop launcher and optional icon.
+**Depends on**: P7-M5
+**Notes**: Blocked until package-owned paths and launcher are available.
+
+### P7-M7: Upgrade / Uninstall / Data Safety
+
+**Status**: blocked
+**Goal**: Define and implement upgrade/uninstall behavior and backup/export command.
+**Depends on**: P7-M6
+**Notes**: Blocked until package install behavior exists.
+
+### P7-M8: Local App Release Candidate
+
+**Status**: blocked
+**Goal**: Run full local app smoke test from deb install through weekly review flow and runtime record storage.
+**Depends on**: P7-M7
+**Notes**: Must confirm active YAML/rubric unchanged and P6 remains not validated/not sealed.
+
+### P7-M9: P7 Closeout
+
+**Status**: blocked
+**Goal**: Verify local app release candidate and keep P8 blocked.
+**Depends on**: P7-M8
+**Notes**: Must not claim P6 behavior validation or start P8.

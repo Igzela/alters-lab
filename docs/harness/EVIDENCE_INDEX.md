@@ -238,6 +238,10 @@
 | P6-ENDGAME | Real-use validation runbook | docs/harness/P6_ENDGAME_REAL_USE_VALIDATION_RUNBOOK.md | Operator process for Week 1-4 real-use validation, pattern review, behavior validation, closeout, and failure branches. Does not claim validation. |
 | P6-ENDGAME | Weekly review template | docs/harness/P6_WEEKLY_REVIEW_TEMPLATE.md | Obsidian weekly note template for real weekly notes. Raw notes remain runtime/private unless explicitly sanitized. |
 | P6-ENDGAME | Validation checklist | docs/harness/P6_VALIDATION_CHECKLIST.md | Checklist for required weekly reviews, calibration records, pattern review, 4-week window, usage integrity, validation result, and closeout report. |
+| P7-000 | Local app distribution plan | docs/harness/P7_000_LOCAL_APP_DISTRIBUTION_PLAN.md | P7 current state, product goal, non-goals, runtime layout, provider/frontend/packaging policies, P6 interaction, and milestone map. |
+| P7-000 | P7 taskbook | docs/harness/P7_TASKBOOK.md | One-page execution summary, milestone table, dependencies, and PASS/BLOCKED criteria. |
+| P7-000 | Runtime layout | docs/harness/P7_RUNTIME_LAYOUT.md | Exact production paths, config schema draft, migration notes, and dev/prod detection strategy. |
+| P7-000 | Packaging boundary | docs/harness/P7_PACKAGING_BOUNDARY.md | Debian package contents, installed/not-installed files, user data preservation, desktop integration, and smoke test checklist. |
 | P6-ENDGAME | Closeout operator guide | docs/harness/P6_CLOSEOUT_OPERATOR_GUIDE.md | Guarded closeout instructions that keep P6 blocked unless behavior validation passes with verified persisted evidence. |
 | P6-ENDGAME | Helper scripts | tools/p6_weekly_review_flow.py, tools/p6_validation_check.py, tools/p6_closeout_attempt.py | Local operator helpers. Weekly flow writes ignored runtime records only from supplied real notes; validation check is read-only; closeout attempt blocks without complete evidence. |
 | P6-ENDGAME | Helper script tests | apps/api/tests/test_p6_endgame_tools.py | Tests empty evidence remains blocked, dry-run closeout remains blocked, and weekly flow writes records only under a supplied repo root. |

@@ -523,3 +523,43 @@
 **Decision**: P6 endgame can be orchestrated end-to-end with runbooks, templates, helper scripts, and governance tracking. The final seal still requires real persisted evidence for 4 weekly reviews, 4 calibration records, at least 1 pattern review, a real 4-week window, `P6_BEHAVIOR_VALIDATED`, and phase6 closeout `PASS`.
 **Consequences**: Operators can run the same process each week without new implementation scope, while P6 remains blocked until real evidence exists. Helper scripts may create runtime records only from Charlie-provided real weekly notes, and raw records remain gitignored unless explicitly sanitized as evidence.
 **Alternatives**: Require a new implementation slice each week (rejected because it adds coordination overhead without changing runtime behavior). Allow automation to seal P6 after setup (rejected because it violates the 4-week real-use validation standard).
+
+### Decision P7-000-01: P7 is local app distribution, not cloud productization
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6 real use should not require coding tools, but distribution work could drift into SaaS, cloud deployment, multi-user auth, or public productization.
+**Decision**: P7 is defined as local app distribution for Linux/Ubuntu/Debian-style systems. It targets an installable local application with backend, frontend, provider configuration, runtime data directory, desktop launcher, and `.deb` packaging. It excludes cloud, SaaS, multi-user accounts, production auth, mobile apps, Windows/macOS packaging, and P8 work.
+**Consequences**: P7 can make the system easier to use locally without expanding the product boundary beyond a single-user local application.
+
+### Decision P7-000-02: Packaged mode must use user data dirs, not repo runtime dirs
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Repo-based P6 runtime paths are acceptable for development, but an installed app cannot depend on a writable repository checkout.
+**Decision**: Packaged mode writes runtime data under `~/.local/share/alters-lab`, config under `~/.config/alters-lab`, and logs under `~/.local/state/alters-lab/logs`. Application code installs under `/opt/alters-lab`. Dev mode may remain repo-compatible, but active YAML and rubric protections apply in both modes.
+**Consequences**: P7-M1 must introduce a runtime config/path resolver and update production writes before packaging work proceeds.
+
+### Decision P7-000-03: P7 enables P6 validation but does not replace it
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P7 exists because real P6 use should be possible outside coding tools, but P6 validation requires real weekly evidence over time.
+**Decision**: P7 may enable P6 real-use validation by making the app installable and launchable. P7 does not mark P6 behavior validated, does not seal P6, and must not fabricate weekly review, calibration, pattern review, or behavior validation records.
+**Consequences**: P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED until verified real-use evidence satisfies the P6 gate.
+
+### Decision P7-000-04: Provider is explicit and secret-redacted
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Local app distribution requires provider configuration, but secrets and provider output can compromise safety if exposed or treated as truth.
+**Decision**: Provider defaults to disabled/mock. Real provider mode must be explicit. API keys are stored only in local secret storage, never committed, never returned by API responses, and never logged. Provider output is not persistent by default, never writes active YAML, and never auto-generates reality scores.
+**Consequences**: P7-M4 must include redacted provider status and a local secret storage strategy before real provider use is considered usable.
+
+### Decision P7-000-05: Debian package preserves user data on upgrade/uninstall
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Package lifecycle scripts can accidentally overwrite or delete the user data needed for P6 real-use validation.
+**Decision**: The `.deb` package installs app code and launch integration only. User config, secrets, data, and logs stay under the user's home directory and are preserved on upgrade and uninstall unless a future explicit purge path is separately approved.
+**Consequences**: P7-M5 through P7-M7 must treat user data preservation as a release-blocking packaging requirement.
