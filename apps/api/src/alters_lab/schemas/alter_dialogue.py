@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, field_validator
 
 
@@ -59,18 +61,18 @@ class AlterDialoguePromptPacket(BaseModel):
     system_instruction: str
     user_message: str
     full_alter_yaml: dict
-    full_context_injected: bool = True
+    full_context_injected: Literal[True] = True
     context_summary: dict
     safety_boundaries: list[str]
     style_constraints: list[str]
-    context_injection_policy: str = "full_alter_yaml_required"
-    persistence_policy: str = "read_only_no_active_yaml_write"
-    provider_ready: bool = False
+    context_injection_policy: Literal["full_alter_yaml_required"] = "full_alter_yaml_required"
+    persistence_policy: Literal["read_only_no_active_yaml_write"] = "read_only_no_active_yaml_write"
+    provider_ready: Literal[False] = False
 
 
 class AlterDialogueResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    status: str  # context_ready | prompt_packet_ready | rejected
+    status: Literal["context_ready", "prompt_packet_ready", "rejected"]
     alter_id: str
     dialogue_context: AlterDialogueContext | None = None
     prompt_packet: AlterDialoguePromptPacket | None = None
@@ -81,7 +83,7 @@ class AlterDialogueHealthResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
     status: str
     component: str = "alter-dialogue"
-    mode: str = "read_only_no_provider"
+    mode: Literal["read_only_no_provider"] = "read_only_no_provider"
     provider_used: bool = False
     active_write_allowed: bool = False
 

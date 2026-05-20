@@ -77,6 +77,7 @@ def validate_alter_id(alter_id: str) -> None:
 
 
 def load_active_alter(alter_id: str, repo_root: Path | None = None) -> dict:
+    validate_alter_id(alter_id)
     root = repo_root or get_repo_root()
     alter_path = root / "alters" / "current" / "alters" / f"{alter_id}.yaml"
     if not alter_path.exists():
