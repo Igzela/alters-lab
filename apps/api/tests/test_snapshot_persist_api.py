@@ -337,6 +337,6 @@ def test_no_forbidden_routers():
     routes = [route.path for route in _app.routes]
     for forbidden in ["dialogue", "calibration", "archive"]:
         for route in routes:
-            assert forbidden not in route.lower() or route == "/health" or route.startswith("/alter-dialogue") or route.startswith("/calibration-loop") or route.startswith("/archive-mechanism") or route.startswith("/provider-dialogue"), (
+            assert forbidden not in route.lower() or route == "/health" or route.startswith("/alter-dialogue") or route.startswith("/calibration-loop") or route.startswith("/archive-mechanism") or route.startswith("/provider-dialogue") or route.startswith("/p6-data-retention"), (
                 f"Unexpected route containing '{forbidden}': {route}"
             )

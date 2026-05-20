@@ -525,70 +525,80 @@
 
 ### P6-M1: Obsidian Weekly Note Ingest
 
-**Status**: ready_with_approval
+**Status**: code_complete_pending_review
 **Goal**: Parse semi-fixed weekly note, preserve raw note, produce editable extracted record.
 **Depends on**: P6-000 (done)
-**Notes**: First P6 implementation milestone. Semi-fixed template with fixed headings, free writing inside fields. Raw note preserved; extracted record editable with correction_note for semantic edits.
+**Notes**: Implemented with schema/service/API/tests. Raw note is preserved, extracted records mark derived_from_raw_note, edits require correction_note and produce diff/challenge metadata.
 
 ### P6-M2: Weekly Review Session Runtime
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Structured prefill -> alter recommendation -> dialogue -> review_note + calibration_record.
-**Depends on**: P6-M1 (ready_with_approval)
+**Depends on**: P6-M1 (code_complete_pending_review)
+**Notes**: Implemented runtime session container derived from ingested weekly note. Completion creates review note and calibration shell without auto-scoring.
 
 ### P6-M3: Action Alignment Scoring
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Implement direction_alignment, execution_consistency, avoidance_level, evidence requirements, and next correction rule.
 **Depends on**: P6-M2
+**Notes**: Implemented explicit score records with required action/friction/correction evidence. No provider truth, active YAML write, or rubric mutation.
 
 ### P6-M4: Self-Deception and Challenge Layer
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Implement self_deception_risk, rationalization_pattern, evidence-based challenge, edit challenge.
 **Depends on**: P6-M3
+**Notes**: Implemented medium/high risk field requirements, strong challenge gate, and edit challenge triggers for softening edits.
 
 ### P6-M5: Alter Recommendation Engine
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Recommend primary alter and optional counter-alter using defined factors.
 **Depends on**: P6-M2
+**Notes**: Implemented deterministic factor scoring, optional counter-alter triggers, and override-with-reason flow.
 
 ### P6-M6: Reminder / Skip-with-Reason Flow
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Weekly reminder state and skip reason record.
 **Depends on**: P6-M2
+**Notes**: Implemented fixed reminder status, skip-with-reason, complete, and history records. Skips count toward usage integrity.
 
 ### P6-M7: 4-Week Pattern Review
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Detect repeated patterns and impose strategy constraints when threshold met.
 **Depends on**: P6-M3
+**Notes**: Implemented 4-week pattern detection with 3/4 high-confidence threshold and strategy constraint output.
 
 ### P6-M8: Data Retention / Export / Delete
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Manual delete, export, archive controls for weekly review records.
 **Depends on**: P6-M2
+**Notes**: Implemented manifest/export/delete/archive controls for P6 runtime areas only. Export/archive output is sanitized and active YAML is untouched.
 
 ### P6-M9: Real Provider Optional Enablement
 
-**Status**: blocked
+**Status**: code_complete_pending_review
 **Goal**: Provider remains disabled/mock by default. Explicit configuration only. No auto-mutation.
 **Depends on**: P6-M2
+**Notes**: Implemented P6 provider policy status and explicit config validation. No new provider stack or direct SDK imports.
 
 ### P6-M10: Behavior Validation Gate
 
-**Status**: blocked
+**Status**: implemented_waiting_real_use
 **Goal**: After 4 weeks, judge P6 as P6_BEHAVIOR_VALIDATED, P6_FAILED_TO_VALIDATE, or P6_USAGE_INVALID.
 **Depends on**: P6-M1 through P6-M9
+**Notes**: Implemented gate logic. R1 repair verifies persisted weekly review/calibration/pattern records, rejects fake or missing IDs, and requires a real 4-week window. It returns P6_INSUFFICIENT_DATA until real use provides verified evidence.
 
 ### P6-M11: P6 Closeout
 
-**Status**: blocked
+**Status**: implemented_blocked_by_behavior_validation
 **Goal**: Only seal P6 if behavior validation passes.
 **Depends on**: P6-M10
+**Notes**: Implemented read-only closeout report/evidence endpoints. R1 repair re-verifies latest validation against persisted evidence. Closeout remains BLOCKED unless latest behavior validation is P6_BEHAVIOR_VALIDATED and evidence re-verifies.
 
 ### P7-000: Future Phase 7
 
