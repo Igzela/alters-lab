@@ -23,9 +23,15 @@ Claude Code MUST NOT:
 - Approve its own work
 - Make governance decisions
 - Modify the task queue
-- Create PRs or merge changes
+- Create PRs or merge to main without approval
 - Connect real LLM providers
 - Act as governance authority
+
+Claude Code MAY (after completing a task):
+
+- `git add` and `git commit` changes
+- `git push` to the current branch (NOT main/master directly)
+- Push to feature branches for review
 
 ## Human Authority
 
