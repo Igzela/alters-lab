@@ -76,8 +76,12 @@
 | R-070 | Dialogue output mistaken for active truth | Low | Medium | P4-M1: dialogue is read-only; prompt packets include persistence_policy=read_only_no_active_yaml_write; no active YAML write capability | Mitigated |
 | R-071 | Provider accidentally called from dialogue runtime | Low | High | P4-M1: provider_ready=false enforced; no provider imports in alter_dialogue service/API; grep check confirms no provider patterns | Mitigated |
 | R-072 | Alter persona drift from active YAML | Low | Medium | P4-M1: validate_active_alter_for_dialogue checks voice.core_stance, branch_ref, source_refs, quality_status; rejects invalid alters | Active |
-| R-073 | Prompt packet leaking full unrelated active YAML | Low | Medium | P4-M1: build_alter_dialogue_context extracts only voice fields, source_refs, quality_status; no full YAML content exposed | Mitigated |
+| R-073 | Prompt packet missing load-bearing alter details | Medium | High | P4-M1R: prompt packets include the complete loaded alter YAML and assert full_context_injected=true; list endpoint remains metadata-only | Mitigated |
 | R-074 | Frontend later triggering writes through dialogue endpoint | Low | High | P4-M1: boundary_confirmations read_only=true, controlled_persist_called=false; endpoint has no write capability | Mitigated |
+| R-075 | Reality scores inferred instead of explicitly submitted | Medium | High | P4-M2: request schema requires submitted_by_user=true and source=explicit_user_submission; extra provider/runtime fields are rejected | Mitigated |
+| R-076 | Drift evidence triggering automatic regeneration | Low | High | P4-M3: drift endpoint returns evidence_only=true, regeneration_triggered=false, and performs no writes | Mitigated |
+| R-077 | Calibration history mutating score records | Low | Medium | P4-M4: history endpoint only reads score files and derives drift in memory; tests verify file contents unchanged | Mitigated |
+| R-078 | Calibration loop modifying rubric or active YAML | Low | High | P4-M2/M3/M4 write only score records under alters/calibration/scores; no endpoint writes alters/current/** or rubric.yaml | Mitigated |
 
 ## Risk Assessment
 

@@ -123,3 +123,15 @@ Evolution is triggered by:
 5. **No active scores in Phase 0**: No `score_*.yaml` files are created until cold-start ends and checkpoints exist.
 6. **No drift without both sides**: Drift cannot be computed without both predicted and actual values.
 7. **No rubric self-evolution**: Rubric evolution requires explicit human review and a decision record.
+
+## I. P4 Calibration Loop MVP Contract
+
+Phase 4 introduces a narrow backend-only calibration loop surface:
+
+- Reality score records may be created only from explicit user submission.
+- Reality score writes are limited to `alters/calibration/scores/score_*.yaml`.
+- `alters/current/**` remains out of bounds for calibration loop writes.
+- `alters/calibration/rubric.yaml` remains read-only and cannot be changed by the API.
+- Drift calculation is response-only evidence; it does not trigger regeneration, archive, promotion, or rubric delta.
+- Calibration history is read-only; derived drift evidence may be computed in memory but is not persisted by the history endpoint.
+- No LLM provider, frontend, database, archive, regeneration, or promotion path is part of P4-M2/M3/M4.

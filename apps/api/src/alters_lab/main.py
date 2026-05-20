@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from alters_lab.api.alters import router as alters_router
 from alters_lab.api.branches import router as branches_router
+from alters_lab.api.calibration_loop import router as calibration_loop_router
 from alters_lab.api.cycle_summary import router as cycle_summary_router
 from alters_lab.api.draft_review import router as draft_review_router
 from alters_lab.api.evidence_reports import router as evidence_reports_router
@@ -33,3 +34,4 @@ app.include_router(promotion_execution_gate_router)
 app.include_router(promotion_live_execution_router)
 app.include_router(phase3_closeout_router)
 app.include_router(alter_dialogue_router)
+app.include_router(calibration_loop_router)

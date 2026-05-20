@@ -54,6 +54,10 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/alter-dialogue/alters` | List active alter metadata (no full YAML) |
 | GET | `/alter-dialogue/{alter_id}/context` | Get dialogue context for an alter |
 | POST | `/alter-dialogue/{alter_id}/prompt` | Build prompt packet from alter + user message |
+| GET | `/calibration-loop/health` | Calibration loop component health |
+| POST | `/calibration-loop/reality-scores` | Persist explicit user-submitted reality score record |
+| POST | `/calibration-loop/drift/calculate` | Compute drift evidence from expected and actual scores |
+| GET | `/calibration-loop/history` | Read-only calibration history and derived drift evidence |
 
 ## Services
 
@@ -71,7 +75,8 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **promotion_execution_gate** — Promotion execution gate (dry-run, prerequisites, execution packet)
 - **promotion_live_execution** — Controlled live execution runtime (dry-run/live, path_overrides, controlled persist)
 - **phase3_closeout** — Phase 3 read-only closeout verification gate
-- **alter_dialogue** — Read-only alter dialogue context builder (P4-M1, no provider)
+- **alter_dialogue** — Read-only alter dialogue context builder (P4-M1/P4-M1R, full alter YAML prompt packet, no provider)
+- **calibration_loop** — P4 explicit reality score records, evidence-only drift calculation, read-only calibration history
 
 ## Export
 
@@ -85,6 +90,17 @@ The Alter Dialogue Runtime provides read-only dialogue context packaging. It loa
 - **No assistant replies are generated** — the endpoint returns context and prompt packets only.
 - **No active YAML is written** — dialogue is read-only and non-persistent.
 - **No dialogue logs are persisted** — session state is not saved to files.
+- **Full alter YAML is injected** — prompt packets include `full_alter_yaml`; summary-only injection is invalid.
+
+## Calibration Loop MVP (P4-M2/M3/M4)
+
+The Calibration Loop MVP exposes backend-only calibration contracts.
+
+- **Reality scores are explicit user submissions** — `POST /calibration-loop/reality-scores` writes `score_*.yaml` records under `alters/calibration/scores`.
+- **Drift is evidence only** — `POST /calibration-loop/drift/calculate` computes normalized drift from supplied expected and actual scores, but does not write files or trigger regeneration.
+- **History is read-only** — `GET /calibration-loop/history` lists score records and derives drift evidence in memory when expected scores exist.
+- **Rubric is never modified** — no endpoint writes `alters/calibration/rubric.yaml`.
+- **No active YAML, frontend, database, provider, archive, promotion, or regeneration path is added.**
 
 ## Run
 

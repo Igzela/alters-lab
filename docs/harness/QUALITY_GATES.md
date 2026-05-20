@@ -62,6 +62,12 @@ Calibration scores branches against reality using a fixed rubric with four dimen
 - **Pass**: rubric.yaml has canonical structure (version, mode, status, dimensions, drift_formula, evolution_policy with auto_modify: false), state.json has cold_start state, scores/_template.yaml exists and is marked inactive_template_only, no active score_*.yaml files exist, no drift computed, no rubric evolution, calibration-system-workflow.md documents all sections (purpose, inputs, two-speed model, dimensions, cold-start policy, evolution policy, valid/invalid, hard prohibitions).
 - **Fail**: rubric auto_modify is true, active score files created without confirmed inputs, drift computed without both predicted and actual values, rubric modified without human confirmation, invented values used for scoring, Brier scoring used, cold-start scoring attempted before baseline established.
 
+### P4 Calibration Loop MVP
+
+P4-M2/M3/M4 adds explicit user score records, evidence-only drift calculation, and read-only history. Quality gate:
+- **Pass**: reality score API requires `submitted_by_user: true` and `source: "explicit_user_submission"`; score values are 1-5 across the four rubric dimensions; score writes are limited to `alters/calibration/scores/score_*.yaml`; drift calculation requires both expected and actual scores and returns evidence only; history endpoint performs no writes; rubric.yaml and `alters/current/**` are not modified; no provider, frontend, database, archive, promotion, or regeneration route is introduced.
+- **Fail**: score values inferred from system/provider output, score submission accepts hidden provider/runtime/database fields, drift triggers regeneration/archive/promotion, history mutates score files, rubric is modified, active YAML is modified, or any calibration API creates frontend/database/provider integration.
+
 ### Archive System
 
 Archive System preserves historical system states at meaningful checkpoints. Quality gate:
@@ -105,6 +111,10 @@ Archive System preserves historical system states at meaningful checkpoints. Qua
 - [ ] No rubric evolution without human confirmation
 - [ ] No Brier scoring used
 - [ ] Cold-start policy documented and followed
+- [ ] P4 reality scores require explicit user submission
+- [ ] P4 drift calculation is evidence only and triggers no regeneration
+- [ ] P4 calibration history is read-only
+- [ ] P4 calibration loop does not modify active YAML or rubric.yaml
 - [ ] Archive _template folder has all 7 files
 - [ ] All archive templates marked inactive_template_only
 - [ ] No real dated archive folders created

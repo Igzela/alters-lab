@@ -82,6 +82,10 @@ def test_prompt():
     assert data["alter_id"] == "alter_A"
     assert data["prompt_packet"]["provider_ready"] is False
     assert data["prompt_packet"]["persistence_policy"] == "read_only_no_active_yaml_write"
+    assert data["prompt_packet"]["full_context_injected"] is True
+    assert data["prompt_packet"]["context_injection_policy"] == "full_alter_yaml_required"
+    assert data["prompt_packet"]["full_alter_yaml"]["id"] == "alter_A"
+    assert "personality_drift" in data["prompt_packet"]["full_alter_yaml"]
     assert "Hello alter" in data["prompt_packet"]["user_message"]
 
 
