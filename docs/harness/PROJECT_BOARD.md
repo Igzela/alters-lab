@@ -54,7 +54,25 @@ todo → ready → running → review → done/failed
 | P5-M7 | Safety Review and Product Closeout | **done** |
 | P5-M8 | Local Release Candidate | **done** |
 | P5-CLOSEOUT | Phase 5 Closeout | **done** |
-| P6-000 | Future Phase 6 | **blocked** |
+| P6-000 | Personal Long-Term Use Hardening Plan | **done** |
+
+## Phase 6 — Personal Long-Term Use Hardening
+
+| ID | Title | Status |
+|----|-------|--------|
+| P6-000 | Personal Long-Term Use Hardening Plan | **done** |
+| P6-M1 | Obsidian Weekly Note Ingest | **ready_with_approval** |
+| P6-M2 | Weekly Review Session Runtime | **blocked** |
+| P6-M3 | Action Alignment Scoring | **blocked** |
+| P6-M4 | Self-Deception and Challenge Layer | **blocked** |
+| P6-M5 | Alter Recommendation Engine | **blocked** |
+| P6-M6 | Reminder / Skip-with-Reason Flow | **blocked** |
+| P6-M7 | 4-Week Pattern Review | **blocked** |
+| P6-M8 | Data Retention / Export / Delete | **blocked** |
+| P6-M9 | Real Provider Optional Enablement | **blocked** |
+| P6-M10 | Behavior Validation Gate | **blocked** |
+| P6-M11 | P6 Closeout | **blocked** |
+| P7-000 | Future Phase 7 | **blocked** |
 
 ## Phase 5 Sealed Baseline
 
@@ -181,4 +199,4 @@ Phase 2 Final Gate: **PASS**
 - P4-M1 complete. Read-only alter dialogue runtime — no provider, no active YAML write, 656 tests passing.
 - P4-CAL-LOOP-MVP complete pending GPT verdict. P4-M1R hardens full alter YAML injection. P4-M2/M3/M4 add explicit reality score records, evidence-only drift, and read-only calibration history. No provider, frontend, database, active YAML mutation, rubric mutation, archive, promotion, or regeneration trigger.
 - P4-FINAL complete. P4-M5 rubric delta suggestions are suggestion-only. P4-M6 archive creation is explicit-only copy packaging. P4-M7 checkpoint regeneration is plan-only. Phase 4 closeout establishes a backend calibration loop sealed candidate. P5-000 remains blocked pending GPT/human review.
-- P5-FULL complete. Local product MVP: provider gateway (mock default), provider-backed dialogue, minimal frontend (Vite+React), storage boundary (YAML default), user workflow integration, phase 5 closeout PASS. 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 blocked pending GPT/human review.
+- P5-FULL complete. Local product MVP: provider gateway (mock default), provider-backed dialogue, minimal frontend (Vite+React), storage boundary (YAML default), user workflow integration, phase 5 closeout PASS. 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 complete. P6 is personal long-term use hardening, not public productization. P6 success = behavior change after 4-week validation window. P6-M1 ready_with_approval. P7-000 blocked.

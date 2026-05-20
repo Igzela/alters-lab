@@ -432,3 +432,67 @@
 **Context**: P5 is a local MVP, not a production product. Closeout should verify boundaries, not production readiness.
 **Decision**: Phase 5 closeout checks: provider gateway default safe, no secrets committed, no active YAML diff, no rubric diff, frontend safety, storage boundary, provider dialogue defaults, P5 docs complete, no raw runtime artifacts.
 **Consequences**: Clear distinction between local MVP verification and production readiness assessment.
+
+### Decision P6-000-01: Personal long-term use over public productization
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: After P5 local MVP completion, the question is what P6 should address — public productization or personal long-term use hardening.
+**Decision**: P6 is defined as personal long-term use hardening, not public productization. The system has not been validated by real usage. P6 focuses on Charlie's actual usage patterns, not market features.
+**Consequences**: P6 scope is constrained to personal use validation. Public productization is deferred until after P6 behavior validation passes.
+
+### Decision P6-000-02: Behavior change as success standard
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6 needs a success criterion. Code completion alone would be productivity theatre.
+**Decision**: P6 success is measured by behavior change, not feature completion. Criteria: action_alignment_score_improves, repeated_negative_patterns_reduce, primary_correction_completion_rate_improves.
+**Consequences**: P6 requires a 4-week real-use validation window. P6_CODE_COMPLETE is not sufficient for sealing.
+
+### Decision P6-000-03: Obsidian raw note as primary evidence
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Weekly review needs an evidence source. System-generated summaries risk inventing facts.
+**Decision**: Obsidian raw weekly note is the primary evidence source. System extracts structure from raw notes but cannot invent weekly facts. Dual-layer truth: raw note wins in conflicts.
+**Consequences**: System cannot fabricate facts. Raw note + edit diff wins over derived calibration record. Human edits require correction_note.
+
+### Decision P6-000-04: Action alignment as primary metric
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6 needs a primary metric to measure weekly progress.
+**Decision**: `action_alignment` is the primary metric — whether actions match the user's endorsed direction. Three-dimensional scoring: direction_alignment, execution_consistency, avoidance_level.
+**Consequences**: All scoring and review centers on alignment between stated direction and actual action. Each session requires one_action_evidence, one_avoidance_or_friction_evidence, and one_next_correction.
+
+### Decision P6-000-05: Dual-layer output
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Weekly review output needs to serve both human understanding and system tracking.
+**Decision**: P6 produces two-layer output: human-readable review_note and machine-readable calibration_record. Both are required per session.
+**Consequences**: Neither layer is optional. review_note serves narrative review; calibration_record serves pattern tracking.
+
+### Decision P6-000-06: 4-week validation window
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6 needs a minimum validation period before sealing.
+**Decision**: P6 requires 4 weeks of real use before sealing. Required: 4 weekly reviews, at least 4 calibration records, at least 1 monthly pattern review, measurable change in action alignment / negative patterns / primary correction completion.
+**Consequences**: P6 cannot be sealed after code completion alone. One week is noise; four weeks shows patterns.
+
+### Decision P6-000-07: Provider default disabled/mock
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6 weekly review could use a real LLM provider, but this introduces dependency and truth-confusion risks.
+**Decision**: Provider remains disabled or mock by default. Real provider requires explicit user configuration. No API key committed. No default real provider calls. Weekly review must run with mock. Real provider output cannot auto-write active YAML or auto-generate reality score.
+**Consequences**: P6 is self-contained. Provider output is never mistaken for system truth.
+
+### Decision P6-000-08: No-improvement requires usage integrity audit first
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: If no behavior improvement after 4 weeks, the system could be wrong or the usage could be dishonest.
+**Decision**: If no improvement after 4 weeks, first audit usage integrity: weekly notes completed honestly, calibration records created, primary corrections set, failure reviews honest, self_deception_risk not softened, sessions not skipped too often. If usage invalid, fix usage behavior. If usage valid but no improvement, decide redesign or stop expansion.
+**Consequences**: Prevents adding features to solve a usage honesty problem. Forces honest assessment before redesign.
