@@ -516,9 +516,83 @@
 **Goal**: Final verification of P5 productization boundary.
 **Notes**: 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 blocked pending GPT/human review.
 
-### P6-000: Future Phase 6
+### P6-000: Personal Long-Term Use Hardening Plan
+
+**Status**: done
+**Goal**: Create P6 plan and decision ledger from completed grill session. P6 is personal long-term use hardening, not public productization.
+**Depends on**: P5-CLOSEOUT (done)
+**Notes**: P6 identity defined. 30 core decisions recorded. 11 milestones (P6-M1 through P6-M11) planned. P6 success = behavior change after 4-week validation. P6-M1 ready_with_approval. P7-000 blocked.
+
+### P6-M1: Obsidian Weekly Note Ingest
+
+**Status**: ready_with_approval
+**Goal**: Parse semi-fixed weekly note, preserve raw note, produce editable extracted record.
+**Depends on**: P6-000 (done)
+**Notes**: First P6 implementation milestone. Semi-fixed template with fixed headings, free writing inside fields. Raw note preserved; extracted record editable with correction_note for semantic edits.
+
+### P6-M2: Weekly Review Session Runtime
+
+**Status**: blocked
+**Goal**: Structured prefill -> alter recommendation -> dialogue -> review_note + calibration_record.
+**Depends on**: P6-M1 (ready_with_approval)
+
+### P6-M3: Action Alignment Scoring
+
+**Status**: blocked
+**Goal**: Implement direction_alignment, execution_consistency, avoidance_level, evidence requirements, and next correction rule.
+**Depends on**: P6-M2
+
+### P6-M4: Self-Deception and Challenge Layer
+
+**Status**: blocked
+**Goal**: Implement self_deception_risk, rationalization_pattern, evidence-based challenge, edit challenge.
+**Depends on**: P6-M3
+
+### P6-M5: Alter Recommendation Engine
+
+**Status**: blocked
+**Goal**: Recommend primary alter and optional counter-alter using defined factors.
+**Depends on**: P6-M2
+
+### P6-M6: Reminder / Skip-with-Reason Flow
+
+**Status**: blocked
+**Goal**: Weekly reminder state and skip reason record.
+**Depends on**: P6-M2
+
+### P6-M7: 4-Week Pattern Review
+
+**Status**: blocked
+**Goal**: Detect repeated patterns and impose strategy constraints when threshold met.
+**Depends on**: P6-M3
+
+### P6-M8: Data Retention / Export / Delete
+
+**Status**: blocked
+**Goal**: Manual delete, export, archive controls for weekly review records.
+**Depends on**: P6-M2
+
+### P6-M9: Real Provider Optional Enablement
+
+**Status**: blocked
+**Goal**: Provider remains disabled/mock by default. Explicit configuration only. No auto-mutation.
+**Depends on**: P6-M2
+
+### P6-M10: Behavior Validation Gate
+
+**Status**: blocked
+**Goal**: After 4 weeks, judge P6 as P6_BEHAVIOR_VALIDATED, P6_FAILED_TO_VALIDATE, or P6_USAGE_INVALID.
+**Depends on**: P6-M1 through P6-M9
+
+### P6-M11: P6 Closeout
+
+**Status**: blocked
+**Goal**: Only seal P6 if behavior validation passes.
+**Depends on**: P6-M10
+
+### P7-000: Future Phase 7
 
 **Status**: blocked
 **Goal**: TBD
-**Depends on**: GPT/human review of Phase 5 closeout.
-**Notes**: Blocked. No P6 implementation may start.
+**Depends on**: P6-M11 (P6 closeout)
+**Notes**: Blocked. No P7 implementation may start.

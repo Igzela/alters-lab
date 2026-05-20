@@ -95,6 +95,14 @@
 | R-089 | Frontend triggering active mutation | Low | Critical | P5-M4: No frontend page calls promotion-live-execution, controlled persist, or archive create. API requires explicit confirmation | Mitigated |
 | R-090 | Database migration scope creep | Medium | Medium | P5-M5: YAML remains default. Storage boundary explicitly states database_implemented=false. No DB imports in codebase | Mitigated |
 | R-091 | Local MVP mistaken for production product | Medium | High | P5-M8: Release candidate docs clearly state single-user, local-only. No cloud deployment, no production auth, no billing | Active |
+| R-092 | P6 becomes another analysis tool without behavior change | Medium | Critical | P6 success = behavior change, not feature completion. 4-week validation window required. Usage integrity audit before redesign. | Active |
+| R-093 | Weekly review becomes too heavy and stops being used | Medium | High | Medium template (5-7 facts, 3 sentences max subjective). 30-60 min sessions. Skip-with-reason allowed. | Active |
+| R-094 | User softens negative evidence during extraction edits | Medium | High | Extraction edit challenge triggers on lowering self_deception_risk, changing failure status, deleting negative facts. Challenge question: "这是事实修正，还是叙事软化？" | Active |
+| R-095 | Provider output mistaken for truth | Medium | High | Provider default disabled/mock. Real provider requires explicit config. Provider output cannot auto-write active YAML or auto-generate reality score. | Active |
+| R-096 | Obsidian notes become performative | Medium | High | System cannot invent facts. Raw note preserved. Dual-layer truth with raw note as primary. | Active |
+| R-097 | Action alignment gamed by easy corrections | Low | High | Required evidence: one_action_evidence, one_avoidance_or_friction_evidence. Supporting actions must serve primary correction, not create new fronts. | Active |
+| R-098 | Pattern constraints feel too restrictive and cause abandonment | Medium | High | Strategy constraints only trigger on 3+ occurrences in 4 weeks with high confidence. Next week primary correction must reflect constraint. | Active |
+| R-099 | P6 mistakenly sealed after code completion without real use | Medium | Critical | P6_CODE_COMPLETE != P6_BEHAVIOR_VALIDATED. 4 weekly reviews, 4 calibration records, 1 monthly pattern review, measurable change required before sealing. | Active |
 
 ## Risk Assessment
 
