@@ -59,6 +59,12 @@ class BehaviorValidationRecord(BaseModel):
     usage_integrity: UsageIntegrityAudit
     usage_integrity_valid: bool
     behavior_improved: bool
+    evidence_verified: bool = False
+    evidence_window_days: int | None = None
+    evidence_verification_errors: list[str] = Field(default_factory=list)
+    verified_weekly_review_ids: list[str] = Field(default_factory=list)
+    verified_calibration_record_ids: list[str] = Field(default_factory=list)
+    verified_pattern_review_ids: list[str] = Field(default_factory=list)
     message: str
     created_at: str
     p6_sealed: bool = False

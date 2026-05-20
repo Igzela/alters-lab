@@ -104,6 +104,7 @@
 | R-098 | Pattern constraints feel too restrictive and cause abandonment | Medium | High | Strategy constraints only trigger on 3+ occurrences in 4 weeks with high confidence. Next week primary correction must reflect constraint. | Active |
 | R-099 | P6 mistakenly sealed after code completion without real use | Medium | Critical | P6_CODE_COMPLETE != P6_BEHAVIOR_VALIDATED. 4 weekly reviews, 4 calibration records, 1 monthly pattern review, measurable change required before sealing. | Active |
 | R-100 | Raw P6 runtime records accidentally committed | Medium | High | P6 runtime directories under alters/product are gitignored; only .gitkeep/template and sanitized evidence should be tracked. Phase 6 closeout checks git-tracked P6 runtime paths. | Active |
+| R-101 | Behavior validation forged with arbitrary IDs | Medium | Critical | P6-CODE-COMPLETE-R1 verifies persisted weekly review, calibration, and pattern records, requires a 4-week window, and makes closeout re-verify latest validation evidence. | Mitigated |
 
 ## Risk Assessment
 

@@ -505,3 +505,12 @@
 **Decision**: P6 runtime code may reach code_complete_pending_review while P6_BEHAVIOR_VALIDATED remains unavailable. The behavior validation gate returns insufficient data until the required real-use evidence exists, and the P6 closeout gate remains blocked unless the latest behavior validation outcome is P6_BEHAVIOR_VALIDATED.
 **Consequences**: The backend can be exercised immediately, but P6 cannot be sealed by implementation work alone. This preserves the P6 success standard: behavior change after four weeks, not feature completion.
 **Alternatives**: Mark P6 complete after runtime implementation (rejected because it violates P6-000-06 and R-099).
+
+### Decision P6-CODE-R1-01: Behavior validation must verify persisted evidence
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Review found that behavior validation could be faked by sending arbitrary weekly/calibration/pattern IDs plus true booleans.
+**Decision**: Behavior validation must load and verify persisted P6 runtime evidence before returning P6_BEHAVIOR_VALIDATED. It rejects unknown IDs, requires at least 4 weekly review records, at least 4 calibration records linked to those weekly reviews, at least 1 real 4-week pattern review, and a 4-week evidence window. Phase6 closeout re-verifies persisted validation evidence instead of trusting the outcome field alone.
+**Consequences**: Fake or manually written validation records cannot seal P6. Real behavior validation remains possible once four weeks of persisted evidence exists.
+**Alternatives**: Trust request-supplied IDs and booleans (rejected because it violates the P6 behavior validation standard).

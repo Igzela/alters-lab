@@ -10,6 +10,7 @@ from alters_lab.schemas.alter_recommendation import AlterOverrideRequest, AlterR
 from alters_lab.schemas.behavior_validation import (
     BehaviorValidationEvaluateRequest,
     BehaviorValidationMetrics,
+    BehaviorValidationRecord,
     UsageIntegrityAudit,
 )
 from alters_lab.schemas.p6_data_retention import P6ArchiveRequest, P6DeleteRequest, P6ExportRequest, P6RecordRef
@@ -55,6 +56,32 @@ def _create_completed_review(tmp_path):
     )
     save_weekly_review_session(completed, tmp_path)
     return note, completed
+
+
+def _create_four_week_validation_evidence(tmp_path):
+    review_ids = []
+    score_ids = []
+    for i, date in enumerate(("2026-04-01T00:00:00+00:00", "2026-04-08T00:00:00+00:00", "2026-04-15T00:00:00+00:00", "2026-04-22T00:00:00+00:00")):
+        _, session = _create_completed_review(tmp_path)
+        session.created_at = date
+        session.completed_at = date
+        save_weekly_review_session(session, tmp_path)
+        score = build_action_alignment_score(_score_request(session.session_id), tmp_path)
+        save_action_alignment_score(score, tmp_path)
+        review_ids.append(session.session_id)
+        score_ids.append(score.score_id)
+    pattern = build_pattern_review(
+        PatternReviewRequest(
+            weekly_patterns=[
+                WeeklyPatternSignal(week_id="2026-W14", patterns=[], confidence=0.9),
+                WeeklyPatternSignal(week_id="2026-W15", patterns=[], confidence=0.9),
+                WeeklyPatternSignal(week_id="2026-W16", patterns=[], confidence=0.9),
+                WeeklyPatternSignal(week_id="2026-W17", patterns=[], confidence=0.9),
+            ]
+        )
+    )
+    save_pattern_review(pattern, tmp_path)
+    return review_ids, score_ids, [pattern.review_id]
 
 
 def _score_request(session_id: str) -> ActionAlignmentScoreRequest:
@@ -202,46 +229,191 @@ def test_provider_policy_requires_explicit_real_config():
     assert accepted.api_key_returned is False
 
 
-def test_behavior_validation_outcomes_and_phase6_gate(tmp_path):
+def test_fake_ids_cannot_validate_p6(tmp_path):
+    with pytest.raises(ValueError, match="weekly review record not found"):
+        evaluate_behavior_validation(
+            BehaviorValidationEvaluateRequest(
+                weekly_review_ids=["w1", "w2", "w3", "w4"],
+                calibration_record_ids=["c1", "c2", "c3", "c4"],
+                pattern_review_ids=["p1"],
+                metrics=_metrics(True),
+                usage_integrity=_integrity(True),
+            ),
+            tmp_path,
+        )
+
+
+def test_missing_weekly_review_record_blocks_validation(tmp_path):
+    _, session = _create_completed_review(tmp_path)
+    score = build_action_alignment_score(_score_request(session.session_id), tmp_path)
+    save_action_alignment_score(score, tmp_path)
+    pattern = build_pattern_review(PatternReviewRequest(weekly_patterns=[]))
+    save_pattern_review(pattern, tmp_path)
+    with pytest.raises(ValueError, match="weekly review record not found"):
+        evaluate_behavior_validation(
+            BehaviorValidationEvaluateRequest(
+                weekly_review_ids=[session.session_id, "missing"],
+                calibration_record_ids=[score.score_id],
+                pattern_review_ids=[pattern.review_id],
+                metrics=_metrics(True),
+                usage_integrity=_integrity(True),
+            ),
+            tmp_path,
+        )
+
+
+def test_missing_calibration_record_blocks_validation(tmp_path):
+    _, session = _create_completed_review(tmp_path)
+    pattern = build_pattern_review(PatternReviewRequest(weekly_patterns=[]))
+    save_pattern_review(pattern, tmp_path)
+    with pytest.raises(ValueError, match="calibration record not found"):
+        evaluate_behavior_validation(
+            BehaviorValidationEvaluateRequest(
+                weekly_review_ids=[session.session_id],
+                calibration_record_ids=["missing"],
+                pattern_review_ids=[pattern.review_id],
+                metrics=_metrics(True),
+                usage_integrity=_integrity(True),
+            ),
+            tmp_path,
+        )
+
+
+def test_missing_pattern_review_blocks_validation(tmp_path):
+    _, session = _create_completed_review(tmp_path)
+    score = build_action_alignment_score(_score_request(session.session_id), tmp_path)
+    save_action_alignment_score(score, tmp_path)
+    with pytest.raises(ValueError, match="pattern review not found"):
+        evaluate_behavior_validation(
+            BehaviorValidationEvaluateRequest(
+                weekly_review_ids=[session.session_id],
+                calibration_record_ids=[score.score_id],
+                pattern_review_ids=["missing"],
+                metrics=_metrics(True),
+                usage_integrity=_integrity(True),
+            ),
+            tmp_path,
+        )
+
+
+def test_too_short_real_window_does_not_validate(tmp_path):
+    review_ids = []
+    score_ids = []
+    for _ in range(4):
+        _, session = _create_completed_review(tmp_path)
+        score = build_action_alignment_score(_score_request(session.session_id), tmp_path)
+        save_action_alignment_score(score, tmp_path)
+        review_ids.append(session.session_id)
+        score_ids.append(score.score_id)
+    pattern = build_pattern_review(PatternReviewRequest(weekly_patterns=[
+        WeeklyPatternSignal(week_id="w1", patterns=[], confidence=0.9),
+        WeeklyPatternSignal(week_id="w2", patterns=[], confidence=0.9),
+        WeeklyPatternSignal(week_id="w3", patterns=[], confidence=0.9),
+        WeeklyPatternSignal(week_id="w4", patterns=[], confidence=0.9),
+    ]))
+    save_pattern_review(pattern, tmp_path)
+    result = evaluate_behavior_validation(
+        BehaviorValidationEvaluateRequest(
+            weekly_review_ids=review_ids,
+            calibration_record_ids=score_ids,
+            pattern_review_ids=[pattern.review_id],
+            metrics=_metrics(True),
+            usage_integrity=_integrity(True),
+        ),
+        tmp_path,
+    )
+    assert result.outcome == "P6_INSUFFICIENT_DATA"
+    assert result.evidence_verified is False
+    assert "4-week validation window" in result.message
+
+
+def test_four_real_weeks_can_validate_and_closeout(tmp_path):
+    review_ids, score_ids, pattern_ids = _create_four_week_validation_evidence(tmp_path)
+    validated = evaluate_behavior_validation(
+        BehaviorValidationEvaluateRequest(
+            weekly_review_ids=review_ids,
+            calibration_record_ids=score_ids,
+            pattern_review_ids=pattern_ids,
+            metrics=_metrics(True),
+            usage_integrity=_integrity(True),
+        ),
+        tmp_path,
+    )
+    assert validated.outcome == "P6_BEHAVIOR_VALIDATED"
+    assert validated.evidence_verified is True
+    assert validated.evidence_window_days >= 21
+    save_behavior_validation(validated, tmp_path)
+    report = build_phase6_closeout_report(tmp_path)
+    assert report.status == "PASS"
+
+
+def test_behavior_validation_outcomes(tmp_path):
+    review_ids, score_ids, pattern_ids = _create_four_week_validation_evidence(tmp_path)
     insufficient = evaluate_behavior_validation(
         BehaviorValidationEvaluateRequest(
-            weekly_review_ids=["w1"],
-            calibration_record_ids=["c1"],
+            weekly_review_ids=review_ids[:1],
+            calibration_record_ids=score_ids[:1],
             pattern_review_ids=[],
             metrics=_metrics(True),
             usage_integrity=_integrity(True),
-        )
+        ),
+        tmp_path,
     )
     assert insufficient.outcome == "P6_INSUFFICIENT_DATA"
 
     invalid = evaluate_behavior_validation(
         BehaviorValidationEvaluateRequest(
-            weekly_review_ids=["w1", "w2", "w3", "w4"],
-            calibration_record_ids=["c1", "c2", "c3", "c4"],
-            pattern_review_ids=["p1"],
+            weekly_review_ids=review_ids,
+            calibration_record_ids=score_ids,
+            pattern_review_ids=pattern_ids,
             metrics=_metrics(True),
             usage_integrity=_integrity(False),
-        )
+        ),
+        tmp_path,
     )
     assert invalid.outcome == "P6_USAGE_INVALID"
 
-    validated = evaluate_behavior_validation(
+    failed = evaluate_behavior_validation(
         BehaviorValidationEvaluateRequest(
-            weekly_review_ids=["w1", "w2", "w3", "w4"],
-            calibration_record_ids=["c1", "c2", "c3", "c4"],
-            pattern_review_ids=["p1"],
-            metrics=_metrics(True),
+            weekly_review_ids=review_ids,
+            calibration_record_ids=score_ids,
+            pattern_review_ids=pattern_ids,
+            metrics=_metrics(False),
             usage_integrity=_integrity(True),
-        )
+        ),
+        tmp_path,
     )
-    save_behavior_validation(validated, tmp_path)
-    pattern = build_pattern_review(PatternReviewRequest(weekly_patterns=[]))
-    save_pattern_review(pattern, tmp_path)
-    report = build_phase6_closeout_report(tmp_path)
-    assert report.status == "PASS"
+    assert failed.outcome == "P6_FAILED_TO_VALIDATE"
 
 
 def test_phase6_closeout_blocked_without_behavior_validation(tmp_path):
     report = build_phase6_closeout_report(tmp_path)
     assert report.status == "BLOCKED"
     assert report.summary.sealed_baseline_candidate is False
+
+
+def test_phase6_closeout_blocked_for_manual_fake_validation_record(tmp_path):
+    fake = BehaviorValidationRecord(
+        validation_id="manual_fake_validation",
+        outcome="P6_BEHAVIOR_VALIDATED",
+        status="validated",
+        weekly_review_count=4,
+        calibration_record_count=4,
+        pattern_review_count=1,
+        metrics=_metrics(True),
+        usage_integrity=_integrity(True),
+        usage_integrity_valid=True,
+        behavior_improved=True,
+        evidence_verified=True,
+        evidence_window_days=21,
+        verified_weekly_review_ids=["w1", "w2", "w3", "w4"],
+        verified_calibration_record_ids=["c1", "c2", "c3", "c4"],
+        verified_pattern_review_ids=["p1"],
+        message="Manual fake validation.",
+        created_at="2026-05-20T00:00:00+00:00",
+    )
+    save_behavior_validation(fake, tmp_path)
+    report = build_phase6_closeout_report(tmp_path)
+    assert report.status == "BLOCKED"
+    behavior_check = next(check for check in report.checks if check.name == "behavior_validation_passed")
+    assert behavior_check.status == "FAIL"
