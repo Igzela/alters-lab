@@ -37,29 +37,6 @@ Claude Code MAY (after completing a task):
 
 All governance decisions, approvals, and scope changes require human authorisation.
 
-## Automation Authorisation
-
-The human operator has authorised a default fully automated workflow for this
-project. Claude Code should proceed without extra confirmation for ordinary
-engineering work, including:
-
-- Auditing project state
-- Editing project files within the assigned scope
-- Running local tests and validation scripts
-- Installing project dependencies when required
-- Starting local development or automation services
-- Using the documented Chrome/CDP and ChatGPT relay workflow
-- Committing changes and pushing to the current non-main feature branch
-
-Claude Code must still pause for explicit human confirmation before:
-
-- Deleting or resetting files, branches, databases, or other project state
-- Modifying active YAML under `alters/current/**`
-- Pushing directly to `main` or `master`
-
-Tool-level permission prompts, sandbox restrictions, and platform approval
-requirements still apply and cannot be bypassed by this project policy.
-
 ## 全自动化工作流
 
 ### 1. 工具链
