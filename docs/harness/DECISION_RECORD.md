@@ -352,3 +352,35 @@
 **Context**: P4-CAL-LOOP-MVP combines dialogue contract hardening with P4-M2/M3/M4. The blocker was summary-only dialogue injection, and the calibration loop needed a backend contract without broad productization or automatic mutation.
 **Decision**: Prompt packets must include the complete loaded alter YAML. Reality scores are explicit user-submitted records written only under `alters/calibration/scores/score_*.yaml`. Drift calculation requires supplied expected and actual scores and returns response-only evidence. Calibration history is read-only and may derive drift in memory. No endpoint writes `alters/current/**` or `alters/calibration/rubric.yaml`, and no provider, frontend, database, archive, promotion, or regeneration path is added.
 **Consequences**: P4 has a usable backend calibration loop while preserving Phase 3 mutation boundaries. Drift can inform review but cannot trigger automatic regeneration or rubric evolution.
+
+### Decision P4-M5-01: Rubric delta is suggestion-only and cannot modify rubric.yaml
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P4-M5 needs to identify repeated expected-vs-actual mismatch patterns without destabilizing the calibration rubric.
+**Decision**: Rubric delta output is a `pending_review` suggestion only. It may be saved under `alters/calibration/rubric_delta_suggestions/`, but `rubric_write_allowed` is always false and `alters/calibration/rubric.yaml` is never modified.
+**Consequences**: Drift can inform future human review while preserving rubric stability.
+
+### Decision P4-M6-01: Archive creation is explicit-only and copies state without modifying source
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Future major writes require a rollback evidence package, but archive creation must not be silent or alter current state.
+**Decision**: Archive planning is read-only. Archive creation occurs only through an explicit request and copies approved source files into `alters/archive/checkpoints/archive_*` with sha256 manifest entries. Source files are unchanged.
+**Consequences**: Archive packages support future rollback review without becoming hidden mutation or rollback execution.
+
+### Decision P4-M7-01: Checkpoint regeneration is plan-only; no active regeneration
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: High drift should trigger structured review, not automatic branch/alter replacement.
+**Decision**: Checkpoint regeneration produces a `pending_review` plan with execution disallowed on every step. `regeneration_allowed_now` and `active_write_allowed` are always false. No provider, generation, or active YAML write is called.
+**Consequences**: High drift creates a governance artifact for review while semantic promotion remains blocked until a later approved slice.
+
+### Decision P4-CLOSEOUT-01: Phase 4 closeout seals backend calibration loop, not full productization
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P4-FINAL completes the remaining planned backend calibration scope, but does not authorize P5 work.
+**Decision**: Phase 4 closeout verifies P4-M1R through P4-M7, no provider/frontend/database work, no active YAML/rubric diff, and no committed raw runtime records. It establishes a sealed backend calibration loop candidate only.
+**Consequences**: P5-000 remains blocked pending GPT/human review and a separate boundary plan.

@@ -310,5 +310,5 @@ def test_no_generation_runtime_routers():
     routes = [route.path for route in _app.routes]
     for forbidden in ["branch-discovery", "alter-generation", "dialogue", "calibration", "archive"]:
         for route in routes:
-            if forbidden in route.lower() and route != "/health" and not route.startswith("/alter-dialogue") and not route.startswith("/calibration-loop"):
+            if forbidden in route.lower() and route != "/health" and not route.startswith("/alter-dialogue") and not route.startswith("/calibration-loop") and not route.startswith("/archive-mechanism"):
                 pytest.fail(f"Unexpected route containing '{forbidden}': {route}")

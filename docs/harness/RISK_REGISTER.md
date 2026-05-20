@@ -82,6 +82,12 @@
 | R-076 | Drift evidence triggering automatic regeneration | Low | High | P4-M3: drift endpoint returns evidence_only=true, regeneration_triggered=false, and performs no writes | Mitigated |
 | R-077 | Calibration history mutating score records | Low | Medium | P4-M4: history endpoint only reads score files and derives drift in memory; tests verify file contents unchanged | Mitigated |
 | R-078 | Calibration loop modifying rubric or active YAML | Low | High | P4-M2/M3/M4 write only score records under alters/calibration/scores; no endpoint writes alters/current/** or rubric.yaml | Mitigated |
+| R-079 | rubric suggestion mistaken for confirmed rubric | Medium | High | P4-M5 suggestions stay pending_review, rubric_write_allowed=false, and rubric.yaml is never written | Mitigated |
+| R-080 | archive creation mistaken for rollback execution | Medium | High | P4-M6 archive packages are copy-only evidence; rollback notes require manual explicit review | Mitigated |
+| R-081 | checkpoint plan mistaken for active regeneration | Medium | High | P4-M7 plans set regeneration_allowed_now=false, active_write_allowed=false, and every step execution_allowed_now=false | Mitigated |
+| R-082 | runtime archive artifacts accidentally committed | Medium | High | Runtime archive/suggestion/checkpoint records are gitignored; only .gitkeep/_template.yaml may be tracked | Active |
+| R-083 | phase4 closeout mistaken for full product completion | Medium | High | P4-CLOSEOUT report states backend calibration loop sealed candidate only; P5-000 remains blocked | Active |
+| R-084 | provider/frontend/database scope creep after closeout | Medium | High | Phase 4 closeout checks no provider/frontend/database implementation and keeps P5-000 blocked pending GPT/human review | Active |
 
 ## Risk Assessment
 

@@ -113,6 +113,11 @@ Phase 2 Final Gate: **PASS**
 | P4-M2 | Reality Score Form/API | **done** |
 | P4-M3 | Drift Calculation | **done** |
 | P4-M4 | Calibration History Query | **done** |
+| P4-M5 | Rubric Delta Suggestion | **done** |
+| P4-M6 | Archive Mechanism | **done** |
+| P4-M7 | Checkpoint Regeneration Plan | **done** |
+| P4-CLOSEOUT | Phase 4 Closeout | **done** |
+| P5-000 | Future Productization / Provider Boundary Plan | **blocked** |
 
 ## Quality Gates
 
@@ -139,3 +144,4 @@ Phase 2 Final Gate: **PASS**
 - P4-000 complete. Phase 4 scope and boundary plan defined.
 - P4-M1 complete. Read-only alter dialogue runtime — no provider, no active YAML write, 656 tests passing.
 - P4-CAL-LOOP-MVP complete pending GPT verdict. P4-M1R hardens full alter YAML injection. P4-M2/M3/M4 add explicit reality score records, evidence-only drift, and read-only calibration history. No provider, frontend, database, active YAML mutation, rubric mutation, archive, promotion, or regeneration trigger.
+- P4-FINAL complete. P4-M5 rubric delta suggestions are suggestion-only. P4-M6 archive creation is explicit-only copy packaging. P4-M7 checkpoint regeneration is plan-only. Phase 4 closeout establishes a backend calibration loop sealed candidate. P5-000 remains blocked pending GPT/human review.

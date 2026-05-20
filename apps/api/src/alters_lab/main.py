@@ -1,16 +1,20 @@
 from fastapi import FastAPI
 
 from alters_lab.api.alters import router as alters_router
+from alters_lab.api.archive_mechanism import router as archive_mechanism_router
 from alters_lab.api.branches import router as branches_router
 from alters_lab.api.calibration_loop import router as calibration_loop_router
+from alters_lab.api.checkpoint_regeneration import router as checkpoint_regeneration_router
 from alters_lab.api.cycle_summary import router as cycle_summary_router
 from alters_lab.api.draft_review import router as draft_review_router
 from alters_lab.api.evidence_reports import router as evidence_reports_router
 from alters_lab.api.promotion_execution_gate import router as promotion_execution_gate_router
 from alters_lab.api.promotion_live_execution import router as promotion_live_execution_router
 from alters_lab.api.promotion_orchestration import router as promotion_orchestration_router
+from alters_lab.api.phase4_closeout import router as phase4_closeout_router
 from alters_lab.api.phase3_closeout import router as phase3_closeout_router
 from alters_lab.api.generation_drafts import router as generation_drafts_router
+from alters_lab.api.rubric_delta import router as rubric_delta_router
 from alters_lab.api.snapshot_intake import router as snapshot_intake_router
 from alters_lab.api.alter_dialogue import router as alter_dialogue_router
 
@@ -35,3 +39,7 @@ app.include_router(promotion_live_execution_router)
 app.include_router(phase3_closeout_router)
 app.include_router(alter_dialogue_router)
 app.include_router(calibration_loop_router)
+app.include_router(rubric_delta_router)
+app.include_router(archive_mechanism_router)
+app.include_router(checkpoint_regeneration_router)
+app.include_router(phase4_closeout_router)
