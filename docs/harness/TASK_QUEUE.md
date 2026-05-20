@@ -591,14 +591,14 @@
 **Status**: implemented_waiting_real_use
 **Goal**: After 4 weeks, judge P6 as P6_BEHAVIOR_VALIDATED, P6_FAILED_TO_VALIDATE, or P6_USAGE_INVALID.
 **Depends on**: P6-M1 through P6-M9
-**Notes**: Implemented gate logic. It returns P6_INSUFFICIENT_DATA until real use provides 4 weekly reviews, 4 calibration records, and 1 pattern review.
+**Notes**: Implemented gate logic. R1 repair verifies persisted weekly review/calibration/pattern records, rejects fake or missing IDs, and requires a real 4-week window. It returns P6_INSUFFICIENT_DATA until real use provides verified evidence.
 
 ### P6-M11: P6 Closeout
 
 **Status**: implemented_blocked_by_behavior_validation
 **Goal**: Only seal P6 if behavior validation passes.
 **Depends on**: P6-M10
-**Notes**: Implemented read-only closeout report/evidence endpoints. Closeout remains BLOCKED unless latest behavior validation is P6_BEHAVIOR_VALIDATED.
+**Notes**: Implemented read-only closeout report/evidence endpoints. R1 repair re-verifies latest validation against persisted evidence. Closeout remains BLOCKED unless latest behavior validation is P6_BEHAVIOR_VALIDATED and evidence re-verifies.
 
 ### P7-000: Future Phase 7
 

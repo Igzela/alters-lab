@@ -78,9 +78,9 @@ def test_provider_policy_and_behavior_gate_api(tmp_path, monkeypatch):
     assert rejected.json()["valid"] is False
 
     validation = client.post("/behavior-validation/evaluate", json={
-        "weekly_review_ids": ["w1"],
-        "calibration_record_ids": ["c1"],
-        "pattern_review_ids": [],
+        "weekly_review_ids": ["w1", "w2", "w3", "w4"],
+        "calibration_record_ids": ["c1", "c2", "c3", "c4"],
+        "pattern_review_ids": ["p1"],
         "metrics": {
             "action_alignment_score_improves": True,
             "repeated_negative_patterns_reduce": True,
@@ -95,8 +95,8 @@ def test_provider_policy_and_behavior_gate_api(tmp_path, monkeypatch):
             "sessions_not_skipped_too_often": True,
         },
     })
-    assert validation.status_code == 200
-    assert validation.json()["validation"]["outcome"] == "P6_INSUFFICIENT_DATA"
+    assert validation.status_code == 400
+    assert "weekly review record not found" in validation.json()["detail"]
 
 
 def test_retention_archive_and_phase6_closeout_api(tmp_path, monkeypatch):

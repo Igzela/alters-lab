@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from alters_lab.schemas.behavior_validation import (
     BehaviorValidationEvaluateRequest,
@@ -26,7 +26,10 @@ def health():
 
 @router.post("/evaluate", response_model=BehaviorValidationResponse)
 def evaluate(body: BehaviorValidationEvaluateRequest):
-    validation = evaluate_behavior_validation(body)
+    try:
+        validation = evaluate_behavior_validation(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
     path = save_behavior_validation(validation) if body.save else None
     return BehaviorValidationResponse(status=validation.status, validation=validation, validation_path=str(path) if path else None)
 

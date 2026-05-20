@@ -15,7 +15,7 @@ from alters_lab.schemas.phase6_closeout import (
     Phase6CloseoutReportResponse,
     Phase6CloseoutSummary,
 )
-from alters_lab.services.behavior_validation import latest_behavior_validation
+from alters_lab.services.behavior_validation import behavior_validation_has_verified_evidence, latest_behavior_validation
 from alters_lab.services.p6_runtime import P6_RUNTIME_AREAS, get_repo_root
 
 
@@ -32,18 +32,18 @@ def check_behavior_validation_passed(repo_root: Path | None = None) -> Phase6Clo
             severity="critical",
             message="No behavior validation record exists.",
         )
-    if validation.outcome == "P6_BEHAVIOR_VALIDATED":
+    if behavior_validation_has_verified_evidence(validation, repo_root):
         return Phase6CloseoutCheck(
             name="behavior_validation_passed",
             status="PASS",
             severity="critical",
-            message="Latest behavior validation outcome is P6_BEHAVIOR_VALIDATED.",
+            message="Latest behavior validation outcome is P6_BEHAVIOR_VALIDATED and persisted evidence re-verifies.",
         )
     return Phase6CloseoutCheck(
         name="behavior_validation_passed",
         status="FAIL",
         severity="critical",
-        message=f"Latest behavior validation outcome is {validation.outcome}.",
+        message=f"Latest behavior validation outcome is {validation.outcome}; verified persisted evidence is required.",
     )
 
 
