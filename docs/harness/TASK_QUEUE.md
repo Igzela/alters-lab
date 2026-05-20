@@ -406,7 +406,58 @@
 
 ### P4-M2: Reality Score Form/API
 
-**Status**: blocked
+**Status**: done
 **Goal**: Implement reality score submission form/API
-**Depends on**: P4-M1 (done), GPT/human review (pending)
-**Notes**: Blocked pending GPT/human review. User-submitted reality scores only. No automatic score inference.
+**Depends on**: P4-M1 (done)
+**Notes**: Complete via P4-CAL-LOOP-MVP. User-submitted reality scores only. No automatic score inference.
+
+### P4-M3: Drift Calculation
+
+**Status**: done
+**Goal**: Compute drift from supplied expected and actual scores as evidence only.
+**Depends on**: P4-M2
+**Notes**: Complete via P4-CAL-LOOP-MVP. No automatic regeneration.
+
+### P4-M4: Calibration History Query
+
+**Status**: done
+**Goal**: Provide read-only access to calibration score history and derived drift evidence.
+**Depends on**: P4-M3
+**Notes**: Complete via P4-CAL-LOOP-MVP. History endpoint does not mutate score records.
+
+---
+
+### P4-M5: Rubric Delta Suggestion
+
+**Status**: done
+**Goal**: Detect repeated mismatch patterns between expected and actual scores and produce pending-review rubric suggestions only.
+**Depends on**: P4-M2/P4-M3/P4-M4
+**Notes**: Suggestion-only. Does not write `alters/calibration/rubric.yaml`.
+
+### P4-M6: Archive Mechanism
+
+**Status**: done
+**Goal**: Provide explicit archive planning and copy-only checkpoint archive package creation.
+**Depends on**: P4-M5
+**Notes**: Archive creation is explicit-only and does not modify source files.
+
+### P4-M7: Checkpoint Regeneration Plan
+
+**Status**: done
+**Goal**: Produce pending-review checkpoint regeneration plans from high drift evidence.
+**Depends on**: P4-M6
+**Notes**: Plan-only. No active YAML regeneration or branch/alter replacement.
+
+### P4-CLOSEOUT: Phase 4 Closeout
+
+**Status**: done
+**Goal**: Verify P4-M1R through P4-M7 and produce sealed candidate evidence for the backend calibration loop.
+**Depends on**: P4-M7
+**Notes**: Closeout seals backend calibration scope only, not full productization.
+
+### P5-000: Future Productization / Provider Boundary Plan
+
+**Status**: blocked
+**Goal**: Define any future provider, frontend, database, or productization boundary before implementation begins.
+**Depends on**: GPT/human review of Phase 4 closeout.
+**Notes**: Blocked. No P5 implementation may start in P4-FINAL.

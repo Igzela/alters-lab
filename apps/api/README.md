@@ -58,6 +58,19 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | POST | `/calibration-loop/reality-scores` | Persist explicit user-submitted reality score record |
 | POST | `/calibration-loop/drift/calculate` | Compute drift evidence from expected and actual scores |
 | GET | `/calibration-loop/history` | Read-only calibration history and derived drift evidence |
+| GET | `/rubric-delta/health` | Rubric delta suggestion health |
+| POST | `/rubric-delta/suggest` | Suggest pending-review rubric deltas from repeated score mismatch |
+| GET | `/rubric-delta/list` | List saved rubric delta suggestion metadata |
+| GET | `/archive-mechanism/health` | Archive mechanism health |
+| POST | `/archive-mechanism/plan` | Preview archive manifest without writing |
+| POST | `/archive-mechanism/create` | Explicitly create copy-only checkpoint archive package |
+| GET | `/archive-mechanism/list` | List archive package metadata |
+| GET | `/checkpoint-regeneration/health` | Checkpoint regeneration plan health |
+| POST | `/checkpoint-regeneration/plan` | Create pending-review regeneration plan from high drift evidence |
+| GET | `/checkpoint-regeneration/list` | List saved checkpoint plan metadata |
+| GET | `/phase4-closeout/health` | Phase 4 closeout health |
+| GET | `/phase4-closeout/report` | Phase 4 closeout report (read-only) |
+| GET | `/phase4-closeout/evidence` | Phase 4 closeout evidence (read-only) |
 
 ## Services
 
@@ -77,6 +90,10 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **phase3_closeout** — Phase 3 read-only closeout verification gate
 - **alter_dialogue** — Read-only alter dialogue context builder (P4-M1/P4-M1R, full alter YAML prompt packet, no provider)
 - **calibration_loop** — P4 explicit reality score records, evidence-only drift calculation, read-only calibration history
+- **rubric_delta** — P4-M5 suggestion-only rubric delta detection from calibration history; never writes rubric.yaml
+- **archive_mechanism** — P4-M6 explicit-only archive planner/creator; copy-only package, source files unchanged
+- **checkpoint_regeneration** — P4-M7 high-drift checkpoint plan builder; plan-only, no active regeneration
+- **phase4_closeout** — Phase 4 backend calibration loop closeout verifier and evidence writer
 
 ## Export
 
@@ -101,6 +118,43 @@ The Calibration Loop MVP exposes backend-only calibration contracts.
 - **History is read-only** — `GET /calibration-loop/history` lists score records and derives drift evidence in memory when expected scores exist.
 - **Rubric is never modified** — no endpoint writes `alters/calibration/rubric.yaml`.
 - **No active YAML, frontend, database, provider, archive, promotion, or regeneration path is added.**
+
+## Rubric Delta Suggestion (P4-M5)
+
+Rubric delta suggestion detects repeated mismatch patterns between expected and actual reality scores.
+
+- Suggestions stay `pending_review`.
+- `rubric_write_allowed` is always `false`.
+- Saving a suggestion writes only to `alters/calibration/rubric_delta_suggestions/`.
+- `alters/calibration/rubric.yaml` is never modified.
+
+## Archive Mechanism (P4-M6)
+
+Archive mechanism is explicit-action only.
+
+- `/archive-mechanism/plan` returns a manifest preview and writes nothing.
+- `/archive-mechanism/create` copies approved active/calibration files into `alters/archive/checkpoints/archive_*`.
+- Source files are unchanged.
+- Archive creation is not rollback execution; rollback remains manual and requires explicit approval.
+
+## Checkpoint Regeneration Plan (P4-M7)
+
+Checkpoint regeneration produces a review plan when drift crosses the configured threshold.
+
+- Plans stay `pending_review`.
+- `regeneration_allowed_now` and `active_write_allowed` are always `false`.
+- Saving a plan writes only to `alters/calibration/checkpoint_plans/`.
+- No branch, alter, snapshot, or active YAML regeneration occurs.
+
+## Phase 4 Closeout
+
+Phase 4 closeout verifies the backend calibration loop scope:
+
+- P4-M1R through P4-M7 are present.
+- No provider, frontend, or database implementation is added.
+- No active YAML or rubric diff is allowed.
+- Raw runtime archives, checkpoint plans, and rubric suggestions are ignored unless they are explicit templates/placeholders.
+- Phase 4 closeout seals the backend calibration loop candidate, not full productization.
 
 ## Run
 

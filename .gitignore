@@ -3,5 +3,13 @@ __pycache__/
 docs/harness/phase3_write_audit.jsonl
 docs/harness/phase3_generation_draft_audit.jsonl
 alters/drafts/
+alters/archive/checkpoints/*
+!alters/archive/checkpoints/.gitkeep
+alters/calibration/rubric_delta_suggestions/*
+!alters/calibration/rubric_delta_suggestions/.gitkeep
+!alters/calibration/rubric_delta_suggestions/_template.yaml
+alters/calibration/checkpoint_plans/*
+!alters/calibration/checkpoint_plans/.gitkeep
+!alters/calibration/checkpoint_plans/_template.yaml
 .codex/
 .claude-p3-*.md
