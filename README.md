@@ -38,6 +38,33 @@ alters/
   archive/                 # Completed cycle archives
 ```
 
+## Local Chrome CDP Proxy
+
+`tools/cli.py` controls an existing GUI Chrome through CDP. To restart Chrome
+with CDP on port `9222` and route browser traffic through the local Clash Verge
+proxy at `http://127.0.0.1:7897`, run:
+
+```bash
+tools/start_chrome_proxy.sh
+```
+
+The script closes the matching Chrome instance for
+`/tmp/chrome-debug-profile`, starts Chrome with `--proxy-server`, and keeps the
+GUI display environment:
+
+```bash
+DISPLAY=:0
+XAUTHORITY=/run/user/1000/.mutter-Xwaylandauth.DZGGP3
+WAYLAND_DISPLAY=wayland-0
+```
+
+Verify access through CDP:
+
+```bash
+python3 tools/cli.py --timeout 60 navigate https://chatgpt.com/
+python3 tools/cli.py --target-url chatgpt.com get-content
+```
+
 ## License
 
 TBD

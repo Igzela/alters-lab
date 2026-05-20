@@ -48,7 +48,7 @@ Phase 3 Final Gate: **SEALED_WITH_NOTES**
 - Sealed baseline commit: 86b75aa
 - Closeout report: `docs/harness/PHASE3_CLOSEOUT_REPORT.md`
 - P4-000 scope and boundary plan complete
-- P4-M1 blocked pending GPT/human review
+- P4-CAL-LOOP-MVP complete pending GPT verdict
 
 ## Phase 1 Sealed Baseline
 
@@ -109,7 +109,10 @@ Phase 2 Final Gate: **PASS**
 | P3-M8R2 | Closeout Evidence Truth Repair | **done** |
 | P4-000 | Phase 4 Scope and Boundary Plan | **done** |
 | P4-M1 | Alter Dialogue Runtime | **done** |
-| P4-M2 | Reality Score Form/API | **blocked** |
+| P4-M1R | Dialogue Contract Hardening | **done** |
+| P4-M2 | Reality Score Form/API | **done** |
+| P4-M3 | Drift Calculation | **done** |
+| P4-M4 | Calibration History Query | **done** |
 
 ## Quality Gates
 
@@ -133,5 +136,6 @@ Phase 2 Final Gate: **PASS**
 - P1-012 complete. Day 30 Evidence Harness + Schema Alignment — 9-step evidence schema validated, harness regenerated.
 - Day 14 gate completed. Day 30 gate passed (P1-012). Phase 1 sealed (P1-013 done).
 - P3-M8R2 complete. Closeout evidence truth repair — distinguishes tracked vs untracked audit files. Phase 3 sealed baseline established.
-- P4-000 complete. Phase 4 scope and boundary plan defined. P4-M1 blocked pending GPT/human review.
-- P4-M1 complete. Read-only alter dialogue runtime — no provider, no active YAML write, 656 tests passing. P4-M2 blocked.
+- P4-000 complete. Phase 4 scope and boundary plan defined.
+- P4-M1 complete. Read-only alter dialogue runtime — no provider, no active YAML write, 656 tests passing.
+- P4-CAL-LOOP-MVP complete pending GPT verdict. P4-M1R hardens full alter YAML injection. P4-M2/M3/M4 add explicit reality score records, evidence-only drift, and read-only calibration history. No provider, frontend, database, active YAML mutation, rubric mutation, archive, promotion, or regeneration trigger.

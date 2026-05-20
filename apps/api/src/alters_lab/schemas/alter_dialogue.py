@@ -58,9 +58,12 @@ class AlterDialoguePromptPacket(BaseModel):
     alter_id: str
     system_instruction: str
     user_message: str
+    full_alter_yaml: dict
+    full_context_injected: bool = True
     context_summary: dict
     safety_boundaries: list[str]
     style_constraints: list[str]
+    context_injection_policy: str = "full_alter_yaml_required"
     persistence_policy: str = "read_only_no_active_yaml_write"
     provider_ready: bool = False
 

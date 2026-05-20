@@ -164,6 +164,7 @@ def test_build_system_instruction():
     assert "alter_A" in instruction
     assert "read-only" in instruction.lower() or "read_only" in instruction.lower()
     assert "Test stance" in instruction
+    assert "full alter YAML" in instruction
 
 
 def test_build_prompt_packet():
@@ -171,6 +172,10 @@ def test_build_prompt_packet():
     assert isinstance(packet, AlterDialoguePromptPacket)
     assert packet.alter_id == "alter_A"
     assert packet.provider_ready is False
+    assert packet.full_context_injected is True
+    assert packet.context_injection_policy == "full_alter_yaml_required"
+    assert packet.full_alter_yaml == VALID_ALTER
+    assert packet.full_alter_yaml["source_refs"]["rubric_ref"] == "alters/calibration/rubric.yaml"
     assert packet.persistence_policy == "read_only_no_active_yaml_write"
     assert "Hello alter" in packet.user_message
 

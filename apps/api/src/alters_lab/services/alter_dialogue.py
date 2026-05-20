@@ -153,7 +153,8 @@ def build_system_instruction(context: AlterDialogueContext) -> str:
         "Stay grounded in this alter's voice. Do not claim active state has changed. "
         "Do not write YAML. Do not make final life decisions for the user. "
         "Ask for clarification if user asks outside alter scope. "
-        "Dialogue is read-only and non-persistent in P4-M1."
+        "Dialogue is read-only and non-persistent. The full alter YAML is injected "
+        "into the prompt packet; summary-only context is invalid."
     )
 
 
@@ -182,9 +183,12 @@ def build_prompt_packet(
         alter_id=context.alter_id,
         system_instruction=system_instruction,
         user_message=user_message,
+        full_alter_yaml=dict(alter),
+        full_context_injected=True,
         context_summary=context_summary,
         safety_boundaries=list(SAFETY_BOUNDARIES),
         style_constraints=list(STYLE_CONSTRAINTS),
+        context_injection_policy="full_alter_yaml_required",
         persistence_policy="read_only_no_active_yaml_write",
         provider_ready=False,
     )

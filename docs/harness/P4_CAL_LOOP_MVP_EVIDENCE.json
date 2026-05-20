@@ -1,0 +1,100 @@
+{
+  "p4_cal_loop_mvp_run_id": "p4_cal_loop_mvp_20260520T012206Z",
+  "timestamp": "2026-05-20T01:22:06Z",
+  "head_before": "2135e0f",
+  "verdict": "PASS",
+  "gpt_verdict": "PENDING",
+  "review_status": "pending_gpt_review",
+  "scope": {
+    "slice": "P4-CAL-LOOP-MVP",
+    "included_milestones": ["P4-M1R", "P4-M2", "P4-M3", "P4-M4"],
+    "summary": "Dialogue contract hardening plus explicit reality score records, evidence-only drift calculation, and read-only calibration history."
+  },
+  "implemented_surfaces": {
+    "dialogue_contract_hardening": {
+      "files": [
+        "apps/api/src/alters_lab/schemas/alter_dialogue.py",
+        "apps/api/src/alters_lab/services/alter_dialogue.py"
+      ],
+      "evidence": [
+        "AlterDialoguePromptPacket includes full_alter_yaml",
+        "AlterDialoguePromptPacket includes full_context_injected",
+        "AlterDialoguePromptPacket includes context_injection_policy=full_alter_yaml_required"
+      ]
+    },
+    "calibration_loop_schemas": {
+      "files": ["apps/api/src/alters_lab/schemas/calibration_loop.py"],
+      "evidence": [
+        "Explicit reality score request/response models",
+        "Evidence-only drift calculation models",
+        "Read-only calibration history models",
+        "Boundary confirmation models use ConfigDict(extra=\"forbid\")"
+      ]
+    },
+    "calibration_loop_service": {
+      "files": ["apps/api/src/alters_lab/services/calibration_loop.py"],
+      "evidence": [
+        "User-submitted score records write only under alters/calibration/scores",
+        "Drift calculation uses supplied expected and actual scores",
+        "History listing is read-only and derives drift in memory"
+      ]
+    },
+    "calibration_loop_api": {
+      "files": [
+        "apps/api/src/alters_lab/api/calibration_loop.py",
+        "apps/api/src/alters_lab/main.py"
+      ],
+      "endpoints": [
+        "GET /calibration-loop/health",
+        "POST /calibration-loop/reality-scores",
+        "POST /calibration-loop/drift/calculate",
+        "GET /calibration-loop/history"
+      ]
+    },
+    "documentation": {
+      "files": [
+        "apps/api/README.md",
+        "docs/calibration-system-workflow.md",
+        "docs/harness/QUALITY_GATES.md",
+        "docs/harness/PROJECT_BOARD.md",
+        "docs/harness/DECISION_RECORD.md",
+        "docs/harness/RISK_REGISTER.md",
+        "docs/harness/RUN_LOG.md",
+        "docs/harness/EVIDENCE_INDEX.md"
+      ]
+    }
+  },
+  "tests": {
+    "command": "python3 -m pytest apps/api/tests -q",
+    "count": 682,
+    "result": "PASS"
+  },
+  "boundary_confirmations": {
+    "full_alter_yaml_injected_into_prompt_packet": true,
+    "summary_only_dialogue_injection_removed": true,
+    "reality_scores_require_explicit_user_submission": true,
+    "drift_calculation_is_response_only_evidence": true,
+    "calibration_history_is_read_only": true,
+    "no_active_yaml_modified": true,
+    "no_calibration_rubric_modified": true,
+    "no_automatic_regeneration_trigger_added": true,
+    "no_archive_path_added": true,
+    "no_promotion_path_added": true,
+    "no_llm_provider_connected": true,
+    "no_frontend_added": true,
+    "no_database_added": true,
+    "api_boundary_models_forbid_extra_fields": true,
+    "task_queue_not_modified_for_this_slice": true,
+    "full_tests_passed": true
+  },
+  "mutation_checks": {
+    "active_yaml_diff_files": [],
+    "calibration_rubric_diff_files": [],
+    "tracked_calibration_score_files": [
+      "alters/calibration/scores/.gitkeep",
+      "alters/calibration/scores/_template.yaml"
+    ],
+    "runtime_score_records_committed": false
+  },
+  "rollback_status": "not_needed"
+}

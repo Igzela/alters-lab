@@ -344,3 +344,11 @@
 **Context**: Phase 4 begins with dialogue capability. The first question was whether to build full provider-backed dialogue immediately or establish safe context packaging first.
 **Decision**: P4-M1 implements read-only dialogue context and prompt packet building only. No LLM provider is called. No assistant replies are generated. No dialogue logs are persisted. provider_ready is always false. The runtime validates active alter contracts, builds dialogue context with scope boundaries, and returns prompt packets for downstream use.
 **Consequences**: Phase 4 establishes safe dialogue context packaging before provider-backed replies or saved dialogue logs. This prevents premature provider integration and ensures alter persona consistency is validated before any LLM interaction.
+
+### Decision P4-CAL-LOOP-MVP-01: Calibration loop records user submissions and keeps drift evidential
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P4-CAL-LOOP-MVP combines dialogue contract hardening with P4-M2/M3/M4. The blocker was summary-only dialogue injection, and the calibration loop needed a backend contract without broad productization or automatic mutation.
+**Decision**: Prompt packets must include the complete loaded alter YAML. Reality scores are explicit user-submitted records written only under `alters/calibration/scores/score_*.yaml`. Drift calculation requires supplied expected and actual scores and returns response-only evidence. Calibration history is read-only and may derive drift in memory. No endpoint writes `alters/current/**` or `alters/calibration/rubric.yaml`, and no provider, frontend, database, archive, promotion, or regeneration path is added.
+**Consequences**: P4 has a usable backend calibration loop while preserving Phase 3 mutation boundaries. Drift can inform review but cannot trigger automatic regeneration or rubric evolution.

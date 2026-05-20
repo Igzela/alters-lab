@@ -3,3 +3,5 @@ __pycache__/
 docs/harness/phase3_write_audit.jsonl
 docs/harness/phase3_generation_draft_audit.jsonl
 alters/drafts/
+.codex/
+.claude-p3-*.md

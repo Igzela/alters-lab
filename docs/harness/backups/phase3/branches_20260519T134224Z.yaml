@@ -1,0 +1,149 @@
+branch_discovery:
+  status: "completed"
+  source_snapshot_ref: "alters/current/snapshot.yaml"
+  requires_snapshot_phase: "completed"
+  confirmed_by: "human_owner"
+  confirmation_note: "CYCLE-001 branches confirmed by human owner after Branch Discovery review."
+
+  pipeline:
+    step_1_tension_extraction:
+      output:
+        - "精力收束 vs 路径保留"
+        - "学历跃迁 vs 工程作品证明"
+        - "安全保底 vs 深度投入"
+        - "技术探索自由 vs 外部路径规则"
+
+    step_2_structural_branch_identification:
+      output:
+        - "branch_A"
+        - "branch_B"
+        - "branch_C"
+        - "branch_D"
+
+    step_3_convergence:
+      output:
+        - "All in 考研收束路径"
+        - "Offer 保底 + 工程能力路径"
+        - "限时双轨校准路径"
+        - "硬工程作品优先路径"
+
+  quality_rules:
+    reject_result_differences: true
+    reject_parameter_differences: true
+    require_mutual_incompatibility: true
+    require_incompatible_with: true
+    min_branches: 3
+    max_branches: 4
+
+branches:
+  - id: "branch_A"
+    label: "All in 考研收束路径"
+    core_choice: "未来 6–9 个月把考研作为唯一主线，目标 985 CS 方向。"
+    structural_commitment: >
+      大幅削减项目实践、AI agent 探索、求职准备和创业想法，把主要精力投入数学、
+      专业课、英语和政治复习。日常结构围绕图书馆、刷题、模考和复盘展开。
+    key_tension_resolved: "用精力收束换取学历跃迁机会。"
+    incompatible_with: ["branch_B", "branch_C", "branch_D"]
+    preserves:
+      - "985 CS 学历跃迁可能性"
+      - "清晰单一目标"
+      - "传统路径认可度"
+    sacrifices:
+      - "短期工程作品闭环"
+      - "技术探索自由"
+      - "秋招/工作窗口"
+      - "创业或独立产品窗口"
+    validation_signal_30d:
+      - "连续 30 天完成稳定考研复习节奏"
+      - "数学复习进度和正确率有可记录提升"
+      - "能接受项目/AI 探索显著降级而不强烈反弹"
+    invalid_if:
+      - "30 天内仍频繁切换到项目/AI/求职，无法维持考研主线"
+      - "数学复习持续低效，且没有可修正原因"
+      - "对完全放弃工程作品产生强烈抵触"
+
+  - id: "branch_B"
+    label: "Offer 保底 + 工程能力路径"
+    core_choice: "优先拿到工作 offer，把就业确定性和工程能力展示作为主线，考研降级为次级选项。"
+    structural_commitment: >
+      未来 3–6 个月围绕秋招、实习、简历、面试和可展示项目建立节奏。
+      考研复习保留最低限度，但不再占据全部精力。重点是拿到一个可接受的现实落点。
+    key_tension_resolved: "用工作保底降低不确定性，同时保留工程作品能力。"
+    incompatible_with: ["branch_A", "branch_C", "branch_D"]
+    preserves:
+      - "现实安全垫"
+      - "工程实践连续性"
+      - "简历和面试反馈"
+      - "部分技术探索空间"
+    sacrifices:
+      - "985 考研深度准备"
+      - "全力学历跃迁机会"
+      - "纯粹长期探索时间"
+    validation_signal_30d:
+      - "完成一版可投递简历"
+      - "明确 1 个主打工程项目并推进到可展示状态"
+      - "开始投递或准备面试题库"
+      - "考研复习降级后焦虑没有失控"
+    invalid_if:
+      - "无法接受考研优先级下降"
+      - "30 天内没有任何可投递/可展示进展"
+      - "offer 准备变成新的分散源，而不是收束结构"
+
+  - id: "branch_C"
+    label: "限时双轨校准路径"
+    core_choice: "不立即 All in，也不立即放弃考研；用 45–60 天做受控双轨验证，再按证据切换。"
+    structural_commitment: >
+      设置严格时间盒和止损规则：每天固定考研主块，固定项目/求职小块，
+      每周只评估一次，不允许随情绪切换。到期后根据数学进展、项目进展、
+      精力状态和焦虑水平决定转向 A 或 B/D。
+    key_tension_resolved: "用短期结构化试验换取路径证据，而不是靠焦虑做决定。"
+    incompatible_with: ["branch_A", "branch_B", "branch_D"]
+    preserves:
+      - "考研窗口"
+      - "工作/项目窗口"
+      - "心理缓冲"
+      - "用现实数据校准自己的能力"
+    sacrifices:
+      - "单一路径深度"
+      - "短期效率"
+      - "简单明确的身份感"
+    validation_signal_30d:
+      - "连续 4 周执行同一套周计划"
+      - "考研数学和工程项目都有可量化进度"
+      - "TODO list 合并为一个主系统"
+      - "每周只做一次路径复盘，而不是每天摇摆"
+    invalid_if:
+      - "双轨实际变成无约束多轨"
+      - "每天根据焦虑切换任务"
+      - "30 天后仍没有任何路径证据"
+      - "两个方向都没有最低可见进展"
+
+  - id: "branch_D"
+    label: "硬工程作品优先路径"
+    core_choice: "把考研和传统 offer 保底都降级，优先做出一个真实可展示、可复用、有技术含量的工程作品。"
+    structural_commitment: >
+      未来 2–4 个月围绕一个高质量工程项目建立生活结构，例如 AI agent 系统、
+      LLM Wiki / Alters Lab 工具化、开源项目或独立产品原型。
+      目标是用作品证明能力，而不是先依赖学历或岗位标签。
+    key_tension_resolved: "用硬工程作品换取长期自主性和技术身份。"
+    incompatible_with: ["branch_A", "branch_B", "branch_C"]
+    preserves:
+      - "技术探索自由"
+      - "硬工程作品能力"
+      - "自主路径感"
+      - "长期差异化可能性"
+    sacrifices:
+      - "考研复习连续性"
+      - "传统 offer 保底"
+      - "短期稳定感"
+      - "外部认可速度"
+    validation_signal_30d:
+      - "确定唯一主项目"
+      - "完成项目 README / 架构 / 最小可运行版本计划"
+      - "每周都有 commit 或可展示产物"
+      - "能抵抗他人保研/offer 信息带来的路径摇摆"
+    invalid_if:
+      - "30 天没有形成可运行或可展示成果"
+      - "项目不断换题，无法闭环"
+      - "缺少现实使用场景"
+      - "焦虑到重新无序切回考研/求职/创业多轨"
