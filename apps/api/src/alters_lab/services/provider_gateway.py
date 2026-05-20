@@ -1,0 +1,163 @@
+"""P5-M2 Provider Gateway Boundary service.
+
+All provider calls go through this single gateway. No feature module directly
+imports provider SDKs. Default mode is mock.
+"""
+
+from __future__ import annotations
+
+import os
+import re
+
+from alters_lab.schemas.provider_gateway import (
+    ProviderConfigStatusResponse,
+    ProviderGatewayHealthResponse,
+    ProviderGatewayRequest,
+    ProviderGatewayResponse,
+)
+
+VALID_MODES = {"mock", "disabled", "openai_compatible_http"}
+
+_MOCK_REPLIES = {
+    "default": "I understand your question. As a mock provider, I'm simulating a thoughtful response based on the alter context provided.",
+}
+
+
+def _get_provider_mode() -> str:
+    return os.environ.get("ALTERS_PROVIDER_MODE", "mock")
+
+
+def _get_provider_base_url() -> str | None:
+    return os.environ.get("ALTERS_PROVIDER_BASE_URL")
+
+
+def _get_provider_api_key() -> str | None:
+    return os.environ.get("ALTERS_PROVIDER_API_KEY")
+
+
+def _get_provider_model() -> str:
+    return os.environ.get("ALTERS_PROVIDER_MODEL", "mock-model")
+
+
+def _redact_secrets(text: str) -> str:
+    patterns = [
+        r"sk-[A-Za-z0-9]{20,}",
+        r"Bearer\s+[A-Za-z0-9._-]+",
+        r"api[_-]?key\s*[:=]\s*\S+",
+    ]
+    result = text
+    for pattern in patterns:
+        result = re.sub(pattern, "[REDACTED]", result, flags=re.IGNORECASE)
+    return result
+
+
+def _count_redactions(original: str, redacted: str) -> int:
+    return max(0, original.count("[REDACTED]") - redacted.count("[REDACTED]"))
+
+
+def get_provider_gateway_health() -> ProviderGatewayHealthResponse:
+    mode = _get_provider_mode()
+    return ProviderGatewayHealthResponse(
+        mode=mode,
+        model=_get_provider_model(),
+        api_key_configured=_get_provider_api_key() is not None,
+    )
+
+
+def get_provider_config_status() -> ProviderConfigStatusResponse:
+    mode = _get_provider_mode()
+    return ProviderConfigStatusResponse(
+        mode=mode,
+        model=_get_provider_model(),
+        base_url_configured=_get_provider_base_url() is not None,
+        api_key_configured=_get_provider_api_key() is not None,
+    )
+
+
+def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewayResponse:
+    mode = _get_provider_mode()
+
+    if mode == "disabled":
+        return ProviderGatewayResponse(
+            status="disabled",
+            mode=mode,
+            model=_get_provider_model(),
+            content="Provider gateway is disabled. Set ALTERS_PROVIDER_MODE to enable.",
+            persisted=False,
+            active_yaml_modified=False,
+        )
+
+    if mode == "mock" or mode not in VALID_MODES:
+        content = _MOCK_REPLIES["default"]
+        if request.messages:
+            last_user = ""
+            for msg in reversed(request.messages):
+                if msg.get("role") == "user":
+                    last_user = msg.get("content", "")
+                    break
+            if last_user:
+                content = f"[Mock] Acknowledging: {last_user[:100]}"
+
+        redacted = _redact_secrets(content)
+        return ProviderGatewayResponse(
+            status="mock_response",
+            mode=mode,
+            model=request.model or _get_provider_model(),
+            content=redacted,
+            usage={"prompt_tokens": 0, "completion_tokens": len(content.split()), "total_tokens": len(content.split())},
+            redaction_summary={"fields_redacted": 0, "api_key_exposed": False},
+            persisted=False,
+            active_yaml_modified=False,
+        )
+
+    # openai_compatible_http mode
+    base_url = _get_provider_base_url()
+    api_key = _get_provider_api_key()
+    if not base_url or not api_key:
+        return ProviderGatewayResponse(
+            status="error",
+            mode=mode,
+            model=_get_provider_model(),
+            content="Provider mode requires ALTERS_PROVIDER_BASE_URL and ALTERS_PROVIDER_API_KEY.",
+            persisted=False,
+            active_yaml_modified=False,
+        )
+
+    try:
+        import httpx
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "model": request.model or _get_provider_model(),
+            "messages": request.messages,
+            "temperature": request.temperature,
+            "max_tokens": request.max_tokens,
+        }
+        resp = httpx.post(f"{base_url}/chat/completions", json=payload, headers=headers, timeout=30.0)
+        resp.raise_for_status()
+        data = resp.json()
+        content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+        usage = data.get("usage")
+    except Exception as exc:
+        return ProviderGatewayResponse(
+            status="error",
+            mode=mode,
+            model=_get_provider_model(),
+            content=f"Provider request failed: {type(exc).__name__}",
+            persisted=False,
+            active_yaml_modified=False,
+        )
+
+    redacted_content = _redact_secrets(content)
+    return ProviderGatewayResponse(
+        status="provider_response",
+        mode=mode,
+        model=request.model or _get_provider_model(),
+        content=redacted_content,
+        usage=usage,
+        redaction_summary={"fields_redacted": 0, "api_key_exposed": False},
+        persisted=False,
+        active_yaml_modified=False,
+    )

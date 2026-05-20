@@ -88,6 +88,13 @@
 | R-082 | runtime archive artifacts accidentally committed | Medium | High | Runtime archive/suggestion/checkpoint records are gitignored; only .gitkeep/_template.yaml may be tracked | Active |
 | R-083 | phase4 closeout mistaken for full product completion | Medium | High | P4-CLOSEOUT report states backend calibration loop sealed candidate only; P5-000 remains blocked | Active |
 | R-084 | provider/frontend/database scope creep after closeout | Medium | High | Phase 4 closeout checks no provider/frontend/database implementation and keeps P5-000 blocked pending GPT/human review | Active |
+| R-085 | Provider secret leakage | Low | Critical | P5-M2: API keys never returned by API, redacted in logs, not written to disk. Config status returns "[redacted]" | Mitigated |
+| R-086 | Frontend calling dangerous endpoint | Low | Critical | P5-M4: Frontend only calls safe product APIs. Grep tests verify no references to promotion-live-execution, branches/persist, alters/persist, or API key env names | Mitigated |
+| R-087 | Provider output mistaken for truth | Medium | High | P5-M3: Provider replies include safety metadata. Dialogues are simulated. Sessions include provider_output_not_fact=true | Mitigated |
+| R-088 | Provider output auto-persisted | Low | High | P5-M3: save_session defaults to false. Explicit opt-in required. Sessions written to ignored runtime area only | Mitigated |
+| R-089 | Frontend triggering active mutation | Low | Critical | P5-M4: No frontend page calls promotion-live-execution, controlled persist, or archive create. API requires explicit confirmation | Mitigated |
+| R-090 | Database migration scope creep | Medium | Medium | P5-M5: YAML remains default. Storage boundary explicitly states database_implemented=false. No DB imports in codebase | Mitigated |
+| R-091 | Local MVP mistaken for production product | Medium | High | P5-M8: Release candidate docs clearly state single-user, local-only. No cloud deployment, no production auth, no billing | Active |
 
 ## Risk Assessment
 
