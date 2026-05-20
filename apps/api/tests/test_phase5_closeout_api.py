@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from alters_lab.main import app
@@ -28,12 +30,32 @@ def test_report():
     assert data["summary"]["sealed_baseline_candidate"] is True
 
 
-def test_evidence():
+def test_evidence_reads_existing_file():
     r = client.get("/phase5-closeout/evidence")
     assert r.status_code == 200
     data = r.json()
     assert data["status"] == "ok"
     assert "evidence_path" in data
+    assert Path(data["evidence_path"]).exists()
+
+
+def test_evidence_returns_404_when_missing(tmp_path, monkeypatch):
+    monkeypatch.setattr("alters_lab.api.phase5_closeout._get_repo_root", lambda: tmp_path)
+    r = client.get("/phase5-closeout/evidence")
+    assert r.status_code == 404
+    assert "not found" in r.json()["detail"].lower()
+
+
+def test_evidence_creates_no_files(tmp_path, monkeypatch):
+    """Regression test: GET /evidence must be read-only and create no files."""
+    monkeypatch.setattr("alters_lab.api.phase5_closeout._get_repo_root", lambda: tmp_path)
+    harness = tmp_path / "docs" / "harness"
+    harness.mkdir(parents=True)
+    before = set(harness.iterdir()) if harness.exists() else set()
+    r = client.get("/phase5-closeout/evidence")
+    after = set(harness.iterdir()) if harness.exists() else set()
+    assert r.status_code == 404
+    assert before == after
 
 
 def test_route_inventory():

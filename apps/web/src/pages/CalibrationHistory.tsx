@@ -21,7 +21,7 @@ export default function CalibrationHistory() {
     <div>
       <h2>Calibration History</h2>
       <p>Read-only: {data.read_only ? 'Yes' : 'No'}</p>
-      <h3>Scores ({data.count})</h3>
+      <h3>Scores ({String(data.count)})</h3>
       {records.length === 0 && <p>No scores yet.</p>}
       {records.map(r => (
         <div key={String(r.id)} style={{ padding: 8, marginBottom: 8, background: '#f9f9f9' }}>

@@ -28,7 +28,7 @@ export default function CheckpointPlan() {
       {data && (
         <div style={{ marginTop: 12, padding: 12, background: '#f5f5f5', borderRadius: 4 }}>
           <p>Status: {String(data.status)}</p>
-          {data.plan && <pre>{JSON.stringify(data.plan, null, 2)}</pre>}
+          <pre>{data.plan ? JSON.stringify(data.plan as Record<string, unknown>, null, 2) : ''}</pre>
         </div>
       )}
     </div>
