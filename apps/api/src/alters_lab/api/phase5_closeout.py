@@ -1,11 +1,13 @@
 """P5-M7 Phase 5 Closeout routes.
 
-Read-only report and evidence endpoints. Artifact generation via service.
+Read-only report and evidence endpoints. Artifact generation via service/manual command only.
 """
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from pathlib import Path
+
+from fastapi import APIRouter, HTTPException
 
 from alters_lab.schemas.phase5_closeout import (
     Phase5CloseoutEvidenceResponse,
@@ -14,7 +16,7 @@ from alters_lab.schemas.phase5_closeout import (
 )
 from alters_lab.services.phase5_closeout import (
     build_phase5_closeout_report,
-    write_phase5_closeout_artifacts,
+    _get_repo_root,
 )
 
 router = APIRouter(prefix="/phase5-closeout", tags=["phase5-closeout"])
@@ -32,6 +34,11 @@ def report():
 
 @router.get("/evidence", response_model=Phase5CloseoutEvidenceResponse)
 def evidence():
-    report = build_phase5_closeout_report()
-    path = write_phase5_closeout_artifacts(report)
-    return Phase5CloseoutEvidenceResponse(evidence_path=path)
+    root = _get_repo_root()
+    evidence_path = root / "docs" / "harness" / "PHASE5_CLOSEOUT_EVIDENCE.json"
+    if not evidence_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Evidence file not found. Run closeout artifact generation manually.",
+        )
+    return Phase5CloseoutEvidenceResponse(evidence_path=str(evidence_path))

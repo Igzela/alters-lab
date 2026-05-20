@@ -28,7 +28,7 @@ export default function RubricDelta() {
       {data && (
         <div style={{ marginTop: 12, padding: 12, background: '#f5f5f5', borderRadius: 4 }}>
           <p>Status: {String(data.status)}</p>
-          {data.suggestions && <pre>{JSON.stringify(data.suggestions, null, 2)}</pre>}
+          <pre>{data.suggestions ? JSON.stringify(data.suggestions as Record<string, unknown>, null, 2) : ''}</pre>
         </div>
       )}
     </div>
