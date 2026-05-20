@@ -103,6 +103,7 @@
 | R-097 | Action alignment gamed by easy corrections | Low | High | Required evidence: one_action_evidence, one_avoidance_or_friction_evidence. Supporting actions must serve primary correction, not create new fronts. | Active |
 | R-098 | Pattern constraints feel too restrictive and cause abandonment | Medium | High | Strategy constraints only trigger on 3+ occurrences in 4 weeks with high confidence. Next week primary correction must reflect constraint. | Active |
 | R-099 | P6 mistakenly sealed after code completion without real use | Medium | Critical | P6_CODE_COMPLETE != P6_BEHAVIOR_VALIDATED. 4 weekly reviews, 4 calibration records, 1 monthly pattern review, measurable change required before sealing. | Active |
+| R-100 | Raw P6 runtime records accidentally committed | Medium | High | P6 runtime directories under alters/product are gitignored; only .gitkeep/template and sanitized evidence should be tracked. Phase 6 closeout checks git-tracked P6 runtime paths. | Active |
 
 ## Risk Assessment
 
