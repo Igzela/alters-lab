@@ -17,6 +17,12 @@ from alters_lab.api.generation_drafts import router as generation_drafts_router
 from alters_lab.api.rubric_delta import router as rubric_delta_router
 from alters_lab.api.snapshot_intake import router as snapshot_intake_router
 from alters_lab.api.alter_dialogue import router as alter_dialogue_router
+from alters_lab.api.product_surface import router as product_surface_router
+from alters_lab.api.provider_gateway import router as provider_gateway_router
+from alters_lab.api.provider_dialogue import router as provider_dialogue_router
+from alters_lab.api.storage_boundary import router as storage_boundary_router
+from alters_lab.api.user_workflow import router as user_workflow_router
+from alters_lab.api.phase5_closeout import router as phase5_closeout_router
 
 app = FastAPI(title="Alters Lab API")
 
@@ -43,3 +49,9 @@ app.include_router(rubric_delta_router)
 app.include_router(archive_mechanism_router)
 app.include_router(checkpoint_regeneration_router)
 app.include_router(phase4_closeout_router)
+app.include_router(product_surface_router)
+app.include_router(provider_gateway_router)
+app.include_router(provider_dialogue_router)
+app.include_router(storage_boundary_router)
+app.include_router(user_workflow_router)
+app.include_router(phase5_closeout_router)

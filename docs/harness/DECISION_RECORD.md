@@ -384,3 +384,51 @@
 **Context**: P4-FINAL completes the remaining planned backend calibration scope, but does not authorize P5 work.
 **Decision**: Phase 4 closeout verifies P4-M1R through P4-M7, no provider/frontend/database work, no active YAML/rubric diff, and no committed raw runtime records. It establishes a sealed backend calibration loop candidate only.
 **Consequences**: P5-000 remains blocked pending GPT/human review and a separate boundary plan.
+
+### Decision P5-000-01: P5 is local MVP productization, not hosted SaaS
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P5 scope must be bounded to avoid scope creep into cloud deployment, multi-user auth, or production infrastructure.
+**Decision**: P5 is defined as Local Product MVP — single-user, local-only, file-based storage. No cloud deployment, no production auth, no billing, no mobile app.
+**Consequences**: P5 delivers a usable local loop without production complexity. P6 will address production concerns when ready.
+
+### Decision P5-M2-01: Provider access must go through provider gateway only
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Prevents scattered provider SDK imports and inconsistent error handling across feature modules.
+**Decision**: All provider calls go through a single provider_gateway service. No feature module directly imports provider SDKs. Default mode is mock.
+**Consequences**: Centralized provider control, easier testing, no SDK dependency leakage.
+
+### Decision P5-M3-01: Provider dialogue output does not persist or mutate by default
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Provider replies are simulated and should not be treated as facts or automatically persisted.
+**Decision**: save_session defaults to false. Provider output never writes active YAML. Saved sessions go to alters/product/sessions/ (ignored by default).
+**Consequences**: User must explicitly opt-in to session persistence. Provider output is clearly separated from active state.
+
+### Decision P5-M4-01: Frontend may call only safe product APIs
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Frontend must not have access to dangerous endpoints that could mutate active state.
+**Decision**: Frontend calls only safe product APIs (/product/*, /provider-dialogue/*, /calibration-loop/*, /rubric-delta/*, /checkpoint-regeneration/*). No calls to promotion-live-execution, controlled persist, or archive create.
+**Consequences**: Frontend is safe by construction. Dangerous operations remain API-only with explicit confirmation.
+
+### Decision P5-M5-01: YAML remains default storage; database migration deferred
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: Database migration would add significant complexity and is not needed for local MVP.
+**Decision**: YAML remains the default storage backend. Storage boundary module describes path classifications. SQLite/PostgreSQL deferred to a future phase.
+**Consequences**: Simpler implementation, no database dependency. Migration path documented for future phase.
+
+### Decision P5-M7-01: P5 closeout verifies productization boundaries, not production readiness
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P5 is a local MVP, not a production product. Closeout should verify boundaries, not production readiness.
+**Decision**: Phase 5 closeout checks: provider gateway default safe, no secrets committed, no active YAML diff, no rubric diff, frontend safety, storage boundary, provider dialogue defaults, P5 docs complete, no raw runtime artifacts.
+**Consequences**: Clear distinction between local MVP verification and production readiness assessment.

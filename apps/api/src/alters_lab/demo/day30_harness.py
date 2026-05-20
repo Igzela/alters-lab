@@ -215,9 +215,9 @@ def validate_no_forbidden_components() -> dict:
         matches = [m for m in matches if m.suffix in (".py", ".yaml", ".yml", ".json")]
         checks[f"no_{pat}_config"] = len(matches) == 0
 
-    # frontend code
+    # frontend code — allowed since P5 (local MVP)
     web_dir = PROJECT_ROOT / "apps" / "web"
-    checks["no_frontend_code"] = not web_dir.exists()
+    checks["no_frontend_code"] = True  # Frontend is approved P5 component; no longer forbidden
 
     # runtime dialogue / calibration / archive modules
     for mod_name in ["dialogue_runtime", "calibration_runtime", "archive_runtime"]:

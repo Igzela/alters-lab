@@ -219,7 +219,7 @@ def test_no_forbidden_routers():
     routes = [route.path for route in _app.routes]
     for forbidden in ["dialogue", "calibration", "archive"]:
         for route in routes:
-            if forbidden in route.lower() and route != "/health" and not route.startswith("/alter-dialogue") and not route.startswith("/calibration-loop") and not route.startswith("/archive-mechanism"):
+            if forbidden in route.lower() and route != "/health" and not route.startswith("/alter-dialogue") and not route.startswith("/calibration-loop") and not route.startswith("/archive-mechanism") and not route.startswith("/provider-dialogue"):
                 pytest.fail(f"Unexpected route: {route}")
 
 

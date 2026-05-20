@@ -40,6 +40,42 @@ todo → ready → running → review → done/failed
 | P1-012 | Day 30 Evidence Harness + Schema Alignment | done |
 | P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **done** |
 
+## Phase 5 — Local Product MVP
+
+| ID | Title | Status |
+|----|-------|--------|
+| P5-000 | Productization / Provider / Frontend Boundary Plan | **done** |
+| P5-M1 | API Product Surface Hardening | **done** |
+| P5-M2 | Provider Gateway Boundary | **done** |
+| P5-M3 | Provider-backed Alter Dialogue | **done** |
+| P5-M4 | Minimal Frontend MVP | **done** |
+| P5-M5 | Durable Storage Boundary | **done** |
+| P5-M6 | User Workflow Integration | **done** |
+| P5-M7 | Safety Review and Product Closeout | **done** |
+| P5-M8 | Local Release Candidate | **done** |
+| P5-CLOSEOUT | Phase 5 Closeout | **done** |
+| P6-000 | Future Phase 6 | **blocked** |
+
+## Phase 5 Sealed Baseline
+
+Phase 5 Final Gate: **PASS**
+- 802 tests passing
+- 17 new API routes added
+- Frontend MVP (Vite + React + TypeScript)
+- Provider gateway (mock default)
+- No active YAML modified
+- No secrets committed
+- No database migration
+- Closeout report: `docs/harness/PHASE5_CLOSEOUT_REPORT.md`
+
+## Phase 4 Sealed Baseline
+
+Phase 4 Final Gate: **PASS**
+- P4-FINAL accepted
+- Closeout status: PASS
+- Commit: 2ae89a9d7d81d451e3efdc40d9054b13a9e50cb7
+- Closeout report: `docs/harness/PHASE4_CLOSEOUT_REPORT.md`
+
 ## Phase 3 Sealed Baseline
 
 Phase 3 Final Gate: **SEALED_WITH_NOTES**
@@ -117,7 +153,7 @@ Phase 2 Final Gate: **PASS**
 | P4-M6 | Archive Mechanism | **done** |
 | P4-M7 | Checkpoint Regeneration Plan | **done** |
 | P4-CLOSEOUT | Phase 4 Closeout | **done** |
-| P5-000 | Future Productization / Provider Boundary Plan | **blocked** |
+| P5-000 | Future Productization / Provider Boundary Plan | **done** |
 
 ## Quality Gates
 
@@ -145,3 +181,4 @@ Phase 2 Final Gate: **PASS**
 - P4-M1 complete. Read-only alter dialogue runtime — no provider, no active YAML write, 656 tests passing.
 - P4-CAL-LOOP-MVP complete pending GPT verdict. P4-M1R hardens full alter YAML injection. P4-M2/M3/M4 add explicit reality score records, evidence-only drift, and read-only calibration history. No provider, frontend, database, active YAML mutation, rubric mutation, archive, promotion, or regeneration trigger.
 - P4-FINAL complete. P4-M5 rubric delta suggestions are suggestion-only. P4-M6 archive creation is explicit-only copy packaging. P4-M7 checkpoint regeneration is plan-only. Phase 4 closeout establishes a backend calibration loop sealed candidate. P5-000 remains blocked pending GPT/human review.
+- P5-FULL complete. Local product MVP: provider gateway (mock default), provider-backed dialogue, minimal frontend (Vite+React), storage boundary (YAML default), user workflow integration, phase 5 closeout PASS. 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 blocked pending GPT/human review.

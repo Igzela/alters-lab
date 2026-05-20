@@ -455,9 +455,70 @@
 **Depends on**: P4-M7
 **Notes**: Closeout seals backend calibration scope only, not full productization.
 
-### P5-000: Future Productization / Provider Boundary Plan
+### P5-000: Productization / Provider / Frontend Boundary Plan
+
+**Status**: done
+**Goal**: Define P5 scope as local product MVP, not hosted SaaS.
+**Depends on**: P4-CLOSEOUT (done)
+**Notes**: Created P5_000_PRODUCTIZATION_PROVIDER_FRONTEND_BOUNDARY_PLAN.md. P5 identity, provider modes, frontend scope, storage scope, active YAML safety, dialogue safety, persistent writes, forbidden items, exit gate, module inventory.
+
+### P5-M1: API Product Surface Hardening
+
+**Status**: done
+**Goal**: Expose stable product-facing route inventory and health/status summary.
+**Notes**: Read-only. 4 endpoints (/product/health, /routes, /status, /workflow-capabilities). No writes, no provider calls, no active YAML mutation. Route classification (safe/internal/dangerous).
+
+### P5-M2: Provider Gateway Boundary
+
+**Status**: done
+**Goal**: All provider calls through single gateway. No feature module imports provider SDKs.
+**Notes**: Default mock mode. 3 endpoints (/provider-gateway/health, /complete, /config-status). API key never returned. Secrets redacted. No active YAML modification.
+
+### P5-M3: Provider-backed Alter Dialogue
+
+**Status**: done
+**Goal**: Provider-backed dialogue using full alter YAML prompt packet.
+**Notes**: 2 endpoints (/provider-dialogue/health, /{alter_id}/reply). Mock default. No active YAML write. save_session defaults to false. Sessions written to alters/product/sessions/ only when explicitly requested.
+
+### P5-M4: Minimal Frontend MVP
+
+**Status**: done
+**Goal**: Vite + React + TypeScript minimal UI.
+**Notes**: 6 pages (SystemStatus, AlterDialogue, RealityScore, CalibrationHistory, RubricDelta, CheckpointPlan). No auth, no database. Calls only safe product APIs. No dangerous endpoint references.
+
+### P5-M5: Durable Storage Boundary
+
+**Status**: done
+**Goal**: YAML remains default. Describe storage boundaries without adding database.
+**Notes**: 2 endpoints (/storage-boundary/health, /manifest). Classifies paths: active YAML read-only, calibration score write, product session write, ignored runtime areas, evidence areas.
+
+### P5-M6: User Workflow Integration
+
+**Status**: done
+**Goal**: Integrated workflow state and optional workflow-run record.
+**Notes**: 3 endpoints (/user-workflow/health, /state, /run-summary). No provider calls in state. Run summary writes to alters/product/workflow_runs/ only.
+
+### P5-M7: Safety Review and Product Closeout
+
+**Status**: done
+**Goal**: Verify productization boundaries, not production readiness.
+**Notes**: 3 read-only endpoints (/phase5-closeout/health, /report, /evidence). 9 verification checks. Generates PHASE5_CLOSEOUT_EVIDENCE.json and P5_FINAL_EVIDENCE.json.
+
+### P5-M8: Local Release Candidate
+
+**Status**: done
+**Goal**: Document local workflow demo steps and safety notes.
+**Notes**: Created P5_LOCAL_RELEASE_CANDIDATE.md with backend/frontend start commands, provider explanation, demo steps, safety notes, route inventory.
+
+### P5-CLOSEOUT: Phase 5 Closeout
+
+**Status**: done
+**Goal**: Final verification of P5 productization boundary.
+**Notes**: 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 blocked pending GPT/human review.
+
+### P6-000: Future Phase 6
 
 **Status**: blocked
-**Goal**: Define any future provider, frontend, database, or productization boundary before implementation begins.
-**Depends on**: GPT/human review of Phase 4 closeout.
-**Notes**: Blocked. No P5 implementation may start in P4-FINAL.
+**Goal**: TBD
+**Depends on**: GPT/human review of Phase 5 closeout.
+**Notes**: Blocked. No P6 implementation may start.

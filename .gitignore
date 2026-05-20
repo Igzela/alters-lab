@@ -11,5 +11,16 @@ alters/calibration/rubric_delta_suggestions/*
 alters/calibration/checkpoint_plans/*
 !alters/calibration/checkpoint_plans/.gitkeep
 !alters/calibration/checkpoint_plans/_template.yaml
+alters/product/sessions/*
+!alters/product/sessions/.gitkeep
+!alters/product/sessions/_template.yaml
+alters/product/provider_runs/*
+!alters/product/provider_runs/.gitkeep
+alters/product/workflow_runs/*
+!alters/product/workflow_runs/.gitkeep
 .codex/
 .claude-p3-*.md
+apps/web/node_modules/
+apps/web/dist/
+.env
+.env.local

@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "summary": {
+    "overall_status": "PASS",
+    "total_checks": 9,
+    "passed": 9,
+    "failed": 0,
+    "notes": 0,
+    "sealed_baseline_candidate": true
+  },
+  "checks": [
+    {
+      "name": "provider_gateway_default_safe",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "Provider mode defaults to 'mock'."
+    },
+    {
+      "name": "no_secrets_committed",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "No secrets found in committed files."
+    },
+    {
+      "name": "no_active_yaml_diff",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "No active YAML diff detected."
+    },
+    {
+      "name": "no_rubric_diff",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "No rubric diff detected."
+    },
+    {
+      "name": "frontend_no_dangerous_endpoints",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "Frontend does not reference dangerous endpoints."
+    },
+    {
+      "name": "storage_no_db",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "No database imports found. YAML remains default."
+    },
+    {
+      "name": "provider_dialogue_no_default_persist",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "save_session defaults to False."
+    },
+    {
+      "name": "p5_docs_complete",
+      "status": "PASS",
+      "severity": "warning",
+      "message": "All P5 docs present."
+    },
+    {
+      "name": "no_raw_runtime_artifacts",
+      "status": "PASS",
+      "severity": "critical",
+      "message": "No raw runtime artifacts committed."
+    }
+  ],
+  "generated_at": "2026-05-20"
+}
