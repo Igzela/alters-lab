@@ -9,6 +9,7 @@ import pytest
 from alters_lab.schemas.alter_dialogue import (
     AlterDialogueBoundaryConfirmations,
     AlterDialogueContext,
+    AlterDialogueHealthResponse,
     AlterDialoguePromptPacket,
     AlterDialogueRequest,
     AlterDialogueResponse,
@@ -82,6 +83,11 @@ def test_load_active_alter():
 def test_load_active_alter_missing(tmp_path):
     with pytest.raises(FileNotFoundError):
         load_active_alter("alter_A", tmp_path)
+
+
+def test_load_active_alter_rejects_invalid_id_before_path_construction(tmp_path):
+    with pytest.raises(ValueError):
+        load_active_alter("alter_A/../secret", tmp_path)
 
 
 VALID_ALTER = {
@@ -270,3 +276,40 @@ def test_schema_extra_forbid():
             source_refs={}, quality_status={}, allowed_scope=[], forbidden_scope=[],
             evil_field=True,
         )
+
+
+def test_prompt_packet_contract_rejects_invalid_boundary_values():
+    base = {
+        "alter_id": "alter_A",
+        "system_instruction": "Read-only instruction",
+        "user_message": "Hello",
+        "full_alter_yaml": VALID_ALTER,
+        "context_summary": {"alter_id": "alter_A"},
+        "safety_boundaries": [],
+        "style_constraints": [],
+    }
+
+    invalid_cases = [
+        {"provider_ready": True},
+        {"persistence_policy": "write_active_yaml"},
+        {"full_context_injected": False},
+        {"context_injection_policy": "summary_only"},
+    ]
+
+    for override in invalid_cases:
+        with pytest.raises(Exception):
+            AlterDialoguePromptPacket(**base, **override)
+
+
+def test_dialogue_response_status_contract_rejects_invalid_value():
+    with pytest.raises(Exception):
+        AlterDialogueResponse(
+            status="ready",
+            alter_id="alter_A",
+            boundary_confirmations=alter_dialogue_boundary_confirmations(),
+        )
+
+
+def test_health_response_mode_contract_rejects_invalid_value():
+    with pytest.raises(Exception):
+        AlterDialogueHealthResponse(status="ok", mode="provider_enabled")
