@@ -523,65 +523,94 @@
 **Depends on**: P5-CLOSEOUT (done)
 **Notes**: P6 identity defined. 30 core decisions recorded. 11 milestones (P6-M1 through P6-M11) planned. P6 success = behavior change after 4-week validation. P6-M1 ready_with_approval. P7-000 blocked.
 
+### P6-CODE-COMPLETE: P6 Runtime Code Complete
+
+**Status**: accepted
+**Goal**: Merge P6-M1 through P6-M11 runtime code as code complete only.
+**Depends on**: P6-000 (done)
+**Notes**: Accepted and merged to main at cdf4d4e6bf20c3ed160c429c1520dd1ec74917e1. This is not behavior validation and not a sealed P6 baseline.
+
+### P6-ENDGAME: Real-Use Validation Orchestration
+
+**Status**: running
+**Goal**: Orchestrate Week 1-4 real-use evidence collection, behavior validation, and final closeout without fabricating evidence.
+**Depends on**: P6-CODE-COMPLETE (accepted)
+**Allowed outputs now**: runbook, weekly note template, validation checklist, operator guide, helper scripts, governance updates.
+**Runtime writes**: Only allowed when Charlie provides real weekly note content. Runtime records remain gitignored and must not be committed raw.
+**Current blocker**: Week 1 raw Obsidian weekly note has not been provided.
+**Current state**: CODE_COMPLETE, P6_BLOCKED_BY_REAL_USE_WINDOW, NOT_SEALED.
+
+#### P6-ENDGAME Week 1-4 Execution Checklist
+
+- [ ] Week 1: Charlie provides real raw Obsidian weekly note.
+- [ ] Week 1: Ingest note, complete weekly review, create calibration record, complete/skip reminder.
+- [ ] Week 2: Repeat after one real week; do not backdate.
+- [ ] Week 3: Repeat after one real week; do not backdate.
+- [ ] Week 4: Repeat after one real week; do not backdate.
+- [ ] Pattern review: Run only after 4 real weekly review records exist.
+- [ ] Evidence check: Confirm 4 weekly reviews, 4 calibration records, 1 pattern review, and 21-day minimum window.
+- [ ] Behavior validation: Run only after evidence check passes.
+- [ ] Phase6 closeout: Run only after behavior validation returns P6_BEHAVIOR_VALIDATED.
+
 ### P6-M1: Obsidian Weekly Note Ingest
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Parse semi-fixed weekly note, preserve raw note, produce editable extracted record.
 **Depends on**: P6-000 (done)
 **Notes**: Implemented with schema/service/API/tests. Raw note is preserved, extracted records mark derived_from_raw_note, edits require correction_note and produce diff/challenge metadata.
 
 ### P6-M2: Weekly Review Session Runtime
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Structured prefill -> alter recommendation -> dialogue -> review_note + calibration_record.
 **Depends on**: P6-M1 (code_complete_pending_review)
 **Notes**: Implemented runtime session container derived from ingested weekly note. Completion creates review note and calibration shell without auto-scoring.
 
 ### P6-M3: Action Alignment Scoring
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Implement direction_alignment, execution_consistency, avoidance_level, evidence requirements, and next correction rule.
 **Depends on**: P6-M2
 **Notes**: Implemented explicit score records with required action/friction/correction evidence. No provider truth, active YAML write, or rubric mutation.
 
 ### P6-M4: Self-Deception and Challenge Layer
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Implement self_deception_risk, rationalization_pattern, evidence-based challenge, edit challenge.
 **Depends on**: P6-M3
 **Notes**: Implemented medium/high risk field requirements, strong challenge gate, and edit challenge triggers for softening edits.
 
 ### P6-M5: Alter Recommendation Engine
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Recommend primary alter and optional counter-alter using defined factors.
 **Depends on**: P6-M2
 **Notes**: Implemented deterministic factor scoring, optional counter-alter triggers, and override-with-reason flow.
 
 ### P6-M6: Reminder / Skip-with-Reason Flow
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Weekly reminder state and skip reason record.
 **Depends on**: P6-M2
 **Notes**: Implemented fixed reminder status, skip-with-reason, complete, and history records. Skips count toward usage integrity.
 
 ### P6-M7: 4-Week Pattern Review
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Detect repeated patterns and impose strategy constraints when threshold met.
 **Depends on**: P6-M3
 **Notes**: Implemented 4-week pattern detection with 3/4 high-confidence threshold and strategy constraint output.
 
 ### P6-M8: Data Retention / Export / Delete
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Manual delete, export, archive controls for weekly review records.
 **Depends on**: P6-M2
 **Notes**: Implemented manifest/export/delete/archive controls for P6 runtime areas only. Export/archive output is sanitized and active YAML is untouched.
 
 ### P6-M9: Real Provider Optional Enablement
 
-**Status**: code_complete_pending_review
+**Status**: code_complete_accepted
 **Goal**: Provider remains disabled/mock by default. Explicit configuration only. No auto-mutation.
 **Depends on**: P6-M2
 **Notes**: Implemented P6 provider policy status and explicit config validation. No new provider stack or direct SDK imports.
@@ -599,6 +628,20 @@
 **Goal**: Only seal P6 if behavior validation passes.
 **Depends on**: P6-M10
 **Notes**: Implemented read-only closeout report/evidence endpoints. R1 repair re-verifies latest validation against persisted evidence. Closeout remains BLOCKED unless latest behavior validation is P6_BEHAVIOR_VALIDATED and evidence re-verifies.
+
+### P6-BEHAVIOR-VALIDATION: Real 4-Week Behavior Validation
+
+**Status**: blocked_by_real_use_window
+**Goal**: Produce P6_BEHAVIOR_VALIDATED only from verified persisted evidence.
+**Depends on**: P6-ENDGAME Week 1-4 evidence complete
+**Notes**: Requires 4 weekly reviews, 4 calibration records, 1 pattern review, and a real 4-week evidence window. Fake IDs, manual validation records, and short windows must remain blocked.
+
+### P6-CLOSEOUT: Final Phase 6 Closeout
+
+**Status**: blocked
+**Goal**: Seal P6 only after behavior validation passes and phase6 closeout returns PASS.
+**Depends on**: P6-BEHAVIOR-VALIDATION
+**Notes**: Current expected closeout status is BLOCKED. Do not mark P6 sealed before verified behavior validation.
 
 ### P7-000: Future Phase 7
 

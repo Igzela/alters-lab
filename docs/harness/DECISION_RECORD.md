@@ -514,3 +514,12 @@
 **Decision**: Behavior validation must load and verify persisted P6 runtime evidence before returning P6_BEHAVIOR_VALIDATED. It rejects unknown IDs, requires at least 4 weekly review records, at least 4 calibration records linked to those weekly reviews, at least 1 real 4-week pattern review, and a 4-week evidence window. Phase6 closeout re-verifies persisted validation evidence instead of trusting the outcome field alone.
 **Consequences**: Fake or manually written validation records cannot seal P6. Real behavior validation remains possible once four weeks of persisted evidence exists.
 **Alternatives**: Trust request-supplied IDs and booleans (rejected because it violates the P6 behavior validation standard).
+
+### Decision P6-ENDGAME-01: Endgame orchestration is allowed but cannot seal P6
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6 runtime code is complete and merged, but P6 still needs real 4-week evidence before behavior validation and closeout. Without an endgame runbook, each week would require a new implementation slice and operators could confuse automation progress with validation progress.
+**Decision**: P6 endgame can be orchestrated end-to-end with runbooks, templates, helper scripts, and governance tracking. The final seal still requires real persisted evidence for 4 weekly reviews, 4 calibration records, at least 1 pattern review, a real 4-week window, `P6_BEHAVIOR_VALIDATED`, and phase6 closeout `PASS`.
+**Consequences**: Operators can run the same process each week without new implementation scope, while P6 remains blocked until real evidence exists. Helper scripts may create runtime records only from Charlie-provided real weekly notes, and raw records remain gitignored unless explicitly sanitized as evidence.
+**Alternatives**: Require a new implementation slice each week (rejected because it adds coordination overhead without changing runtime behavior). Allow automation to seal P6 after setup (rejected because it violates the 4-week real-use validation standard).
