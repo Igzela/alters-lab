@@ -23,6 +23,17 @@ from alters_lab.api.provider_dialogue import router as provider_dialogue_router
 from alters_lab.api.storage_boundary import router as storage_boundary_router
 from alters_lab.api.user_workflow import router as user_workflow_router
 from alters_lab.api.phase5_closeout import router as phase5_closeout_router
+from alters_lab.api.obsidian_weekly_note import router as obsidian_weekly_note_router
+from alters_lab.api.weekly_review_session import router as weekly_review_session_router
+from alters_lab.api.action_alignment import router as action_alignment_router
+from alters_lab.api.self_deception_challenge import router as self_deception_challenge_router
+from alters_lab.api.alter_recommendation import router as alter_recommendation_router
+from alters_lab.api.weekly_reminder import router as weekly_reminder_router
+from alters_lab.api.pattern_review import router as pattern_review_router
+from alters_lab.api.p6_data_retention import router as p6_data_retention_router
+from alters_lab.api.p6_provider_policy import router as p6_provider_policy_router
+from alters_lab.api.behavior_validation import router as behavior_validation_router
+from alters_lab.api.phase6_closeout import router as phase6_closeout_router
 
 app = FastAPI(title="Alters Lab API")
 
@@ -55,3 +66,14 @@ app.include_router(provider_dialogue_router)
 app.include_router(storage_boundary_router)
 app.include_router(user_workflow_router)
 app.include_router(phase5_closeout_router)
+app.include_router(obsidian_weekly_note_router)
+app.include_router(weekly_review_session_router)
+app.include_router(action_alignment_router)
+app.include_router(self_deception_challenge_router)
+app.include_router(alter_recommendation_router)
+app.include_router(weekly_reminder_router)
+app.include_router(pattern_review_router)
+app.include_router(p6_data_retention_router)
+app.include_router(p6_provider_policy_router)
+app.include_router(behavior_validation_router)
+app.include_router(phase6_closeout_router)

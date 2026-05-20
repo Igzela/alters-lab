@@ -496,3 +496,12 @@
 **Context**: If no behavior improvement after 4 weeks, the system could be wrong or the usage could be dishonest.
 **Decision**: If no improvement after 4 weeks, first audit usage integrity: weekly notes completed honestly, calibration records created, primary corrections set, failure reviews honest, self_deception_risk not softened, sessions not skipped too often. If usage invalid, fix usage behavior. If usage valid but no improvement, decide redesign or stop expansion.
 **Consequences**: Prevents adding features to solve a usage honesty problem. Forces honest assessment before redesign.
+
+### Decision P6-CODE-01: Code completion is not behavior validation
+
+**Date**: 2026-05-20
+**Status**: accepted
+**Context**: P6-M1 through P6-M11 runtime code can be implemented before Charlie has accumulated four weeks of real-use data.
+**Decision**: P6 runtime code may reach code_complete_pending_review while P6_BEHAVIOR_VALIDATED remains unavailable. The behavior validation gate returns insufficient data until the required real-use evidence exists, and the P6 closeout gate remains blocked unless the latest behavior validation outcome is P6_BEHAVIOR_VALIDATED.
+**Consequences**: The backend can be exercised immediately, but P6 cannot be sealed by implementation work alone. This preserves the P6 success standard: behavior change after four weeks, not feature completion.
+**Alternatives**: Mark P6 complete after runtime implementation (rejected because it violates P6-000-06 and R-099).

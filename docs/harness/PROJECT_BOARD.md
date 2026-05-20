@@ -61,17 +61,17 @@ todo → ready → running → review → done/failed
 | ID | Title | Status |
 |----|-------|--------|
 | P6-000 | Personal Long-Term Use Hardening Plan | **done** |
-| P6-M1 | Obsidian Weekly Note Ingest | **ready_with_approval** |
-| P6-M2 | Weekly Review Session Runtime | **blocked** |
-| P6-M3 | Action Alignment Scoring | **blocked** |
-| P6-M4 | Self-Deception and Challenge Layer | **blocked** |
-| P6-M5 | Alter Recommendation Engine | **blocked** |
-| P6-M6 | Reminder / Skip-with-Reason Flow | **blocked** |
-| P6-M7 | 4-Week Pattern Review | **blocked** |
-| P6-M8 | Data Retention / Export / Delete | **blocked** |
-| P6-M9 | Real Provider Optional Enablement | **blocked** |
-| P6-M10 | Behavior Validation Gate | **blocked** |
-| P6-M11 | P6 Closeout | **blocked** |
+| P6-M1 | Obsidian Weekly Note Ingest | **code_complete_pending_review** |
+| P6-M2 | Weekly Review Session Runtime | **code_complete_pending_review** |
+| P6-M3 | Action Alignment Scoring | **code_complete_pending_review** |
+| P6-M4 | Self-Deception and Challenge Layer | **code_complete_pending_review** |
+| P6-M5 | Alter Recommendation Engine | **code_complete_pending_review** |
+| P6-M6 | Reminder / Skip-with-Reason Flow | **code_complete_pending_review** |
+| P6-M7 | 4-Week Pattern Review | **code_complete_pending_review** |
+| P6-M8 | Data Retention / Export / Delete | **code_complete_pending_review** |
+| P6-M9 | Real Provider Optional Enablement | **code_complete_pending_review** |
+| P6-M10 | Behavior Validation Gate | **implemented_waiting_real_use** |
+| P6-M11 | P6 Closeout | **implemented_blocked_by_behavior_validation** |
 | P7-000 | Future Phase 7 | **blocked** |
 
 ## Phase 5 Sealed Baseline
@@ -200,3 +200,4 @@ Phase 2 Final Gate: **PASS**
 - P4-CAL-LOOP-MVP complete pending GPT verdict. P4-M1R hardens full alter YAML injection. P4-M2/M3/M4 add explicit reality score records, evidence-only drift, and read-only calibration history. No provider, frontend, database, active YAML mutation, rubric mutation, archive, promotion, or regeneration trigger.
 - P4-FINAL complete. P4-M5 rubric delta suggestions are suggestion-only. P4-M6 archive creation is explicit-only copy packaging. P4-M7 checkpoint regeneration is plan-only. Phase 4 closeout establishes a backend calibration loop sealed candidate. P5-000 remains blocked pending GPT/human review.
 - P5-FULL complete. Local product MVP: provider gateway (mock default), provider-backed dialogue, minimal frontend (Vite+React), storage boundary (YAML default), user workflow integration, phase 5 closeout PASS. 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 complete. P6 is personal long-term use hardening, not public productization. P6 success = behavior change after 4-week validation window. P6-M1 ready_with_approval. P7-000 blocked.
+- P6 runtime code complete pending human review. P6-M1 through P6-M9 backend routes/services/schemas implemented. P6-M10 behavior validation gate and P6-M11 closeout gate implemented but intentionally blocked until 4 weeks of real use produce 4 weekly reviews, 4 calibration records, 1 pattern review, and measurable behavior change. 833 backend tests passing. P6 is not sealed and not behavior validated.
