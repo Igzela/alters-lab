@@ -109,10 +109,11 @@
 | R-103 | Package install overwrites user data | Medium | Critical | `.deb` package installs app code only; config, secrets, runtime data, and logs remain user-owned and preserved on upgrade/uninstall. | Active |
 | R-104 | Provider secrets leaked through config, API, or logs | Medium | Critical | Provider defaults disabled/mock; real provider explicit; secrets stored in keyring or chmod 0600 fallback; API/status/logs redact keys. | Active |
 | R-105 | Frontend calls dangerous endpoints | Medium | Critical | Frontend policy forbids controlled persist, promotion live execution, and active mutation endpoints; P7-M2/M4 must include route safety checks. | Active |
-| R-106 | Packaged mode writes into repo paths | Medium | High | P7-M1 must add runtime path resolver; packaged mode writes to `~/.local/share/alters-lab`; dev mode compatibility remains separate. | Active |
+| R-106 | Packaged mode writes into repo paths | Medium | High | P7-M1 added runtime layout resolver and tests proving packaged writes go to `~/.local/share/alters-lab/product` or an overridden test data dir; explicit repo_root preserves dev behavior. | Mitigated |
 | R-107 | P7 mistaken for P6 behavior validation | Medium | Critical | P7 docs and governance state P7 enables real use only; P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED until verified real evidence exists. | Active |
 | R-108 | Local server exposed beyond localhost | Low | High | Packaged server binds to `127.0.0.1` by default; configurable host must be explicit and visible in doctor/status. | Active |
 | R-109 | Upgrade breaks existing user data | Medium | High | P7-M7 must define upgrade/uninstall data-safety checks and backup/export behavior before release candidate. | Active |
+| R-110 | Runtime config endpoint leaks provider secrets | Low | Critical | `/runtime-layout/status` returns provider mode/storage only with `secrets_redacted=true`; `/runtime-layout/ensure-config` writes config only and no secret values. | Active |
 
 ## Risk Assessment
 

@@ -71,6 +71,9 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/phase4-closeout/health` | Phase 4 closeout health |
 | GET | `/phase4-closeout/report` | Phase 4 closeout report (read-only) |
 | GET | `/phase4-closeout/evidence` | Phase 4 closeout evidence (read-only) |
+| GET | `/runtime-layout/health` | Runtime layout component health |
+| GET | `/runtime-layout/status` | Resolved dev/packaged layout status with secrets redacted |
+| POST | `/runtime-layout/ensure-config` | Create user config only; no secrets or runtime records |
 
 ## Services
 
@@ -94,6 +97,7 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **archive_mechanism** — P4-M6 explicit-only archive planner/creator; copy-only package, source files unchanged
 - **checkpoint_regeneration** — P4-M7 high-drift checkpoint plan builder; plan-only, no active regeneration
 - **phase4_closeout** — Phase 4 backend calibration loop closeout verifier and evidence writer
+- **runtime_layout** — P7 dev/packaged runtime path resolver and config helpers; packaged mode targets user data dirs
 
 ## Export
 
@@ -155,6 +159,18 @@ Phase 4 closeout verifies the backend calibration loop scope:
 - No active YAML or rubric diff is allowed.
 - Raw runtime archives, checkpoint plans, and rubric suggestions are ignored unless they are explicit templates/placeholders.
 - Phase 4 closeout seals the backend calibration loop candidate, not full productization.
+
+## Runtime Layout (P7-M1)
+
+Runtime layout provides the path boundary needed for packaging.
+
+- **Dev mode** remains repo-compatible and preserves existing `tmp_path` test behavior.
+- **Packaged mode** writes runtime records under `~/.local/share/alters-lab/product/`.
+- Config resolves to `~/.config/alters-lab/config.yaml`.
+- Logs resolve to `~/.local/state/alters-lab/logs/`.
+- Provider secrets are not written by this slice; fallback path is `~/.config/alters-lab/secrets.yaml` with `0600` when explicitly created.
+- `/runtime-layout/status` redacts secret state and does not create files.
+- `/runtime-layout/ensure-config` creates config only and does not write runtime records, active YAML, rubric, or secrets.
 
 ## Run
 

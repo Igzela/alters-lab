@@ -15,6 +15,8 @@ from typing import Any
 
 import yaml
 
+from alters_lab.services.runtime_layout import RuntimeLayout, resolve_runtime_layout
+
 
 P6_RUNTIME_AREAS = {
     "weekly_notes": "alters/product/weekly_notes",
@@ -53,27 +55,56 @@ def validate_record_id(record_id: str) -> str:
     return record_id
 
 
-def runtime_dir(area: str, repo_root: Path | None = None) -> Path:
+def runtime_dir(
+    area: str,
+    repo_root: Path | None = None,
+    layout: RuntimeLayout | None = None,
+    mode: str | None = None,
+) -> Path:
     if area not in P6_RUNTIME_AREAS:
         raise ValueError(f"Unknown P6 runtime area: {area}")
-    root = repo_root or get_repo_root()
+    if repo_root is not None:
+        return repo_root / P6_RUNTIME_AREAS[area]
+    resolved_layout = layout or resolve_runtime_layout(mode=mode)
+    if resolved_layout.mode == "packaged":
+        return resolved_layout.product_data_dir / area
+    root = resolved_layout.repo_root or get_repo_root()
     return root / P6_RUNTIME_AREAS[area]
 
 
-def record_path(area: str, record_id: str, repo_root: Path | None = None) -> Path:
+def record_path(
+    area: str,
+    record_id: str,
+    repo_root: Path | None = None,
+    layout: RuntimeLayout | None = None,
+    mode: str | None = None,
+) -> Path:
     validate_record_id(record_id)
-    return runtime_dir(area, repo_root) / f"{record_id}.yaml"
+    return runtime_dir(area, repo_root, layout, mode) / f"{record_id}.yaml"
 
 
-def write_record(area: str, record_id: str, data: dict[str, Any], repo_root: Path | None = None) -> Path:
-    path = record_path(area, record_id, repo_root)
+def write_record(
+    area: str,
+    record_id: str,
+    data: dict[str, Any],
+    repo_root: Path | None = None,
+    layout: RuntimeLayout | None = None,
+    mode: str | None = None,
+) -> Path:
+    path = record_path(area, record_id, repo_root, layout, mode)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
     return path
 
 
-def read_record(area: str, record_id: str, repo_root: Path | None = None) -> dict[str, Any]:
-    path = record_path(area, record_id, repo_root)
+def read_record(
+    area: str,
+    record_id: str,
+    repo_root: Path | None = None,
+    layout: RuntimeLayout | None = None,
+    mode: str | None = None,
+) -> dict[str, Any]:
+    path = record_path(area, record_id, repo_root, layout, mode)
     if not path.exists():
         raise FileNotFoundError(f"P6 record not found: {record_id}")
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -82,8 +113,13 @@ def read_record(area: str, record_id: str, repo_root: Path | None = None) -> dic
     return data
 
 
-def list_records(area: str, repo_root: Path | None = None) -> list[dict[str, Any]]:
-    directory = runtime_dir(area, repo_root)
+def list_records(
+    area: str,
+    repo_root: Path | None = None,
+    layout: RuntimeLayout | None = None,
+    mode: str | None = None,
+) -> list[dict[str, Any]]:
+    directory = runtime_dir(area, repo_root, layout, mode)
     if not directory.exists():
         return []
     records: list[dict[str, Any]] = []
@@ -96,8 +132,14 @@ def list_records(area: str, repo_root: Path | None = None) -> list[dict[str, Any
     return records
 
 
-def delete_record(area: str, record_id: str, repo_root: Path | None = None) -> Path:
-    path = record_path(area, record_id, repo_root)
+def delete_record(
+    area: str,
+    record_id: str,
+    repo_root: Path | None = None,
+    layout: RuntimeLayout | None = None,
+    mode: str | None = None,
+) -> Path:
+    path = record_path(area, record_id, repo_root, layout, mode)
     if not path.exists():
         raise FileNotFoundError(f"P6 record not found: {record_id}")
     path.unlink()

@@ -563,3 +563,11 @@
 **Context**: Package lifecycle scripts can accidentally overwrite or delete the user data needed for P6 real-use validation.
 **Decision**: The `.deb` package installs app code and launch integration only. User config, secrets, data, and logs stay under the user's home directory and are preserved on upgrade and uninstall unless a future explicit purge path is separately approved.
 **Consequences**: P7-M5 through P7-M7 must treat user data preservation as a release-blocking packaging requirement.
+
+### Decision P7-M1-01: Runtime layout resolver separates dev repo paths from packaged user data paths
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P6 runtime helpers were repo-rooted, which is suitable for development but unsuitable for an installed local app. P7 packaging needs a single path resolver before local server, launcher, and `.deb` work proceed.
+**Decision**: P7-M1 introduces a runtime layout resolver with `dev` and `packaged` modes. Dev mode remains repo-compatible and preserves explicit `repo_root`/`tmp_path` behavior. Packaged mode resolves config to `~/.config/alters-lab/config.yaml`, runtime data to `~/.local/share/alters-lab/product`, logs to `~/.local/state/alters-lab/logs`, and secrets fallback to `~/.config/alters-lab/secrets.yaml`. Runtime safety flags for active YAML, rubric, and provider output remain false.
+**Consequences**: P6/P7 runtime helpers can be exercised in packaged mode without requiring writable repo paths, while existing dev tests and helper tools keep working. P7-M2 can now focus on serving built frontend assets from FastAPI.

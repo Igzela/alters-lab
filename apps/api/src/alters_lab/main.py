@@ -34,6 +34,7 @@ from alters_lab.api.p6_data_retention import router as p6_data_retention_router
 from alters_lab.api.p6_provider_policy import router as p6_provider_policy_router
 from alters_lab.api.behavior_validation import router as behavior_validation_router
 from alters_lab.api.phase6_closeout import router as phase6_closeout_router
+from alters_lab.api.runtime_layout import router as runtime_layout_router
 
 app = FastAPI(title="Alters Lab API")
 
@@ -77,3 +78,4 @@ app.include_router(p6_data_retention_router)
 app.include_router(p6_provider_policy_router)
 app.include_router(behavior_validation_router)
 app.include_router(phase6_closeout_router)
+app.include_router(runtime_layout_router)

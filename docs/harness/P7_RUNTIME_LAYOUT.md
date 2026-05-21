@@ -109,6 +109,16 @@ Migration rules:
 
 Runtime mode should be resolved in a single app runtime config resolver.
 
+P7-M1 implementation:
+
+- Resolver module: `apps/api/src/alters_lab/services/runtime_layout.py`
+- P6 runtime integration: `apps/api/src/alters_lab/services/p6_runtime.py`
+- API status routes: `/runtime-layout/health`, `/runtime-layout/status`, `/runtime-layout/ensure-config`
+- Dev mode remains repo-compatible.
+- Packaged mode writes P6 runtime records under `~/.local/share/alters-lab/product/`.
+- `/runtime-layout/status` returns redacted layout status and does not create config files.
+- `/runtime-layout/ensure-config` creates `config.yaml` only; it does not create secrets or runtime records.
+
 Detection precedence:
 
 1. Explicit CLI flag, for example `--mode dev` or `--mode packaged`.
@@ -128,4 +138,3 @@ Packaged mode:
 - Must not require a repo checkout.
 - Must bind local server to `127.0.0.1` by default.
 - Must protect active YAML/rubric even if a repo path is present.
-

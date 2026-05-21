@@ -652,17 +652,17 @@
 
 ### P7-M1: Runtime Layout Externalization
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Refactor path handling so packaged mode writes runtime data to user data directories while dev mode remains repo-compatible.
 **Depends on**: P7-000 (done)
-**Notes**: Next recommended action. Must preserve active YAML/rubric protections and keep tests compatible with repo dev mode.
+**Notes**: Runtime layout resolver added with dev and packaged modes. P6 runtime helper preserves explicit repo_root/tmp_path behavior and can write packaged runtime records under user data/product paths. Added `/runtime-layout/health`, `/runtime-layout/status`, and `/runtime-layout/ensure-config`. Active YAML/rubric protections remain false. No `.deb`, launcher, provider UI, real provider calls, P6 validation, or P6 sealing.
 
 ### P7-M2: Unified Local Server
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Serve built frontend from FastAPI and add local app health/status endpoints.
 **Depends on**: P7-M1
-**Notes**: Blocked until runtime layout externalization is complete.
+**Notes**: Next recommended action. Must serve built frontend from FastAPI without requiring Vite in packaged mode and must keep frontend away from dangerous endpoints.
 
 ### P7-M3: CLI Launcher
 
