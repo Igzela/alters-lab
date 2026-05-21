@@ -9,7 +9,7 @@ from alters_lab import cli
 
 def test_cli_parser_has_expected_commands():
     parser = cli.build_parser()
-    for command in ("start", "stop", "status", "open", "doctor"):
+    for command in ("start", "stop", "status", "open", "doctor", "backup"):
         parsed = parser.parse_args([command, "--mode", "dev"])
         assert parsed.command == command
 
@@ -68,3 +68,29 @@ def test_cli_open_dry_run_uses_expected_url(tmp_path, monkeypatch, capsys):
     assert data["url"] == "http://127.0.0.1:18790/"
     assert data["status"] == "dry_run"
     assert opened == []
+
+
+def test_cli_backup_dry_run_json_excludes_secrets(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+
+    assert cli.main(["backup", "--mode", "dev", "--dry-run", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+
+    assert data["status"] == "planned"
+    assert data["dry_run"] is True
+    assert data["secrets_included"] is False
+    assert "secrets" in data["excluded_sections"]
+    assert data["p6_behavior_validated"] is False
+    assert data["p6_sealed"] is False
+
+
+def test_cli_backup_include_secrets_without_confirmation_blocks(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+
+    assert cli.main(["backup", "--mode", "dev", "--dry-run", "--include-secrets", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+
+    assert data["status"] == "blocked"
+    assert "include_secrets requires confirmation" in data["reason"]
+    assert data["p6_behavior_validated"] is False
+    assert data["p6_sealed"] is False

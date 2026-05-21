@@ -611,3 +611,11 @@
 **Context**: P7 local app use should work from the desktop app menu, but desktop integration must not introduce a second launcher path or hidden runtime behavior.
 **Decision**: The desktop entry is package-owned, installed to `/usr/share/applications/alters-lab.desktop`, and launches `alters-lab open`. The icon is a project-owned SVG staged under the hicolor scalable app icon path. The desktop file contains no repo checkout paths, user-home paths, shell expansion, or secrets.
 **Consequences**: Desktop launch reuses the existing CLI and runtime layout. P7-M7 can focus on upgrade/remove and user data preservation rather than another launch mechanism.
+
+### Decision P7-M7-01: Upgrade/uninstall preserve user-owned state and backup excludes secrets by default
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: Before release candidate testing, P7 must prove package lifecycle and backup behavior will not destroy or leak user-owned P6 evidence, config, logs, or secrets.
+**Decision**: Package maintainer scripts preserve `~/.config/alters-lab`, `~/.local/share/alters-lab`, `~/.local/state/alters-lab`, and provider secrets on install, upgrade, remove, and purge. `alters-lab backup` backs up user data and config by default, excludes logs unless requested, and excludes secrets unless `--include-secrets --confirm-include-secrets include-secrets-in-backup` is supplied.
+**Consequences**: P7-M8 can perform local app release candidate smoke testing with a backup/export path and explicit secret safety boundary.

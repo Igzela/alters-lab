@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 from typing import Any
 
+from alters_lab.services.data_safety import DataSafetyError, build_backup_plan, create_backup_archive
 from alters_lab.services.local_launcher import (
     DEFAULT_HOST,
     DEFAULT_PORT,
@@ -36,6 +38,17 @@ def build_parser() -> argparse.ArgumentParser:
     stop = subcommands.add_parser("stop")
     stop.add_argument("--mode", choices=["dev", "packaged"], default=None)
     stop.add_argument("--json", action="store_true")
+
+    backup = subcommands.add_parser("backup")
+    backup.add_argument("--mode", choices=["dev", "packaged"], default=None)
+    backup.add_argument("--output", default=None)
+    backup.add_argument("--include-logs", action="store_true")
+    backup.add_argument("--include-config", dest="include_config", action="store_true", default=True)
+    backup.add_argument("--no-include-config", dest="include_config", action="store_false")
+    backup.add_argument("--include-secrets", action="store_true")
+    backup.add_argument("--confirm-include-secrets", default=None)
+    backup.add_argument("--dry-run", action="store_true")
+    backup.add_argument("--json", action="store_true")
     return parser
 
 
@@ -61,6 +74,29 @@ def main(argv: list[str] | None = None) -> int:
         result = build_doctor_report(layout, args.host, args.port)
     elif args.command == "open":
         result = open_app(layout, args.host, args.port, no_start=args.no_start, dry_run=args.dry_run)
+    elif args.command == "backup":
+        output = Path(args.output).expanduser() if args.output else None
+        try:
+            if args.dry_run:
+                result = build_backup_plan(
+                    layout,
+                    output_path=output,
+                    include_logs=args.include_logs,
+                    include_config=args.include_config,
+                    include_secrets=args.include_secrets,
+                    confirm_include_secrets=args.confirm_include_secrets,
+                )
+            else:
+                result = create_backup_archive(
+                    layout,
+                    output_path=output,
+                    include_logs=args.include_logs,
+                    include_config=args.include_config,
+                    include_secrets=args.include_secrets,
+                    confirm_include_secrets=args.confirm_include_secrets,
+                )
+        except DataSafetyError as exc:
+            result = {"status": "blocked", "reason": str(exc), "p6_behavior_validated": False, "p6_sealed": False}
     else:
         parser.error(f"Unknown command: {args.command}")
 

@@ -266,6 +266,11 @@
 | P7-M6 | Desktop icon | packaging/assets/alters-lab.svg | Small project-owned SVG icon staged as hicolor scalable app icon. |
 | P7-M6 | Desktop integration docs | docs/harness/P7_DESKTOP_INTEGRATION.md | Desktop file path, icon path, package staging, and P6 boundary. |
 | P7-M6 | Desktop package staging | tools/build_deb.py, apps/api/tests/test_deb_package_build.py | Build script stages desktop file/icon; tests cover source desktop file, unsafe token absence, icon staging, and P6 state docs. |
+| P7-M7 | Data safety service | apps/api/src/alters_lab/services/data_safety.py | User data manifest, backup plan/archive creation, secret confirmation gate, package contents safety checks, and maintainer script checks. |
+| P7-M7 | Backup CLI | apps/api/src/alters_lab/cli/launcher.py | `alters-lab backup` with dry-run/json/output/log/config/secret options and P6 false flags. |
+| P7-M7 | Debian safety inspector | tools/inspect_deb_safety.py | Checks built package for required app/launcher/desktop/icon paths and forbidden user data/runtime/secret paths. |
+| P7-M7 | Data safety tests | apps/api/tests/test_data_safety.py, apps/api/tests/test_local_launcher_cli.py, apps/api/tests/test_deb_package_build.py | Tests backup defaults, logs/secrets behavior, archive contents, CLI backup dry-run, package forbidden fragments, and maintainer scripts. |
+| P7-M7 | Data safety docs | docs/harness/P7_DATA_SAFETY.md | Upgrade/remove/purge policy, backup policy, secret exclusion rationale, and P6 boundary. |
 | P6-ENDGAME | Closeout operator guide | docs/harness/P6_CLOSEOUT_OPERATOR_GUIDE.md | Guarded closeout instructions that keep P6 blocked unless behavior validation passes with verified persisted evidence. |
 | P6-ENDGAME | Helper scripts | tools/p6_weekly_review_flow.py, tools/p6_validation_check.py, tools/p6_closeout_attempt.py | Local operator helpers. Weekly flow writes ignored runtime records only from supplied real notes; validation check is read-only; closeout attempt blocks without complete evidence. |
 | P6-ENDGAME | Helper script tests | apps/api/tests/test_p6_endgame_tools.py | Tests empty evidence remains blocked, dry-run closeout remains blocked, and weekly flow writes records only under a supplied repo root. |

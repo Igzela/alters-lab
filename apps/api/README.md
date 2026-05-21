@@ -260,6 +260,19 @@ P7-M6 adds desktop integration to the package:
 - `/usr/share/icons/hicolor/scalable/apps/alters-lab.svg`
 
 The desktop entry runs `alters-lab open`, which uses the existing local launcher.
+
+## Data Safety / Backup (P7-M7)
+
+The CLI includes a local backup command:
+
+```bash
+alters-lab backup --dry-run --json
+alters-lab backup --output ~/alters-lab-backup.tar.gz
+```
+
+Default backup includes user data and config when present. It excludes secrets and logs by default. Logs require `--include-logs`; secrets require `--include-secrets --confirm-include-secrets include-secrets-in-backup`.
+
+P7 package scripts preserve user config, data, logs, and secrets on upgrade/remove. Backup/export does not validate or seal P6.
 - P6 behavior validation and seal state remain false.
 
 ## Run

@@ -694,17 +694,17 @@
 
 ### P7-M7: Upgrade / Uninstall / Data Safety
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Define and implement upgrade/uninstall behavior and backup/export command.
 **Depends on**: P7-M6
-**Notes**: Next recommended action. Verify upgrade/remove behavior preserves user config, data, secrets, and logs; add backup/export command if needed.
+**Notes**: Added data safety service, `alters-lab backup`, Debian safety inspector, backup docs, and tests. Backup dry-run writes nothing; default backup includes user data/config and excludes secrets/logs. Logs require `--include-logs`; secrets require exact confirmation. Maintainer scripts preserve user config/data/logs/secrets and do not start services or create root-owned user config.
 
 ### P7-M8: Local App Release Candidate
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Run full local app smoke test from deb install through weekly review flow and runtime record storage.
 **Depends on**: P7-M7
-**Notes**: Must confirm active YAML/rubric unchanged and P6 remains not validated/not sealed.
+**Notes**: Next recommended action. Install/start/open/configure/run smoke flow while confirming active YAML/rubric unchanged and P6 remains not validated/not sealed.
 
 ### P7-M9: P7 Closeout
 

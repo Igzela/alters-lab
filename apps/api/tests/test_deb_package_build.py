@@ -9,6 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BUILD_DEB_PATH = REPO_ROOT / "tools" / "build_deb.py"
+INSPECT_DEB_PATH = REPO_ROOT / "tools" / "inspect_deb_safety.py"
 
 
 def _load_build_deb():
@@ -16,6 +17,16 @@ def _load_build_deb():
     assert spec is not None
     module = importlib.util.module_from_spec(spec)
     sys.modules["build_deb"] = module
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_inspect_deb():
+    spec = importlib.util.spec_from_file_location("inspect_deb_safety", INSPECT_DEB_PATH)
+    assert spec is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["inspect_deb_safety"] = module
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
@@ -172,3 +183,21 @@ def test_desktop_integration_docs_keep_p6_unvalidated_and_unsealed():
     assert "NOT_VALIDATED" in doc
     assert "NOT_SEALED" in doc
     assert "does not validate P6" in doc
+
+
+def test_inspect_deb_forbidden_fragments_cover_user_data_and_runtime_records():
+    inspect_deb = _load_inspect_deb()
+
+    assert "node_modules" in inspect_deb.FORBIDDEN_FRAGMENTS
+    assert "alters/product" in inspect_deb.FORBIDDEN_FRAGMENTS
+    assert ".local/share/alters-lab" in inspect_deb.FORBIDDEN_FRAGMENTS
+    assert ".local/state/alters-lab" in inspect_deb.FORBIDDEN_FRAGMENTS
+    assert "secrets.yaml" in inspect_deb.FORBIDDEN_FRAGMENTS
+
+
+def test_inspect_deb_required_paths_include_desktop_and_icon():
+    inspect_deb = _load_inspect_deb()
+
+    assert "/usr/share/applications/alters-lab.desktop" in inspect_deb.REQUIRED_PATHS
+    assert "/usr/share/icons/hicolor/scalable/apps/alters-lab.svg" in inspect_deb.REQUIRED_PATHS
+    assert "/usr/bin/alters-lab" in inspect_deb.REQUIRED_PATHS

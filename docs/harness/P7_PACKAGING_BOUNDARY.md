@@ -74,8 +74,17 @@ Uninstall policy:
 
 Purge policy:
 
-- Not implemented in P7-000.
-- Must require explicit future approval before any destructive data deletion behavior is added.
+- P7-M7 does not implement destructive purge.
+- Maintainer scripts preserve user home data even on purge.
+- Any future destructive purge command requires separate explicit approval.
+
+Backup policy:
+
+- `alters-lab backup` creates local archive backups.
+- Default backup includes user data and config.
+- Default backup excludes secrets and logs.
+- Logs require `--include-logs`.
+- Secrets require `--include-secrets --confirm-include-secrets include-secrets-in-backup`.
 
 ## Desktop Integration
 
