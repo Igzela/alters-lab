@@ -708,7 +708,14 @@
 
 ### P7-M9: P7 Closeout
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Verify local app release candidate and keep P8 blocked.
 **Depends on**: P7-M8
-**Notes**: Next recommended action. Must not claim P6 behavior validation or start P8.
+**Notes**: P7 closeout PASS. Local app release candidate sealed. Backend tests, frontend build, package build, package safety inspection, and package-context smoke all passed. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. P8 remains blocked.
+
+### P8-000: Future Phase Boundary Plan
+
+**Status**: blocked
+**Goal**: Define the next phase only after explicit human/GPT approval.
+**Depends on**: Explicit human/GPT approval after P7 closeout
+**Notes**: Do not start P8 automatically. Recommended next action is real P6 validation using the local app.

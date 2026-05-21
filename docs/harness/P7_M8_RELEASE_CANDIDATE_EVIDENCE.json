@@ -1,6 +1,6 @@
 {
   "backup": {
-    "archive_path": "[temp-root]/home/.local/share/alters-lab/product/exports/alters_lab_backup_20260521T062711Z.tar.gz",
+    "archive_path": "[temp-root]/home/.local/share/alters-lab/product/exports/alters_lab_backup_20260521T063715Z.tar.gz",
     "dry_run": true,
     "excluded_sections": [
       "secrets",
@@ -89,7 +89,7 @@
           "status": "PASS"
         },
         {
-          "message": "port=34001",
+          "message": "port=52629",
           "name": "port_available_or_current",
           "status": "PASS"
         },
@@ -135,21 +135,21 @@
         "p6_sealed": false,
         "pid": null,
         "pid_file": "[temp-root]/home/.local/state/alters-lab/alters-lab.pid",
-        "port": 34001,
+        "port": 52629,
         "provider_mode": "disabled",
         "running": false,
         "runtime_mode": "packaged",
         "status": "not_running",
-        "url": "http://127.0.0.1:34001/"
+        "url": "http://127.0.0.1:52629/"
       },
       "status": "PASS"
     },
     "start": {
       "log_file": "[temp-root]/home/.local/state/alters-lab/logs/alters-lab.log",
-      "pid": 28278,
+      "pid": 31383,
       "running": true,
       "status": "started",
-      "url": "http://127.0.0.1:34001/"
+      "url": "http://127.0.0.1:52629/"
     },
     "start_dry_run": {
       "command": [
@@ -160,13 +160,13 @@
         "--host",
         "127.0.0.1",
         "--port",
-        "34001"
+        "52629"
       ],
       "log_file": "[temp-root]/home/.local/state/alters-lab/logs/alters-lab.log",
       "pid_file": "[temp-root]/home/.local/state/alters-lab/alters-lab.pid",
       "running": false,
       "status": "dry_run",
-      "url": "http://127.0.0.1:34001/"
+      "url": "http://127.0.0.1:52629/"
     },
     "status": {
       "config_path": "[temp-root]/home/.config/alters-lab/config.yaml",
@@ -179,15 +179,15 @@
       "p6_sealed": false,
       "pid": null,
       "pid_file": "[temp-root]/home/.local/state/alters-lab/alters-lab.pid",
-      "port": 34001,
+      "port": 52629,
       "provider_mode": "disabled",
       "running": false,
       "runtime_mode": "packaged",
       "status": "not_running",
-      "url": "http://127.0.0.1:34001/"
+      "url": "http://127.0.0.1:52629/"
     },
     "stop": {
-      "pid": 28278,
+      "pid": 31383,
       "running": false,
       "status": "stopped"
     }
@@ -195,7 +195,7 @@
   "method": "dpkg-deb -x simulated install",
   "p6_behavior_validated": false,
   "p6_sealed": false,
-  "port": 34001,
+  "port": 52629,
   "provider": {
     "config_after": {
       "base_url": null,
@@ -264,13 +264,13 @@
     "note_status": "saved",
     "record_paths": {
       "calibration_records": [
-        ".local/share/alters-lab/product/calibration_records/action_alignment_20260521T062711Z_de34b980.yaml"
+        ".local/share/alters-lab/product/calibration_records/action_alignment_20260521T063715Z_b3265fa6.yaml"
       ],
       "weekly_notes": [
-        ".local/share/alters-lab/product/weekly_notes/weekly_note_20260521_20260521T062711Z_a7751b30.yaml"
+        ".local/share/alters-lab/product/weekly_notes/weekly_note_20260521_20260521T063715Z_631c3175.yaml"
       ],
       "weekly_reviews": [
-        ".local/share/alters-lab/product/weekly_reviews/weekly_review_20260521T062711Z_9cdc5616.yaml"
+        ".local/share/alters-lab/product/weekly_reviews/weekly_review_20260521T063715Z_45f1ef43.yaml"
       ]
     },
     "score_status": "saved",

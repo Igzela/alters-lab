@@ -1,0 +1,124 @@
+{
+  "phase": "P7",
+  "status": "PASS",
+  "generated_at": "2026-05-21T06:37:55Z",
+  "latest_commit": "9fe9ad8be904859e5045350d57f011bdaaab3022",
+  "sealed_state": "LOCAL_APP_RELEASE_CANDIDATE",
+  "milestone_statuses": {
+    "P7-000": "done",
+    "P7-M1": "done",
+    "P7-M2": "done",
+    "P7-M3": "done",
+    "P7-M4": "done",
+    "P7-M5": "done",
+    "P7-M6": "done",
+    "P7-M7": "done",
+    "P7-M8": "done",
+    "P7-M9": "done"
+  },
+  "tests": {
+    "backend_pytest": {
+      "command": "cd apps/api && python3 -m pytest",
+      "status": "PASS",
+      "passed": 949
+    },
+    "frontend_install": {
+      "command": "cd apps/web && npm install",
+      "status": "PASS"
+    },
+    "frontend_build": {
+      "command": "cd apps/web && npm run build",
+      "status": "PASS"
+    }
+  },
+  "build_results": {
+    "deb_build": {
+      "command": "python3 tools/build_deb.py",
+      "status": "PASS",
+      "artifact": "dist/deb/alters-lab_0.1.0_amd64.deb"
+    }
+  },
+  "package_results": {
+    "safety_inspection": {
+      "command": "python3 tools/inspect_deb_safety.py dist/deb/alters-lab_0.1.0_amd64.deb --json",
+      "status": "PASS",
+      "required_paths": {
+        "/opt/alters-lab/": true,
+        "/usr/bin/alters-lab": true,
+        "/usr/share/applications/alters-lab.desktop": true,
+        "/usr/share/icons/hicolor/scalable/apps/alters-lab.svg": true
+      },
+      "forbidden_matches": [],
+      "maintainer_script_findings": []
+    },
+    "contents_include": [
+      "/opt/alters-lab/apps/api",
+      "/opt/alters-lab/web/dist",
+      "/opt/alters-lab/.venv",
+      "/usr/bin/alters-lab",
+      "/usr/share/applications/alters-lab.desktop",
+      "/usr/share/icons/hicolor/scalable/apps/alters-lab.svg"
+    ],
+    "contents_exclude": [
+      "node_modules",
+      ".env",
+      ".env.local",
+      "secrets.yaml",
+      "user config.yaml",
+      "alters/product raw runtime records",
+      ".config/alters-lab",
+      ".local/share/alters-lab",
+      ".local/state/alters-lab",
+      "logs"
+    ]
+  },
+  "smoke_results": {
+    "command": "python3 tools/p7_local_app_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json --evidence docs/harness/P7_M8_RELEASE_CANDIDATE_EVIDENCE.json",
+    "status": "PASS",
+    "method": "dpkg-deb -x simulated install",
+    "isolated_home": true,
+    "frontend_index_loaded": true,
+    "frontend_asset_loaded": true,
+    "provider_mode_after": "mock",
+    "provider_network_call_made": false,
+    "synthetic_smoke_only": true,
+    "server_stopped": true
+  },
+  "boundary_confirmations": {
+    "active_yaml_diff_empty": true,
+    "rubric_diff_empty": true,
+    "raw_product_runtime_status_empty": true,
+    "generated_artifacts_ignored": true,
+    "provider_secrets_committed": false,
+    "live_provider_calls_added": false,
+    "p6_behavior_validation_claimed": false,
+    "p6_seal_claimed": false,
+    "p8_started": false
+  },
+  "p6_state": {
+    "runtime": "CODE_COMPLETE",
+    "behavior_validation": "NOT_VALIDATED",
+    "seal": "NOT_SEALED"
+  },
+  "p8_state": "blocked",
+  "artifacts": [
+    "docs/harness/P7_000_LOCAL_APP_DISTRIBUTION_PLAN.md",
+    "docs/harness/P7_TASKBOOK.md",
+    "docs/harness/P7_RUNTIME_LAYOUT.md",
+    "docs/harness/P7_PACKAGING_BOUNDARY.md",
+    "docs/harness/P7_DEBIAN_PACKAGE_BUILD.md",
+    "docs/harness/P7_DESKTOP_INTEGRATION.md",
+    "docs/harness/P7_DATA_SAFETY.md",
+    "docs/harness/P7_LOCAL_APP_RELEASE_CANDIDATE.md",
+    "docs/harness/P7_M8_RELEASE_CANDIDATE_EVIDENCE.json",
+    "docs/harness/P7_CLOSEOUT_REPORT.md",
+    "docs/harness/P7_CLOSEOUT_EVIDENCE.json"
+  ],
+  "known_limitations": [
+    "P6 behavior validation still requires real 4-week use.",
+    "Actual sudo install/upgrade/remove smoke was skipped because no safe disposable system environment was used.",
+    "P7 is Linux/Debian local-app distribution only, not cloud/SaaS/multi-user/mobile/Windows/macOS.",
+    "Real provider live calls are not enabled by default and were not tested with real keys."
+  ],
+  "recommended_next_action": "Begin real P6 validation using the local app, or start P8-000 only after explicit human/GPT approval."
+}

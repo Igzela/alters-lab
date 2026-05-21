@@ -92,7 +92,25 @@ P6 state remains: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED**.
 | P7-M6 | Desktop Integration | **done** |
 | P7-M7 | Upgrade / Uninstall / Data Safety | **done** |
 | P7-M8 | Local App Release Candidate | **done** |
-| P7-M9 | P7 Closeout | **ready_with_approval** |
+| P7-M9 | P7 Closeout | **done** |
+
+## Phase 7 Sealed Baseline
+
+P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
+- Backend tests: 949 passed
+- Frontend build: PASS
+- Debian package build: PASS
+- Package safety inspection: PASS
+- Package-context smoke: PASS
+- Closeout report: `docs/harness/P7_CLOSEOUT_REPORT.md`
+- P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
+- P8 remains blocked pending explicit human/GPT approval
+
+## Phase 8
+
+| ID | Title | Status |
+|----|-------|--------|
+| P8-000 | Future phase boundary plan | **blocked** |
 
 ## Phase 5 Sealed Baseline
 

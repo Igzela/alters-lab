@@ -627,3 +627,11 @@
 **Context**: P7-M8 must prove the Debian package can run as a local app without mutating real user state or confusing smoke artifacts with P6 behavior validation.
 **Decision**: The P7-M8 release-candidate smoke extracts the `.deb` with `dpkg-deb -x`, runs the packaged launcher/server in packaged mode with an isolated `HOME`, serves frontend assets from the package app root, and creates only synthetic weekly review/calibration records under the temporary user data directory. The smoke evidence records `p6_behavior_validated=false` and `p6_sealed=false`.
 **Consequences**: P7-M8 can validate package integration and runtime path safety without requiring sudo, touching real user data, fabricating P6 evidence, or advancing P6 closeout.
+
+### Decision P7-M9-01: Phase 7 closeout seals local app release candidate, not P6 behavior validation
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7 closeout completes local Linux app distribution, but P6 behavior validation still depends on real weekly use over time.
+**Decision**: P7-M9 seals Phase 7 as `LOCAL_APP_RELEASE_CANDIDATE`. This means local app distribution, Debian package build, CLI launcher, desktop integration, provider config safety, runtime layout, data safety, and package-context smoke are complete. It does not validate P6 behavior, does not seal P6, and does not authorize P8.
+**Consequences**: The next recommended action is real P6 validation using the local app. P8 remains blocked until explicit human/GPT approval.

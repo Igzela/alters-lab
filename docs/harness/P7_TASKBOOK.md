@@ -30,7 +30,7 @@ Execution rules:
 | P7-M6 | Desktop Integration | done | P7-M5 | Desktop launcher starts local app and opens browser to local UI | Launcher depends on repo checkout or dev tooling |
 | P7-M7 | Upgrade / Uninstall / Data Safety | done | P7-M6 | Upgrade preserves user data; uninstall preserves data unless explicit purge; backup/export command exists | Upgrade/uninstall deletes user config, data, logs, or secrets by default |
 | P7-M8 | Local App Release Candidate | done | P7-M7 | Install deb, start app, open frontend, show provider status, run weekly review, store record in user data dir, P6 remains not sealed | Smoke test requires coding tools or mutates active YAML/rubric |
-| P7-M9 | P7 Closeout | ready_with_approval | P7-M8 | Release candidate evidence complete; P8 remains blocked; P6 validation state unchanged unless real evidence later exists | P7 closeout claims P6 validation or starts P8 |
+| P7-M9 | P7 Closeout | done | P7-M8 | Release candidate evidence complete; P8 remains blocked; P6 validation state unchanged unless real evidence later exists | P7 closeout claims P6 validation or starts P8 |
 
 ## Dependencies
 
