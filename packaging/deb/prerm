@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+echo "Removing Alters Lab package-owned files only. User data is preserved."
+exit 0

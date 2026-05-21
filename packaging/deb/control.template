@@ -1,0 +1,9 @@
+Package: alters-lab
+Version: 0.1.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: python3
+Maintainer: Charlie / Alters Lab
+Description: Local personal calibration app for Alters Lab
+ Single-user local application package for running Alters Lab from /opt/alters-lab.

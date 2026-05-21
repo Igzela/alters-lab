@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+echo "Alters Lab package removed. User config, data, logs, and secrets are preserved."
+exit 0

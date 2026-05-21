@@ -241,6 +241,18 @@ Local provider configuration is available through `/provider-config/*` and the f
 - `/provider-config/test` is dry-run by default and does not make network calls.
 - Provider output cannot write active YAML, persist by default, or generate reality scores.
 - P6 remains not behavior validated and not sealed.
+
+## Debian Package Build (P7-M5)
+
+Build the local package candidate from repo root:
+
+```bash
+python tools/build_deb.py
+```
+
+The build stages files under `build/deb/alters-lab` and writes `dist/deb/alters-lab_0.1.0_amd64.deb`. The package installs app code under `/opt/alters-lab`, the built frontend under `/opt/alters-lab/web/dist`, a bundled Python venv under `/opt/alters-lab/.venv`, and the launcher at `/usr/bin/alters-lab`.
+
+The package does not include user config, secrets, logs, raw P6 runtime records, `node_modules`, or `.env` files. Generated `.deb` artifacts remain ignored by git.
 - P6 behavior validation and seal state remain false.
 
 ## Run

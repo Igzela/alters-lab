@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+echo "Alters Lab installed. Run: alters-lab doctor"
+exit 0

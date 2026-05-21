@@ -595,3 +595,11 @@
 **Context**: P7 local app use needs provider configuration without turning provider output into system truth or leaking user secrets.
 **Decision**: P7-M4 stores non-secret provider settings in local config and API keys only in optional keyring storage or a chmod `0600` fallback secrets file. Real `openai-compatible-http` mode requires explicit user configuration. API responses and frontend status are redacted. Provider configuration tests are dry-run/no-network by default. Provider output cannot persist by default, write active YAML, or generate reality scores.
 **Consequences**: The local app can expose provider settings safely while preserving P6 behavior validation boundaries. P7-M5 may package the app without embedding or owning user secrets.
+
+### Decision P7-M5-01: Debian package installs app code and CLI only; user data remains user-owned
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7 needs an installable Debian package, but package lifecycle mistakes could overwrite P6 real-use evidence, provider secrets, config, or logs.
+**Decision**: The Debian package build stages application code under `/opt/alters-lab`, frontend assets under `/opt/alters-lab/web/dist`, a package-local Python venv under `/opt/alters-lab/.venv`, and a CLI launcher under `/usr/bin/alters-lab`. User config, secrets, data, logs, raw P6 runtime records, node_modules, and `.env` files are excluded. Maintainer scripts do not create root-owned user config, start services, write secrets, or delete user home data.
+**Consequences**: P7-M6 can add desktop integration on top of a package-owned launcher while P7-M7 still owns deeper upgrade/uninstall safety and backup/export behavior.

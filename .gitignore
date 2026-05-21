@@ -43,3 +43,6 @@ apps/web/node_modules/
 apps/web/dist/
 .env
 .env.local
+build/deb/
+dist/deb/
+*.deb

@@ -680,17 +680,17 @@
 
 ### P7-M5: Debian Package Build
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create packaging scaffold and build `.deb` installing app code to `/opt/alters-lab`.
 **Depends on**: P7-M4
-**Notes**: Next recommended action. Must install app code only, preserve user config/data/secrets/logs, and avoid desktop integration until P7-M6.
+**Notes**: Added `tools/build_deb.py`, Debian metadata/scripts, package safety tests, package docs, and gitignore rules for build/deb, dist/deb, and .deb artifacts. Package stages app code under `/opt/alters-lab`, frontend dist under `/opt/alters-lab/web/dist`, bundled Python venv under `/opt/alters-lab/.venv`, and launcher under `/usr/bin/alters-lab`. User config/data/secrets/logs, raw P6 runtime records, node_modules, and .env files are excluded.
 
 ### P7-M6: Desktop Integration
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Add desktop launcher and optional icon.
 **Depends on**: P7-M5
-**Notes**: Blocked until package-owned paths and launcher are available.
+**Notes**: Next recommended action. Add desktop launcher/menu integration only after package build boundary is stable.
 
 ### P7-M7: Upgrade / Uninstall / Data Safety
 

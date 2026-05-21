@@ -83,6 +83,10 @@ P7-M2 establishes one server process: FastAPI serves both existing API routes an
 
 P7-M3 adds the launcher behavior that packaging should install later as `/usr/bin/alters-lab`. P7-M3 does not install anything into `/usr/bin`; it only defines the Python CLI entrypoint and process-control behavior.
 
+P7-M5 adds the package build machinery. It stages the launcher script under `/usr/bin/alters-lab` inside the package filesystem, stages backend source under `/opt/alters-lab/apps/api`, stages frontend assets under `/opt/alters-lab/web/dist`, and includes a package-local Python venv under `/opt/alters-lab/.venv`.
+
+P7-M5 does not add desktop integration. Desktop launcher/menu/icon files remain P7-M6 scope.
+
 Desktop launcher target:
 
 - Runs `alters-lab open` or equivalent launcher behavior.
