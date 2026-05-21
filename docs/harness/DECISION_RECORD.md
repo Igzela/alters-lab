@@ -619,3 +619,11 @@
 **Context**: Before release candidate testing, P7 must prove package lifecycle and backup behavior will not destroy or leak user-owned P6 evidence, config, logs, or secrets.
 **Decision**: Package maintainer scripts preserve `~/.config/alters-lab`, `~/.local/share/alters-lab`, `~/.local/state/alters-lab`, and provider secrets on install, upgrade, remove, and purge. `alters-lab backup` backs up user data and config by default, excludes logs unless requested, and excludes secrets unless `--include-secrets --confirm-include-secrets include-secrets-in-backup` is supplied.
 **Consequences**: P7-M8 can perform local app release candidate smoke testing with a backup/export path and explicit secret safety boundary.
+
+### Decision P7-M8-01: Release-candidate smoke uses isolated package context and synthetic records only
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7-M8 must prove the Debian package can run as a local app without mutating real user state or confusing smoke artifacts with P6 behavior validation.
+**Decision**: The P7-M8 release-candidate smoke extracts the `.deb` with `dpkg-deb -x`, runs the packaged launcher/server in packaged mode with an isolated `HOME`, serves frontend assets from the package app root, and creates only synthetic weekly review/calibration records under the temporary user data directory. The smoke evidence records `p6_behavior_validated=false` and `p6_sealed=false`.
+**Consequences**: P7-M8 can validate package integration and runtime path safety without requiring sudo, touching real user data, fabricating P6 evidence, or advancing P6 closeout.

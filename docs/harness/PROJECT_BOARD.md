@@ -91,8 +91,8 @@ P6 state remains: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED**.
 | P7-M5 | Debian Package Build | **done** |
 | P7-M6 | Desktop Integration | **done** |
 | P7-M7 | Upgrade / Uninstall / Data Safety | **done** |
-| P7-M8 | Local App Release Candidate | **ready_with_approval** |
-| P7-M9 | P7 Closeout | **blocked** |
+| P7-M8 | Local App Release Candidate | **done** |
+| P7-M9 | P7 Closeout | **ready_with_approval** |
 
 ## Phase 5 Sealed Baseline
 

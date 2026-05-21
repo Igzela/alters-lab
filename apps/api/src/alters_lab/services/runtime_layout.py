@@ -71,17 +71,19 @@ def resolve_runtime_layout(
     data_dir: Path | None = None,
     state_dir: Path | None = None,
 ) -> RuntimeLayout:
-    resolved_mode = resolve_runtime_mode(mode, app_root)
+    env_app_root = os.environ.get("ALTERS_LAB_APP_ROOT")
+    resolved_app_root_override = app_root or (Path(env_app_root).expanduser() if env_app_root else None)
+    resolved_mode = resolve_runtime_mode(mode, resolved_app_root_override)
     resolved_repo_root = repo_root.resolve() if repo_root is not None else get_repo_root()
 
     if resolved_mode == "dev":
-        resolved_app_root = (app_root or resolved_repo_root).resolve()
+        resolved_app_root = (resolved_app_root_override or resolved_repo_root).resolve()
         resolved_config_dir = (config_dir or (resolved_repo_root / "alters" / "product" / "config")).resolve()
         resolved_data_dir = (data_dir or resolved_repo_root).resolve()
         product_data_dir = resolved_data_dir / "alters" / "product"
         resolved_state_dir = (state_dir or (resolved_repo_root / "alters" / "product" / "state")).resolve()
     else:
-        resolved_app_root = (app_root or DEFAULT_PACKAGED_APP_ROOT).resolve()
+        resolved_app_root = (resolved_app_root_override or DEFAULT_PACKAGED_APP_ROOT).resolve()
         resolved_config_dir = (config_dir or (Path.home() / ".config" / APP_NAME)).expanduser().resolve()
         resolved_data_dir = (data_dir or (Path.home() / ".local" / "share" / APP_NAME)).expanduser().resolve()
         product_data_dir = resolved_data_dir / "product"

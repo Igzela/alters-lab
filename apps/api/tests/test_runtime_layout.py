@@ -53,6 +53,20 @@ def test_environment_packaged_mode_selects_packaged_paths(tmp_path, monkeypatch)
     assert layout.data_dir == home / ".local" / "share" / "alters-lab"
 
 
+def test_environment_app_root_overrides_packaged_app_root(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    app_root = tmp_path / "pkgroot" / "opt" / "alters-lab"
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("ALTERS_LAB_MODE", "packaged")
+    monkeypatch.setenv("ALTERS_LAB_APP_ROOT", str(app_root))
+
+    layout = resolve_runtime_layout()
+
+    assert layout.mode == "packaged"
+    assert layout.app_root == app_root.resolve()
+    assert layout.config_path == home / ".config" / "alters-lab" / "config.yaml"
+
+
 def test_explicit_repo_root_preserves_p6_dev_test_behavior(tmp_path, monkeypatch):
     monkeypatch.setenv("ALTERS_LAB_MODE", "packaged")
 
@@ -138,4 +152,3 @@ def test_secrets_fallback_file_has_0600_permissions(tmp_path):
     assert path == tmp_path / "config" / "secrets.yaml"
     assert mode == 0o600
     assert "sk-" not in path.read_text(encoding="utf-8")
-

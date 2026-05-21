@@ -120,6 +120,7 @@
 | R-114 | Package may accidentally include secrets, node_modules, raw runtime records, or user data | Medium | Critical | P7-M5 build script excludes node_modules, `.env`, `alters/product`, user home config/data/log paths, and secrets; tests cover exclusions; `.deb` artifacts are ignored; dpkg contents inspection required. | Active |
 | R-115 | Desktop launcher could hide failures or depend on repo/dev tooling | Medium | High | P7-M6 desktop entry uses package-owned `alters-lab open`; tests reject repo paths, user-home paths, shell expansion, and secrets; package contents inspection verifies desktop/icon paths. | Active |
 | R-116 | Backup/export may accidentally include provider secrets | Medium | Critical | P7-M7 backup excludes secrets by default, requires exact confirmation for secret inclusion, tests inspect archive contents, and secret grep remains required. | Active |
+| R-117 | Synthetic release-candidate smoke mistaken for P6 real-use evidence | Medium | Critical | P7-M8 smoke uses an isolated temporary HOME, marks records synthetic, deletes them after the run, records P6 flags false, and docs state these records are not P6 validation evidence. | Mitigated |
 
 ## Risk Assessment
 

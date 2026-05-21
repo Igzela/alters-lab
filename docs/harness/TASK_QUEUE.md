@@ -701,14 +701,14 @@
 
 ### P7-M8: Local App Release Candidate
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Run full local app smoke test from deb install through weekly review flow and runtime record storage.
 **Depends on**: P7-M7
-**Notes**: Next recommended action. Install/start/open/configure/run smoke flow while confirming active YAML/rubric unchanged and P6 remains not validated/not sealed.
+**Notes**: Release-candidate smoke passed using `dpkg-deb -x` simulated package install with isolated HOME. Packaged CLI start/status/doctor/stop worked, FastAPI served API and built frontend, provider config stayed redacted/mock, synthetic weekly review flow wrote only under temporary user data dirs, backup dry-run excluded secrets/logs, and P6 remained not validated/not sealed.
 
 ### P7-M9: P7 Closeout
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Verify local app release candidate and keep P8 blocked.
 **Depends on**: P7-M8
-**Notes**: Must not claim P6 behavior validation or start P8.
+**Notes**: Next recommended action. Must not claim P6 behavior validation or start P8.
