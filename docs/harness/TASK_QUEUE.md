@@ -719,3 +719,10 @@
 **Goal**: Define the next phase only after explicit human/GPT approval.
 **Depends on**: Explicit human/GPT approval after P7 closeout
 **Notes**: Do not start P8 automatically. Recommended next action is real P6 validation using the local app.
+
+### P7-R1: Complete P6 Frontend Usability Layer
+
+**Status**: done
+**Goal**: Add a usable frontend weekly review flow for real P6 weekly review usage.
+**Depends on**: P7 local app release candidate
+**Notes**: Added Weekly Review nav/page, P6 progress panel, provider stale-config guard, Status weekly review link, Reality Score clarification, and History weekly/action records. P6 remains NOT_VALIDATED / NOT_SEALED. P8 remains blocked.

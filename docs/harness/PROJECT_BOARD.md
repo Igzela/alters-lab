@@ -106,6 +106,12 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 - P8 remains blocked pending explicit human/GPT approval
 
+## Phase 7 Repair / Usability Follow-up
+
+| ID | Title | Status |
+|----|-------|--------|
+| P7-R1 | Complete P6 Frontend Usability Layer | **done** |
+
 ## Phase 8
 
 | ID | Title | Status |

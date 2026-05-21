@@ -635,3 +635,11 @@
 **Context**: P7 closeout completes local Linux app distribution, but P6 behavior validation still depends on real weekly use over time.
 **Decision**: P7-M9 seals Phase 7 as `LOCAL_APP_RELEASE_CANDIDATE`. This means local app distribution, Debian package build, CLI launcher, desktop integration, provider config safety, runtime layout, data safety, and package-context smoke are complete. It does not validate P6 behavior, does not seal P6, and does not authorize P8.
 **Consequences**: The next recommended action is real P6 validation using the local app. P8 remains blocked until explicit human/GPT approval.
+
+### Decision P7-R1-01: Weekly Review is the primary P6 frontend entry point
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7 local app distribution was complete, but the frontend still looked like an engineering control panel. The backend weekly review flow existed but required scripts or direct API calls.
+**Decision**: P7-R1 makes `Weekly Review` the primary P6 frontend entry point. The page walks the user through note ingest, extracted record review, weekly review start/complete, and action alignment scoring. `Reality Score` remains a manual/admin score submission page and explicitly points users to Weekly Review for real weekly review use.
+**Consequences**: Real P6 weekly review evidence can now be created from the local app UI while preserving the boundary that P6 remains not behavior validated and not sealed.

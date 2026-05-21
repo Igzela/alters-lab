@@ -6,8 +6,9 @@ import CalibrationHistory from './pages/CalibrationHistory'
 import RubricDelta from './pages/RubricDelta'
 import CheckpointPlan from './pages/CheckpointPlan'
 import ProviderSettings from './pages/ProviderSettings'
+import WeeklyReview from './pages/WeeklyReview'
 
-type Page = 'status' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider'
+type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider'
 
 export default function App() {
   const [page, setPage] = useState<Page>('status')
@@ -26,6 +27,7 @@ export default function App() {
       <h1 style={{ fontSize: 20, marginBottom: 16 }}>Alters Lab — Local MVP</h1>
       <nav style={{ display: 'flex', gap: 4, marginBottom: 20, flexWrap: 'wrap' }}>
         <button style={navStyle('status')} onClick={() => setPage('status')}>Status</button>
+        <button style={navStyle('weekly')} onClick={() => setPage('weekly')}>Weekly Review</button>
         <button style={navStyle('dialogue')} onClick={() => setPage('dialogue')}>Dialogue</button>
         <button style={navStyle('reality')} onClick={() => setPage('reality')}>Reality Score</button>
         <button style={navStyle('history')} onClick={() => setPage('history')}>History</button>
@@ -33,9 +35,10 @@ export default function App() {
         <button style={navStyle('checkpoint')} onClick={() => setPage('checkpoint')}>Checkpoint Plan</button>
         <button style={navStyle('provider')} onClick={() => setPage('provider')}>Provider</button>
       </nav>
-      {page === 'status' && <SystemStatus />}
+      {page === 'status' && <SystemStatus onNavigate={setPage} />}
+      {page === 'weekly' && <WeeklyReview />}
       {page === 'dialogue' && <AlterDialogue />}
-      {page === 'reality' && <RealityScore />}
+      {page === 'reality' && <RealityScore onNavigate={() => setPage('weekly')} />}
       {page === 'history' && <CalibrationHistory />}
       {page === 'rubric' && <RubricDelta />}
       {page === 'checkpoint' && <CheckpointPlan />}

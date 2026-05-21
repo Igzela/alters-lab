@@ -10,7 +10,7 @@ const ALTERS = [
 
 const DIMS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
 
-export default function RealityScore() {
+export default function RealityScore({ onNavigate }: { onNavigate?: () => void }) {
   const [pair, setPair] = useState(0)
   const [scores, setScores] = useState<Record<string, number>>({
     execution_discipline: 3,
@@ -46,6 +46,10 @@ export default function RealityScore() {
     <div>
       <h2>Reality Score</h2>
       <p style={{ color: '#888', fontSize: 12 }}>Scores require explicit user submission. No auto-inference from dialogue.</p>
+      <p style={{ padding: 10, background: '#fff7ed', border: '1px solid #fed7aa' }}>
+        This page is for manual score submission. For real weekly review, use Weekly Review.
+      </p>
+      {onNavigate && <button onClick={onNavigate} style={{ marginBottom: 12 }}>Go to Weekly Review</button>}
       <select value={pair} onChange={e => setPair(Number(e.target.value))} style={{ marginBottom: 12 }}>
         {ALTERS.map((a, i) => <option key={a.alter} value={i}>{a.alter} / {a.branch}</option>)}
       </select>

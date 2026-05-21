@@ -57,6 +57,8 @@ def resolve_runtime_mode(mode: str | None = None, app_root: Path | None = None) 
     env_mode = normalize_runtime_mode(os.environ.get("ALTERS_LAB_MODE"))
     if env_mode is not None:
         return env_mode
+    if app_root is None:
+        return "dev"
     marker_root = app_root or DEFAULT_PACKAGED_APP_ROOT
     if marker_root == DEFAULT_PACKAGED_APP_ROOT and marker_root.exists():
         return "packaged"

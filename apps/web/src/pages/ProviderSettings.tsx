@@ -67,6 +67,7 @@ const buttonStyle = {
 
 export default function ProviderSettings() {
   const [config, setConfig] = useState<ProviderConfig | null>(null)
+  const [savedConfig, setSavedConfig] = useState<ProviderConfig | null>(null)
   const [status, setStatus] = useState<ProviderStatus | null>(null)
   const [apiKey, setApiKey] = useState('')
   const [testResult, setTestResult] = useState<TestResult | null>(null)
@@ -81,6 +82,7 @@ export default function ProviderSettings() {
     ])
       .then(([nextConfig, nextStatus]) => {
         setConfig(nextConfig)
+        setSavedConfig(nextConfig)
         setStatus(nextStatus)
       })
       .catch(e => setError(e.message))
@@ -149,15 +151,34 @@ export default function ProviderSettings() {
       .catch(e => setError(e.message))
   }
 
+  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>
+  if (!config || !status) return <p>Loading...</p>
+
+  const hasUnsavedChanges = savedConfig
+    ? JSON.stringify({
+      mode: config.mode,
+      base_url: config.base_url || null,
+      model: config.model || null,
+      timeout_seconds: config.timeout_seconds,
+      secret_storage: config.secret_storage,
+      key_name: config.key_name,
+    }) !== JSON.stringify({
+      mode: savedConfig.mode,
+      base_url: savedConfig.base_url || null,
+      model: savedConfig.model || null,
+      timeout_seconds: savedConfig.timeout_seconds,
+      secret_storage: savedConfig.secret_storage,
+      key_name: savedConfig.key_name,
+    })
+    : false
+
   const testProvider = () => {
+    if (hasUnsavedChanges) return
     setError('')
     postJson('/provider-config/test', { dry_run: true })
       .then(result => setTestResult(result as TestResult))
       .catch(e => setError(e.message))
   }
-
-  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>
-  if (!config || !status) return <p>Loading...</p>
 
   return (
     <div>
@@ -180,6 +201,7 @@ export default function ProviderSettings() {
       </section>
 
       <form onSubmit={saveConfig} style={{ marginBottom: 20 }}>
+        {hasUnsavedChanges && <p style={{ color: '#b45309' }}>Unsaved changes. Save config before testing.</p>}
         <label style={fieldStyle}>
           Mode
           <select
@@ -262,7 +284,15 @@ export default function ProviderSettings() {
 
       <section>
         <h3>Dry Run</h3>
-        <button style={buttonStyle} type="button" onClick={testProvider}>Test Provider Config</button>
+        <button
+          style={{ ...buttonStyle, opacity: hasUnsavedChanges ? 0.5 : 1 }}
+          type="button"
+          onClick={testProvider}
+          disabled={hasUnsavedChanges}
+        >
+          Test Provider Config
+        </button>
+        {hasUnsavedChanges && <p>Save config before testing.</p>}
         {testResult && (
           <div style={{ marginTop: 12 }}>
             <p>Status: {testResult.status}</p>

@@ -122,6 +122,7 @@
 | R-116 | Backup/export may accidentally include provider secrets | Medium | Critical | P7-M7 backup excludes secrets by default, requires exact confirmation for secret inclusion, tests inspect archive contents, and secret grep remains required. | Active |
 | R-117 | Synthetic release-candidate smoke mistaken for P6 real-use evidence | Medium | Critical | P7-M8 smoke uses an isolated temporary HOME, marks records synthetic, deletes them after the run, records P6 flags false, and docs state these records are not P6 validation evidence. | Mitigated |
 | R-118 | P7 release candidate mistaken for validated behavior-change system | Medium | Critical | P7-M9 closeout explicitly seals only local app distribution. P6 state remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED, and P8 remains blocked. | Mitigated |
+| R-119 | Manual Reality Score or smoke records mistaken for real P6 validation | Medium | Critical | P7-R1 makes Weekly Review the primary P6 UI, clarifies Reality Score as manual/admin scoring, shows P6 flags false, and does not run behavior validation. | Mitigated |
 
 ## Risk Assessment
 
