@@ -118,6 +118,7 @@
 | R-112 | Launcher leaves stale background processes or kills wrong process | Medium | High | P7-M3 stores launcher-owned PID metadata, cleans stale PID files, blocks non-Alters PID ownership, defaults to localhost, and tests not_running/stale_pid/port_conflict paths. | Mitigated |
 | R-113 | Provider secrets may leak through API, logs, frontend, or committed files | Medium | Critical | P7-M4 returns only redacted secret status, never returns API key values, writes fallback secrets with chmod `0600`, clears the frontend key input after save, avoids localStorage, and requires secret grep before commit. | Active |
 | R-114 | Package may accidentally include secrets, node_modules, raw runtime records, or user data | Medium | Critical | P7-M5 build script excludes node_modules, `.env`, `alters/product`, user home config/data/log paths, and secrets; tests cover exclusions; `.deb` artifacts are ignored; dpkg contents inspection required. | Active |
+| R-115 | Desktop launcher could hide failures or depend on repo/dev tooling | Medium | High | P7-M6 desktop entry uses package-owned `alters-lab open`; tests reject repo paths, user-home paths, shell expansion, and secrets; package contents inspection verifies desktop/icon paths. | Active |
 
 ## Risk Assessment
 

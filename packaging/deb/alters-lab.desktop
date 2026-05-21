@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Alters Lab
+Comment=Local personal calibration app
+Exec=alters-lab open
+Terminal=false
+Categories=Utility;X-Productivity;
+StartupNotify=true
+Icon=alters-lab

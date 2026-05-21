@@ -29,6 +29,8 @@ def test_build_paths_compute_expected_package_paths(tmp_path: Path):
     assert paths.api_root == tmp_path / "build/deb/alters-lab/opt/alters-lab/apps/api"
     assert paths.web_dist_root == tmp_path / "build/deb/alters-lab/opt/alters-lab/web/dist"
     assert paths.usr_bin == tmp_path / "build/deb/alters-lab/usr/bin"
+    assert paths.applications_dir == tmp_path / "build/deb/alters-lab/usr/share/applications"
+    assert paths.icon_dir == tmp_path / "build/deb/alters-lab/usr/share/icons/hicolor/scalable/apps"
     assert paths.output_deb == tmp_path / "dist/deb/alters-lab_0.1.0_amd64.deb"
 
 
@@ -107,6 +109,65 @@ def test_gitignore_ignores_package_outputs():
 
 def test_package_docs_keep_p6_unvalidated_and_unsealed():
     doc = (REPO_ROOT / "docs" / "harness" / "P7_DEBIAN_PACKAGE_BUILD.md").read_text(encoding="utf-8")
+
+    assert "NOT_VALIDATED" in doc
+    assert "NOT_SEALED" in doc
+    assert "does not validate P6" in doc
+
+
+def test_desktop_file_exists_and_launches_existing_cli():
+    desktop = (REPO_ROOT / "packaging" / "deb" / "alters-lab.desktop").read_text(encoding="utf-8")
+
+    assert "Type=Application" in desktop
+    assert "Name=Alters Lab" in desktop
+    assert "Exec=alters-lab open" in desktop
+    assert "Terminal=false" in desktop
+    assert "Categories=Utility;X-Productivity;" in desktop
+
+
+def test_desktop_file_has_no_repo_home_secret_or_shell_expansion():
+    desktop = (REPO_ROOT / "packaging" / "deb" / "alters-lab.desktop").read_text(encoding="utf-8")
+
+    forbidden = ["$(", "`", "~", "/home/", "/home/igzela", "Projects/alters-lab", "OPENAI_API_KEY", "sk-"]
+    for token in forbidden:
+        assert token not in desktop
+
+
+def test_icon_asset_exists_and_is_project_owned_svg():
+    icon = REPO_ROOT / "packaging" / "assets" / "alters-lab.svg"
+    content = icon.read_text(encoding="utf-8")
+
+    assert icon.exists()
+    assert "<svg" in content
+    assert content.count("http://") == 1
+    assert "http://www.w3.org/2000/svg" in content
+    assert "https://" not in content
+
+
+def test_write_packaging_files_stages_desktop_file_and_icon(tmp_path: Path):
+    build_deb = _load_build_deb()
+    paths = build_deb.build_paths(tmp_path)
+    paths.debian_dir.mkdir(parents=True)
+    paths.usr_bin.mkdir(parents=True)
+    paths.applications_dir.mkdir(parents=True)
+    paths.icon_dir.mkdir(parents=True)
+
+    packaging_dir = tmp_path / "packaging" / "deb"
+    assets_dir = tmp_path / "packaging" / "assets"
+    packaging_dir.mkdir(parents=True)
+    assets_dir.mkdir(parents=True)
+    (packaging_dir / "alters-lab.desktop").write_text("Exec=alters-lab open\n", encoding="utf-8")
+    (assets_dir / "alters-lab.svg").write_text("<svg></svg>\n", encoding="utf-8")
+
+    build_deb.write_packaging_files(paths)
+
+    assert (paths.applications_dir / "alters-lab.desktop").read_text(encoding="utf-8") == "Exec=alters-lab open\n"
+    assert (paths.icon_dir / "alters-lab.svg").read_text(encoding="utf-8") == "<svg></svg>\n"
+    assert (paths.usr_bin / "alters-lab").stat().st_mode & 0o111
+
+
+def test_desktop_integration_docs_keep_p6_unvalidated_and_unsealed():
+    doc = (REPO_ROOT / "docs" / "harness" / "P7_DESKTOP_INTEGRATION.md").read_text(encoding="utf-8")
 
     assert "NOT_VALIDATED" in doc
     assert "NOT_SEALED" in doc

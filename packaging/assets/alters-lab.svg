@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Alters Lab">
+  <rect width="128" height="128" rx="20" fill="#1f2933"/>
+  <path d="M28 88 54 28h20l26 60H82l-5-13H50l-5 13H28Z" fill="#f7fafc"/>
+  <path d="M55 61h17l-8-21-9 21Z" fill="#3dd6b4"/>
+  <circle cx="94" cy="34" r="9" fill="#f2c94c"/>
+  <path d="M31 100h66" stroke="#3dd6b4" stroke-width="8" stroke-linecap="round"/>
+</svg>

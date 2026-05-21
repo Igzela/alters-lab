@@ -687,17 +687,17 @@
 
 ### P7-M6: Desktop Integration
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Add desktop launcher and optional icon.
 **Depends on**: P7-M5
-**Notes**: Next recommended action. Add desktop launcher/menu integration only after package build boundary is stable.
+**Notes**: Added source desktop entry and SVG icon. Package build now stages `/usr/share/applications/alters-lab.desktop` and `/usr/share/icons/hicolor/scalable/apps/alters-lab.svg`. Desktop entry launches existing package CLI with `alters-lab open`; it contains no repo paths, user-home paths, shell expansion, or secrets. Uses `X-Productivity` to satisfy desktop-file validation. No runtime behavior changed.
 
 ### P7-M7: Upgrade / Uninstall / Data Safety
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Define and implement upgrade/uninstall behavior and backup/export command.
 **Depends on**: P7-M6
-**Notes**: Blocked until package install behavior exists.
+**Notes**: Next recommended action. Verify upgrade/remove behavior preserves user config, data, secrets, and logs; add backup/export command if needed.
 
 ### P7-M8: Local App Release Candidate
 

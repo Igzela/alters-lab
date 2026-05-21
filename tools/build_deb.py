@@ -39,6 +39,8 @@ class DebBuildPaths:
     api_root: Path
     web_dist_root: Path
     usr_bin: Path
+    applications_dir: Path
+    icon_dir: Path
     output_dir: Path
     output_deb: Path
 
@@ -60,6 +62,8 @@ def build_paths(repo_root: Path, version: str = VERSION, architecture: str = ARC
         api_root=package_root / "opt" / PACKAGE_NAME / "apps" / "api",
         web_dist_root=package_root / "opt" / PACKAGE_NAME / "web" / "dist",
         usr_bin=package_root / "usr" / "bin",
+        applications_dir=package_root / "usr" / "share" / "applications",
+        icon_dir=package_root / "usr" / "share" / "icons" / "hicolor" / "scalable" / "apps",
         output_dir=output_dir,
         output_deb=output_dir / f"{PACKAGE_NAME}_{version}_{architecture}.deb",
     )
@@ -127,6 +131,8 @@ def clean_paths(paths: DebBuildPaths) -> None:
     paths.output_dir.mkdir(parents=True, exist_ok=True)
     paths.debian_dir.mkdir(parents=True, exist_ok=True)
     paths.usr_bin.mkdir(parents=True, exist_ok=True)
+    paths.applications_dir.mkdir(parents=True, exist_ok=True)
+    paths.icon_dir.mkdir(parents=True, exist_ok=True)
     paths.opt_root.mkdir(parents=True, exist_ok=True)
 
 
@@ -155,6 +161,18 @@ def write_packaging_files(paths: DebBuildPaths) -> None:
     launcher = paths.usr_bin / PACKAGE_NAME
     launcher.write_text(launcher_script(), encoding="utf-8")
     launcher.chmod(0o755)
+
+    desktop_source = packaging_dir / "alters-lab.desktop"
+    if desktop_source.exists():
+        desktop_target = paths.applications_dir / "alters-lab.desktop"
+        shutil.copy2(desktop_source, desktop_target)
+        desktop_target.chmod(0o644)
+
+    icon_source = paths.repo_root / "packaging" / "assets" / "alters-lab.svg"
+    if icon_source.exists():
+        icon_target = paths.icon_dir / "alters-lab.svg"
+        shutil.copy2(icon_source, icon_target)
+        icon_target.chmod(0o644)
 
 
 def stage_app(paths: DebBuildPaths) -> None:

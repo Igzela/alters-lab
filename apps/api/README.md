@@ -253,6 +253,13 @@ python tools/build_deb.py
 The build stages files under `build/deb/alters-lab` and writes `dist/deb/alters-lab_0.1.0_amd64.deb`. The package installs app code under `/opt/alters-lab`, the built frontend under `/opt/alters-lab/web/dist`, a bundled Python venv under `/opt/alters-lab/.venv`, and the launcher at `/usr/bin/alters-lab`.
 
 The package does not include user config, secrets, logs, raw P6 runtime records, `node_modules`, or `.env` files. Generated `.deb` artifacts remain ignored by git.
+
+P7-M6 adds desktop integration to the package:
+
+- `/usr/share/applications/alters-lab.desktop`
+- `/usr/share/icons/hicolor/scalable/apps/alters-lab.svg`
+
+The desktop entry runs `alters-lab open`, which uses the existing local launcher.
 - P6 behavior validation and seal state remain false.
 
 ## Run

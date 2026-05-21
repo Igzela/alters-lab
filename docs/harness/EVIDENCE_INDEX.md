@@ -262,6 +262,10 @@
 | P7-M5 | Debian package metadata | packaging/deb/control.template, packaging/deb/postinst, packaging/deb/prerm, packaging/deb/postrm, packaging/deb/README.md | Package metadata and safe maintainer scripts that do not start services or delete user data. |
 | P7-M5 | Debian package build docs | docs/harness/P7_DEBIAN_PACKAGE_BUILD.md | Package contents, launcher behavior, exclusions, data safety, and P6 boundary. |
 | P7-M5 | Debian package tests | apps/api/tests/test_deb_package_build.py | Tests package paths, control metadata, launcher content, exclusions, maintainer script safety, gitignore outputs, and P6 unvalidated/unsealed docs. |
+| P7-M6 | Desktop file | packaging/deb/alters-lab.desktop | Desktop entry that launches `alters-lab open`, with `Terminal=false`, Utility/Productivity categories, and no repo/user-home paths. |
+| P7-M6 | Desktop icon | packaging/assets/alters-lab.svg | Small project-owned SVG icon staged as hicolor scalable app icon. |
+| P7-M6 | Desktop integration docs | docs/harness/P7_DESKTOP_INTEGRATION.md | Desktop file path, icon path, package staging, and P6 boundary. |
+| P7-M6 | Desktop package staging | tools/build_deb.py, apps/api/tests/test_deb_package_build.py | Build script stages desktop file/icon; tests cover source desktop file, unsafe token absence, icon staging, and P6 state docs. |
 | P6-ENDGAME | Closeout operator guide | docs/harness/P6_CLOSEOUT_OPERATOR_GUIDE.md | Guarded closeout instructions that keep P6 blocked unless behavior validation passes with verified persisted evidence. |
 | P6-ENDGAME | Helper scripts | tools/p6_weekly_review_flow.py, tools/p6_validation_check.py, tools/p6_closeout_attempt.py | Local operator helpers. Weekly flow writes ignored runtime records only from supplied real notes; validation check is read-only; closeout attempt blocks without complete evidence. |
 | P6-ENDGAME | Helper script tests | apps/api/tests/test_p6_endgame_tools.py | Tests empty evidence remains blocked, dry-run closeout remains blocked, and weekly flow writes records only under a supplied repo root. |

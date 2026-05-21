@@ -603,3 +603,11 @@
 **Context**: P7 needs an installable Debian package, but package lifecycle mistakes could overwrite P6 real-use evidence, provider secrets, config, or logs.
 **Decision**: The Debian package build stages application code under `/opt/alters-lab`, frontend assets under `/opt/alters-lab/web/dist`, a package-local Python venv under `/opt/alters-lab/.venv`, and a CLI launcher under `/usr/bin/alters-lab`. User config, secrets, data, logs, raw P6 runtime records, node_modules, and `.env` files are excluded. Maintainer scripts do not create root-owned user config, start services, write secrets, or delete user home data.
 **Consequences**: P7-M6 can add desktop integration on top of a package-owned launcher while P7-M7 still owns deeper upgrade/uninstall safety and backup/export behavior.
+
+### Decision P7-M6-01: Desktop integration launches existing local CLI and does not own runtime state
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7 local app use should work from the desktop app menu, but desktop integration must not introduce a second launcher path or hidden runtime behavior.
+**Decision**: The desktop entry is package-owned, installed to `/usr/share/applications/alters-lab.desktop`, and launches `alters-lab open`. The icon is a project-owned SVG staged under the hicolor scalable app icon path. The desktop file contains no repo checkout paths, user-home paths, shell expansion, or secrets.
+**Consequences**: Desktop launch reuses the existing CLI and runtime layout. P7-M7 can focus on upgrade/remove and user data preservation rather than another launch mechanism.

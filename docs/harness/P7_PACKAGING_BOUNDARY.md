@@ -85,7 +85,12 @@ P7-M3 adds the launcher behavior that packaging should install later as `/usr/bi
 
 P7-M5 adds the package build machinery. It stages the launcher script under `/usr/bin/alters-lab` inside the package filesystem, stages backend source under `/opt/alters-lab/apps/api`, stages frontend assets under `/opt/alters-lab/web/dist`, and includes a package-local Python venv under `/opt/alters-lab/.venv`.
 
-P7-M5 does not add desktop integration. Desktop launcher/menu/icon files remain P7-M6 scope.
+P7-M6 adds desktop integration. It stages:
+
+- `/usr/share/applications/alters-lab.desktop`
+- `/usr/share/icons/hicolor/scalable/apps/alters-lab.svg`
+
+The desktop file runs `alters-lab open` and does not contain repo checkout paths or user home paths.
 
 Desktop launcher target:
 
