@@ -115,6 +115,7 @@
 | R-109 | Upgrade breaks existing user data | Medium | High | P7-M7 must define upgrade/uninstall data-safety checks and backup/export behavior before release candidate. | Active |
 | R-110 | Runtime config endpoint leaks provider secrets | Low | Critical | `/runtime-layout/status` returns provider mode/storage only with `secrets_redacted=true`; `/runtime-layout/ensure-config` writes config only and no secret values. | Active |
 | R-111 | Frontend static mount shadows API routes | Medium | Critical | P7-M2 registers API routers before frontend fallback, blocks known API prefixes from SPA fallback, and adds route inventory/API preservation tests. | Mitigated |
+| R-112 | Launcher leaves stale background processes or kills wrong process | Medium | High | P7-M3 stores launcher-owned PID metadata, cleans stale PID files, blocks non-Alters PID ownership, defaults to localhost, and tests not_running/stale_pid/port_conflict paths. | Mitigated |
 
 ## Risk Assessment
 

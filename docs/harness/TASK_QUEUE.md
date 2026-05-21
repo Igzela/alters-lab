@@ -666,17 +666,17 @@
 
 ### P7-M3: CLI Launcher
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Add `alters-lab start`, `stop`, `status`, `open`, and `doctor`.
 **Depends on**: P7-M2
-**Notes**: Next recommended action. Must start one local backend/UI server, open browser, handle port conflicts, and write logs under `~/.local/state/alters-lab/logs`.
+**Notes**: Added local launcher service and CLI package entrypoint. Commands implemented: `start`, `stop`, `status`, `open`, `doctor`. Defaults to `127.0.0.1:18790`, starts `python -m uvicorn alters_lab.main:app`, writes PID/log paths under runtime state/log dirs, supports dry-run/json mode, detects port conflicts, cleans stale PID files, and avoids killing non-Alters PID files. No `.deb`, desktop launcher, provider UI, provider calls, runtime records, P6 validation, or P6 seal.
 
 ### P7-M4: Provider Configuration UI/API
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Add local provider settings page/API with disabled/mock/openai-compatible-http modes and secret redaction.
 **Depends on**: P7-M3
-**Notes**: Blocked until launcher/status surface exists.
+**Notes**: Next recommended action. Must keep provider explicit, secret-redacted, and unable to write active YAML/rubric or auto-generate reality scores.
 
 ### P7-M5: Debian Package Build
 

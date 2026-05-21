@@ -81,6 +81,8 @@ Purge policy:
 
 P7-M2 establishes one server process: FastAPI serves both existing API routes and the built React frontend. Package and launcher work should target that unified server rather than starting a separate Vite process.
 
+P7-M3 adds the launcher behavior that packaging should install later as `/usr/bin/alters-lab`. P7-M3 does not install anything into `/usr/bin`; it only defines the Python CLI entrypoint and process-control behavior.
+
 Desktop launcher target:
 
 - Runs `alters-lab open` or equivalent launcher behavior.

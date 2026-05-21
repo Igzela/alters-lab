@@ -579,3 +579,11 @@
 **Context**: Packaged local app use should not require a separate Vite dev server. The backend already owns the local API and runtime layout; P7 needs one process that can serve API routes and built frontend assets.
 **Decision**: FastAPI serves existing API routes plus built React frontend assets. API routers are registered before frontend fallback. Dev mode resolves frontend dist to `apps/web/dist`; packaged mode resolves it from app root, such as `/opt/alters-lab/web/dist`. Missing frontend dist is non-fatal and reports `frontend_available=false`.
 **Consequences**: P7-M3 can implement a CLI launcher around one local server process instead of coordinating separate backend and Vite servers.
+
+### Decision P7-M3-01: Local app launcher controls start/stop/status/open/doctor without coding tools
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7 requires real local use without Codex, Claude Code, curl, pytest, or manual uvicorn commands. P7-M2 established one server process for API and frontend.
+**Decision**: P7-M3 adds a local launcher CLI with `start`, `stop`, `status`, `open`, and `doctor`. The launcher defaults to `127.0.0.1:18790`, runs `python -m uvicorn alters_lab.main:app`, writes PID/log files under runtime state/log dirs, supports json/dry-run modes, and keeps P6 validation/seal flags false.
+**Consequences**: P7-M4 can assume a local app can be started and inspected through launcher commands before adding provider configuration UI/API.

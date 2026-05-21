@@ -20,5 +20,8 @@ dev = [
     "uvicorn",
 ]
 
+[project.scripts]
+alters-lab = "alters_lab.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]

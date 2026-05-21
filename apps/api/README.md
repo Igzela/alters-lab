@@ -189,6 +189,37 @@ FastAPI now serves API routes and built React frontend assets from one process.
 - Missing frontend dist does not crash API; `/` returns a clear placeholder with 503.
 - Existing API routes remain registered before frontend fallback.
 
+## Local Launcher (P7-M3)
+
+The local launcher controls one FastAPI process without Codex, Claude Code, curl, pytest, or manual uvicorn commands.
+
+Commands:
+
+- `alters-lab start`
+- `alters-lab stop`
+- `alters-lab status`
+- `alters-lab open`
+- `alters-lab doctor`
+
+Module form for development:
+
+```bash
+PYTHONPATH=apps/api/src python3 -m alters_lab.cli status --mode dev --json
+PYTHONPATH=apps/api/src python3 -m alters_lab.cli doctor --mode dev --json
+PYTHONPATH=apps/api/src python3 -m alters_lab.cli start --mode dev --dry-run --json
+PYTHONPATH=apps/api/src python3 -m alters_lab.cli stop --mode dev --json
+```
+
+Launcher behavior:
+
+- Defaults to `127.0.0.1:18790`.
+- Starts `python -m uvicorn alters_lab.main:app`.
+- Writes PID file under runtime state dir.
+- Writes logs under runtime logs dir.
+- `open` starts the server unless `--no-start` is supplied.
+- `doctor` reports PASS/WARN/BLOCKED checks without writing runtime records.
+- P6 behavior validation and seal state remain false.
+
 ## Run
 
 ```bash
