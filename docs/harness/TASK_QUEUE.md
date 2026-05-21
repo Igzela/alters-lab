@@ -659,17 +659,17 @@
 
 ### P7-M2: Unified Local Server
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Serve built frontend from FastAPI and add local app health/status endpoints.
 **Depends on**: P7-M1
-**Notes**: Next recommended action. Must serve built frontend from FastAPI without requiring Vite in packaged mode and must keep frontend away from dangerous endpoints.
+**Notes**: Added unified local server layer. FastAPI now exposes `/local-app/health`, `/local-app/status`, and `/local-app/frontend-status`; serves built frontend index at `/`; serves `/assets/*` from frontend dist only; and provides SPA fallback without shadowing known API prefixes. Missing dist returns a clear placeholder without crashing API. Frontend build verified. No `.deb`, launcher, provider UI, provider calls, P6 validation, or P6 seal.
 
 ### P7-M3: CLI Launcher
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Add `alters-lab start`, `stop`, `status`, `open`, and `doctor`.
 **Depends on**: P7-M2
-**Notes**: Blocked until one local server can serve API and UI.
+**Notes**: Next recommended action. Must start one local backend/UI server, open browser, handle port conflicts, and write logs under `~/.local/state/alters-lab/logs`.
 
 ### P7-M4: Provider Configuration UI/API
 

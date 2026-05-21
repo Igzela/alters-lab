@@ -74,6 +74,9 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/runtime-layout/health` | Runtime layout component health |
 | GET | `/runtime-layout/status` | Resolved dev/packaged layout status with secrets redacted |
 | POST | `/runtime-layout/ensure-config` | Create user config only; no secrets or runtime records |
+| GET | `/local-app/health` | Unified local app server health |
+| GET | `/local-app/status` | Local app status, runtime mode, frontend availability, and safety flags |
+| GET | `/local-app/frontend-status` | Built frontend dist availability and path |
 
 ## Services
 
@@ -98,6 +101,7 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **checkpoint_regeneration** — P4-M7 high-drift checkpoint plan builder; plan-only, no active regeneration
 - **phase4_closeout** — Phase 4 backend calibration loop closeout verifier and evidence writer
 - **runtime_layout** — P7 dev/packaged runtime path resolver and config helpers; packaged mode targets user data dirs
+- **local_app** — P7 unified local server status and built frontend static serving through FastAPI
 
 ## Export
 
@@ -171,6 +175,19 @@ Runtime layout provides the path boundary needed for packaging.
 - Provider secrets are not written by this slice; fallback path is `~/.config/alters-lab/secrets.yaml` with `0600` when explicitly created.
 - `/runtime-layout/status` redacts secret state and does not create files.
 - `/runtime-layout/ensure-config` creates config only and does not write runtime records, active YAML, rubric, or secrets.
+
+## Unified Local Server (P7-M2)
+
+FastAPI now serves API routes and built React frontend assets from one process.
+
+- Dev frontend dist resolves to `apps/web/dist`.
+- Packaged frontend dist resolves to `<app_root>/web/dist`, for example `/opt/alters-lab/web/dist`.
+- `/local-app/status` reports backend readiness, frontend availability, runtime mode, provider mode, redacted secrets, and P6 safety state.
+- `/` serves `index.html` when frontend dist exists.
+- `/assets/*` serves files only from frontend dist assets.
+- SPA fallback serves frontend routes but blocks known API prefixes.
+- Missing frontend dist does not crash API; `/` returns a clear placeholder with 503.
+- Existing API routes remain registered before frontend fallback.
 
 ## Run
 

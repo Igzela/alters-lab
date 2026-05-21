@@ -571,3 +571,11 @@
 **Context**: P6 runtime helpers were repo-rooted, which is suitable for development but unsuitable for an installed local app. P7 packaging needs a single path resolver before local server, launcher, and `.deb` work proceed.
 **Decision**: P7-M1 introduces a runtime layout resolver with `dev` and `packaged` modes. Dev mode remains repo-compatible and preserves explicit `repo_root`/`tmp_path` behavior. Packaged mode resolves config to `~/.config/alters-lab/config.yaml`, runtime data to `~/.local/share/alters-lab/product`, logs to `~/.local/state/alters-lab/logs`, and secrets fallback to `~/.config/alters-lab/secrets.yaml`. Runtime safety flags for active YAML, rubric, and provider output remain false.
 **Consequences**: P6/P7 runtime helpers can be exercised in packaged mode without requiring writable repo paths, while existing dev tests and helper tools keep working. P7-M2 can now focus on serving built frontend assets from FastAPI.
+
+### Decision P7-M2-01: FastAPI is the unified local server for API and built frontend in packaged mode
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: Packaged local app use should not require a separate Vite dev server. The backend already owns the local API and runtime layout; P7 needs one process that can serve API routes and built frontend assets.
+**Decision**: FastAPI serves existing API routes plus built React frontend assets. API routers are registered before frontend fallback. Dev mode resolves frontend dist to `apps/web/dist`; packaged mode resolves it from app root, such as `/opt/alters-lab/web/dist`. Missing frontend dist is non-fatal and reports `frontend_available=false`.
+**Consequences**: P7-M3 can implement a CLI launcher around one local server process instead of coordinating separate backend and Vite servers.

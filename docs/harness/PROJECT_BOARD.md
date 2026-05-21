@@ -85,8 +85,8 @@ P6 state remains: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED**.
 |----|-------|--------|
 | P7-000 | Local App Distribution Boundary Plan | **done** |
 | P7-M1 | Runtime Layout Externalization | **done** |
-| P7-M2 | Unified Local Server | **ready_with_approval** |
-| P7-M3 | CLI Launcher | **blocked** |
+| P7-M2 | Unified Local Server | **done** |
+| P7-M3 | CLI Launcher | **ready_with_approval** |
 | P7-M4 | Provider Configuration UI/API | **blocked** |
 | P7-M5 | Debian Package Build | **blocked** |
 | P7-M6 | Desktop Integration | **blocked** |

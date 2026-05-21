@@ -23,8 +23,8 @@ Execution rules:
 |----|-------|--------|------------|---------------|------------------|
 | P7-000 | Local App Distribution Boundary Plan | done | P6 code complete, P6 not validated | P7 docs created; governance updated; P6 remains not validated and not sealed | Any runtime code, frontend code, packaging script, active YAML, rubric, or raw runtime record changed |
 | P7-M1 | Runtime Layout Externalization | ready_with_approval | P7-000 | Dev mode still uses repo-compatible paths; packaged mode writes runtime records under `~/.local/share/alters-lab`; active YAML/rubric protected | Runtime writes still hardcoded to repo paths; active YAML/rubric can be written by packaged runtime |
-| P7-M2 | Unified Local Server | blocked | P7-M1 | FastAPI serves API and built frontend; `/local-app/health` and `/local-app/status` work; no Vite required in production | Separate frontend dev server required for packaged use |
-| P7-M3 | CLI Launcher | blocked | P7-M2 | `alters-lab start/stop/status/open/doctor` works; logs written under `~/.local/state/alters-lab/logs`; port conflicts handled | App launch requires Codex, Claude Code, curl, pytest, or manual scripts |
+| P7-M2 | Unified Local Server | done | P7-M1 | FastAPI serves API and built frontend; `/local-app/health`, `/local-app/status`, and `/local-app/frontend-status` work; no Vite required in production | Separate frontend dev server required for packaged use |
+| P7-M3 | CLI Launcher | ready_with_approval | P7-M2 | `alters-lab start/stop/status/open/doctor` works; logs written under `~/.local/state/alters-lab/logs`; port conflicts handled | App launch requires Codex, Claude Code, curl, pytest, or manual scripts |
 | P7-M4 | Provider Configuration UI/API | blocked | P7-M3 | UI/API support disabled/mock/openai-compatible-http; secrets stored locally and redacted; key never returned | API response, log, or committed file exposes provider key |
 | P7-M5 | Debian Package Build | blocked | P7-M4 | `.deb` installs app code to `/opt/alters-lab`, launcher to `/usr/bin/alters-lab`, desktop file to `/usr/share/applications` | Package writes or owns user runtime data |
 | P7-M6 | Desktop Integration | blocked | P7-M5 | Desktop launcher starts local app and opens browser to local UI | Launcher depends on repo checkout or dev tooling |
@@ -60,4 +60,3 @@ Execution rules:
 - Any packaged runtime writes into repo runtime paths.
 - Any frontend route calls controlled persist or promotion live execution endpoints.
 - Any package lifecycle script deletes user data by default.
-

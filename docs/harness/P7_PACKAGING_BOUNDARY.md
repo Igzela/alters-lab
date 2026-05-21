@@ -79,6 +79,8 @@ Purge policy:
 
 ## Desktop Integration
 
+P7-M2 establishes one server process: FastAPI serves both existing API routes and the built React frontend. Package and launcher work should target that unified server rather than starting a separate Vite process.
+
 Desktop launcher target:
 
 - Runs `alters-lab open` or equivalent launcher behavior.
@@ -111,4 +113,3 @@ Launcher requirements:
 - Confirm `alters/current/**` is unchanged.
 - Confirm `alters/calibration/rubric.yaml` is unchanged.
 - Confirm P6 behavior validation remains not sealed unless real evidence later satisfies the P6 gate.
-
