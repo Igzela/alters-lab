@@ -673,17 +673,17 @@
 
 ### P7-M4: Provider Configuration UI/API
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Add local provider settings page/API with disabled/mock/openai-compatible-http modes and secret redaction.
 **Depends on**: P7-M3
-**Notes**: Next recommended action. Must keep provider explicit, secret-redacted, and unable to write active YAML/rubric or auto-generate reality scores.
+**Notes**: Added `/provider-config/health`, `/provider-config/status`, `/provider-config/config`, `/provider-config/secret`, and `/provider-config/test` plus frontend Provider Settings UI. Config writes only non-secret `config.yaml`; secrets use optional keyring or `secrets_yaml_fallback` with chmod `0600`; API responses redact keys. Provider test is dry-run/no-network by default. No provider output writes active YAML, persists by default, or auto-generates reality scores. P6 remains not validated and not sealed.
 
 ### P7-M5: Debian Package Build
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create packaging scaffold and build `.deb` installing app code to `/opt/alters-lab`.
 **Depends on**: P7-M4
-**Notes**: Blocked until local app startup and provider config boundaries are stable.
+**Notes**: Next recommended action. Must install app code only, preserve user config/data/secrets/logs, and avoid desktop integration until P7-M6.
 
 ### P7-M6: Desktop Integration
 

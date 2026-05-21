@@ -109,6 +109,8 @@ Launcher requirements:
 - Confirm `/local-app/health` responds.
 - Confirm `/local-app/status` responds.
 - Confirm provider status is visible and secrets are redacted.
+- Confirm `/provider-config/status` returns redacted provider status.
+- Confirm `/provider-config/test` dry-run makes no network call.
 - Run weekly review flow from user-provided real input.
 - Confirm runtime record is stored under `~/.local/share/alters-lab/product/weekly_reviews/`.
 - Confirm logs are stored under `~/.local/state/alters-lab/logs/`.

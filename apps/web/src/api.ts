@@ -15,3 +15,13 @@ export async function postJson(path: string, body: unknown) {
   if (!res.ok) throw new Error(`${path}: ${res.status}`)
   return res.json()
 }
+
+export async function deleteJson(path: string, body: unknown) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) throw new Error(`${path}: ${res.status}`)
+  return res.json()
+}

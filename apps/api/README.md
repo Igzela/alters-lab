@@ -4,7 +4,7 @@ FastAPI backend for the Alters Lab personal future-branch simulation system.
 
 ## Overview
 
-Provides in-memory Snapshot Intake workflow and YAML export service. No database, no frontend, no LLM provider integration.
+Provides local FastAPI runtime services, built-frontend serving, controlled YAML workflows, and local provider configuration boundaries. No database, cloud service, or default live LLM provider call is required.
 
 ## Endpoints
 
@@ -77,6 +77,13 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 | GET | `/local-app/health` | Unified local app server health |
 | GET | `/local-app/status` | Local app status, runtime mode, frontend availability, and safety flags |
 | GET | `/local-app/frontend-status` | Built frontend dist availability and path |
+| GET | `/provider-config/health` | Local provider configuration health |
+| GET | `/provider-config/status` | Redacted provider configuration status |
+| GET | `/provider-config/config` | Non-secret provider configuration |
+| POST | `/provider-config/config` | Update non-secret provider settings |
+| POST | `/provider-config/secret` | Store provider API key in local secret storage |
+| DELETE | `/provider-config/secret` | Delete provider API key from local secret storage |
+| POST | `/provider-config/test` | Dry-run provider configuration check; no live provider call |
 
 ## Services
 
@@ -102,6 +109,7 @@ Provides in-memory Snapshot Intake workflow and YAML export service. No database
 - **phase4_closeout** — Phase 4 backend calibration loop closeout verifier and evidence writer
 - **runtime_layout** — P7 dev/packaged runtime path resolver and config helpers; packaged mode targets user data dirs
 - **local_app** — P7 unified local server status and built frontend static serving through FastAPI
+- **provider_config** — P7 local provider configuration, redacted status, and local secret storage; no provider calls
 
 ## Export
 
@@ -218,6 +226,21 @@ Launcher behavior:
 - Writes logs under runtime logs dir.
 - `open` starts the server unless `--no-start` is supplied.
 - `doctor` reports PASS/WARN/BLOCKED checks without writing runtime records.
+
+## Provider Configuration (P7-M4)
+
+Local provider configuration is available through `/provider-config/*` and the frontend Provider page.
+
+- Default mode is `disabled`.
+- Supported modes are `disabled`, `mock`, and `openai-compatible-http`.
+- Real provider mode requires `explicit_user_configuration=true`.
+- `/provider-config/config` writes only non-secret config.
+- `/provider-config/secret` stores keys in optional keyring storage or `secrets_yaml_fallback`.
+- Fallback secrets are written to `secrets.yaml` with mode `0600`.
+- API responses never return the provider API key.
+- `/provider-config/test` is dry-run by default and does not make network calls.
+- Provider output cannot write active YAML, persist by default, or generate reality scores.
+- P6 remains not behavior validated and not sealed.
 - P6 behavior validation and seal state remain false.
 
 ## Run

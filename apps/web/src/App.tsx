@@ -5,8 +5,9 @@ import RealityScore from './pages/RealityScore'
 import CalibrationHistory from './pages/CalibrationHistory'
 import RubricDelta from './pages/RubricDelta'
 import CheckpointPlan from './pages/CheckpointPlan'
+import ProviderSettings from './pages/ProviderSettings'
 
-type Page = 'status' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint'
+type Page = 'status' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider'
 
 export default function App() {
   const [page, setPage] = useState<Page>('status')
@@ -30,6 +31,7 @@ export default function App() {
         <button style={navStyle('history')} onClick={() => setPage('history')}>History</button>
         <button style={navStyle('rubric')} onClick={() => setPage('rubric')}>Rubric Delta</button>
         <button style={navStyle('checkpoint')} onClick={() => setPage('checkpoint')}>Checkpoint Plan</button>
+        <button style={navStyle('provider')} onClick={() => setPage('provider')}>Provider</button>
       </nav>
       {page === 'status' && <SystemStatus />}
       {page === 'dialogue' && <AlterDialogue />}
@@ -37,6 +39,7 @@ export default function App() {
       {page === 'history' && <CalibrationHistory />}
       {page === 'rubric' && <RubricDelta />}
       {page === 'checkpoint' && <CheckpointPlan />}
+      {page === 'provider' && <ProviderSettings />}
     </div>
   )
 }

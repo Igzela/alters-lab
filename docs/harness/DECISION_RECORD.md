@@ -587,3 +587,11 @@
 **Context**: P7 requires real local use without Codex, Claude Code, curl, pytest, or manual uvicorn commands. P7-M2 established one server process for API and frontend.
 **Decision**: P7-M3 adds a local launcher CLI with `start`, `stop`, `status`, `open`, and `doctor`. The launcher defaults to `127.0.0.1:18790`, runs `python -m uvicorn alters_lab.main:app`, writes PID/log files under runtime state/log dirs, supports json/dry-run modes, and keeps P6 validation/seal flags false.
 **Consequences**: P7-M4 can assume a local app can be started and inspected through launcher commands before adding provider configuration UI/API.
+
+### Decision P7-M4-01: Provider configuration is local, explicit, redacted, and non-mutating
+
+**Date**: 2026-05-21
+**Status**: accepted
+**Context**: P7 local app use needs provider configuration without turning provider output into system truth or leaking user secrets.
+**Decision**: P7-M4 stores non-secret provider settings in local config and API keys only in optional keyring storage or a chmod `0600` fallback secrets file. Real `openai-compatible-http` mode requires explicit user configuration. API responses and frontend status are redacted. Provider configuration tests are dry-run/no-network by default. Provider output cannot persist by default, write active YAML, or generate reality scores.
+**Consequences**: The local app can expose provider settings safely while preserving P6 behavior validation boundaries. P7-M5 may package the app without embedding or owning user secrets.

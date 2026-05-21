@@ -88,6 +88,14 @@ Secret storage values:
 
 When `secrets_yaml_fallback` is used, `~/.config/alters-lab/secrets.yaml` must be created with mode `0600` and must never be committed.
 
+P7-M4 provider configuration behavior:
+
+- `/provider-config/config` reads/writes only non-secret provider settings in `config.yaml`.
+- `/provider-config/secret` writes the provider API key to optional keyring storage or the chmod `0600` fallback file.
+- If keyring is unavailable, selected keyring storage falls back to `secrets_yaml_fallback`.
+- `/provider-config/status` and `/provider-config/config` never return the API key.
+- `/provider-config/test` is dry-run/no-network by default.
+
 ## Data Migration Notes
 
 P6 repo-mode runtime records currently live under repo runtime areas such as product weekly notes, weekly reviews, calibration records, pattern reviews, behavior validation, and exports.

@@ -116,6 +116,7 @@
 | R-110 | Runtime config endpoint leaks provider secrets | Low | Critical | `/runtime-layout/status` returns provider mode/storage only with `secrets_redacted=true`; `/runtime-layout/ensure-config` writes config only and no secret values. | Active |
 | R-111 | Frontend static mount shadows API routes | Medium | Critical | P7-M2 registers API routers before frontend fallback, blocks known API prefixes from SPA fallback, and adds route inventory/API preservation tests. | Mitigated |
 | R-112 | Launcher leaves stale background processes or kills wrong process | Medium | High | P7-M3 stores launcher-owned PID metadata, cleans stale PID files, blocks non-Alters PID ownership, defaults to localhost, and tests not_running/stale_pid/port_conflict paths. | Mitigated |
+| R-113 | Provider secrets may leak through API, logs, frontend, or committed files | Medium | Critical | P7-M4 returns only redacted secret status, never returns API key values, writes fallback secrets with chmod `0600`, clears the frontend key input after save, avoids localStorage, and requires secret grep before commit. | Active |
 
 ## Risk Assessment
 
