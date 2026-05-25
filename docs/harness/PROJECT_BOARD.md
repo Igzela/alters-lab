@@ -29,13 +29,13 @@ todo → ready → running → review → done/failed
 | P1-001 | Backend Foundation + Snapshot Intake Contract | done |
 | P1-002 | Snapshot Intake API Endpoints | done |
 | P1-003 | Snapshot YAML Persistence / Export Gate | done |
- P1-004 | Controlled Snapshot YAML Write | done |
- P1-005 | Controlled Branches YAML Write | done |
- P1-006 | Controlled Alter YAML Write | done |
+| P1-004 | Controlled Snapshot YAML Write | done |
+| P1-005 | Controlled Branches YAML Write | done |
+| P1-006 | Controlled Alter YAML Write | done |
 | P1-007 | Value Alignment Controlled YAML Write | done |
- P1-008 | Controlled Dialogue YAML Write | done |
- P1-009 | Reality Trace / Weekly Evidence Controlled Write | done |
- P1-010 | State Reconciliation + Active YAML Schema Normalization | done |
+| P1-008 | Controlled Dialogue YAML Write | done |
+| P1-009 | Reality Trace / Weekly Evidence Controlled Write | done |
+| P1-010 | State Reconciliation + Active YAML Schema Normalization | done |
 | P1-011 | Governance Truth Repair + Day 30 Demo Definition | done |
 | P1-012 | Day 30 Evidence Harness + Schema Alignment | done |
 | P1-013 | Phase 1 Closeout / Day 30 Evidence Review | **done** |
