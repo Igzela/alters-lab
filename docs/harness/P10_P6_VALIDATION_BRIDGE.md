@@ -2,23 +2,22 @@
 
 ## Purpose
 
-Define the exact conditions under which P6 validation can transition from `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED` to active validation.
+Define the exact conditions under which P6 validation can start and complete.
 
 ## P6 Validation Start Conditions
 
-All of the following must be true before P6 validation can begin:
+P6 validation can START after:
 
 1. **Explicit human decision** — Charlie explicitly says "start P6 validation"
 2. **Explicit GPT confirmation** — GPT confirms the start decision
-3. **Real weekly notes exist** — At least 4 real weekly note records from actual Obsidian usage
-4. **Real weekly reviews exist** — At least 4 real weekly review sessions
-5. **Calibration records exist** — At least 4 calibration records from real reviews
-6. **Action alignment data exists** — At least 4 action alignment scores
-7. **Time window satisfied** — At least 21 calendar days / 4 distinct ISO weeks
-8. **No synthetic evidence** — None of the above records are synthetic/test data
-9. **Clear start date** — P6 validation start date is explicitly recorded
+3. **Clear start date** — P6 validation start date is explicitly recorded
+4. **Real weekly notes exist** — At least 1 real weekly note from actual Obsidian usage
 
-## What P6 Validation Requires
+Start does NOT require 4 weeks of data. Start is a decision, not a completion.
+
+## P6 Validation Completion / Seal Conditions
+
+P6 validation can COMPLETE and seal only after all of the following:
 
 | Requirement | Source | Minimum |
 |-------------|--------|---------|
@@ -28,8 +27,10 @@ All of the following must be true before P6 validation can begin:
 | Action alignment scores | Real usage | 4 scores |
 | Pattern review | Real usage | 1 review |
 | Time window | Calendar | 21 days / 4 ISO weeks |
-| Start decision | Human + GPT | Explicit |
-| Start date | Recorded | One date |
+| No synthetic evidence | Verified | All records real |
+| No provider-output-as-evidence | Verified | Clean source |
+| Records backed by real weekly notes | Verified | Chain complete |
+| Explicit GPT/human closeout decision | Human + GPT | Explicit |
 
 ## What P6 Validation Does NOT Accept
 
@@ -39,14 +40,15 @@ All of the following must be true before P6 validation can begin:
 - Records from dev-mode runs
 - Records without real weekly note backing
 - Automatic or implicit validation start
+- Validation completion without 4-week evidence window
 
 ## P6 State Transitions
 
 ```
 CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
-  ↓ (explicit human + GPT decision)
+  ↓ (explicit human + GPT decision, start date recorded)
 CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
-  ↓ (all requirements met, 4 weeks complete)
+  ↓ (all completion requirements met, 4 weeks complete, closeout decision)
 CODE_COMPLETE / VALIDATED / SEALED
 ```
 

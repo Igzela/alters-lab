@@ -15,7 +15,7 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
 - **P9**: All milestones done (P9-000 through P9-M7). P9 closeout PASS. Install docs, lifecycle verification, onboarding guide, provider guide, troubleshooting/doctor, release checklist, version bump policy all complete. Closeout report: `docs/harness/P9_CLOSEOUT_REPORT.md`.
 - **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 boundary plan done. Next step: P10-M1 (local installation cutover checklist) after approval.
-- **P6 validation**: Not started. Requires 4 real weekly reviews, 21 days, explicit human/GPT decision.
+- **P6 validation**: Not started. Starts after explicit human/GPT decision. Completes after 4 real weekly reviews, 21 days.
 
 ## Reading Order
 
