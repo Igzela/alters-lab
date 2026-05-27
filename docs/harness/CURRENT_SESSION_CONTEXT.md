@@ -15,18 +15,22 @@ Last updated: 2026-05-27
 
 ## What Was Just Completed
 
-P10-M4: Real-use friction log and fix triage.
-- Friction log created with 3 low-severity items, all accepted_no_fix
-- Fix triage: 0 blocker friction, 0 must-fix, 0 should-fix, 3 no-fix-needed
-- No fixes required before P6 validation start decision gate
+P10-M5: P6 validation start decision gate.
+- Decision gate created with 3 options: START, DEFER, BLOCKED
+- GPT recommends START_P6_VALIDATION_NOW
+- Awaiting Charlie's explicit decision
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P10-M5: P6 validation start decision gate — ready_with_approval.
-GPT must review and approve. This is an explicit human/GPT decision, not automatic.
+Charlie must explicitly reply with one of:
+- START_P6_VALIDATION_NOW
+- DEFER_P6_VALIDATION
+- BLOCKED_BY_NEW_FRICTION
 
-After P10-M5, proceed to P10-M6 (Week 1 validation package) if P6 validation is explicitly started.
+This is a human-only decision. Codex and GPT cannot make it.
+
+After Charlie decides, proceed to P10-M6 (Week 1 validation package) if START.
 
 New sessions must not claim P6 validated.
 

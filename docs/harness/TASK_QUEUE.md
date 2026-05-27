@@ -889,10 +889,10 @@
 
 ### P10-M5: P6 validation start decision gate
 
-**Status**: ready_with_approval
+**Status**: awaiting_human_decision
 **Goal**: Explicit human/GPT decision on P6 validation start.
 **Depends on**: P10-M4
-**Notes**: Not started. Ready for explicit human/GPT decision.
+**Notes**: Decision gate created (P10_M5_P6_VALIDATION_START_DECISION.md). Evidence template created. GPT recommends START_P6_VALIDATION_NOW. Awaiting Charlie's explicit decision: START_P6_VALIDATION_NOW, DEFER_P6_VALIDATION, or BLOCKED_BY_NEW_FRICTION. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M6: Week 1 validation package
 

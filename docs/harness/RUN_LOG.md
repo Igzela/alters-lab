@@ -86,3 +86,4 @@
 | P10-M2 | 2026-05-27 | claude | done | First real weekly note ingested via packaged app API. Real-use evidence recorded. P6 remains NOT_VALIDATED/NOT_SEALED. |
 | P10-M3 | 2026-05-27 | claude | done | First real weekly review session completed via packaged app API. Action alignment score: 0.75. Real-use evidence recorded. P6 remains NOT_VALIDATED/NOT_SEALED. |
 | P10-M4 | 2026-05-27 | claude | done | Real-use friction log and fix triage. 3 low-severity items (F-001 React textarea, F-002 section validation, F-003 mock provider), all accepted_no_fix. 0 blocker friction. No fixes required before P6 validation start. P6 remains NOT_VALIDATED/NOT_SEALED. |
+| P10-M5 | 2026-05-27 | claude | awaiting_human_decision | P6 validation start decision gate created. GPT recommends START_P6_VALIDATION_NOW. Awaiting Charlie's explicit decision. P6 remains NOT_VALIDATED/NOT_SEALED. |

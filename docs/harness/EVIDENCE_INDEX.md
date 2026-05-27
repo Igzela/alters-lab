@@ -373,3 +373,5 @@
 | P10-M3 | P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE.md | docs/harness/ | Real-use evidence: first weekly review session completed via packaged app |
 | P10-M4 | P10_M4_REAL_USE_FRICTION_LOG.md | docs/harness/ | Structured friction log from P10-M2/P10-M3 real use: 3 low-severity items, 0 blocker |
 | P10-M4 | P10_M4_FIX_TRIAGE.md | docs/harness/ | Fix triage classification: 0 must-fix, 0 should-fix, 0 defer, 3 no-fix-needed |
+| P10-M5 | P10_M5_P6_VALIDATION_START_DECISION.md | docs/harness/ | Decision gate: 3 options, GPT recommends START, awaiting Charlie's explicit decision |
+| P10-M5 | P10_M5_P6_VALIDATION_START_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable evidence template for P6 validation start decision |
