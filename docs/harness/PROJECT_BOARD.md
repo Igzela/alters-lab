@@ -113,14 +113,21 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 | P7-R1 | Complete P6 Frontend Usability Layer | **done** |
 | DOCS-R1 | New Session Bootstrap Docs | **done** |
 
-## Phase 8 — Real Provider Integration & End-to-End Validation
+## Phase 8 — Real Provider & Product Readiness
 
 | ID | Title | Status |
 |----|-------|--------|
-| P8-000 | Real Provider Integration & E2E Boundary Plan | **blocked** |
+| P8-000 | Real Provider & Product Readiness Boundary Plan | **done** |
+| P8-M1 | Provider Adapter Contract Hardening | **ready_with_approval** |
+| P8-M2 | Real Provider Dry-Run / Connectivity Check | **blocked** |
+| P8-M3 | Provider-Backed Dialogue Preview | **blocked** |
+| P8-M4 | Weekly Review Assistant Mode | **blocked** |
+| P8-M5 | E2E Product Validation | **blocked** |
+| P8-M6 | Provider Safety Audit | **blocked** |
+| P8-M7 | P8 Closeout | **blocked** |
 
 P6 status: **P6_SKIPPED_VALIDATION** — human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
-P8 status: **blocked** — requires explicit human/GPT approval before starting.
+P8 status: **in_progress** — P8-000 plan complete, P8-M1 ready_with_approval, P8-M2 through P8-M7 blocked.
 
 ## Phase 5 Sealed Baseline
 

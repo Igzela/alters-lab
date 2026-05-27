@@ -643,3 +643,11 @@
 **Context**: P7 local app distribution was complete, but the frontend still looked like an engineering control panel. The backend weekly review flow existed but required scripts or direct API calls.
 **Decision**: P7-R1 makes `Weekly Review` the primary P6 frontend entry point. The page walks the user through note ingest, extracted record review, weekly review start/complete, and action alignment scoring. `Reality Score` remains a manual/admin score submission page and explicitly points users to Weekly Review for real weekly review use.
 **Consequences**: Real P6 weekly review evidence can now be created from the local app UI while preserving the boundary that P6 remains not behavior validated and not sealed.
+
+### Decision P8-000-01: Real provider integration must be explicit, redacted, non-mutating, and audit-first
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P7 sealed the local app as a release candidate with mock-only provider support. Real provider integration requires careful safety boundaries to prevent secret leakage, accidental persistence, automatic scoring, and active YAML mutation.
+**Decision**: P8 defines real provider integration as explicit opt-in, dry-run default, redacted status responses, no provider output persistence by default, no active YAML/rubric writes, user confirmation required for any persisted semantic output, audit metadata only (not raw secrets), and no background provider calls. P8 success is measured by safety and auditability, not merely by provider calls working.
+**Consequences**: P8-M1 through P8-M7 implement provider capability within these boundaries. P6 behavior validation remains separate. P7 local app remains installable. Any future provider feature must pass through the safety boundary defined in `docs/harness/P8_PROVIDER_SAFETY_BOUNDARY.md`.

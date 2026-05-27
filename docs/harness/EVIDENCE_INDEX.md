@@ -283,3 +283,7 @@
 | P6-ENDGAME | Helper script tests | apps/api/tests/test_p6_endgame_tools.py | Tests empty evidence remains blocked, dry-run closeout remains blocked, and weekly flow writes records only under a supplied repo root. |
 | DOCS-R1 | New session bootstrap | docs/harness/START_HERE_FOR_NEW_SESSION.md | First-read doc for new ChatGPT/Codex/Claude sessions. States current phase state, reading order, do-not-do list, and verification commands. |
 | DOCS-R1 | Session context | docs/harness/CURRENT_SESSION_CONTEXT.md | Current session state: what was just completed, next decision, verification commands, and key boundaries. |
+| P8-000 | P8 plan | docs/harness/P8_000_REAL_PROVIDER_AND_PRODUCT_READINESS_PLAN.md | Real provider and product readiness boundary plan: current state, milestone table, threat model, safety policy, E2E validation plan, required artifacts, hard boundaries, excluded scope. |
+| P8-000 | P8 taskbook | docs/harness/P8_TASKBOOK.md | P8 milestone taskbook: P8-000 through P8-M7 with status, goals, dependencies, and notes. |
+| P8-000 | Provider safety boundary | docs/harness/P8_PROVIDER_SAFETY_BOUNDARY.md | Provider safety rules: secret handling, provider output handling, network behavior, UI behavior, audit events. |
+| P8-000 | E2E validation plan | docs/harness/P8_E2E_VALIDATION_PLAN.md | E2E validation plan: 5 test levels from mock-only to frontend flow smoke, pass criteria, excluded scope. |

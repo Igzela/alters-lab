@@ -123,6 +123,12 @@
 | R-117 | Synthetic release-candidate smoke mistaken for P6 real-use evidence | Medium | Critical | P7-M8 smoke uses an isolated temporary HOME, marks records synthetic, deletes them after the run, records P6 flags false, and docs state these records are not P6 validation evidence. | Mitigated |
 | R-118 | P7 release candidate mistaken for validated behavior-change system | Medium | Critical | P7-M9 closeout explicitly seals only local app distribution. P6 state remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED, and P8 remains blocked. | Mitigated |
 | R-119 | Manual Reality Score or smoke records mistaken for real P6 validation | Medium | Critical | P7-R1 makes Weekly Review the primary P6 UI, clarifies Reality Score as manual/admin scoring, shows P6 flags false, and does not run behavior validation. | Mitigated |
+| R-120 | Real provider API key leaked in API responses, logs, or frontend state | Medium | Critical | P8 provider safety boundary: redacted status/config responses, audit metadata only in logs, no keys in React state beyond input lifecycle, backup excludes secrets by default, secret grep required. | Active |
+| R-121 | Provider output accidentally writes active YAML or rubric | Medium | Critical | P8 hard boundary: no provider output writes alters/current/** or rubric.yaml. Provider adapter enforces non-mutating output. Tests verify no YAML/rubric changes after provider calls. | Active |
+| R-122 | Provider output automatically generates reality scores or action alignment | Medium | Critical | P8 safety policy: all scores remain user-submitted. No automatic scoring from provider output. UI labels provider output as unverified. | Active |
+| R-123 | Provider prompt contains user personal records without consent | Medium | High | P8 safety policy: explicit opt-in for live provider, dry-run default for connectivity check, no personal records in connectivity check prompts. | Active |
+| R-124 | Network timeout/retry loops consume resources or leak data | Low | High | P8 safety policy: explicit timeout, no automatic retry, user-initiated only, failed requests logged as audit events. | Active |
+| R-125 | Provider hallucinated advice mistaken as factual guidance | Medium | Medium | P8 UI: provider output labeled unverified, user must manually edit/confirm, no auto-submit. | Active |
 
 ## Risk Assessment
 
