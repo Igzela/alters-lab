@@ -152,11 +152,26 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | P10-M2 | First real weekly note ingest | **done** |
 | P10-M3 | First real weekly review session | **done** |
 | P10-M4 | Real-use friction log and fix triage | **done** |
-| P10-M5 | P6 validation start decision gate | **awaiting_human_decision** |
+| P10-M5 | P6 validation start decision gate | **done** |
 | P10-M6 | Week 1 validation package | **blocked** |
 | P10-M7 | Pilot closeout / next phase decision | **blocked** |
 
-P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-M4 done, P10-M5 awaiting_human_decision** — 1270 backend tests passing.
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-M5 done (BLOCKED_BY_NEW_FRICTION), P11 next** — 1270 backend tests passing.
+
+## Phase 11 — Product Completeness Before Validation
+
+| ID | Title | Status |
+|----|-------|--------|
+| P11-000 | Product Completeness Before Validation Plan | **done** |
+| P11-M1 | Current app capability inventory | **blocked** |
+| P11-M2 | Missing core workflow map | **blocked** |
+| P11-M3 | UX gaps and normal-use blockers | **blocked** |
+| P11-M4 | Data model/API/frontend gap closure plan | **blocked** |
+| P11-M5 | Product completion implementation batch 1 | **blocked** |
+| P11-M6 | Product completion implementation batch 2 | **blocked** |
+| P11-M7 | Product completeness smoke and closeout | **blocked** |
+
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P11 purpose: audit and complete app before P6 validation.
 
 ## Phase 5 Sealed Baseline
 

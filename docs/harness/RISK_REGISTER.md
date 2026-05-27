@@ -157,3 +157,4 @@
 | R-054 | Committing personal records to repo | Medium | High | Hard boundary: no raw records committed; redacted summaries only | Active |
 | R-055 | Install/runtime drift from packaged app | Medium | Medium | P10-M1 cutover checklist validates packaged app | Active |
 | R-056 | Ignoring friction because docs say it should work | Medium | Medium | Friction log captures real issues; product friction policy allows scoped fixes | Active |
+| R-057 | Starting P6 validation before app is functionally complete | High | High | P10-M5 decision gate blocks validation; P11 product completeness phase required first | Active |

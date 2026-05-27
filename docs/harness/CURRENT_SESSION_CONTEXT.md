@@ -15,22 +15,18 @@ Last updated: 2026-05-27
 
 ## What Was Just Completed
 
-P10-M5: P6 validation start decision gate.
-- Decision gate created with 3 options: START, DEFER, BLOCKED
-- GPT recommends START_P6_VALIDATION_NOW
-- Awaiting Charlie's explicit decision
+P10-M5-R1: Decision recorded — BLOCKED_BY_NEW_FRICTION.
+- Charlie corrected GPT: app is not yet functionally complete enough for normal use
+- P6 validation must NOT start
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
+- P11 planning stub created (Product Completeness Before Validation)
 
 ## Next Decision
 
-Charlie must explicitly reply with one of:
-- START_P6_VALIDATION_NOW
-- DEFER_P6_VALIDATION
-- BLOCKED_BY_NEW_FRICTION
+P11-M1: Current app capability inventory — ready for GPT instruction.
+GPT must define what to inventory before Codex executes.
 
-This is a human-only decision. Codex and GPT cannot make it.
-
-After Charlie decides, proceed to P10-M6 (Week 1 validation package) if START.
+After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
 
 New sessions must not claim P6 validated.
 

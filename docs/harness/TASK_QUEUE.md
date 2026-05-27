@@ -889,10 +889,10 @@
 
 ### P10-M5: P6 validation start decision gate
 
-**Status**: awaiting_human_decision
+**Status**: done
 **Goal**: Explicit human/GPT decision on P6 validation start.
 **Depends on**: P10-M4
-**Notes**: Decision gate created (P10_M5_P6_VALIDATION_START_DECISION.md). Evidence template created. GPT recommends START_P6_VALIDATION_NOW. Awaiting Charlie's explicit decision: START_P6_VALIDATION_NOW, DEFER_P6_VALIDATION, or BLOCKED_BY_NEW_FRICTION. P6 remains NOT_VALIDATED/NOT_SEALED.
+**Notes**: Done. Decision: BLOCKED_BY_NEW_FRICTION. Charlie corrected GPT — app not yet functionally complete enough for normal use. P6 validation must NOT start. Evidence recorded in P10_M5_P6_VALIDATION_START_EVIDENCE.md. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. Next: P11 product completeness.
 
 ### P10-M6: Week 1 validation package
 

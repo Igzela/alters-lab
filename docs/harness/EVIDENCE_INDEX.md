@@ -375,3 +375,5 @@
 | P10-M4 | P10_M4_FIX_TRIAGE.md | docs/harness/ | Fix triage classification: 0 must-fix, 0 should-fix, 0 defer, 3 no-fix-needed |
 | P10-M5 | P10_M5_P6_VALIDATION_START_DECISION.md | docs/harness/ | Decision gate: 3 options, GPT recommends START, awaiting Charlie's explicit decision |
 | P10-M5 | P10_M5_P6_VALIDATION_START_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable evidence template for P6 validation start decision |
+| P10-M5 | P10_M5_P6_VALIDATION_START_EVIDENCE.md | docs/harness/ | Decision evidence: BLOCKED_BY_NEW_FRICTION, product incompleteness |
+| P11-000 | P11_000_PRODUCT_COMPLETENESS_BEFORE_VALIDATION_PLAN.md | docs/harness/ | P11 planning stub: audit and complete app before P6 validation |

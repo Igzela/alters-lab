@@ -708,3 +708,12 @@
 **Decision**: P10 is an operational cutover / dogfood / real-use readiness phase. Not a feature expansion phase. P10 prepares for P6 validation but must not claim it has started.
 **Consequences**: P10 milestones focus on installation, real usage, friction discovery, and validation gating. No new product features during P10.
 **Alternatives**: Start P6 validation immediately (rejected — no real usage data yet). Continue feature expansion (rejected — delays real use).
+
+### Decision P10-M5-01: P6 validation blocked by product incompleteness
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P10-M5 decision gate ready. GPT recommended START_P6_VALIDATION_NOW. Charlie corrected — app is not yet functionally complete enough for normal daily use.
+**Decision**: P6 validation is BLOCKED_BY_NEW_FRICTION. The app must reach product completeness before any 4-week validation window starts. P11 (Product Completeness Before Validation) is the next phase.
+**Consequences**: P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. P10-M6/M7 remain blocked. P11 begins with app capability inventory.
+**Alternatives**: START_P6_VALIDATION_NOW (rejected by Charlie — app incomplete). DEFER_P6_VALIDATION (rejected — too vague, product completeness is the specific blocker).
