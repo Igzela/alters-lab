@@ -349,3 +349,5 @@
 | P9-M4 | ProviderSettings.tsx update | apps/web/src/pages/ProviderSettings.tsx | Added safety notes panel: disabled default, mock no-network, live confirmation-gated, output advisory, key never displayed, links to docs. |
 | P9-M4 | FIRST_RUN.md update | docs/user/FIRST_RUN.md | Replaced inline provider setup with links to PROVIDER_SETUP.md and PROVIDER_SAFETY.md. |
 | P9-M4 | README.md update | README.md | Added Provider Setup and Provider Safety links to Documentation section. |
+| P9-M4-R1 | PROVIDER_SETUP.md fix | docs/user/PROVIDER_SETUP.md | Corrected dry-run wording: verifies local config only, no network. Added live connectivity check section. |
+| P9-M4-R1 | PROVIDER_SAFETY.md fix | docs/user/PROVIDER_SAFETY.md | Updated confirmation table with Network Call column distinguishing dry-run (no network) from live connectivity (may call /models). |
