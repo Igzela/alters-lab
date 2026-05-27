@@ -130,7 +130,7 @@
 | Install package | usable | Verified by P9 lifecycle smoke |
 | Launch app | usable | CLI start/open works |
 | First run | usable | Getting Started page + checklist |
-| Provider mock setup | usable | Default mock, no config needed |
+| Provider mock setup | usable | User-selectable in Provider Settings; no API key and no network required |
 | Weekly note ingest | usable | Full API + frontend flow |
 | Weekly review | usable | 6-step flow end-to-end |
 | Action alignment score | usable | Score submission works |
