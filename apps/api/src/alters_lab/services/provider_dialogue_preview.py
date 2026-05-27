@@ -138,6 +138,18 @@ def run_provider_dialogue_preview(
             message="Real provider generation requires saved provider mode openai-compatible-http.",
         )
 
+    # request.mode=disabled is always safe and no-network
+    if request.mode == "disabled":
+        audit = build_provider_dialogue_preview_audit_event(
+            provider_mode="disabled", status="skipped",
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+        )
+        return ProviderDialoguePreviewResponse(
+            status="skipped", provider_mode="disabled", configured=True,
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+            audit_event_id=audit.event_id, message="Provider preview disabled by request mode.",
+        )
+
     if saved_mode == "disabled":
         audit = build_provider_dialogue_preview_audit_event(
             provider_mode="disabled", status="skipped",

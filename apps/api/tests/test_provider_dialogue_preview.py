@@ -484,3 +484,44 @@ def test_secret_store_get_secret_fallback_respects_storage_policy(tmp_path: Path
     # storage=keyring, keyring unavailable → falls back to secrets.yaml
     result = store.get_secret("keyring", "alters-lab/provider-api-key")
     assert result == "test-api-key-123"
+
+
+# --- P8-M3-R2 regression tests ---
+
+
+def test_request_mode_disabled_always_skipped(tmp_path: Path):
+    layout = _configured_layout(tmp_path)
+    resp = run_provider_dialogue_preview(
+        _req(mode="disabled", dry_run=False, live_generation=True,
+             confirmation=LIVE_CONFIRMATION),
+        layout, http_client=_fake_http_200,
+    )
+
+    assert resp.status == "skipped"
+    assert resp.provider_mode == "disabled"
+    assert resp.network_call_made is False
+    assert resp.output_preview is None
+
+
+def test_request_mode_disabled_with_mock_saved(tmp_path: Path):
+    layout = _layout(tmp_path)
+    update_provider_config(ProviderConfigUpdateRequest(mode="mock"), layout)
+    resp = run_provider_dialogue_preview(
+        _req(mode="disabled"), layout,
+    )
+
+    assert resp.status == "skipped"
+    assert resp.provider_mode == "disabled"
+    assert resp.network_call_made is False
+
+
+def test_request_mode_openai_with_openai_saved_uses_network(tmp_path: Path):
+    layout = _configured_layout(tmp_path)
+    resp = run_provider_dialogue_preview(
+        _req(mode="openai-compatible-http", dry_run=False, live_generation=True,
+             confirmation=LIVE_CONFIRMATION),
+        layout, http_client=_fake_http_200,
+    )
+
+    assert resp.network_call_made is True
+    assert resp.status == "ok"
