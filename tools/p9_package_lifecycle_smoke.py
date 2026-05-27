@@ -347,13 +347,20 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert install["user_data_before_app_smoke"]["secrets_file_exists"] is False
     assert install["user_data_before_app_smoke"]["product_dir_exists"] is False
 
-    # Post-install app smoke
-    app_smoke = install.get("post_install_app_smoke", {})
-    if app_smoke.get("status") == "PASS":
-        assert app_smoke["provider_mode"] == "disabled"
-        assert app_smoke["p6_behavior_validated"] is False
-        assert app_smoke["p6_sealed"] is False
-        assert app_smoke["real_provider_call_made"] is False
+    # Post-install app smoke (mandatory)
+    app_smoke = install.get("post_install_app_smoke")
+    assert app_smoke is not None, "post_install_app_smoke missing"
+    assert app_smoke["status"] == "PASS", f"app smoke failed: {app_smoke}"
+    required_routes = ["/local-app/status", "/runtime-layout/status", "/provider-config/status"]
+    for route in required_routes:
+        assert route in app_smoke.get("routes_checked", []), f"route {route} not checked"
+    assert app_smoke["local_app_status"]["status"] == "ok"
+    assert app_smoke["runtime_layout_status"]["status"] == "ok"
+    assert app_smoke["provider_config_status"]["status"] == "ok"
+    assert app_smoke["provider_mode"] == "disabled"
+    assert app_smoke["p6_behavior_validated"] is False
+    assert app_smoke["p6_sealed"] is False
+    assert app_smoke["real_provider_call_made"] is False
 
     # Upgrade assertions
     assert upgrade["dpkg_returncode"] == 0, f"upgrade failed: {upgrade['dpkg_stderr']}"

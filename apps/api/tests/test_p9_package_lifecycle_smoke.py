@@ -50,6 +50,14 @@ def _make_valid_report() -> dict:
             },
             "post_install_app_smoke": {
                 "status": "PASS",
+                "routes_checked": [
+                    "/local-app/status",
+                    "/runtime-layout/status",
+                    "/provider-config/status",
+                ],
+                "local_app_status": {"status": "ok"},
+                "runtime_layout_status": {"status": "ok"},
+                "provider_config_status": {"status": "ok", "provider_mode": "disabled"},
                 "provider_mode": "disabled",
                 "p6_behavior_validated": False,
                 "p6_sealed": False,
@@ -271,6 +279,30 @@ class TestReportContract:
     def test_assert_fails_on_app_smoke_provider_not_disabled(self):
         report = _make_valid_report()
         report["install"]["post_install_app_smoke"]["provider_mode"] = "mock"
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_app_smoke_missing(self):
+        report = _make_valid_report()
+        report["install"]["post_install_app_smoke"] = None
+        with pytest.raises(AssertionError, match="post_install_app_smoke missing"):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_app_smoke_not_pass(self):
+        report = _make_valid_report()
+        report["install"]["post_install_app_smoke"]["status"] = "FAIL"
+        with pytest.raises(AssertionError, match="app smoke failed"):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_missing_route(self):
+        report = _make_valid_report()
+        report["install"]["post_install_app_smoke"]["routes_checked"] = ["/local-app/status"]
+        with pytest.raises(AssertionError, match="not checked"):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_route_status_not_ok(self):
+        report = _make_valid_report()
+        report["install"]["post_install_app_smoke"]["local_app_status"]["status"] = "error"
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
