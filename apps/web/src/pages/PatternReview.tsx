@@ -82,6 +82,9 @@ export default function PatternReview() {
       <p style={{ color: '#888', fontSize: 12 }}>
         Detects repeated behavioral patterns across weekly reviews. Patterns indicate recurring tendencies that may need attention.
       </p>
+      <div style={{ padding: 10, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 6, marginBottom: 16, fontSize: 13 }}>
+        Pattern review is supporting evidence only. It does not validate or seal P6. Provider output is not counted as evidence. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED.
+      </div>
 
       <div style={{ marginBottom: 16 }}>
         <button onClick={buildReview} disabled={building}>

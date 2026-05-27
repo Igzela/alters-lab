@@ -10,16 +10,13 @@ interface Manifest {
   archive_supported: boolean
 }
 
-interface ActionResult {
-  status: string
-  path: string | null
-}
-
 export default function DataManagement() {
   const [manifest, setManifest] = useState<Manifest | null>(null)
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
-  const [deleteTarget, setDeleteTarget] = useState<{ area: string; record_id: string } | null>(null)
+  const [showDeletePanel, setShowDeletePanel] = useState(false)
+  const [deleteArea, setDeleteArea] = useState('')
+  const [deleteRecordId, setDeleteRecordId] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState('')
 
   useEffect(() => {
@@ -50,23 +47,20 @@ export default function DataManagement() {
     }
   }
 
-  const confirmDelete = (area: string, record_id: string) => {
-    setDeleteTarget({ area, record_id })
-    setDeleteConfirm('')
-  }
-
   const executeDelete = async () => {
-    if (!deleteTarget || deleteConfirm !== 'delete') return
+    if (!deleteArea || !deleteRecordId || deleteConfirm !== 'delete') return
     setError('')
     setStatus('')
     try {
       await postJson('/p6-data-retention/delete', {
-        record: deleteTarget,
+        record: { area: deleteArea, record_id: deleteRecordId },
         confirmation: 'delete',
         caller: 'api',
       })
-      setStatus(`Deleted: ${deleteTarget.area}/${deleteTarget.record_id}`)
-      setDeleteTarget(null)
+      setStatus(`Deleted: ${deleteArea}/${deleteRecordId}`)
+      setShowDeletePanel(false)
+      setDeleteArea('')
+      setDeleteRecordId('')
       setDeleteConfirm('')
       fetchJson('/p6-data-retention/manifest').then(setManifest).catch(() => {})
     } catch (e: unknown) {
@@ -78,7 +72,7 @@ export default function DataManagement() {
     <div>
       <h2>Data Management</h2>
       <p style={{ color: '#888', fontSize: 12 }}>
-        View, export, archive, or delete your product data. All exports redact secrets. Deletion requires explicit confirmation.
+        View, export, or delete your product data. All exports redact secrets. Deletion requires exact record id and explicit confirmation.
       </p>
 
       {error && <p style={{ color: '#b00020' }}>{error}</p>}
@@ -98,64 +92,81 @@ export default function DataManagement() {
                   <strong>{area}</strong>
                   <span style={{ fontSize: 14, color: '#333' }}>{manifest.record_counts[area] ?? 0}</span>
                 </div>
-                <div style={{ display: 'flex', gap: 6 }}>
-                  <button
-                    onClick={() => exportArea(area)}
-                    style={{ fontSize: 12, padding: '2px 8px' }}
-                  >
-                    Export
-                  </button>
-                  {(manifest.record_counts[area] ?? 0) > 0 && manifest.manual_delete_supported && (
-                    <button
-                      onClick={() => confirmDelete(area, `last_${area}`)}
-                      style={{ fontSize: 12, padding: '2px 8px', color: '#b00020' }}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={() => exportArea(area)}
+                  style={{ fontSize: 12, padding: '2px 8px' }}
+                >
+                  Export
+                </button>
               </div>
             ))}
           </div>
 
-          <div style={{ padding: 10, background: '#f6f8ff', borderRadius: 6, border: '1px solid #d0daf0', fontSize: 13, color: '#555' }}>
+          <div style={{ padding: 10, background: '#f6f8ff', borderRadius: 6, border: '1px solid #d0daf0', fontSize: 13, color: '#555', marginBottom: 16 }}>
             <div>Long-term save by default: <strong>{manifest.default_long_term_save ? 'Yes' : 'No'}</strong></div>
             <div>Export supported: <strong>{manifest.export_supported ? 'Yes' : 'No'}</strong></div>
             <div>Archive supported: <strong>{manifest.archive_supported ? 'Yes' : 'No'}</strong></div>
           </div>
+
+          <div style={{ padding: 10, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 6, marginBottom: 16, fontSize: 13 }}>
+            <strong>Archive:</strong> Archive requires exact record selection; disabled until record list/detail exists.
+          </div>
         </>
       )}
 
-      {deleteTarget && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ background: '#fff', padding: 20, borderRadius: 8, border: '1px solid #ddd', maxWidth: 400, width: '100%' }}>
-            <h3 style={{ margin: '0 0 10px', color: '#b00020' }}>Confirm Deletion</h3>
-            <p style={{ fontSize: 14, marginBottom: 10 }}>
-              Delete <strong>{deleteTarget.area}/{deleteTarget.record_id}</strong>?
-              This cannot be undone.
-            </p>
-            <p style={{ fontSize: 13, marginBottom: 10 }}>
-              Type <strong>delete</strong> to confirm:
-            </p>
-            <input
-              value={deleteConfirm}
-              onChange={e => setDeleteConfirm(e.target.value)}
-              placeholder="delete"
-              style={{ width: '100%', padding: 6, marginBottom: 10, boxSizing: 'border-box' }}
-            />
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button
-                onClick={executeDelete}
-                disabled={deleteConfirm !== 'delete'}
-                style={{ color: deleteConfirm === 'delete' ? '#b00020' : '#888' }}
-              >
-                Delete
-              </button>
-              <button onClick={() => { setDeleteTarget(null); setDeleteConfirm('') }}>Cancel</button>
-            </div>
-          </div>
+      <div style={{ padding: 12, background: '#fafafa', borderRadius: 6, border: '1px solid #ddd', marginBottom: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <h4 style={{ margin: 0 }}>Delete by Record ID</h4>
+          <button onClick={() => setShowDeletePanel(!showDeletePanel)} style={{ fontSize: 12 }}>
+            {showDeletePanel ? 'Hide' : 'Show'}
+          </button>
         </div>
-      )}
+        {showDeletePanel && (
+          <div>
+            <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
+              Use only when you know the exact local record id. Export first if unsure.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
+              <div>
+                <label style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Area</label>
+                <input
+                  value={deleteArea}
+                  onChange={e => setDeleteArea(e.target.value)}
+                  placeholder="e.g. weekly_reviews"
+                  style={{ width: '100%', padding: 4, boxSizing: 'border-box' }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Record ID</label>
+                <input
+                  value={deleteRecordId}
+                  onChange={e => setDeleteRecordId(e.target.value)}
+                  placeholder="e.g. review_2026-W01"
+                  style={{ width: '100%', padding: 4, boxSizing: 'border-box' }}
+                />
+              </div>
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <label style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Type <strong>delete</strong> to confirm</label>
+              <input
+                value={deleteConfirm}
+                onChange={e => setDeleteConfirm(e.target.value)}
+                placeholder="delete"
+                style={{ width: '100%', padding: 4, boxSizing: 'border-box' }}
+              />
+            </div>
+            <button
+              onClick={executeDelete}
+              disabled={!deleteArea || !deleteRecordId || deleteConfirm !== 'delete'}
+              style={{
+                color: deleteArea && deleteRecordId && deleteConfirm === 'delete' ? '#b00020' : '#888',
+              }}
+            >
+              Delete Record
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
