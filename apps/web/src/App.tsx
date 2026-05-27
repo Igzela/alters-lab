@@ -8,8 +8,11 @@ import CheckpointPlan from './pages/CheckpointPlan'
 import ProviderSettings from './pages/ProviderSettings'
 import WeeklyReview from './pages/WeeklyReview'
 import GettingStarted from './pages/GettingStarted'
+import PatternReview from './pages/PatternReview'
+import BehaviorValidation from './pages/BehaviorValidation'
+import DataManagement from './pages/DataManagement'
 
-type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started'
+type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
 
 export default function App() {
   const [page, setPage] = useState<Page>('status')
@@ -36,6 +39,9 @@ export default function App() {
         <button style={navStyle('rubric')} onClick={() => setPage('rubric')}>Rubric Delta</button>
         <button style={navStyle('checkpoint')} onClick={() => setPage('checkpoint')}>Checkpoint Plan</button>
         <button style={navStyle('provider')} onClick={() => setPage('provider')}>Provider</button>
+        <button style={navStyle('patterns')} onClick={() => setPage('patterns')}>Patterns</button>
+        <button style={navStyle('validation')} onClick={() => setPage('validation')}>Validation</button>
+        <button style={navStyle('data')} onClick={() => setPage('data')}>Data</button>
       </nav>
       {page === 'status' && <SystemStatus onNavigate={setPage} />}
       {page === 'weekly' && <WeeklyReview />}
@@ -46,6 +52,9 @@ export default function App() {
       {page === 'checkpoint' && <CheckpointPlan />}
       {page === 'provider' && <ProviderSettings />}
       {page === 'getting-started' && <GettingStarted onNavigate={setPage} />}
+      {page === 'patterns' && <PatternReview />}
+      {page === 'validation' && <BehaviorValidation />}
+      {page === 'data' && <DataManagement />}
     </div>
   )
 }
