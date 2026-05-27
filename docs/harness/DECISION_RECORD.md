@@ -652,6 +652,14 @@
 **Decision**: P8 defines real provider integration as explicit opt-in, dry-run default, redacted status responses, no provider output persistence by default, no active YAML/rubric writes, user confirmation required for any persisted semantic output, audit metadata only (not raw secrets), and no background provider calls. P8 success is measured by safety and auditability, not merely by provider calls working.
 **Consequences**: P8-M1 through P8-M7 implement provider capability within these boundaries. P6 behavior validation remains separate. P7 local app remains installable. Any future provider feature must pass through the safety boundary defined in `docs/harness/P8_PROVIDER_SAFETY_BOUNDARY.md`.
 
+### Decision P8-M2-01: Real provider connectivity checks are explicit, redacted, non-generative by default, and separate from provider dialogue preview
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P8-M1 established the adapter contract with Literal-locked no-network safety fields. Real provider connectivity checking requires actual network calls but must be carefully gated to prevent accidental data leakage, prompt content exposure, or response persistence.
+**Decision**: Create a separate connectivity-check module (schema/service/api) distinct from the adapter preview contract. The adapter preview remains no-network and Literal-locked. The connectivity check uses /models endpoint (preferred over /chat/completions), requires exact confirmation string for live checks, accepts an injectable http_client for testing, records only redacted metadata (no prompt content, no response body), and gates all network calls behind explicit user action. Status code mapping: 2xx=reachable+auth_ok, 401/403=reachable+auth_fail, timeout=unreachable.
+**Consequences**: P8-M3 can build provider-backed dialogue on top of the connectivity foundation. The adapter preview contract remains untouched. Future connectivity improvements (e.g., model listing, latency benchmarks) can extend the connectivity module without affecting the adapter contract.
+
 ### Decision P8-M1-01: Provider adapter contract separates preview generation, network permission, persistence, and audit metadata
 
 **Date**: 2026-05-27

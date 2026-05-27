@@ -750,17 +750,17 @@
 
 ### P8-M2: Real Provider Dry-Run / Connectivity Check
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Allow user-configured provider to perform an explicit safe connectivity check. User must explicitly enable live_check. No prompts containing personal records by default. No provider output persisted. No secrets returned. All network attempts audited locally with redacted metadata.
 **Depends on**: P8-M1
-**Notes**: Ready with approval after P8-M1 pass.
+**Notes**: Done. Connectivity check uses /models endpoint, exact confirmation gating, fake http_client in tests. 30 new tests. 1080 total backend tests. P8-M3 ready_with_approval.
 
 ### P8-M3: Provider-Backed Dialogue Preview
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Allow optional provider-backed response generation for Alter Dialogue only. save_session=false default, no active YAML writes, no calibration writes, no reality score writes, output displayed as preview, user can copy manually, provider output must be labeled unverified.
 **Depends on**: P8-M2
-**Notes**: Blocked.
+**Notes**: Ready with approval after P8-M2 pass.
 
 ### P8-M4: Weekly Review Assistant Mode
 

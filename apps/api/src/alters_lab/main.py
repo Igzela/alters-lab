@@ -37,6 +37,7 @@ from alters_lab.api.phase6_closeout import router as phase6_closeout_router
 from alters_lab.api.runtime_layout import router as runtime_layout_router
 from alters_lab.api.local_app import router as local_app_router
 from alters_lab.api.provider_adapter import router as provider_adapter_router
+from alters_lab.api.provider_connectivity import router as provider_connectivity_router
 from alters_lab.api.provider_config import router as provider_config_router
 from alters_lab.services.local_app import configure_frontend_static
 
@@ -85,5 +86,6 @@ app.include_router(phase6_closeout_router)
 app.include_router(runtime_layout_router)
 app.include_router(local_app_router)
 app.include_router(provider_adapter_router)
+app.include_router(provider_connectivity_router)
 app.include_router(provider_config_router)
 configure_frontend_static(app)

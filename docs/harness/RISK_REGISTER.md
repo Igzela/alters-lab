@@ -131,6 +131,8 @@
 | R-125 | Provider hallucinated advice mistaken as factual guidance | Medium | Medium | P8 UI: provider output labeled unverified, user must manually edit/confirm, no auto-submit. | Active |
 | R-126 | Adapter preview mistaken as real provider integration | Medium | Medium | P8-M1: real_network_calls_enabled=false, openai-compatible-http live_check blocked until P8-M2, clear route/status flags, tests prove no network calls. | Active |
 | R-127 | Adapter audit event leaks prompt or response content | Low | High | P8-M1: audit event schema enforces prompt_recorded=false, response_recorded=false, secret_recorded=false. Tests verify no raw content in audit. | Active |
+| R-128 | Connectivity check sends user prompt content to provider | Low | High | P8-M2: connectivity check uses /models endpoint only, no user prompt content, exact confirmation required, tests with fake http_client. | Active |
+| R-129 | Connectivity check leaks API key in error path | Low | High | P8-M2: API key never returned in response, Authorization header redacted in error paths, tests verify no key in response. | Active |
 
 ## Risk Assessment
 

@@ -13,8 +13,9 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
 - **P8-000**: Done. Real provider and product readiness boundary plan created.
 - **P8-M1**: Done. Provider adapter contract hardened. 26 new tests, 1030 total backend tests.
-- **P8-M2**: Ready with approval. Real provider dry-run / connectivity check.
-- **P8-M3 through P8-M7**: Blocked. Not started.
+- **P8-M2**: Done. Connectivity check with /models endpoint, exact confirmation gating, fake http_client in tests. 30 new tests, 1080 total backend tests.
+- **P8-M3**: Ready with approval. Provider-backed dialogue preview.
+- **P8-M4 through P8-M7**: Blocked. Not started.
 - **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
 
 ## Reading Order

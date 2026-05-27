@@ -292,3 +292,8 @@
 | P8-M1 | Provider adapter API | apps/api/src/alters_lab/api/provider_adapter.py | Routes: /provider-adapter/health, /status, /preview. |
 | P8-M1 | Provider adapter tests | apps/api/tests/test_provider_adapter.py, apps/api/tests/test_provider_adapter_api.py | 26 tests covering disabled/mock/openai modes, live_check blocked, persist_output blocked, no secrets, no YAML writes, no scores, safety flags. |
 | P8-M1 | P8-M1 contract doc | docs/harness/P8_M1_PROVIDER_ADAPTER_CONTRACT.md | Provider adapter contract definition, architecture, safety guarantees, and test coverage. |
+| P8-M2 | Provider connectivity schemas | apps/api/src/alters_lab/schemas/provider_connectivity.py | ProviderConnectivityRequest, Response, AuditEvent, health/status responses with Literal-locked safety fields. |
+| P8-M2 | Provider connectivity service | apps/api/src/alters_lab/services/provider_connectivity.py | build_provider_connectivity_status/audit_event, run_provider_connectivity_check with http_client injection. |
+| P8-M2 | Provider connectivity API | apps/api/src/alters_lab/api/provider_connectivity.py | Routes: /provider-connectivity/health, /status, /check. |
+| P8-M2 | Provider connectivity tests | apps/api/tests/test_provider_connectivity.py, apps/api/tests/test_provider_connectivity_api.py | 30 tests covering disabled/mock/openai modes, live_check confirmation gating, fake http_client, 2xx/401/timeout, no secrets, safety flags, contract hardening. |
+| P8-M2 | P8-M2 contract doc | docs/harness/P8_M2_PROVIDER_CONNECTIVITY.md | Provider connectivity check definition, architecture, safety guarantees, and test coverage. |
