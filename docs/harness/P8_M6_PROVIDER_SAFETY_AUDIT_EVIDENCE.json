@@ -5,14 +5,14 @@
   "sections": [
     {
       "allowed_by_category": {
-        "documentation": 11,
+        "documentation": 12,
         "source_code": 8,
         "test": 17,
         "tool": 12
       },
       "allowed_by_pattern": {
         "anthropic_key_env": 2,
-        "api_key_env": 13,
+        "api_key_env": 14,
         "deterministic_placeholder": 8,
         "mock_adapter_preview": 6,
         "mock_dialogue_preview": 6,
@@ -21,14 +21,14 @@
         "openrouter_key_env": 2,
         "sk_prefix": 2
       },
-      "allowed_count": 48,
+      "allowed_count": 49,
       "disallowed_by_category": {},
       "disallowed_by_pattern": {},
       "disallowed_count": 0,
       "disallowed_files": [],
       "section": "grep_scan",
       "status": "PASS",
-      "total_findings": 48
+      "total_findings": 49
     },
     {
       "expected_routes": 5,

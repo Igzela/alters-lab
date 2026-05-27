@@ -8,11 +8,18 @@
   "verification_results": {
     "backend_tests": {"status": "PASS", "count": 1215},
     "frontend_build": {"status": "PASS"},
-    "route_inventory": {"status": "PASS", "total_routes": 157},
+    "package_build": {"status": "PASS"},
+    "package_safety": {"status": "PASS"},
+    "p7_smoke": {"status": "PASS"},
+    "p8_smoke": {"status": "PASS"},
     "provider_safety_audit": {"status": "PASS", "sections": 7},
-    "active_yaml_diff": {"status": "clean"},
-    "rubric_diff": {"status": "clean"},
-    "runtime_artifacts": {"status": "only_untracked_config_dir"},
+    "route_inventory": {"status": "PASS", "total_routes": 157},
+    "active_yaml_diff_empty": true,
+    "rubric_diff_empty": true,
+    "runtime_records_committed": false,
+    "provider_secrets_committed": false,
+    "provider_output_committed": false,
+    "real_provider_call_made": false,
     "secret_grep": {"status": "PASS", "disallowed": 0}
   },
   "milestone_table": [
@@ -51,7 +58,8 @@
     "P6 validation is parked/postponed (human decision)",
     "P9 not started (blocked)",
     "Live provider requires explicit configuration and confirmation",
-    "No frontend provider configuration UI (config via API only)"
+    "Frontend provider configuration UI exists for local config, secret storage selection, key store/delete, and dry-run test",
+    "No full live-provider onboarding wizard; live provider use remains explicit, confirmation-gated, and not run by default"
   ],
   "p6_behavior_validated": false,
   "p6_sealed": false

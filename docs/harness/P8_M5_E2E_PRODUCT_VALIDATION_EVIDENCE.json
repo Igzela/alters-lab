@@ -1,6 +1,6 @@
 {
   "backup": {
-    "archive_path": "[temp-root]/home/.local/share/alters-lab/product/exports/alters_lab_backup_20260527T104218Z.tar.gz",
+    "archive_path": "[temp-root]/home/.local/share/alters-lab/product/exports/alters_lab_backup_20260527T111536Z.tar.gz",
     "dry_run": true,
     "excluded_sections": [
       "secrets",
@@ -65,12 +65,12 @@
   "method": "dpkg-deb -x simulated install",
   "p6_behavior_validated": false,
   "p6_sealed": false,
-  "port": 49641,
+  "port": 58985,
   "provider_adapter": {
     "preview": {
       "action_alignment_created": false,
       "active_yaml_modified": false,
-      "audit_event_id": "0eb0785f3ac44e2db94abbde734a88bd",
+      "audit_event_id": "4653310da4b44118962589fd8e29fa75",
       "dry_run": true,
       "error_type": null,
       "live_check": false,
@@ -156,7 +156,7 @@
     "check": {
       "action_alignment_created": false,
       "active_yaml_modified": false,
-      "audit_event_id": "a59eb97c516e42dfaa189cfa2feb01e5",
+      "audit_event_id": "16f2682d98c842f2818a54cfa7f3960c",
       "auth_valid": true,
       "configured": true,
       "dry_run": true,
@@ -196,7 +196,7 @@
     "generate": {
       "action_alignment_created": false,
       "active_yaml_modified": false,
-      "audit_event_id": "858503a5edde45d3a2015fb34693c178",
+      "audit_event_id": "241796ed6dce415188b351d337a35a97",
       "configured": true,
       "dry_run": true,
       "error_type": null,
@@ -391,13 +391,13 @@
     "home_product_dir": "[temp-root]/home/.local/share/alters-lab/product",
     "record_paths": {
       "calibration_records": [
-        ".local/share/alters-lab/product/calibration_records/action_alignment_20260527T104218Z_427a0d6d.yaml"
+        ".local/share/alters-lab/product/calibration_records/action_alignment_20260527T111536Z_eb2582ad.yaml"
       ],
       "weekly_notes": [
-        ".local/share/alters-lab/product/weekly_notes/weekly_note_20260527_20260527T104218Z_9f7e0b8e.yaml"
+        ".local/share/alters-lab/product/weekly_notes/weekly_note_20260527_20260527T111536Z_7320547b.yaml"
       ],
       "weekly_reviews": [
-        ".local/share/alters-lab/product/weekly_reviews/weekly_review_20260527T104218Z_d17ac585.yaml"
+        ".local/share/alters-lab/product/weekly_reviews/weekly_review_20260527T111536Z_f589d76f.yaml"
       ]
     },
     "synthetic_smoke_only": true
@@ -422,7 +422,7 @@
     "suggest": {
       "action_alignment_created": false,
       "active_yaml_modified": false,
-      "audit_event_id": "c5b52b081cd34595b3ffdc4c844a42e3",
+      "audit_event_id": "9bc58f52c4344530ae0ef993bc6c7d48",
       "configured": true,
       "dry_run": true,
       "error_type": null,
@@ -448,7 +448,7 @@
     "suggest_with_session": {
       "action_alignment_created": false,
       "active_yaml_modified": false,
-      "audit_event_id": "9ce4a2bfa6a64b70b8fd4b0f3cb0afd0",
+      "audit_event_id": "79e43ece301944898df84c106c3d7285",
       "configured": true,
       "dry_run": true,
       "error_type": null,

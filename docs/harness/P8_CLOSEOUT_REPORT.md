@@ -21,6 +21,23 @@ P8 (Real Provider & Product Readiness) is sealed as `REAL_PROVIDER_READY_LOCAL_A
 | P8-M6 | Provider Safety Audit | done |
 | P8-M7 | P8 Closeout | done |
 
+## Verification Results
+
+| Check | Result |
+|-------|--------|
+| Backend tests | PASS (1215 passed) |
+| Frontend build | PASS |
+| Package build | PASS |
+| Package safety inspection | PASS |
+| P7 local app smoke | PASS |
+| P8 E2E product smoke | PASS |
+| Provider safety audit | PASS (7 sections) |
+| Route inventory | PASS (157 routes) |
+| Active YAML diff | clean |
+| Rubric diff | clean |
+| Runtime artifacts | no committed raw runtime records |
+| Secret/output grep | PASS / 0 disallowed |
+
 ## Provider Capability Summary
 
 - Provider modes: disabled / mock / openai-compatible-http
@@ -49,20 +66,8 @@ P8 (Real Provider & Product Readiness) is sealed as `REAL_PROVIDER_READY_LOCAL_A
 - P6 validation is parked/postponed (human decision)
 - P9 not started (blocked)
 - Live provider requires explicit configuration and confirmation
-- No frontend provider configuration UI (config via API only)
-
-## Verification Results
-
-| Check | Result |
-|-------|--------|
-| Backend tests | 1215 passed |
-| Frontend build | PASS |
-| Route inventory | PASS (157 routes) |
-| Provider safety audit | PASS (7 sections) |
-| Active YAML diff | clean |
-| Rubric diff | clean |
-| Runtime artifacts | only untracked config dir |
-| Secret/output grep | PASS (0 disallowed) |
+- Frontend provider configuration UI exists for local config, secret storage selection, key store/delete, and dry-run test
+- Known limitation: no full live-provider onboarding wizard; live provider use remains explicit, confirmation-gated, and not run by default
 
 ## P6 State
 
