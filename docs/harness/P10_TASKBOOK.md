@@ -32,14 +32,14 @@
 
 ### P10-M4: Real-use friction log and fix triage
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Capture product friction discovered during real use. Triage fixes vs deferred items.
 **Depends on**: P10-M3
-**Notes**: Not started.
+**Notes**: Done. Friction log created (P10_M4_REAL_USE_FRICTION_LOG.md) with 3 low-severity items, all accepted_no_fix. Fix triage created (P10_M4_FIX_TRIAGE.md) with 0 blocker friction. No fixes required before P6 validation start. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M5: P6 validation start decision gate
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Explicit human/GPT decision on whether to start P6 4-week validation. Must not be automatic.
 **Depends on**: P10-M4
 **Notes**: Not started.

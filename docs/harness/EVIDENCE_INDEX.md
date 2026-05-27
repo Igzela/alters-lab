@@ -371,3 +371,5 @@
 | P10-M3 | P10_M3_FIRST_REAL_WEEKLY_REVIEW_SESSION.md | docs/harness/ | Operator instructions for first real weekly review session |
 | P10-M3 | P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable redacted YAML evidence template for weekly review |
 | P10-M3 | P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE.md | docs/harness/ | Real-use evidence: first weekly review session completed via packaged app |
+| P10-M4 | P10_M4_REAL_USE_FRICTION_LOG.md | docs/harness/ | Structured friction log from P10-M2/P10-M3 real use: 3 low-severity items, 0 blocker |
+| P10-M4 | P10_M4_FIX_TRIAGE.md | docs/harness/ | Fix triage classification: 0 must-fix, 0 should-fix, 0 defer, 3 no-fix-needed |

@@ -15,18 +15,18 @@ Last updated: 2026-05-27
 
 ## What Was Just Completed
 
-P10-M3: First real weekly review session completed via packaged app API.
-- Full workflow executed: note ingest → start review → complete review → action alignment score
-- Action alignment score: 0.75 (aligned_progress)
-- Evidence recorded in P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE.md
+P10-M4: Real-use friction log and fix triage.
+- Friction log created with 3 low-severity items, all accepted_no_fix
+- Fix triage: 0 blocker friction, 0 must-fix, 0 should-fix, 3 no-fix-needed
+- No fixes required before P6 validation start decision gate
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P10-M4: Real-use friction log and fix triage — ready_with_approval.
-GPT must review and approve before Charlie executes.
+P10-M5: P6 validation start decision gate — ready_with_approval.
+GPT must review and approve. This is an explicit human/GPT decision, not automatic.
 
-After P10-M4, proceed to P10-M5 (P6 validation start decision gate).
+After P10-M5, proceed to P10-M6 (Week 1 validation package) if P6 validation is explicitly started.
 
 New sessions must not claim P6 validated.
 

@@ -868,31 +868,31 @@
 
 ### P10-M2: First real weekly note ingest
 
-**Status**: ready_for_human_execution
+**Status**: done
 **Goal**: Charlie writes real weekly note, ingests into Alters Lab.
 **Depends on**: P10-M1
-**Notes**: Instructions and evidence template created. Charlie must perform actual local app operation.
+**Notes**: Done. Real weekly note ingested via packaged app API POST /obsidian-weekly-note/ingest. Record saved to local data dir. Evidence recorded in P10_M2_REAL_WEEKLY_NOTE_INGEST_EVIDENCE.md. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M3: First real weekly review session
 
-**Status**: blocked
+**Status**: done
 **Goal**: Charlie runs real weekly review session.
 **Depends on**: P10-M2
-**Notes**: Not started.
+**Notes**: Done. Real weekly review session completed via packaged app API. Action alignment score: 0.75 (aligned_progress). Evidence recorded in P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE.md. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M4: Real-use friction log and fix triage
 
-**Status**: blocked
+**Status**: done
 **Goal**: Capture product friction from real use.
 **Depends on**: P10-M3
-**Notes**: Not started.
+**Notes**: Done. Friction log created (P10_M4_REAL_USE_FRICTION_LOG.md) with 3 low-severity items, all accepted_no_fix. Fix triage created (P10_M4_FIX_TRIAGE.md) with 0 blocker friction. No fixes required before P6 validation start. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M5: P6 validation start decision gate
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Explicit human/GPT decision on P6 validation start.
 **Depends on**: P10-M4
-**Notes**: Not started.
+**Notes**: Not started. Ready for explicit human/GPT decision.
 
 ### P10-M6: Week 1 validation package
 
