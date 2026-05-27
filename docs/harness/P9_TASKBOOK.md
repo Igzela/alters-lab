@@ -46,14 +46,14 @@
 
 ### P9-M6: Release artifact checklist and version bump policy
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create a release checklist (tests pass, package builds, smoke passes, docs updated) and a version bump policy (when to bump major/minor/patch).
 **Depends on**: P9-M5
-**Notes**: Blocked.
+**Notes**: Done. Created docs/harness/P9_RELEASE_CHECKLIST.md (pre-release checks: backend tests, frontend build, package build, package safety, lifecycle smoke, forbidden claims, secret check, doctor output; doc checks; governance checks; post-release). Created docs/harness/P9_VERSION_BUMP_POLICY.md (SemVer rules, current history, where version lives, phase completion relationship). No code changes. No active YAML/rubric changes.
 
 ### P9-M7: P9 Closeout
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Seal P9 only if: install/uninstall docs exist, disposable verification passes, onboarding guide exists, provider setup guide exists, doctor works, release checklist exists.
 **Depends on**: P9-M6
 **Notes**: Blocked.

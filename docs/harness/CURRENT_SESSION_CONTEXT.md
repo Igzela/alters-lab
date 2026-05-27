@@ -15,25 +15,21 @@ Last updated: 2026-05-27
 - P9-M2 done (disposable dpkg lifecycle verification)
 - P9-M3 done (first-run onboarding guide + Getting Started frontend page)
 - P9-M4 done (provider setup and safety guide + ProviderSettings safety notes)
-- P9-M5 done (troubleshooting / doctor improvements + TROUBLESHOOTING.md)
-- P9-M6 ready_with_approval
-- P9-M7 blocked
+- P9-M6 done (release checklist + version bump policy)
+- P9-M7 ready_with_approval
 
 ## What Was Just Completed
 
-P9-M5: Troubleshooting / doctor improvements.
-- Enhanced build_doctor_report with new checks: app_root_exists, config_exists, product_data_dir_writable, state_dir_writable, provider_configured, secrets_file (0600 permissions), actionable WARN/BLOCKED messages
-- Created docs/user/TROUBLESHOOTING.md (12 scenarios: app won't start, browser, port, command missing, frontend 503, provider issues, keyring, secrets perms, backup, uninstall data, P6, logs)
-- Updated INSTALL.md, FIRST_RUN.md, DATA_AND_BACKUP.md, UNINSTALL.md, README.md with TROUBLESHOOTING links
-- Added 10 new doctor tests (service + CLI)
+P9-M6: Release artifact checklist and version bump policy.
+- Created docs/harness/P9_RELEASE_CHECKLIST.md — pre-release checks, doc checks, governance checks, post-release
+- Created docs/harness/P9_VERSION_BUMP_POLICY.md — SemVer rules, current history, where version lives
+- No code changes, no active YAML/rubric changes
 - Updated 7 governance docs
-- Backend tests passing
-- Frontend build PASS
 
 ## Next Decision
 
-P9-M5 is done. Options:
-1. Begin P9-M6 (release artifact checklist and version bump policy) after explicit approval
+P9-M6 is done. Options:
+1. Begin P9-M7 (P9 Closeout) after explicit approval
 2. Other product work
 
 New sessions must not claim P6 validated.

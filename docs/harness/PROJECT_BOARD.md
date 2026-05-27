@@ -138,10 +138,10 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | P9-M3 | First-run onboarding guide | **done** |
 | P9-M4 | Provider setup and safety guide | **done** |
 | P9-M5 | Troubleshooting / doctor improvements | **done** |
-| P9-M6 | Release artifact checklist and version bump policy | **ready_with_approval** |
-| P9-M7 | P9 Closeout | **blocked** |
+| P9-M6 | Release artifact checklist and version bump policy | **done** |
+| P9-M7 | P9 Closeout | **ready_with_approval** |
 
-P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **sealed as REAL_PROVIDER_READY_LOCAL_APP** — P9 status: **P9-000 done, P9-M1 done, P9-M2 done, P9-M3 done, P9-M4 done, P9-M5 done, P9-M6 ready_with_approval** — backend tests passing.
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **sealed as REAL_PROVIDER_READY_LOCAL_APP** — P9 status: **P9-000 through P9-M6 done, P9-M7 ready_with_approval** — backend tests passing.
 
 ## Phase 5 Sealed Baseline
 

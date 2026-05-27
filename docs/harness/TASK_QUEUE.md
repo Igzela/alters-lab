@@ -838,14 +838,14 @@
 
 ### P9-M6: Release artifact checklist and version bump policy
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create release checklist and version bump policy.
 **Depends on**: P9-M5
-**Notes**: Blocked.
+**Notes**: Done. Created P9_RELEASE_CHECKLIST.md and P9_VERSION_BUMP_POLICY.md. No code changes.
 
 ### P9-M7: P9 Closeout
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Seal P9 only if all release readiness criteria are met.
 **Depends on**: P9-M6
 **Notes**: Blocked.

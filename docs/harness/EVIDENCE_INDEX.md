@@ -355,3 +355,5 @@
 | P9-M5 | Troubleshooting guide | docs/user/TROUBLESHOOTING.md | 12 scenarios: app won't start, browser, port conflict, command missing, frontend 503, provider issues (disabled/mock/live), keyring, secrets perms, backup, uninstall data, P6, logs. |
 | P9-M5 | Doctor tests | apps/api/tests/test_local_launcher.py, apps/api/tests/test_local_launcher_cli.py | 10 new tests: checks list, API key absence, provider mode, P6 flags, data dirs, safety flags, actionable messages, text output. |
 | P9-M5 | Doc updates | docs/user/INSTALL.md, FIRST_RUN.md, DATA_AND_BACKUP.md, UNINSTALL.md, README.md | Added TROUBLESHOOTING.md links. |
+| P9-M6 | Release checklist | docs/harness/P9_RELEASE_CHECKLIST.md | Pre-release checks (backend tests, frontend build, package build, package safety, lifecycle smoke, forbidden claims, secret check, doctor output), doc checks, governance checks, post-release. |
+| P9-M6 | Version bump policy | docs/harness/P9_VERSION_BUMP_POLICY.md | SemVer rules (PATCH/MINOR/MAJOR), current history 0.1.0, where version lives, phase completion relationship. |
