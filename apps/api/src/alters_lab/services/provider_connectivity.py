@@ -172,6 +172,18 @@ def run_provider_connectivity_check(
             message="Dry-run connectivity check. No network call made.",
         )
 
+    if not request.live_check:
+        audit = build_provider_connectivity_audit_event(
+            provider_mode="openai-compatible-http", status="blocked",
+            live_check=False, dry_run=request.dry_run, network_call_made=False,
+        )
+        return ProviderConnectivityResponse(
+            status="blocked", provider_mode="openai-compatible-http", configured=True,
+            live_check=False, dry_run=request.dry_run, network_call_made=False,
+            audit_event_id=audit.event_id,
+            message="Live network check requires live_check=true and exact confirmation.",
+        )
+
     if request.live_check and request.confirmation != LIVE_CONFIRMATION:
         audit = build_provider_connectivity_audit_event(
             provider_mode="openai-compatible-http", status="blocked",

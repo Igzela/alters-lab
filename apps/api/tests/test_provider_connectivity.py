@@ -118,6 +118,16 @@ def test_dry_run_returns_no_network(tmp_path: Path):
     assert resp.network_call_made is False
 
 
+def test_dry_run_false_live_check_false_returns_blocked(tmp_path: Path):
+    layout = _configured_layout(tmp_path)
+    req = ProviderConnectivityRequest(dry_run=False, live_check=False)
+    resp = run_provider_connectivity_check(req, layout)
+
+    assert resp.status == "blocked"
+    assert resp.network_call_made is False
+    assert "live_check=true" in resp.message.lower()
+
+
 def test_live_check_without_confirmation_returns_blocked(tmp_path: Path):
     layout = _configured_layout(tmp_path)
     req = ProviderConnectivityRequest(live_check=True)
