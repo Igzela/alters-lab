@@ -6,7 +6,7 @@ Read this file first in any new ChatGPT, Codex, or Claude session.
 
 Personal future path simulation and calibration system. Not a content creation tool.
 
-## Current State (as of 2026-05-27)
+## Current State (as of 2026-05-28)
 
 - **P7**: Sealed as `LOCAL_APP_RELEASE_CANDIDATE`. Debian package builds, frontend works, CLI launcher works.
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
@@ -14,17 +14,20 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P8**: Sealed as `REAL_PROVIDER_READY_LOCAL_APP`. All milestones done. 1215 backend tests passing.
 - **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
 - **P9**: All milestones done (P9-000 through P9-M7). P9 closeout PASS. Install docs, lifecycle verification, onboarding guide, provider guide, troubleshooting/doctor, release checklist, version bump policy all complete. Closeout report: `docs/harness/P9_CLOSEOUT_REPORT.md`.
-- **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 done. P10-M1 done. P10-M2 done (first real weekly note ingested). P10-M3 done (first real weekly review session completed, action alignment score 0.75). P10-M4 done (friction log: 0 blocker friction, 3 low-severity accepted_no_fix). P10-M5 done — BLOCKED_BY_NEW_FRICTION (app not yet functionally complete for normal use). P6 validation must NOT start.
+- **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 done. P10-M1 done. P10-M2 done (first real weekly note ingested). P10-M3 done (first real weekly review session completed, action alignment score 0.75). P10-M4 done (friction log: 0 blocker friction, 3 low-severity accepted_no_fix). P10-M5 done — BLOCKED_BY_NEW_FRICTION (app not yet functionally complete for normal use). P10-M5-R2 done — reopened P6 validation start gate using P11 closeout + P11-PILOT-1 evidence. **Awaiting Charlie's explicit decision.**
 - **P11**: Product Completeness Before Validation. P11-000 done. P11-M1 done (inventory). P11-M1-R1/R2/R3 done (granularity refinement, count fix, wording fix). P11-M2 done (workflow gap map: 23 workflows, 4 tiers, 20 gaps, 0 normal-use blockers, 4 P6 blockers). P11-M3 done (UX gaps: 12 gaps, 0 blockers, 3 medium, 9 low). P11-M4 done (gap closure plan: all frontend-only, existing APIs sufficient). P11-M5 done (CalibrationHistory detail/trend, RealityScore history, P6Progress rewrite, verdict explanations, dynamic alters). P11-M6 done (PatternReview, BehaviorValidation, DataManagement pages). P11-M7 done (product completeness smoke and closeout). **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**.
-- **P6 validation**: Not started. Starts after explicit human/GPT decision. Completes after 4 real weekly reviews, 21 days.
+- **P11-PILOT-1**: Real-use product pilot PASS. All 10 visible workflows accessible and guarded; no hidden blockers observed.
+- **P6 validation**: Not started. Awaiting Charlie's explicit decision (START_P6_VALIDATION_NOW / RUN_ONE_MORE_PILOT_PASS / DEFER_P6_VALIDATION / BLOCKED_BY_NEW_FRICTION). Completes after 4 real weekly reviews, 21 days.
 
 ## Reading Order
 
-1. `docs/harness/PROJECT_BOARD.md` — task states and phase status
-2. `docs/harness/TASK_QUEUE.md` — full task history with notes
-3. `docs/harness/P7_CLOSEOUT_REPORT.md` — what P7 sealed and why
-4. `docs/harness/P7_FRONTEND_USABILITY_R1.md` — what P7-R1 added
-5. `docs/harness/CURRENT_SESSION_CONTEXT.md` — what to do next
+1. `AGENTS.md` — cross-agent rules and documentation maintenance discipline
+2. `CLAUDE.md` — Claude/GPT collaboration protocol and current technical context
+3. `docs/harness/CURRENT_SESSION_CONTEXT.md` — latest state and next decision
+4. `docs/harness/PROJECT_BOARD.md` — task states and phase status
+5. `docs/harness/TASK_QUEUE.md` — full task history with notes
+6. `docs/harness/P11_CLOSEOUT_REPORT.md` — what P11 sealed and why
+7. `docs/runs/P11-PILOT-1-real-use-product-pilot.md` — latest real-use product pilot
 
 ## What NOT to Do
 
@@ -42,3 +45,19 @@ Personal future path simulation and calibration system. Not a content creation t
 - Run P7 smoke: `python3 tools/p7_local_app_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json`
 - Run P8 smoke: `python3 tools/p8_e2e_product_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json`
 - Check git status: `git status`
+
+## Documentation Maintenance
+
+Before every commit-sized change, update the handoff docs if status, tests, commands, boundaries, workflows, routes, pages, evidence, or next steps changed:
+
+- `docs/harness/START_HERE_FOR_NEW_SESSION.md`
+- `docs/harness/CURRENT_SESSION_CONTEXT.md`
+- `docs/harness/PROJECT_BOARD.md`
+- `docs/harness/TASK_QUEUE.md`
+- `docs/harness/RUN_LOG.md`
+- `docs/harness/EVIDENCE_INDEX.md`
+- `README.md`
+- `CLAUDE.md`
+- `AGENTS.md`
+
+If no documentation update is needed, state why in the completion report.

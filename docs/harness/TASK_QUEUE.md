@@ -894,6 +894,13 @@
 **Depends on**: P10-M4
 **Notes**: Done. Decision: BLOCKED_BY_NEW_FRICTION. Charlie corrected GPT — app not yet functionally complete enough for normal use. P6 validation must NOT start. Evidence recorded in P10_M5_P6_VALIDATION_START_EVIDENCE.md. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. Next: P11 product completeness.
 
+### P10-M5-R2: Reopen P6 validation start gate after P11
+
+**Status**: awaiting_human_decision
+**Goal**: Reopen the P6 validation start decision gate using P11 closeout and P11-PILOT-1 as evidence.
+**Depends on**: P11-M7, P11-PILOT-1
+**Notes**: Decision-gate update only. P11 sealed product completeness. P11-PILOT-1 exercised 10 workflows with no friction. Previous blocker (product incompleteness) likely resolved. Decision options: START_P6_VALIDATION_NOW, RUN_ONE_MORE_PILOT_PASS, DEFER_P6_VALIDATION, BLOCKED_BY_NEW_FRICTION. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. P10-M6 blocked until Charlie explicitly chooses START.
+
 ### P10-M6: Week 1 validation package
 
 **Status**: blocked

@@ -717,3 +717,12 @@
 **Decision**: P6 validation is BLOCKED_BY_NEW_FRICTION. The app must reach product completeness before any 4-week validation window starts. P11 (Product Completeness Before Validation) is the next phase.
 **Consequences**: P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. P10-M6/M7 remain blocked. P11 begins with app capability inventory.
 **Alternatives**: START_P6_VALIDATION_NOW (rejected by Charlie — app incomplete). DEFER_P6_VALIDATION (rejected — too vague, product completeness is the specific blocker).
+
+### Decision P10-M5-R2-01: P6 validation reentry gate reopened
+
+**Date**: 2026-05-28
+**Status**: accepted
+**Context**: P11 sealed product completeness (commit cb5b457). P11-PILOT-1 exercised 10 packaged-app workflows with no friction. Previous P10-M5 blocker (product incompleteness) likely resolved.
+**Decision**: Reopen the P6 validation start decision gate. This is a decision-gate update only — not a new phase, not P6 validation started. Decision options: START_P6_VALIDATION_NOW, RUN_ONE_MORE_PILOT_PASS, DEFER_P6_VALIDATION, BLOCKED_BY_NEW_FRICTION.
+**Consequences**: P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. P10-M6 remains blocked until Charlie explicitly chooses START after GPT review. Evidence from P11 and P11-PILOT-1 supports readiness to start, not completion.
+**Alternatives**: Start P6 validation automatically (rejected — requires explicit Charlie decision). Create P12 (rejected — P10-M5-R2 is a reopening, not a new phase).

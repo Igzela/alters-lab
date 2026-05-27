@@ -3,6 +3,37 @@
 ## 项目身份
 Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具。
 
+## 当前阶段
+- P0-P11 全部完成（P6 验证被有意跳过）
+- P11 已封印：PRODUCT_COMPLETE_BEFORE_VALIDATION
+- P11-PILOT-1 已完成：真实使用产品 pilot PASS，10 个可见工作流无阻塞摩擦
+- 产品状态：可本地运行的个人工具，功能完整，待 P6 行为验证
+- 下一步决策：P10-M5-R2 已重开 P6 validation start gate，等待 Charlie 明确选择 START_P6_VALIDATION_NOW / RUN_ONE_MORE_PILOT_PASS / DEFER_P6_VALIDATION / BLOCKED_BY_NEW_FRICTION
+
+## 技术栈
+- **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
+- **前端**: React 18, TypeScript, Vite（已激活，P11 新增多个页面）
+- **存储**: YAML + JSON 文件（alters/ 目录），无数据库
+- **打包**: Debian (.deb)，CLI 入口 `alters-lab`
+- **测试**: pytest + httpx
+- **部署**: 本地安装，运行在 127.0.0.1:18790
+
+## 核心数据流
+Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration → Archive
+详见 docs/architecture.md 和 docs/data-model.md
+
+## 新 session 启动顺序
+
+所有 Claude Code、Codex 或其他 coding agent 必须先读：
+
+1. `AGENTS.md`
+2. `docs/harness/START_HERE_FOR_NEW_SESSION.md`
+3. `docs/harness/CURRENT_SESSION_CONTEXT.md`
+4. `docs/harness/PROJECT_BOARD.md`
+5. `docs/harness/TASK_QUEUE.md`
+
+如果这些文件、README、最近 git log 互相冲突，先修文档，不要直接进入功能开发。
+
 ## 协作模式
 
 三方角色分工：
@@ -46,10 +77,38 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 ## 代码规范
 - 不修改 alters/current/ 下的 active YAML（除非有明确 approval）
 - 不连接 LLM provider
-- 不添加 frontend/database
 - 测试用 tmp_path，不改真实文件
+- commit message 用英文，格式: `P{N}-M{N}: 简短描述`，修正用 `-R{N}` 后缀
+- 1270 backend tests passing
+
+## 文档维护规则
+
+每次 commit 前，如果状态、测试数、命令、边界、页面、路由、证据或下一步发生变化，必须同步更新：
+
+- `docs/harness/START_HERE_FOR_NEW_SESSION.md`
+- `docs/harness/CURRENT_SESSION_CONTEXT.md`
+- `docs/harness/PROJECT_BOARD.md`
+- `docs/harness/TASK_QUEUE.md`
+- `docs/harness/RUN_LOG.md`
+- `docs/harness/EVIDENCE_INDEX.md`
+- `README.md`
+- `CLAUDE.md`
+- `AGENTS.md`
+
+如果不需要更新文档，在 completion report 中说明原因。新 session 必须能只靠文档接手。
 
 ## 测试命令
 ```bash
 PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 ```
+
+## 项目文档
+- docs/ — 工作流和架构文档（architecture.md, data-model.md, product-spec.md 等）
+- docs/harness/ — 里程碑证据和关闭报告
+- 当前任务方向见最近 git log
+
+## 前端页面
+- SystemStatus (status), GettingStarted, WeeklyReview, AlterDialogue
+- RealityScore, CalibrationHistory, RubricDelta, CheckpointPlan
+- ProviderSettings, PatternReview, BehaviorValidation, DataManagement
+- 所有页面通过 App.tsx 路由，nav bar 导航

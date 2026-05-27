@@ -407,3 +407,8 @@
 | P11-M7 | P11_M7_PRODUCT_COMPLETENESS_SMOKE_EVIDENCE.json | docs/harness/ | Smoke evidence: all builds pass, boundary checks pass, frontend content verified |
 | P11-M7 | P11_CLOSEOUT_REPORT.md | docs/harness/ | P11 closeout: product completeness established, P6 remains NOT_VALIDATED |
 | P11-M7 | P11_CLOSEOUT_EVIDENCE.json | docs/harness/ | Closeout evidence: all milestones PASS, P11 sealed |
+| P11-PILOT-1 | P11-PILOT-1-real-use-product-pilot.md | docs/runs/ | Real-use product pilot: 10 workflows exercised, friction=none, boundary checks pass, GPT verdict PASS |
+| P10-M5-R2 | P10_M5_R2_P6_VALIDATION_REENTRY_DECISION.md | docs/harness/ | Reopened P6 validation start gate using P11 closeout + P11-PILOT-1 evidence |
+| P10-M5-R2 | P10_M5_R2_P6_VALIDATION_REENTRY_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable evidence template for P6 validation reentry decision |
+| DOC-HANDOFF-001 | AGENTS.md | ./ | Cross-agent bootstrap, hard boundaries, verification commands, and documentation maintenance rule |
+| DOC-HANDOFF-001 | README.md, CLAUDE.md, START_HERE_FOR_NEW_SESSION.md, CURRENT_SESSION_CONTEXT.md | ./, docs/harness/ | Handoff surface updated so new sessions see P11/Pilot state and commit-time doc maintenance expectations |
