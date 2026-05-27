@@ -287,3 +287,8 @@
 | P8-000 | P8 taskbook | docs/harness/P8_TASKBOOK.md | P8 milestone taskbook: P8-000 through P8-M7 with status, goals, dependencies, and notes. |
 | P8-000 | Provider safety boundary | docs/harness/P8_PROVIDER_SAFETY_BOUNDARY.md | Provider safety rules: secret handling, provider output handling, network behavior, UI behavior, audit events. |
 | P8-000 | E2E validation plan | docs/harness/P8_E2E_VALIDATION_PLAN.md | E2E validation plan: 5 test levels from mock-only to frontend flow smoke, pass criteria, excluded scope. |
+| P8-M1 | Provider adapter schemas | apps/api/src/alters_lab/schemas/provider_adapter.py | ProviderAdapterRequest, ProviderAdapterResponse, ProviderAuditEvent, health/status responses. |
+| P8-M1 | Provider adapter service | apps/api/src/alters_lab/services/provider_adapter.py | build_provider_adapter_health/status/audit_event, redact_provider_error, validate_provider_request, run_provider_adapter. |
+| P8-M1 | Provider adapter API | apps/api/src/alters_lab/api/provider_adapter.py | Routes: /provider-adapter/health, /status, /preview. |
+| P8-M1 | Provider adapter tests | apps/api/tests/test_provider_adapter.py, apps/api/tests/test_provider_adapter_api.py | 26 tests covering disabled/mock/openai modes, live_check blocked, persist_output blocked, no secrets, no YAML writes, no scores, safety flags. |
+| P8-M1 | P8-M1 contract doc | docs/harness/P8_M1_PROVIDER_ADAPTER_CONTRACT.md | Provider adapter contract definition, architecture, safety guarantees, and test coverage. |

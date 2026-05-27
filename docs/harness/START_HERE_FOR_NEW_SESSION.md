@@ -12,8 +12,9 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
 - **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
 - **P8-000**: Done. Real provider and product readiness boundary plan created.
-- **P8-M1**: Ready with approval. Provider adapter contract hardening.
-- **P8-M2 through P8-M7**: Blocked. Not started.
+- **P8-M1**: Done. Provider adapter contract hardened. 26 new tests, 1030 total backend tests.
+- **P8-M2**: Ready with approval. Real provider dry-run / connectivity check.
+- **P8-M3 through P8-M7**: Blocked. Not started.
 - **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
 
 ## Reading Order

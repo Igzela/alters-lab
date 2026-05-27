@@ -129,6 +129,8 @@
 | R-123 | Provider prompt contains user personal records without consent | Medium | High | P8 safety policy: explicit opt-in for live provider, dry-run default for connectivity check, no personal records in connectivity check prompts. | Active |
 | R-124 | Network timeout/retry loops consume resources or leak data | Low | High | P8 safety policy: explicit timeout, no automatic retry, user-initiated only, failed requests logged as audit events. | Active |
 | R-125 | Provider hallucinated advice mistaken as factual guidance | Medium | Medium | P8 UI: provider output labeled unverified, user must manually edit/confirm, no auto-submit. | Active |
+| R-126 | Adapter preview mistaken as real provider integration | Medium | Medium | P8-M1: real_network_calls_enabled=false, openai-compatible-http live_check blocked until P8-M2, clear route/status flags, tests prove no network calls. | Active |
+| R-127 | Adapter audit event leaks prompt or response content | Low | High | P8-M1: audit event schema enforces prompt_recorded=false, response_recorded=false, secret_recorded=false. Tests verify no raw content in audit. | Active |
 
 ## Risk Assessment
 

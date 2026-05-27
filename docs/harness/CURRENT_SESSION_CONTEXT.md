@@ -8,20 +8,23 @@ Last updated: 2026-05-27
 - P7-R1 (frontend Weekly Review usability) complete
 - P6: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`
 - P8-000: done (boundary plan created)
-- P8-M1: ready_with_approval (provider adapter contract hardening)
-- P8-M2 through P8-M7: blocked
+- P8-M1: done (provider adapter contract hardened)
+- P8-M2: ready_with_approval (real provider dry-run / connectivity check)
+- P8-M3 through P8-M7: blocked
 - No active phase in progress
 
 ## What Was Just Completed
 
-P8-000: Real Provider & Product Readiness Boundary Plan.
-- Created P8 plan, taskbook, provider safety boundary, E2E validation plan
-- Defined provider threat model, safety policy, milestone table
-- No code changes, no provider implementation
+P8-M1: Provider Adapter Contract Hardening.
+- Created provider adapter schemas, service, and API routes
+- 26 new tests, 1030 total backend tests passing
+- live_check blocked in P8-M1, openai-compatible-http dry-run only
+- No network calls, no YAML/rubric writes, no scores
+- P8-M2 ready_with_approval
 
 ## Next Decision
 
-P8-M1 (Provider Adapter Contract Hardening) is ready_with_approval.
+P8-M2 (Real Provider Dry-Run / Connectivity Check) is ready_with_approval.
 Requires explicit human/GPT approval before starting.
 
 ## Verification Commands

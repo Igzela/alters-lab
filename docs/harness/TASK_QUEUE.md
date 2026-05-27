@@ -743,17 +743,17 @@
 
 ### P8-M1: Provider Adapter Contract Hardening
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Define a clean provider adapter boundary with disabled/mock/openai-compatible-http modes, timeout, retry, redaction, no persistence by default, no active YAML write, no score generation.
 **Depends on**: P8-000 reviewed and approved
-**Notes**: Not started. Requires explicit approval.
+**Notes**: Done. Provider adapter schemas, service, and API routes implemented. 26 new tests (17 service + 9 API). 1030 total backend tests passing. live_check blocked in P8-M1. openai-compatible-http dry-run only. No network calls. No active YAML/rubric writes. No scores created. P6 flags remain false. P8-M2 ready_with_approval.
 
 ### P8-M2: Real Provider Dry-Run / Connectivity Check
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Allow user-configured provider to perform an explicit safe connectivity check. User must explicitly enable live_check. No prompts containing personal records by default. No provider output persisted. No secrets returned. All network attempts audited locally with redacted metadata.
 **Depends on**: P8-M1
-**Notes**: Blocked.
+**Notes**: Ready with approval after P8-M1 pass.
 
 ### P8-M3: Provider-Backed Dialogue Preview
 
