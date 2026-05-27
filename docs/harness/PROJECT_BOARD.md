@@ -104,7 +104,7 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 - Package-context smoke: PASS
 - Closeout report: `docs/harness/P7_CLOSEOUT_REPORT.md`
 - P6: CODE_COMPLETE / P6_SKIPPED_VALIDATION
-- P8: PASS (P8-000 through P8-M4 complete)
+- P8: blocked / not started
 
 ## Phase 7 Repair / Usability Follow-up
 
@@ -117,25 +117,10 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 
 | ID | Title | Status |
 |----|-------|--------|
-| P8-000 | Real Provider Integration & E2E Boundary Plan | **done** |
-| P8-M1 | Real Provider Integration | **done** |
-| P8-M2 | End-to-End Workflow Validation | **done** |
-| P8-M3 | Configuration & Documentation | **done** |
-| P8-M4 | P8 Closeout | **done** |
+| P8-000 | Real Provider Integration & E2E Boundary Plan | **blocked** |
 
 P6 status: **P6_SKIPPED_VALIDATION** — human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
-P8 status: **PASS** — all P8 milestones complete, sealed baseline established.
-
-## Phase 8 Sealed Baseline
-
-P8 Final Gate: **PASS**
-- Backend tests: 1004 passed
-- Real provider integration: PASS
-- E2E validation: PASS (27 tests)
-- Documentation: PASS (README, PROVIDER_CONFIGURATION.md, USER_GUIDE.md)
-- P6 status: P6_SKIPPED_VALIDATION
-- P7 status: LOCAL_APP_RELEASE_CANDIDATE
-- Closeout report: `docs/harness/P8_CLOSEOUT_REPORT.md`
+P8 status: **blocked** — requires explicit human/GPT approval before starting.
 
 ## Phase 5 Sealed Baseline
 

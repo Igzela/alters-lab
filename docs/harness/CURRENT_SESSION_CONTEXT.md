@@ -7,7 +7,7 @@ Last updated: 2026-05-27
 - P7 sealed as `LOCAL_APP_RELEASE_CANDIDATE`
 - P7-R1 (frontend Weekly Review usability) complete
 - P6: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`
-- P8: `PASS` (sealed)
+- P8: blocked / not started (requires explicit human/GPT approval)
 - No active phase in progress
 
 ## What Was Just Completed
@@ -19,9 +19,9 @@ DOCS-R1: New session bootstrap documentation added:
 ## Next Decision
 
 Awaiting human/GPT direction. Options:
-1. Begin real P6 validation using the local app (requires 4-week real-use window)
-2. Start P9 or next phase (requires explicit approval)
-3. Other product work
+1. Continue product/frontend polish
+2. Begin real P6 validation later (requires 4-week real-use window)
+3. Start P8-000 only after explicit human/GPT approval
 
 ## Verification Commands
 

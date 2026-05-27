@@ -11,7 +11,7 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P7**: Sealed as `LOCAL_APP_RELEASE_CANDIDATE`. Debian package builds, frontend works, CLI launcher works.
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
 - **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
-- **P8**: Sealed as `PASS`. Real provider integration and E2E validation complete.
+- **P8**: Blocked / not started. Requires explicit human/GPT approval before beginning.
 - **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
 
 ## Reading Order
