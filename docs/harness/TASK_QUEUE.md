@@ -726,3 +726,10 @@
 **Goal**: Add a usable frontend weekly review flow for real P6 weekly review usage.
 **Depends on**: P7 local app release candidate
 **Notes**: Added Weekly Review nav/page, P6 progress panel, provider stale-config guard, Status weekly review link, Reality Score clarification, and History weekly/action records. P6 remains NOT_VALIDATED / NOT_SEALED. P8 remains blocked.
+
+### DOCS-R1: New Session Bootstrap Docs
+
+**Status**: done
+**Goal**: Add bootstrap docs so new ChatGPT/Codex/Claude sessions understand Alters Lab current state, reading order, and boundaries.
+**Depends on**: P7-R1 complete
+**Notes**: Added START_HERE_FOR_NEW_SESSION.md and CURRENT_SESSION_CONTEXT.md. Updated EVIDENCE_INDEX.md and TASK_QUEUE.md. No code changes, no active YAML/rubric changes, no runtime records, no P6 validation claim, no P8 start.

@@ -111,6 +111,7 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 | ID | Title | Status |
 |----|-------|--------|
 | P7-R1 | Complete P6 Frontend Usability Layer | **done** |
+| DOCS-R1 | New Session Bootstrap Docs | **done** |
 
 ## Phase 8 — Real Provider Integration & End-to-End Validation
 

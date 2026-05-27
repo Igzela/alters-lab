@@ -281,3 +281,5 @@
 | P6-ENDGAME | Closeout operator guide | docs/harness/P6_CLOSEOUT_OPERATOR_GUIDE.md | Guarded closeout instructions that keep P6 blocked unless behavior validation passes with verified persisted evidence. |
 | P6-ENDGAME | Helper scripts | tools/p6_weekly_review_flow.py, tools/p6_validation_check.py, tools/p6_closeout_attempt.py | Local operator helpers. Weekly flow writes ignored runtime records only from supplied real notes; validation check is read-only; closeout attempt blocks without complete evidence. |
 | P6-ENDGAME | Helper script tests | apps/api/tests/test_p6_endgame_tools.py | Tests empty evidence remains blocked, dry-run closeout remains blocked, and weekly flow writes records only under a supplied repo root. |
+| DOCS-R1 | New session bootstrap | docs/harness/START_HERE_FOR_NEW_SESSION.md | First-read doc for new ChatGPT/Codex/Claude sessions. States current phase state, reading order, do-not-do list, and verification commands. |
+| DOCS-R1 | Session context | docs/harness/CURRENT_SESSION_CONTEXT.md | Current session state: what was just completed, next decision, verification commands, and key boundaries. |
