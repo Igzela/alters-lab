@@ -155,31 +155,25 @@ alters/
   archive/                 # Completed cycle archives
 ```
 
-## Local Chrome CDP Proxy
+## Browser Automation (chrome-devtools MCP)
 
-`tools/cli.py` controls an existing GUI Chrome through CDP. To restart Chrome
-with CDP on port `9222` and route browser traffic through the local Clash Verge
-proxy at `http://127.0.0.1:7897`, run:
+ChatGPT interaction uses the `chrome-devtools` MCP server (autoConnect mode).
+It connects to the running Chrome instance — no separate scripts or CLI tools needed.
 
-```bash
-tools/start_chrome_proxy.sh
-```
+**Available MCP tools:** `list_pages`, `select_page`, `navigate_page`, `evaluate_script`, `take_snapshot`, `take_screenshot`, `click`, `fill`.
 
-The script closes the matching Chrome instance for
-`/tmp/chrome-debug-profile`, starts Chrome with `--proxy-server`, and keeps the
-GUI display environment:
+**ChatGPT message pattern:**
+```js
+// Type message
+document.querySelector('.ProseMirror').focus()
+document.execCommand('insertText', false, 'your message here')
 
-```bash
-DISPLAY=:0
-XAUTHORITY=/run/user/1000/.mutter-Xwaylandauth.DZGGP3
-WAYLAND_DISPLAY=wayland-0
-```
+// Click send
+const form = document.querySelector('.ProseMirror').closest('form')
+form.querySelectorAll('button').find(b => (b.getAttribute('aria-label')||'').includes('Send')).click()
 
-Verify access through CDP:
-
-```bash
-python3 tools/cli.py --timeout 60 navigate https://chatgpt.com/
-python3 tools/cli.py --target-url chatgpt.com get-content
+// Read reply
+document.body.innerText.substring(document.body.innerText.length - 2000)
 ```
 
 ## License
