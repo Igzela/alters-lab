@@ -26,7 +26,7 @@ repo_root/
 ~/.local/state/alters-lab/ — pid, logs/
 ```
 
-## Record Types
+## Record Types (20 record/config/state types)
 
 | Record Type | Storage Area | Dev Path | Packaged Path | Create API | Read/List API | Delete API | Frontend Access | Packaged Mode | Status |
 |-------------|-------------|----------|---------------|------------|---------------|------------|-----------------|---------------|--------|

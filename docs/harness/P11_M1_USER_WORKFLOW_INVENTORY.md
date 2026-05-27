@@ -219,7 +219,7 @@
 
 ## Workflow Gap Summary
 
-### Fully Usable (8 workflows)
+### Fully Usable (10 workflows)
 Install, launch, first run, provider disabled, provider mock, weekly note ingest, weekly review, action alignment score, backup, uninstall
 
 ### Partial (5 workflows)

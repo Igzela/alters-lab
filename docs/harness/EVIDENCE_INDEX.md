@@ -378,6 +378,6 @@
 | P10-M5 | P10_M5_P6_VALIDATION_START_EVIDENCE.md | docs/harness/ | Decision evidence: BLOCKED_BY_NEW_FRICTION, product incompleteness |
 | P11-000 | P11_000_PRODUCT_COMPLETENESS_BEFORE_VALIDATION_PLAN.md | docs/harness/ | P11 planning stub: audit and complete app before P6 validation |
 | P11-M1 | P11_M1_APP_CAPABILITY_INVENTORY.md | docs/harness/ | Full app inventory: 9 pages, 124 routes, 6 CLI commands, 11 workflows (R1 updated) |
-| P11-M1-R1 | P11_M1_DATA_RECORD_INVENTORY.md | docs/harness/ | Data record / local storage inventory: 19 record types, 12 P6 runtime areas, storage layout |
+| P11-M1-R1 | P11_M1_DATA_RECORD_INVENTORY.md | docs/harness/ | Data record / local storage inventory: 20 record types, 12 P6 runtime areas, storage layout |
 | P11-M1-R1 | P11_M1_ROUTE_AND_PAGE_INVENTORY.md | docs/harness/ | Per-route inventory: method, path, R/W, provider risk, frontend-used, status for 124 routes |
 | P11-M1-R1 | P11_M1_USER_WORKFLOW_INVENTORY.md | docs/harness/ | User workflow inventory: 16 workflows with frontend path, APIs, records, gaps, P6 blocker status |

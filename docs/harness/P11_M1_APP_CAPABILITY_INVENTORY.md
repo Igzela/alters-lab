@@ -99,7 +99,7 @@
 
 ## Data Records / Local Storage
 
-> 19 record/config types across 12 P6 runtime areas + config/state. See `P11_M1_DATA_RECORD_INVENTORY.md` for full detail.
+> 20 record/config types across 12 P6 runtime areas + config/state. See `P11_M1_DATA_RECORD_INVENTORY.md` for full detail.
 
 | Record Type | Storage Area | Create API | Read/List API | Frontend Access | Status |
 |-------------|-------------|------------|---------------|-----------------|--------|
