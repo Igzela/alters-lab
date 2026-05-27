@@ -381,3 +381,6 @@
 | P11-M1-R1 | P11_M1_DATA_RECORD_INVENTORY.md | docs/harness/ | Data record / local storage inventory: 20 record types, 12 P6 runtime areas, storage layout |
 | P11-M1-R1 | P11_M1_ROUTE_AND_PAGE_INVENTORY.md | docs/harness/ | Per-route inventory: method, path, R/W, provider risk, frontend-used, status for 124 routes |
 | P11-M1-R1 | P11_M1_USER_WORKFLOW_INVENTORY.md | docs/harness/ | User workflow inventory: 16 workflows with frontend path, APIs, records, gaps, P6 blocker status |
+| P11-M2 | P11_M2_MISSING_CORE_WORKFLOW_MAP.md | docs/harness/ | Workflow tier classification: 23 workflows, 4 tiers, core missing workflows identified |
+| P11-M2 | P11_M2_PRODUCT_COMPLETENESS_GAP_MATRIX.md | docs/harness/ | Gap matrix: 20 gaps with gap_id, tier, type, severity, blockers, recommended phase |
+| P11-M2 | P11_M2_WORKFLOW_PRIORITY_DECISION.md | docs/harness/ | Priority decision: calibration/history visibility (M3), validation readiness (M4), defer Phase 3-6 frontends |

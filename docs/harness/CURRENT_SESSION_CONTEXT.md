@@ -11,22 +11,24 @@ Last updated: 2026-05-27
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
-- P10: P10-000 done, P10-M1 done, P10-M2 done, P10-M3 done, P10-M4 ready_with_approval
+- P10: P10-000 through P10-M5 done (BLOCKED_BY_NEW_FRICTION), P10-M6/M7 blocked
+- P11: P11-000 done, P11-M1 done (inventory, R1/R2/R3), P11-M2 done (workflow gap map)
 
 ## What Was Just Completed
 
-P11-M1-R1: Inventory granularity refinement.
-- Created P11_M1_DATA_RECORD_INVENTORY.md (19 record types, 12 P6 runtime areas)
-- Created P11_M1_ROUTE_AND_PAGE_INVENTORY.md (124 routes, per-route method/path/RW/provider-risk/frontend-used/status)
-- Created P11_M1_USER_WORKFLOW_INVENTORY.md (16 workflows with detail)
-- Corrected overclaim: "130+ routes all functional" → "124 routes exist; readiness varies"
-- Updated original inventory with data record section
-- 8 governance files updated
+P11-M2: Missing core workflow map.
+- 23 workflows classified into 4 tiers
+- 20 gaps identified in gap matrix
+- 0 normal-use blockers (core weekly review loop works)
+- 4 P6-reconsideration blockers
+- Priority: P11-M3 calibration/history visibility, P11-M4 validation readiness frontends
+- Defer Phase 3-6 route frontends
+- Created 3 files: MISSING_CORE_WORKFLOW_MAP.md, PRODUCT_COMPLETENESS_GAP_MATRIX.md, WORKFLOW_PRIORITY_DECISION.md
 
 ## Next Decision
 
-P11-M2: Missing core workflow map — ready_with_approval.
-GPT must define what workflows to map before Codex executes.
+P11-M3: UX gaps and normal-use blockers — ready_with_approval.
+GPT must define UX gap analysis scope before Codex executes.
 
 After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
 
