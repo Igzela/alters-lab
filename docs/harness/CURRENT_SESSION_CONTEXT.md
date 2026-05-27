@@ -12,25 +12,22 @@ Last updated: 2026-05-27
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 through P10-M5 done (BLOCKED_BY_NEW_FRICTION), P10-M6/M7 blocked
-- P11: P11-000 done, P11-M1 done (inventory, R1/R2/R3), P11-M2 done (workflow gap map), P11-M3 done (UX gaps)
+- P11: P11-000 done, P11-M1 done (inventory, R1/R2/R3), P11-M2 done (workflow gap map), P11-M3 done (UX gaps), P11-M4 done (gap closure plan)
 
 ## What Was Just Completed
 
-P11-M3: UX gaps and normal-use blockers.
-- Normal-use journey audit: 12 steps, all work
-- Page-level UX audit: 10 pages analyzed
-- Calibration/history UX findings: 6 questions answered
-- 12 UX gaps identified (UX-001 through UX-012)
-- Blocker count: 0 blockers, 0 high, 3 medium, 9 low
-- Normal weekly review loop works end-to-end
-- No code changes (analysis only)
-- Created 3 files: UX gaps analysis, calibration/history analysis, blocker decision
+P11-M4: Gap closure plan.
+- Key finding: all M5/M6 features are frontend-only (existing APIs sufficient)
+- M5 batch 1: 5 items — CalibrationHistory detail/trend/explanation, RealityScore history, P6Progress rewrite, Step 5 verdict explanation, optional Step 3 dynamic alters
+- M6 batch 2: 3 items — PatternReview page, BehaviorValidation page, DataManagement page
+- No backend changes required for any item
+- Created 4 files: gap closure plan, implementation batch plan, acceptance criteria, risk/boundary review
 
 ## Next Decision
 
-P11-M4: Data model/API/frontend gap closure plan — ready_with_approval.
-GPT must define gap closure plan scope before Codex executes.
-P11-M4 is planning only — no implementation, no code changes.
+P11-M5: Product completion implementation batch 1 — ready_with_approval.
+GPT must define M5 scope before Codex executes.
+P11-M5 is implementation — actual frontend code changes.
 
 After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
 

@@ -387,3 +387,7 @@
 | P11-M3 | P11_M3_UX_GAPS_AND_NORMAL_USE_BLOCKERS.md | docs/harness/ | Normal-use journey audit (12 steps), page-level UX audit (10 pages), calibration/history UX findings, 12 UX gaps |
 | P11-M3 | P11_M3_CALIBRATION_HISTORY_UX_ANALYSIS.md | docs/harness/ | CalibrationHistory UX analysis: current state, must-have/should-have/nice-to-have requirements, key insight |
 | P11-M3 | P11_M3_NORMAL_USE_BLOCKER_DECISION.md | docs/harness/ | Blocker decision: 0 blockers, 0 high, 3 medium, 9 low. Normal weekly use works. P11-M4 can proceed. |
+| P11-M4 | P11_M4_GAP_CLOSURE_PLAN.md | docs/harness/ | Gap closure plan: all M5/M6 features frontend-only, existing APIs sufficient, no backend changes |
+| P11-M4 | P11_M4_IMPLEMENTATION_BATCH_PLAN.md | docs/harness/ | M5 batch: 5 items (CalibrationHistory, RealityScore, P6Progress, Step 5, Step 3). M6 batch: 3 items (PatternReview, BehaviorValidation, DataManagement) |
+| P11-M4 | P11_M4_ACCEPTANCE_CRITERIA.md | docs/harness/ | Concrete acceptance criteria for M5 and M6 with build/test/feature/boundary checkboxes |
+| P11-M4 | P11_M4_RISK_AND_BOUNDARY_REVIEW.md | docs/harness/ | Risk assessment, hard boundaries, no-go conditions, boundary confirmation checklist |
