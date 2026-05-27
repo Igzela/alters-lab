@@ -903,10 +903,10 @@
 
 ### P10-M6: Week 1 validation package
 
-**Status**: ready_with_approval
-**Goal**: Package Week 1 evidence during P6 validation window.
-**Depends on**: P10-M5-R2
-**Notes**: P6 validation started 2026-05-28. Define Week 1 validation package: what to do this week, what local records count, what redacted evidence can be committed.
+**Status**: ready_for_human_execution
+**Goal**: Define Week 1 validation package: what Charlie must do, what records count, evidence template, validation counters.
+**Depends on**: P10-M5-R2-E1
+**Notes**: Created 3 files: validation package, evidence template, counters. P6 state: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED. Charlie must execute Week 1 packaged-app operations. Week 1 NOT complete until Charlie performs operations and gives redacted evidence.
 
 ### P10-M7: Pilot closeout / next phase decision
 

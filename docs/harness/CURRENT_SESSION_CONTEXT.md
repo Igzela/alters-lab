@@ -11,7 +11,7 @@ Last updated: 2026-05-28
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
-- P10: P10-000 through P10-M5 done; P10-M5-R2 done (START_P6_VALIDATION_NOW); P10-M6 ready_with_approval; P10-M7 blocked
+- P10: P10-000 through P10-M5 done; P10-M5-R2 done (START_P6_VALIDATION_NOW); P10-M5-R2-E1 done (decision recorded); P10-M6 ready_for_human_execution; P10-M7 blocked
 - P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
 
 ## Recent Product Pilot
@@ -37,16 +37,20 @@ P11-PILOT-1: Real-use product pilot.
 
 ## Latest Gate Update
 
-P10-M5-R2-E1: Recorded Charlie's START_P6_VALIDATION_NOW decision.
-- Created evidence doc
-- Updated 7 governance files
+P10-M6: Week 1 validation package defined.
+- Created 3 files: validation package, evidence template, counters
 - P6 state: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
-- Prior pilot/smoke evidence does NOT count for completion
-- P10-M6 ready to define Week 1 validation package
+- Charlie must execute Week 1 packaged-app operations
+- Week 1 NOT complete until Charlie performs operations and gives redacted evidence
+- P10-M7 blocked
 
 ## Next Task
 
-P10-M6: Define Week 1 validation package — what to do this week, what local records count, what redacted evidence can be committed.
+Charlie must execute Week 1 packaged-app validation operations:
+1. Ingest one real weekly note after validation start
+2. Complete one real weekly review after validation start
+3. Create one action alignment score after validation start
+4. Provide redacted evidence for repo commit
 
 New sessions must not claim P6 validated.
 
