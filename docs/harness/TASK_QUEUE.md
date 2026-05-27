@@ -831,14 +831,14 @@
 
 ### P9-M5: Troubleshooting / doctor improvements
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Improve `alters-lab doctor` and add troubleshooting docs.
 **Depends on**: P9-M3
-**Notes**: Blocked.
+**Notes**: Done. Enhanced doctor with new checks (app_root, config, data dirs, provider, secrets permissions, safety flags). Created TROUBLESHOOTING.md. Added 10 doctor tests. Updated 5 user docs with links.
 
 ### P9-M6: Release artifact checklist and version bump policy
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create release checklist and version bump policy.
 **Depends on**: P9-M5
 **Notes**: Blocked.

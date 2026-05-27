@@ -75,3 +75,5 @@ The app runs at `http://127.0.0.1:18790` by default.
 ## Next Steps
 
 See the [First-Run Checklist](FIRST_RUN_CHECKLIST.md) for what to do after installation.
+
+If anything goes wrong, see [Troubleshooting](TROUBLESHOOTING.md).

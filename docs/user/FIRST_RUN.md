@@ -81,3 +81,7 @@ alters-lab stop
 ```
 
 Your data persists across restarts. No data is lost when you stop the server.
+
+## Troubleshooting
+
+If something doesn't work, see [Troubleshooting](TROUBLESHOOTING.md) or run `alters-lab doctor`.

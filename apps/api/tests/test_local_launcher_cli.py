@@ -94,3 +94,61 @@ def test_cli_backup_include_secrets_without_confirmation_blocks(tmp_path, monkey
     assert "include_secrets requires confirmation" in data["reason"]
     assert data["p6_behavior_validated"] is False
     assert data["p6_sealed"] is False
+
+
+def test_cli_doctor_json_includes_checks_list(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("alters_lab.services.local_launcher.is_port_available", lambda host, port: True)
+
+    assert cli.main(["doctor", "--mode", "dev", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+
+    assert isinstance(data["checks"], list)
+    assert len(data["checks"]) >= 10
+    check_names = {c["name"] for c in data["checks"]}
+    assert "runtime_layout_resolves" in check_names
+    assert "provider_configured" in check_names
+    assert "secrets_file" in check_names
+
+
+def test_cli_doctor_json_never_includes_api_key(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("alters_lab.services.local_launcher.is_port_available", lambda host, port: True)
+
+    assert cli.main(["doctor", "--mode", "dev", "--json"]) == 0
+    raw = capsys.readouterr().out
+
+    assert "sk-" not in raw
+    assert "api_key" not in raw
+
+
+def test_cli_doctor_json_reports_provider_mode(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("alters_lab.services.local_launcher.is_port_available", lambda host, port: True)
+
+    assert cli.main(["doctor", "--mode", "dev", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+
+    assert "provider_mode" in data["launcher_status"]
+
+
+def test_cli_doctor_json_reports_p6_flags_false(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("alters_lab.services.local_launcher.is_port_available", lambda host, port: True)
+
+    assert cli.main(["doctor", "--mode", "dev", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+
+    assert data["launcher_status"]["p6_behavior_validated"] is False
+    assert data["launcher_status"]["p6_sealed"] is False
+
+
+def test_cli_doctor_text_output(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("alters_lab.services.runtime_layout.get_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("alters_lab.services.local_launcher.is_port_available", lambda host, port: True)
+
+    assert cli.main(["doctor", "--mode", "dev"]) == 0
+    output = capsys.readouterr().out
+
+    assert "status=" in output
+    assert "checks=" in output

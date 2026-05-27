@@ -73,3 +73,7 @@ alters-lab start
 ## P6 Runtime Records
 
 If you use the Weekly Review feature, runtime records are written under `~/.local/share/alters-lab/product/`. These records are personal evidence for calibration and are not committed to the repository.
+
+## Troubleshooting
+
+If backup fails or data seems missing, see [Troubleshooting](TROUBLESHOOTING.md).

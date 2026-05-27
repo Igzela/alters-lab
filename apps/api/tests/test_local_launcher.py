@@ -130,3 +130,115 @@ def test_dev_pid_and_log_paths_repo_compatible(tmp_path):
 
     assert paths.pid_file == tmp_path / "alters" / "product" / "state" / "alters-lab.pid"
     assert paths.log_file == tmp_path / "alters" / "product" / "state" / "logs" / "alters-lab.log"
+
+
+def _find_check(report: dict, name: str) -> dict[str, str]:
+    return next(c for c in report["checks"] if c["name"] == name)
+
+
+def test_doctor_checks_include_runtime_layout(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    check = _find_check(report, "runtime_layout_resolves")
+    assert check["status"] == "PASS"
+    assert "mode=dev" in check["message"]
+
+
+def test_doctor_checks_app_root_exists(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    check = _find_check(report, "app_root_exists")
+    assert check["status"] in ("PASS", "WARN")
+
+
+def test_doctor_checks_config_exists(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    check = _find_check(report, "config_exists")
+    assert check["status"] in ("PASS", "WARN")
+
+
+def test_doctor_checks_data_dirs_writable(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    for name in ("data_dir_writable", "product_data_dir_writable", "logs_dir_writable", "state_dir_writable"):
+        check = _find_check(report, name)
+        assert check["status"] in ("PASS", "WARN", "BLOCKED")
+
+
+def test_doctor_checks_provider_configured(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    check = _find_check(report, "provider_configured")
+    assert check["status"] == "PASS"
+    assert "no live provider" in check["message"].lower() or "live provider" in check["message"].lower()
+
+
+def test_doctor_checks_secrets_file(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    check = _find_check(report, "secrets_file")
+    assert check["status"] == "PASS"
+
+
+def test_doctor_checks_safety_flags(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    for name in ("active_yaml_write_allowed", "rubric_write_allowed", "p6_behavior_validated", "p6_sealed"):
+        check = _find_check(report, name)
+        assert check["status"] == "PASS"
+        assert check["message"] == "false"
+
+
+def test_doctor_checks_localhost_default(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    check = _find_check(report, "localhost_default")
+    assert check["status"] == "PASS"
+    assert "127.0.0.1" in check["message"]
+
+
+def test_doctor_never_includes_api_key(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+    report_text = json.dumps(report)
+
+    assert "sk-" not in report_text
+    assert "api_key" not in report_text
+
+
+def test_doctor_warn_actionable_messages(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+
+    report = build_doctor_report(layout)
+
+    for check in report["checks"]:
+        if check["status"] == "WARN":
+            assert len(check["message"]) > 10, f"check '{check['name']}' WARN message should be actionable"

@@ -133,6 +133,7 @@ All 8 phases complete:
 - [User Guide](docs/USER_GUIDE.md) — Quick start, workflow walkthrough, and reference
 - [Provider Setup](docs/user/PROVIDER_SETUP.md) — How to configure LLM providers
 - [Provider Safety](docs/user/PROVIDER_SAFETY.md) — Secret handling, output safety, confirmation gating
+- [Troubleshooting](docs/user/TROUBLESHOOTING.md) — Common issues and how to fix them
 - [Product Specification](docs/product-spec.md) — System design and concepts
 - [Alter Generation Workflow](docs/alter-generation-workflow.md) — How alters are generated
 - [Branch Discovery Workflow](docs/branch-discovery-workflow.md) — How branches are discovered

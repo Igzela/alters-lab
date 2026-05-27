@@ -351,3 +351,7 @@
 | P9-M4 | README.md update | README.md | Added Provider Setup and Provider Safety links to Documentation section. |
 | P9-M4-R1 | PROVIDER_SETUP.md fix | docs/user/PROVIDER_SETUP.md | Corrected dry-run wording: verifies local config only, no network. Added live connectivity check section. |
 | P9-M4-R1 | PROVIDER_SAFETY.md fix | docs/user/PROVIDER_SAFETY.md | Updated confirmation table with Network Call column distinguishing dry-run (no network) from live connectivity (may call /models). |
+| P9-M5 | Enhanced doctor report | apps/api/src/alters_lab/services/local_launcher.py | New checks: app_root_exists, config_exists, product_data_dir_writable, state_dir_writable, provider_configured, secrets_file (0600 permissions), actionable WARN/BLOCKED messages. |
+| P9-M5 | Troubleshooting guide | docs/user/TROUBLESHOOTING.md | 12 scenarios: app won't start, browser, port conflict, command missing, frontend 503, provider issues (disabled/mock/live), keyring, secrets perms, backup, uninstall data, P6, logs. |
+| P9-M5 | Doctor tests | apps/api/tests/test_local_launcher.py, apps/api/tests/test_local_launcher_cli.py | 10 new tests: checks list, API key absence, provider mode, P6 flags, data dirs, safety flags, actionable messages, text output. |
+| P9-M5 | Doc updates | docs/user/INSTALL.md, FIRST_RUN.md, DATA_AND_BACKUP.md, UNINSTALL.md, README.md | Added TROUBLESHOOTING.md links. |

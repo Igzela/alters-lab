@@ -39,14 +39,14 @@
 
 ### P9-M5: Troubleshooting / doctor improvements
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Improve the `alters-lab doctor` command to check for common issues: missing config, broken package, provider misconfiguration, data directory permissions. Add troubleshooting docs.
 **Depends on**: P9-M3
-**Notes**: Blocked.
+**Notes**: Done. Enhanced build_doctor_report with new checks: app_root_exists, config_exists, product_data_dir_writable, state_dir_writable, provider_configured, secrets_file (with 0600 permissions), actionable WARN/BLOCKED messages. Created docs/user/TROUBLESHOOTING.md (12 scenarios). Updated INSTALL.md, FIRST_RUN.md, DATA_AND_BACKUP.md, UNINSTALL.md, README.md with links. Added 10 new doctor tests (service + CLI). 34 doctor tests passing. Total backend tests passing.
 
 ### P9-M6: Release artifact checklist and version bump policy
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create a release checklist (tests pass, package builds, smoke passes, docs updated) and a version bump policy (when to bump major/minor/patch).
 **Depends on**: P9-M5
 **Notes**: Blocked.

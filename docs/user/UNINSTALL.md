@@ -75,3 +75,7 @@ sudo apt install ./alters-lab_<new-version>_amd64.deb
 ```
 
 User data is preserved on upgrade. No special steps needed.
+
+## Troubleshooting
+
+If uninstall or reinstall doesn't work as expected, see [Troubleshooting](TROUBLESHOOTING.md).

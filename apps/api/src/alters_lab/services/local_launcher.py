@@ -154,22 +154,70 @@ def build_status(layout: RuntimeLayout, host: str = DEFAULT_HOST, port: int = DE
 def build_doctor_report(layout: RuntimeLayout, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT) -> dict[str, Any]:
     checks: list[dict[str, str]] = []
     status = build_status(layout, host, port)
+
+    # Runtime layout
     checks.append(_check("runtime_layout_resolves", "PASS", f"mode={layout.mode}"))
-    checks.append(_check("config_path_resolves", "PASS", str(layout.config_path)))
+
+    # App root
+    app_root_ok = layout.app_root.exists()
+    checks.append(_check("app_root_exists", "PASS" if app_root_ok else "WARN",
+                         str(layout.app_root) if app_root_ok else "app root not found"))
+
+    # Config
+    config_exists = layout.config_path.exists()
+    checks.append(_check("config_exists", "PASS" if config_exists else "WARN",
+                         str(layout.config_path) if config_exists else "config not found; will be created on first start"))
+
+    # Data directories
     checks.append(_writable_check("data_dir_writable", layout.data_dir))
+    checks.append(_writable_check("product_data_dir_writable", layout.product_data_dir))
     checks.append(_writable_check("logs_dir_writable", layout.logs_dir))
+    checks.append(_writable_check("state_dir_writable", layout.state_dir))
+
+    # Host
     checks.append(_check("localhost_default", "PASS" if host in {"127.0.0.1", "localhost"} else "WARN", f"host={host}"))
+
+    # Port
     port_available = is_port_available(host, port)
     if port_available or status["running"]:
         checks.append(_check("port_available_or_current", "PASS", f"port={port}"))
     else:
-        checks.append(_check("port_available_or_current", "BLOCKED", f"port conflict on {host}:{port}"))
-    checks.append(_check("frontend_dist", "PASS" if status["frontend_available"] else "WARN", "frontend dist available" if status["frontend_available"] else "frontend dist missing"))
-    checks.append(_check("provider_mode_redacted", "PASS", f"provider_mode={status['provider_mode']}"))
+        checks.append(_check("port_available_or_current", "BLOCKED",
+                             f"port conflict on {host}:{port}; stop the other process or use --port"))
+
+    # Frontend
+    if status["frontend_available"]:
+        checks.append(_check("frontend_dist", "PASS", "frontend dist available"))
+    else:
+        checks.append(_check("frontend_dist", "WARN",
+                             "frontend dist missing; run 'npm run build' in apps/web or rebuild the package"))
+
+    # Provider
+    checks.append(_check("provider_mode", "PASS", f"provider_mode={status['provider_mode']}"))
+    provider_configured = status["provider_mode"] == "openai-compatible-http"
+    checks.append(_check("provider_configured", "PASS",
+                         "live provider configured" if provider_configured else "no live provider configured (safe default)"))
+
+    # Secret storage
+    secrets_path = layout.secrets_path
+    secrets_exist = secrets_path.exists()
+    secrets_perms_ok = False
+    if secrets_exist:
+        try:
+            mode = oct(secrets_path.stat().st_mode)[-3:]
+            secrets_perms_ok = mode == "600"
+        except OSError:
+            pass
+    checks.append(_check("secrets_file", "PASS" if not secrets_exist else ("PASS" if secrets_perms_ok else "WARN"),
+                         "no secrets file (keyring or not yet configured)" if not secrets_exist
+                         else ("permissions 0600 OK" if secrets_perms_ok else f"permissions not 0600; run: chmod 600 {secrets_path}")))
+
+    # Safety flags
     checks.append(_check("active_yaml_write_allowed", "PASS", "false"))
     checks.append(_check("rubric_write_allowed", "PASS", "false"))
     checks.append(_check("p6_behavior_validated", "PASS", "false"))
     checks.append(_check("p6_sealed", "PASS", "false"))
+
     overall = "PASS"
     if any(check["status"] == "BLOCKED" for check in checks):
         overall = "BLOCKED"
