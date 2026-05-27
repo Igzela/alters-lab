@@ -297,3 +297,8 @@
 | P8-M2 | Provider connectivity API | apps/api/src/alters_lab/api/provider_connectivity.py | Routes: /provider-connectivity/health, /status, /check. |
 | P8-M2 | Provider connectivity tests | apps/api/tests/test_provider_connectivity.py, apps/api/tests/test_provider_connectivity_api.py | 30 tests covering disabled/mock/openai modes, live_check confirmation gating, fake http_client, 2xx/401/timeout, no secrets, safety flags, contract hardening. |
 | P8-M2 | P8-M2 contract doc | docs/harness/P8_M2_PROVIDER_CONNECTIVITY.md | Provider connectivity check definition, architecture, safety guarantees, and test coverage. |
+| P8-M3 | Provider dialogue preview schemas | apps/api/src/alters_lab/schemas/provider_dialogue_preview.py | ProviderDialoguePreviewRequest, Response, AuditEvent, health/status responses with Literal-locked safety fields. |
+| P8-M3 | Provider dialogue preview service | apps/api/src/alters_lab/services/provider_dialogue_preview.py | run_provider_dialogue_preview with /chat/completions, injectable http_client, prompt/system_prompt capping, exact confirmation gating. |
+| P8-M3 | Provider dialogue preview API | apps/api/src/alters_lab/api/provider_dialogue_preview.py | Routes: /provider-dialogue-preview/health, /status, /generate. |
+| P8-M3 | Provider dialogue preview tests | apps/api/tests/test_provider_dialogue_preview.py, apps/api/tests/test_provider_dialogue_preview_api.py | 36 tests covering disabled/mock/openai modes, confirmation gating, fake http_client, 2xx/401/timeout/invalid_response, no secrets, no YAML writes, safety flags, contract hardening. |
+| P8-M3 | P8-M3 contract doc | docs/harness/P8_M3_PROVIDER_DIALOGUE_PREVIEW.md | Provider dialogue preview definition, architecture, safety guarantees, and test coverage. |

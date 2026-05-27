@@ -10,21 +10,23 @@ Last updated: 2026-05-27
 - P8-000: done (boundary plan created)
 - P8-M1: done (provider adapter contract hardened)
 - P8-M2: done (connectivity check with /models endpoint, exact confirmation gating)
-- P8-M3: ready_with_approval (provider-backed dialogue preview)
-- P8-M4 through P8-M7: blocked
+- P8-M3: done (provider-backed dialogue preview with /chat/completions, injectable http_client)
+- P8-M4: ready_with_approval (Weekly Review assistant mode)
+- P8-M5 through P8-M7: blocked
 - No active phase in progress
 
 ## What Was Just Completed
 
-P8-M2: Real Provider Dry-Run / Connectivity Check.
-- Created provider connectivity schemas, service, and API routes
-- Uses /models endpoint, exact confirmation gating, fake http_client in tests
-- 30 new tests, 1080 total backend tests passing
-- P8-M3 ready_with_approval
+P8-M3: Provider-Backed Dialogue Preview.
+- Created provider dialogue preview schemas, service, and API routes
+- Uses /chat/completions endpoint, injectable http_client, prompt/system_prompt capping
+- persist_output and save_session blocked. live_generation requires exact confirmation.
+- 36 new tests, 1117 total backend tests passing
+- P8-M4 ready_with_approval
 
 ## Next Decision
 
-P8-M3 (Provider-Backed Dialogue Preview) is ready_with_approval.
+P8-M4 (Weekly Review Assistant Mode) is ready_with_approval.
 Requires explicit human/GPT approval before starting.
 
 ## Verification Commands

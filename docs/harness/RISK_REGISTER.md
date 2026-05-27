@@ -133,6 +133,8 @@
 | R-127 | Adapter audit event leaks prompt or response content | Low | High | P8-M1: audit event schema enforces prompt_recorded=false, response_recorded=false, secret_recorded=false. Tests verify no raw content in audit. | Active |
 | R-128 | Connectivity check sends user prompt content to provider | Low | High | P8-M2: connectivity check uses /models endpoint only, no user prompt content, exact confirmation required, tests with fake http_client. | Active |
 | R-129 | Connectivity check leaks API key in error path | Low | High | P8-M2: API key never returned in response, Authorization header redacted in error paths, tests verify no key in response. | Active |
+| R-130 | Dialogue preview output mistaken as verified content | Medium | Medium | P8-M3: output_label="unverified_provider_preview", message always states "unverified", no persistence, user must manually copy. | Active |
+| R-131 | Dialogue preview sends excessive prompt content to provider | Low | Medium | P8-M3: prompt capped at 8000 chars, system_prompt at 4000 chars, tests verify caps enforced. | Active |
 
 ## Risk Assessment
 

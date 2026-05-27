@@ -660,6 +660,14 @@
 **Decision**: Create a separate connectivity-check module (schema/service/api) distinct from the adapter preview contract. The adapter preview remains no-network and Literal-locked. The connectivity check uses /models endpoint (preferred over /chat/completions), requires exact confirmation string for live checks, accepts an injectable http_client for testing, records only redacted metadata (no prompt content, no response body), and gates all network calls behind explicit user action. Status code mapping: 2xx=reachable+auth_ok, 401/403=reachable+auth_fail, timeout=unreachable.
 **Consequences**: P8-M3 can build provider-backed dialogue on top of the connectivity foundation. The adapter preview contract remains untouched. Future connectivity improvements (e.g., model listing, latency benchmarks) can extend the connectivity module without affecting the adapter contract.
 
+### Decision P8-M3-01: Provider-backed dialogue preview is preview-only, non-persistent, and user-triggered with exact confirmation
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P8-M2 established real provider connectivity checking. P8-M3 implements the first content-generating provider feature. Provider output must be unverified, non-persistent, and explicitly triggered to prevent accidental data mutation.
+**Decision**: Create a dialogue preview module (schema/service/api) that uses /chat/completions endpoint with injectable http_client for testing. Output is preview-only (output_label="unverified_provider_preview"), never persisted (output_persisted=Literal[False], save_session=Literal[False], prompt_persisted=Literal[False], response_content_persisted=Literal[False]). Live generation requires live_generation=true and exact confirmation string "run-live-provider-dialogue-preview". Prompt capped at 8000 chars, system_prompt at 4000 chars, max_tokens 16-1200 (default 512), temperature 0.0-1.5 (default 0.7). persist_output and save_session blocked. No active YAML/rubric writes, no reality/action scores, P6 flags remain false.
+**Consequences**: P8-M4 can build Weekly Review assistant on top of the dialogue preview foundation. The preview contract remains non-persistent. Future content-generating features must follow the same safety pattern: Literal-locked no-persist fields, injectable http_client, exact confirmation gating.
+
 ### Decision P8-M1-01: Provider adapter contract separates preview generation, network permission, persistence, and audit metadata
 
 **Date**: 2026-05-27

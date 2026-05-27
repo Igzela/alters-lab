@@ -757,10 +757,10 @@
 
 ### P8-M3: Provider-Backed Dialogue Preview
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Allow optional provider-backed response generation for Alter Dialogue only. save_session=false default, no active YAML writes, no calibration writes, no reality score writes, output displayed as preview, user can copy manually, provider output must be labeled unverified.
 **Depends on**: P8-M2
-**Notes**: Ready with approval after P8-M2 pass.
+**Notes**: Done. Dialogue preview schemas, service, and API routes implemented. Uses /chat/completions endpoint, injectable http_client, prompt 8000 chars / system_prompt 4000 chars caps, max_tokens 16-1200 default 512, temperature 0.0-1.5 default 0.7. persist_output and save_session blocked. live_generation requires exact confirmation. 36 new tests (29 service + 7 API). 1117 total backend tests. P8-M4 ready_with_approval.
 
 ### P8-M4: Weekly Review Assistant Mode
 
