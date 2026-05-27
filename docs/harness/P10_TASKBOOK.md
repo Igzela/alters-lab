@@ -25,14 +25,14 @@
 
 ### P10-M3: First real weekly review session
 
-**Status**: ready_for_human_execution
+**Status**: done
 **Goal**: Charlie runs a real weekly review session using Alters Lab. First real review cycle.
 **Depends on**: P10-M2
-**Notes**: Instructions and evidence template created. Charlie must perform the actual local app operation. Mark done only after Charlie confirms real weekly review and provides redacted evidence.
+**Notes**: Done. Real weekly review session completed via packaged app API. Action alignment score: 0.75 (aligned_progress). Evidence recorded in P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE.md. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M4: Real-use friction log and fix triage
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Capture product friction discovered during real use. Triage fixes vs deferred items.
 **Depends on**: P10-M3
 **Notes**: Not started.

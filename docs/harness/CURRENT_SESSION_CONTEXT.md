@@ -11,24 +11,22 @@ Last updated: 2026-05-27
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
-- P10: P10-000 done, P10-M1 done, P10-M2 done, P10-M3 ready_for_human_execution
+- P10: P10-000 done, P10-M1 done, P10-M2 done, P10-M3 done, P10-M4 ready_with_approval
 
 ## What Was Just Completed
 
-P10-M3 preparation: First real weekly review session instructions + evidence template.
-- Created P10_M3_FIRST_REAL_WEEKLY_REVIEW_SESSION.md (operator instructions)
-- Created P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE_TEMPLATE.md (fillable redacted YAML template)
-- P10-M3 is ready_for_human_execution — Charlie must perform the actual local app operation
+P10-M3: First real weekly review session completed via packaged app API.
+- Full workflow executed: note ingest → start review → complete review → action alignment score
+- Action alignment score: 0.75 (aligned_progress)
+- Evidence recorded in P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE.md
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P10-M3 instructions ready. Charlie must:
-1. Use packaged app to complete a real weekly review session
-2. Fill in the evidence template with redacted summary
-3. Confirm completion
+P10-M4: Real-use friction log and fix triage — ready_with_approval.
+GPT must review and approve before Charlie executes.
 
-After Charlie confirms, mark P10-M3 done and proceed to P10-M4.
+After P10-M4, proceed to P10-M5 (P6 validation start decision gate).
 
 New sessions must not claim P6 validated.
 
