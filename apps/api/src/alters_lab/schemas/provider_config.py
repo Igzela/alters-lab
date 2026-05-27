@@ -14,11 +14,11 @@ SecretStorage = Literal["keyring", "secrets_yaml_fallback"]
 class ProviderSafetyFlags(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    provider_output_persists_by_default: bool = False
-    provider_output_can_write_active_yaml: bool = False
-    provider_output_can_generate_reality_score: bool = False
-    p6_behavior_validated: bool = False
-    p6_sealed: bool = False
+    provider_output_persists_by_default: Literal[False] = False
+    provider_output_can_write_active_yaml: Literal[False] = False
+    provider_output_can_generate_reality_score: Literal[False] = False
+    p6_behavior_validated: Literal[False] = False
+    p6_sealed: Literal[False] = False
 
 
 class ProviderConfigHealthResponse(BaseModel):
@@ -125,5 +125,5 @@ class ProviderConfigTestResponse(ProviderSafetyFlags):
     dry_run: bool = True
     live_check_supported: bool = False
     message: str
-    network_call_made: bool = False
+    network_call_made: Literal[False] = False
     secrets_redacted: bool = True

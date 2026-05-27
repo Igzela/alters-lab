@@ -88,10 +88,7 @@ def _resolve_secret() -> str | None:
         _, _, state = _load_state(layout)
         store = SecretStore(layout)
         if store.secret_configured(state.secret_storage, state.key_name):
-            # Read the actual value from the secrets store
-            if state.secret_storage == "keyring":
-                return store._keyring_get(state.key_name)
-            return store._fallback_get(state.key_name)
+            return store.get_secret(state.secret_storage, state.key_name)
         return None
     except Exception:
         return None

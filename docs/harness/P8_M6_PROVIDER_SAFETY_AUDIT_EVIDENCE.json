@@ -1,28 +1,84 @@
 {
-  "allowed_by_category": {
-    "documentation": 3,
-    "source_code": 8,
-    "test": 18,
-    "tool": 12
-  },
-  "allowed_by_pattern": {
-    "anthropic_key_env": 1,
-    "api_key_env": 12,
-    "deterministic_placeholder": 7,
-    "mock_adapter_preview": 5,
-    "mock_dialogue_preview": 5,
-    "mock_weekly_review_assistant": 5,
-    "openai_key_env": 3,
-    "openrouter_key_env": 1,
-    "sk_prefix": 2
-  },
-  "allowed_count": 41,
-  "disallowed_by_category": {},
-  "disallowed_by_pattern": {},
-  "disallowed_count": 0,
-  "disallowed_files": [],
+  "failed_sections": [],
   "p6_behavior_validated": false,
   "p6_sealed": false,
-  "status": "PASS",
-  "total_findings": 41
+  "sections": [
+    {
+      "allowed_by_category": {
+        "documentation": 11,
+        "source_code": 8,
+        "test": 17,
+        "tool": 12
+      },
+      "allowed_by_pattern": {
+        "anthropic_key_env": 2,
+        "api_key_env": 13,
+        "deterministic_placeholder": 8,
+        "mock_adapter_preview": 6,
+        "mock_dialogue_preview": 6,
+        "mock_weekly_review_assistant": 6,
+        "openai_key_env": 3,
+        "openrouter_key_env": 2,
+        "sk_prefix": 2
+      },
+      "allowed_count": 48,
+      "disallowed_by_category": {},
+      "disallowed_by_pattern": {},
+      "disallowed_count": 0,
+      "disallowed_files": [],
+      "section": "grep_scan",
+      "status": "PASS",
+      "total_findings": 48
+    },
+    {
+      "expected_routes": 5,
+      "found_routes": 5,
+      "missing_routes": [],
+      "section": "route_audit",
+      "status": "PASS"
+    },
+    {
+      "checks": [
+        {
+          "module": "provider_connectivity",
+          "status": "PASS",
+          "value": "run-live-provider-connectivity-check"
+        },
+        {
+          "module": "provider_dialogue_preview",
+          "status": "PASS",
+          "value": "run-live-provider-dialogue-preview"
+        },
+        {
+          "module": "weekly_review_assistant",
+          "status": "PASS",
+          "value": "run-live-weekly-review-assistant"
+        }
+      ],
+      "section": "live_constants",
+      "status": "PASS"
+    },
+    {
+      "files_checked": 5,
+      "issues": [],
+      "section": "schema_safety",
+      "status": "PASS"
+    },
+    {
+      "issues": [],
+      "section": "evidence_contract",
+      "status": "PASS"
+    },
+    {
+      "issues": [],
+      "section": "secret_policy",
+      "status": "PASS"
+    },
+    {
+      "issues": [],
+      "section": "mutation_boundary",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
 }
