@@ -11,7 +11,7 @@ const ALTERS = [
 
 const DIMS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
 
-export default function RealityScore({ onNavigate }: { onNavigate?: () => void }) {
+export default function RealityScore({ onNavigate }: { onNavigate?: (page: string) => void }) {
   const [pair, setPair] = useState(0)
   const [scores, setScores] = useState<Record<string, number>>({
     execution_discipline: 3,
@@ -61,8 +61,8 @@ export default function RealityScore({ onNavigate }: { onNavigate?: () => void }
         This page is for manual score submission. For real weekly review, use Weekly Review.
       </p>
       <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        {onNavigate && <button onClick={onNavigate}>Go to Weekly Review</button>}
-        <a href="#history" onClick={e => { e.preventDefault(); onNavigate?.() }}>View Calibration History</a>
+        {onNavigate && <button onClick={() => onNavigate('weekly')}>Go to Weekly Review</button>}
+        {onNavigate && <a href="#history" onClick={e => { e.preventDefault(); onNavigate('history') }}>View Calibration History</a>}
       </div>
 
       {recentScores.length > 0 && (

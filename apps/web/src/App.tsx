@@ -40,7 +40,7 @@ export default function App() {
       {page === 'status' && <SystemStatus onNavigate={setPage} />}
       {page === 'weekly' && <WeeklyReview />}
       {page === 'dialogue' && <AlterDialogue />}
-      {page === 'reality' && <RealityScore onNavigate={() => setPage('weekly')} />}
+      {page === 'reality' && <RealityScore onNavigate={(p) => setPage(p as Page)} />}
       {page === 'history' && <CalibrationHistory />}
       {page === 'rubric' && <RubricDelta />}
       {page === 'checkpoint' && <CheckpointPlan />}

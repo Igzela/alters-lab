@@ -62,9 +62,7 @@ export default function P6Progress() {
           </div>
 
           <div style={{ marginTop: 10, fontSize: 13, color: '#555' }}>
-            <strong>Next step:</strong> {counts.weeklyReviews < 4
-              ? `Complete ${4 - counts.weeklyReviews} more weekly review${4 - counts.weeklyReviews === 1 ? '' : 's'} to build validation evidence.`
-              : 'You have enough weekly reviews. Continue weekly practice to fill the 21-day window.'}
+            <strong>Next step:</strong> Continue weekly reviews as pilot evidence; P6 validation start remains blocked until product completeness closeout.
           </div>
         </>
       )}
