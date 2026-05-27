@@ -2,9 +2,11 @@ import { useState } from 'react'
 import {
   completeWeeklyReview,
   editWeeklyNote,
+  fetchWeeklyReviewAssistantStatus,
   ingestWeeklyNote,
   scoreActionAlignment,
   startWeeklyReview,
+  suggestWeeklyReviewAssistant,
 } from '../api'
 import type { ActionAlignmentScore, VerdictLabel, WeeklyNoteRecord, WeeklyReviewSession } from '../types'
 import P6Progress from './P6Progress'
@@ -102,6 +104,13 @@ export default function WeeklyReview() {
   const [oneNextCorrection, setOneNextCorrection] = useState('')
   const [verdictLabel, setVerdictLabel] = useState<VerdictLabel>('unstable_but_useful')
   const [verdictSentence, setVerdictSentence] = useState('')
+
+  const [assistantHelp, setAssistantHelp] = useState('general_review_suggestion')
+  const [assistantSuggestion, setAssistantSuggestion] = useState('')
+  const [assistantStatus, setAssistantStatus] = useState<{ provider_mode: string; configured: boolean } | null>(null)
+  const [assistantLiveConfirmation, setAssistantLiveConfirmation] = useState('')
+  const [assistantLoading, setAssistantLoading] = useState(false)
+  const [assistantError, setAssistantError] = useState('')
 
   const run = async (label: string, task: () => Promise<void>) => {
     setLoading(label)
@@ -202,7 +211,39 @@ export default function WeeklyReview() {
     setScorePath(null)
     setError('')
     setMessage('')
+    setAssistantSuggestion('')
+    setAssistantLiveConfirmation('')
+    setAssistantError('')
   }
+
+  const loadAssistantStatus = async () => {
+    try {
+      const s = await fetchWeeklyReviewAssistantStatus()
+      setAssistantStatus(s)
+    } catch {
+      setAssistantStatus({ provider_mode: 'disabled', configured: false })
+    }
+  }
+
+  const generateSuggestion = (live: boolean) => run('generating suggestion', async () => {
+    setAssistantError('')
+    setAssistantSuggestion('')
+    const body: Parameters<typeof suggestWeeklyReviewAssistant>[0] = {
+      requested_help: assistantHelp,
+      dry_run: !live,
+      live_generation: live,
+    }
+    if (live) body.confirmation = assistantLiveConfirmation || null
+    if (noteRecord) body.weekly_note_record_id = noteRecord.record_id
+    if (session) body.weekly_review_session_id = session.session_id
+    if (reviewNote) body.review_context = `Current review note: ${reviewNote}`
+    const result = await suggestWeeklyReviewAssistant(body)
+    if (result.suggestion) {
+      setAssistantSuggestion(result.suggestion)
+    } else {
+      setAssistantError(result.message)
+    }
+  })
 
   return (
     <div>
@@ -311,6 +352,63 @@ export default function WeeklyReview() {
           <TextInput label="primary_next_correction" value={primaryNextCorrection} onChange={setPrimaryNextCorrection} />
           <TextInput label="supporting_action_1 optional" value={supportingAction1} onChange={setSupportingAction1} />
           <TextInput label="supporting_action_2 optional" value={supportingAction2} onChange={setSupportingAction2} />
+
+          <div style={{ ...sectionStyle, background: '#f9f9f9' }}>
+            <h4>Assistant Suggestion</h4>
+            <p style={{ fontSize: 12, color: '#666' }}>Provider output is advisory and unverified. You must manually copy/edit anything that becomes part of the review.</p>
+            <label style={{ display: 'grid', gap: 6, marginBottom: 10 }}>
+              Requested help
+              <select style={inputStyle} value={assistantHelp} onChange={e => setAssistantHelp(e.target.value)}>
+                <option value="general_review_suggestion">General review suggestion</option>
+                <option value="summarize_facts">Summarize facts</option>
+                <option value="identify_friction">Identify friction</option>
+                <option value="draft_primary_correction">Draft primary correction</option>
+                <option value="suggest_supporting_actions">Suggest supporting actions</option>
+                <option value="challenge_avoidance">Challenge avoidance</option>
+              </select>
+            </label>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
+              <button style={buttonStyle} type="button" onClick={() => loadAssistantStatus()} disabled={assistantLoading}>
+                Check provider status
+              </button>
+              <button style={buttonStyle} type="button" onClick={() => generateSuggestion(false)} disabled={!!loading || assistantLoading}>
+                {loading === 'generating suggestion' ? 'Generating...' : 'Generate dry-run suggestion'}
+              </button>
+            </div>
+            {assistantStatus && (
+              <p style={{ fontSize: 12, color: '#666' }}>Provider mode: {assistantStatus.provider_mode} | Configured: {assistantStatus.configured ? 'yes' : 'no'}</p>
+            )}
+            {assistantStatus?.configured && assistantStatus.provider_mode === 'openai-compatible-http' && (
+              <div style={{ marginTop: 8 }}>
+                <label style={{ display: 'grid', gap: 6, marginBottom: 8 }}>
+                  Live confirmation
+                  <input style={inputStyle} value={assistantLiveConfirmation} onChange={e => setAssistantLiveConfirmation(e.target.value)} placeholder="run-live-weekly-review-assistant" />
+                </label>
+                <button style={buttonStyle} type="button" onClick={() => generateSuggestion(true)} disabled={!!loading || assistantLoading || assistantLiveConfirmation !== 'run-live-weekly-review-assistant'}>
+                  Generate live provider suggestion
+                </button>
+              </div>
+            )}
+            {assistantError && <p style={{ color: '#b00020', fontSize: 13 }}>{assistantError}</p>}
+            {assistantSuggestion && (
+              <div style={{ marginTop: 10, padding: 10, border: '1px solid #ccc', borderRadius: 4, background: '#fff' }}>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 6 }}>Unverified provider suggestion</p>
+                <pre style={{ whiteSpace: 'pre-wrap', fontSize: 13, margin: 0 }}>{assistantSuggestion}</pre>
+                <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
+                  <button style={{ ...buttonStyle, background: '#555' }} type="button" onClick={() => setReviewNote(assistantSuggestion)}>
+                    Copy to review_note
+                  </button>
+                  <button style={{ ...buttonStyle, background: '#555' }} type="button" onClick={() => setDialogueSummary(assistantSuggestion)}>
+                    Copy to dialogue_summary
+                  </button>
+                  <button style={{ ...buttonStyle, background: '#555' }} type="button" onClick={() => setPrimaryNextCorrection(assistantSuggestion)}>
+                    Copy to primary_next_correction
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
           <button style={buttonStyle} type="button" onClick={completeReview} disabled={!!loading || !reviewNote.trim() || !primaryNextCorrection.trim()}>
             {loading === 'completing review' ? 'Completing...' : 'Complete review'}
           </button>

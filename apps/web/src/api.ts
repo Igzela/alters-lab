@@ -101,3 +101,35 @@ export async function scoreActionAlignment(body: {
 export async function listActionAlignmentScores() {
   return fetchJson('/action-alignment/list') as Promise<{ status: string; scores: ActionAlignmentScore[]; count: number }>
 }
+
+export async function fetchWeeklyReviewAssistantStatus() {
+  return fetchJson('/weekly-review-assistant/status') as Promise<{
+    provider_mode: string
+    configured: boolean
+    p6_behavior_validated: boolean
+    p6_sealed: boolean
+  }>
+}
+
+export async function suggestWeeklyReviewAssistant(body: {
+  weekly_note_record_id?: string | null
+  weekly_review_session_id?: string | null
+  raw_note_excerpt?: string | null
+  review_context?: string | null
+  requested_help?: string
+  dry_run?: boolean
+  live_generation?: boolean
+  confirmation?: string | null
+}) {
+  return postJson('/weekly-review-assistant/suggest', body) as Promise<{
+    status: string
+    configured: boolean
+    suggestion: string | null
+    suggestion_label: string
+    provider_mode: string
+    dry_run: boolean
+    live_generation: boolean
+    network_call_made: boolean
+    message: string
+  }>
+}

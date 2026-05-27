@@ -11,22 +11,26 @@ Last updated: 2026-05-27
 - P8-M1: done (provider adapter contract hardened)
 - P8-M2: done (connectivity check with /models endpoint, exact confirmation gating)
 - P8-M3: done (provider-backed dialogue preview with /chat/completions, injectable http_client)
-- P8-M4: ready_with_approval (Weekly Review assistant mode)
-- P8-M5 through P8-M7: blocked
+- P8-M4: done (weekly review assistant mode, reuses provider_dialogue_preview)
+- P8-M5: ready_with_approval (E2E Product Validation)
+- P8-M6 through P8-M7: blocked
 - No active phase in progress
 
 ## What Was Just Completed
 
-P8-M3: Provider-Backed Dialogue Preview.
-- Created provider dialogue preview schemas, service, and API routes
-- Uses /chat/completions endpoint, injectable http_client, prompt/system_prompt capping
-- persist_output and save_session blocked. live_generation requires exact confirmation.
-- 36 new tests, 1117 total backend tests passing
-- P8-M4 ready_with_approval
+P8-M4: Weekly Review Assistant Mode.
+- Created weekly review assistant schemas, service, API routes, and frontend UI
+- Reuses provider_dialogue_preview for actual provider calls (no separate unsafe path)
+- Advisory-only suggestions: suggestion_persisted=Literal[False], no auto-completion, no score creation
+- live_generation requires exact confirmation="run-live-weekly-review-assistant"
+- Frontend: Assistant Suggestion section in WeeklyReview Step 4 with copy-only buttons
+- 33 new tests (25 service + 8 API), 1158 total backend tests passing
+- Frontend build: PASS
+- P8-M5 ready_with_approval
 
 ## Next Decision
 
-P8-M4 (Weekly Review Assistant Mode) is ready_with_approval.
+P8-M5 (E2E Product Validation) is ready_with_approval.
 Requires explicit human/GPT approval before starting.
 
 ## Verification Commands
