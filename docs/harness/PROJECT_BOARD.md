@@ -164,6 +164,7 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-
 |----|-------|--------|
 | P11-000 | Product Completeness Before Validation Plan | **done** |
 | P11-M1 | Current app capability inventory | **done** |
+| P11-M1-R1 | Inventory granularity refinement | **done** |
 | P11-M2 | Missing core workflow map | **ready_with_approval** |
 | P11-M3 | UX gaps and normal-use blockers | **blocked** |
 | P11-M4 | Data model/API/frontend gap closure plan | **blocked** |

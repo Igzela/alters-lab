@@ -15,12 +15,13 @@ Last updated: 2026-05-27
 
 ## What Was Just Completed
 
-P11-M1: App capability inventory.
-- 9 frontend pages inventoried (3 usable, 5 partial, 1 static)
-- 130+ backend routes inventoried (all functional)
-- 6 CLI commands inventoried (all usable)
-- 11 workflows inventoried (9 usable, 1 partial, 1 blocked_by_design)
-- Top gaps: AlterDialogue, CalibrationHistory, RubricDelta, CheckpointPlan
+P11-M1-R1: Inventory granularity refinement.
+- Created P11_M1_DATA_RECORD_INVENTORY.md (19 record types, 12 P6 runtime areas)
+- Created P11_M1_ROUTE_AND_PAGE_INVENTORY.md (124 routes, per-route method/path/RW/provider-risk/frontend-used/status)
+- Created P11_M1_USER_WORKFLOW_INVENTORY.md (16 workflows with detail)
+- Corrected overclaim: "130+ routes all functional" → "124 routes exist; readiness varies"
+- Updated original inventory with data record section
+- 8 governance files updated
 
 ## Next Decision
 

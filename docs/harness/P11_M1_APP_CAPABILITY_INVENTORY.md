@@ -1,6 +1,11 @@
 # P11-M1: Current App Capability Inventory
 
-## Frontend Pages (9 pages)
+> **R1 update**: This inventory has been refined. See also:
+> - `P11_M1_DATA_RECORD_INVENTORY.md` — data record / local storage inventory
+> - `P11_M1_ROUTE_AND_PAGE_INVENTORY.md` — per-route granularity with method, path, read/write, provider risk, frontend-used, status
+> - `P11_M1_USER_WORKFLOW_INVENTORY.md` — per-workflow detail with frontend path, APIs, records, gaps
+
+## Frontend Pages (9 pages + 1 panel)
 
 | Page | Route Key | File | Status | Notes |
 |------|-----------|------|--------|-------|
@@ -15,7 +20,9 @@
 | GettingStarted | getting-started | GettingStarted.tsx | usable | Static onboarding checklist |
 | P6Progress | (panel) | P6Progress.tsx | usable | P6 state panel in WeeklyReview, false flags correct |
 
-## Backend Routes (130+ endpoints)
+## Backend Routes (124 endpoints across 30+ route groups)
+
+> 124 backend routes exist and are grouped; functional readiness varies by workflow and frontend integration. See `P11_M1_ROUTE_AND_PAGE_INVENTORY.md` for per-route method, path, read/write classification, provider risk, frontend-used, and status.
 
 ### Core P6 Workflow Routes
 
@@ -89,6 +96,32 @@
 | alters-lab doctor | usable | Health checks, actionable messages |
 | alters-lab open | usable | Open browser, --no-start, --dry-run |
 | alters-lab backup | usable | Backup data, --dry-run, --json, --include-logs/secrets |
+
+## Data Records / Local Storage
+
+> 19 record/config types across 12 P6 runtime areas + config/state. See `P11_M1_DATA_RECORD_INVENTORY.md` for full detail.
+
+| Record Type | Storage Area | Create API | Read/List API | Frontend Access | Status |
+|-------------|-------------|------------|---------------|-----------------|--------|
+| Weekly Notes | weekly_notes | POST /obsidian-weekly-note/ingest | GET /obsidian-weekly-note/list | usable | usable |
+| Weekly Reviews | weekly_reviews | POST /weekly-review/start | GET /weekly-review/list | usable | usable |
+| Calibration Records | calibration_records | POST /action-alignment/score | GET /action-alignment/list | partial | partial |
+| Self-Deception Challenges | self_deception_challenges | POST /self-deception-challenge/evaluate | GET /self-deception-challenge/list | missing | partial |
+| Alter Recommendations | alter_recommendations | POST /alter-recommendation/recommend | GET /alter-recommendation/list | missing | partial |
+| Weekly Reminders | reminders | POST /weekly-reminder/complete | GET /weekly-reminder/status | partial | partial |
+| Pattern Reviews | pattern_reviews | POST /pattern-review/build | GET /pattern-review/list | missing | partial |
+| Behavior Validation | behavior_validation | POST /behavior-validation/evaluate | GET /behavior-validation/report | missing | partial |
+| Exports | exports | POST /p6-data-retention/export | GET /p6-data-retention/manifest | missing | partial |
+| Provider Config | config_dir | POST /provider-config/config | GET /provider-config/config | usable | usable |
+| Provider Secrets | config_dir | POST /provider-config/secret | GET /provider-config/status (redacted) | usable | usable |
+| Generation Drafts | draft workspace | POST /generation-drafts/preview | GET /generation-drafts/list | missing | route_exists |
+| Orchestration Plans | draft workspace | POST /promotion-orchestration/{id}/plan | GET /promotion-orchestration/list | missing | route_exists |
+| Gate Reports | draft workspace | POST /promotion-execution-gate/{id}/check | GET /promotion-execution-gate/list | missing | route_exists |
+| Live Execution Reports | draft workspace | POST /promotion-live-execution/{id}/run | GET /promotion-live-execution/list | missing | route_exists |
+| Phase Closeout Reports | repo artifacts | phase*_closeout routers | phase*_closeout routers | missing | route_exists |
+| Workflow Summaries | state_dir | POST /user-workflow/run-summary | GET /user-workflow/state | missing | route_exists |
+| State (PID) | state_dir | local_launcher | local_launcher | missing | route_exists |
+| Logs | state_dir | server log | (none) | missing | route_exists |
 
 ## Workflows
 
