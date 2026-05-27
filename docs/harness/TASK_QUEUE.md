@@ -803,10 +803,10 @@
 
 ### P9-M1: User-facing install / launch / uninstall docs
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create clear documentation for installing, launching, and uninstalling the app from a .deb package.
 **Depends on**: P9-000 reviewed and approved
-**Notes**: Not started. Requires explicit approval.
+**Notes**: Done. Created docs/user/INSTALL.md, docs/user/FIRST_RUN.md, docs/user/UNINSTALL.md, docs/user/DATA_AND_BACKUP.md. Covers install from .deb, build from source, CLI commands, data paths, backup/restore, upgrade, full cleanup. No code changes.
 
 ### P9-M2: Disposable install/upgrade/remove verification
 

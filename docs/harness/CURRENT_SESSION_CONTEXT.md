@@ -11,27 +11,28 @@ Last updated: 2026-05-27
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9-000 done (release hygiene boundary plan)
-- P9-M1 ready_with_approval (install docs)
-- P9-M2 through P9-M7 blocked
+- P9-M1 done (install/launch/uninstall docs)
+- P9-M2 ready_with_approval (disposable verification)
+- P9-M3 through P9-M7 blocked
 
 ## What Was Just Completed
 
-P9-000: Release Hygiene & Install Readiness Boundary Plan.
-- Created P9 plan, taskbook, release readiness boundary, user-facing docs plan
-- Defined threat model (7 threats), success standard (7 criteria), milestone table (P9-000 through P9-M7)
-- Hard boundaries: no alters/current changes, no rubric changes, no runtime records, no secrets, no real provider calls, no P6 claims, no P6 seal
-- Updated 8 governance docs (PROJECT_BOARD, TASK_QUEUE, DECISION_RECORD, RISK_REGISTER, RUN_LOG, EVIDENCE_INDEX, START_HERE, CURRENT_SESSION_CONTEXT)
+P9-M1: User-facing install/launch/uninstall docs.
+- Created docs/user/INSTALL.md — system requirements, install from .deb, build from source, installed paths, data paths, verification
+- Created docs/user/FIRST_RUN.md — launch, what is Alters Lab, provider mode, smoke test, P6/P7/P8 explanation, weekly review, stopping
+- Created docs/user/UNINSTALL.md — stop, remove, what's removed/preserved, full cleanup, reinstall, upgrade
+- Created docs/user/DATA_AND_BACKUP.md — data paths, backup command, options, restore, data safety, P6 runtime records
+- Updated 8 governance docs
 - No code changes, no active YAML/rubric changes
 
 ## Next Decision
 
-P9-000 is done. Options:
-1. Begin P9-M1 (install docs) after explicit approval
+P9-M1 is done. Options:
+1. Begin P9-M2 (disposable install/upgrade/remove verification) after explicit approval
 2. Begin real P6 validation later
 3. Other product work
 
 New sessions must not claim P6 validated.
-New sessions must not start P9-M1 without explicit approval.
 
 ## Verification Commands
 

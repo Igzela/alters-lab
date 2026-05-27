@@ -331,3 +331,7 @@
 | P9-000 | P9 taskbook | docs/harness/P9_TASKBOOK.md | P9 milestone taskbook: P9-000 through P9-M7. |
 | P9-000 | Release readiness boundary | docs/harness/P9_RELEASE_READINESS_BOUNDARY.md | Hard boundaries, success standard, threat model. |
 | P9-000 | User-facing docs plan | docs/harness/P9_USER_FACING_DOCS_PLAN.md | 5 docs to create, 3 docs to update, review process. |
+| P9-M1 | Install guide | docs/user/INSTALL.md | System requirements, install from .deb, build from source, installed paths, data paths, verification. |
+| P9-M1 | First run guide | docs/user/FIRST_RUN.md | Launch, what is Alters Lab, provider mode, smoke test, P6/P7/P8 explanation, weekly review, stopping. |
+| P9-M1 | Uninstall guide | docs/user/UNINSTALL.md | Stop, remove, what's removed/preserved, full cleanup, reinstall, upgrade. |
+| P9-M1 | Data and backup guide | docs/user/DATA_AND_BACKUP.md | Data paths, backup command, options, restore, data safety, P6 runtime records. |

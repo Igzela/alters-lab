@@ -11,17 +11,17 @@
 
 ### P9-M1: User-facing install / launch / uninstall docs
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create clear documentation for installing, launching, and uninstalling the app from a .deb package. Cover first launch, CLI commands, data directory locations, and clean uninstall.
 **Depends on**: P9-000 reviewed and approved
-**Notes**: Not started. Requires explicit approval.
+**Notes**: Done. Created docs/user/INSTALL.md, docs/user/FIRST_RUN.md, docs/user/UNINSTALL.md, docs/user/DATA_AND_BACKUP.md. Updated 8 governance docs. No code changes.
 
 ### P9-M2: Disposable install/upgrade/remove verification
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Verify that install, upgrade, and remove work correctly in a disposable environment (tmpdir or container). Verify data preservation on upgrade, clean removal on uninstall, no secret leakage.
 **Depends on**: P9-M1
-**Notes**: Blocked.
+**Notes**: Not started. Requires explicit approval.
 
 ### P9-M3: First-run onboarding guide
 
