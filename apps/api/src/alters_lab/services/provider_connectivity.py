@@ -105,7 +105,7 @@ def _get_provider_api_key(layout: RuntimeLayout | None = None) -> str | None:
     if not secrets.secret_configured(state.secret_storage, state.key_name):
         return None
     # Internal use only — never exposed via API response.
-    return secrets._fallback_get(state.key_name) or secrets._keyring_get(state.key_name)
+    return secrets.get_secret(state.secret_storage, state.key_name)
 
 
 def run_provider_connectivity_check(

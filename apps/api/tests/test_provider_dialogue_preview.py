@@ -401,3 +401,86 @@ def test_status_rejects_persistence_supported_true():
         ProviderDialoguePreviewStatusResponse(
             provider_mode="mock", configured=True, persistence_supported=True,
         )
+
+
+# --- P8-M3-R1 regression tests ---
+
+
+def test_saved_mode_mock_request_mode_openai_blocked(tmp_path: Path):
+    layout = _layout(tmp_path)
+    update_provider_config(ProviderConfigUpdateRequest(mode="mock"), layout)
+    resp = run_provider_dialogue_preview(
+        _req(mode="openai-compatible-http", dry_run=False, live_generation=True,
+             confirmation=LIVE_CONFIRMATION),
+        layout,
+    )
+
+    assert resp.status == "blocked"
+    assert resp.network_call_made is False
+    assert "saved provider mode" in resp.message.lower()
+
+
+def test_saved_mode_disabled_request_mode_openai_blocked(tmp_path: Path):
+    layout = _layout(tmp_path)
+    # disabled is the default
+    resp = run_provider_dialogue_preview(
+        _req(mode="openai-compatible-http", dry_run=False, live_generation=True,
+             confirmation=LIVE_CONFIRMATION),
+        layout,
+    )
+
+    assert resp.status == "blocked"
+    assert resp.network_call_made is False
+
+
+def test_saved_mode_openai_request_mode_mock_uses_mock(tmp_path: Path):
+    layout = _configured_layout(tmp_path)
+    resp = run_provider_dialogue_preview(
+        _req(mode="mock"), layout,
+    )
+
+    assert resp.status == "ok"
+    assert resp.network_call_made is False
+    assert resp.output_preview == MOCK_PREVIEW
+
+
+def test_secret_store_get_secret_keyring_preferred():
+    from alters_lab.services.provider_config import SecretStore
+
+    class FakeLayout:
+        secrets_path = Path("/nonexistent")
+
+    store = SecretStore(FakeLayout())  # type: ignore[arg-type]
+
+    # keyring unavailable, storage=keyring → should fallback
+    result = store.get_secret("keyring", "test-key")
+    # No keyring available, so fallback is used (returns None since file doesn't exist)
+    assert result is None
+
+    # storage=secrets_yaml_fallback → always fallback
+    result = store.get_secret("secrets_yaml_fallback", "test-key")
+    assert result is None
+
+
+def test_secret_store_get_secret_fallback_respects_storage_policy(tmp_path: Path):
+    from alters_lab.services.provider_config import SecretStore, store_provider_secret
+    from alters_lab.services.runtime_layout import resolve_runtime_layout
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    layout = resolve_runtime_layout(
+        mode="dev", repo_root=repo,
+        config_dir=tmp_path / "config",
+        data_dir=tmp_path / "data",
+        state_dir=tmp_path / "state",
+    )
+    store = SecretStore(layout)
+    store_provider_secret("test-api-key-123", "secrets_yaml_fallback", "store-secret", layout)
+
+    # storage=secrets_yaml_fallback → returns fallback secret
+    result = store.get_secret("secrets_yaml_fallback", "alters-lab/provider-api-key")
+    assert result == "test-api-key-123"
+
+    # storage=keyring, keyring unavailable → falls back to secrets.yaml
+    result = store.get_secret("keyring", "alters-lab/provider-api-key")
+    assert result == "test-api-key-123"

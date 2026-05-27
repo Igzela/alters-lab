@@ -121,9 +121,24 @@ def run_provider_dialogue_preview(
     http_client: HttpClient | None = None,
 ) -> ProviderDialoguePreviewResponse:
     _, _, state = _load_state(layout)
-    mode = request.mode or state.mode
+    # Real provider network calls always use saved state.mode, not request.mode.
+    # request.mode is only used for mock/disabled preview selection.
+    saved_mode = state.mode
 
-    if mode == "disabled":
+    # Block: request.mode=openai-compatible-http but saved config is not openai-compatible-http
+    if (request.mode or saved_mode) == "openai-compatible-http" and saved_mode != "openai-compatible-http":
+        audit = build_provider_dialogue_preview_audit_event(
+            provider_mode=saved_mode, status="blocked",
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+        )
+        return ProviderDialoguePreviewResponse(
+            status="blocked", provider_mode=saved_mode, configured=False,
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+            audit_event_id=audit.event_id,
+            message="Real provider generation requires saved provider mode openai-compatible-http.",
+        )
+
+    if saved_mode == "disabled":
         audit = build_provider_dialogue_preview_audit_event(
             provider_mode="disabled", status="skipped",
             dry_run=request.dry_run, live_generation=False, network_call_made=False,
@@ -134,7 +149,7 @@ def run_provider_dialogue_preview(
             audit_event_id=audit.event_id, message="Provider is disabled.",
         )
 
-    if mode == "mock":
+    if saved_mode == "mock":
         audit = build_provider_dialogue_preview_audit_event(
             provider_mode="mock", status="ok",
             dry_run=request.dry_run, live_generation=False, network_call_made=False,
@@ -146,7 +161,19 @@ def run_provider_dialogue_preview(
             message="Mock dialogue preview. No network call made.",
         )
 
-    # openai-compatible-http
+    # request.mode=mock overrides saved openai-compatible-http for preview only (no network)
+    if request.mode == "mock":
+        audit = build_provider_dialogue_preview_audit_event(
+            provider_mode="mock", status="ok",
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+        )
+        return ProviderDialoguePreviewResponse(
+            status="ok", provider_mode="mock", configured=True,
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+            output_preview=MOCK_PREVIEW, audit_event_id=audit.event_id,
+            message="Mock dialogue preview. No network call made.",
+        )
+
     secrets = SecretStore(layout) if layout else None
     key_configured = bool(secrets and secrets.secret_configured(state.secret_storage, state.key_name))
     configured = bool(state.base_url) and bool(state.model) and key_configured
@@ -341,4 +368,4 @@ def _get_provider_api_key(layout: RuntimeLayout | None = None) -> str | None:
         return None
     if not secrets.secret_configured(state.secret_storage, state.key_name):
         return None
-    return secrets._fallback_get(state.key_name) or secrets._keyring_get(state.key_name)
+    return secrets.get_secret(state.secret_storage, state.key_name)

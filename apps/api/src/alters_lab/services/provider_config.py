@@ -69,6 +69,13 @@ class SecretStore:
             return self._keyring_get(key_name) is not None
         return self._fallback_get(key_name) is not None
 
+    def get_secret(self, storage: SecretStorage, key_name: str) -> str | None:
+        if storage == "keyring":
+            if self.keyring_available():
+                return self._keyring_get(key_name)
+            return self._fallback_get(key_name)
+        return self._fallback_get(key_name)
+
     def set_secret(self, storage: SecretStorage, key_name: str, value: str) -> SecretStorage:
         if storage == "keyring" and self.keyring_available():
             self._keyring_set(key_name, value)
