@@ -363,3 +363,5 @@
 | P10-000 | P10_REAL_USE_BOUNDARY.md | docs/harness/ | What counts as real use vs synthetic |
 | P10-000 | P10_P6_VALIDATION_BRIDGE.md | docs/harness/ | P6 validation start conditions |
 | P10-000 | P10_PILOT_EVIDENCE_REQUIREMENTS.md | docs/harness/ | Evidence collection and commit policy |
+| P10-M1 | P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md | docs/harness/ | 9-section operator checklist for packaged app cutover |
+| P10-M1 | P10_M1_CUTOVER_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable redacted YAML evidence template |

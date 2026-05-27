@@ -148,7 +148,7 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | ID | Title | Status |
 |----|-------|--------|
 | P10-000 | Personal Pilot & Real-Use Cutover Boundary Plan | **done** |
-| P10-M1 | Local installation cutover checklist | **ready_with_approval** |
+| P10-M1 | Local installation cutover checklist | **done** |
 | P10-M2 | First real weekly note ingest | **blocked** |
 | P10-M3 | First real weekly review session | **blocked** |
 | P10-M4 | Real-use friction log and fix triage | **blocked** |

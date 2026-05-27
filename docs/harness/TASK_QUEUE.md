@@ -861,10 +861,10 @@
 
 ### P10-M1: Local installation cutover checklist
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Checklist for cutting over from dev-mode to packaged app.
 **Depends on**: P10-000
-**Notes**: Not started.
+**Notes**: Done. Created P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md and P10_M1_CUTOVER_EVIDENCE_TEMPLATE.md. Updated FIRST_RUN_CHECKLIST, INSTALL. 7 governance docs. No code changes.
 
 ### P10-M2: First real weekly note ingest
 

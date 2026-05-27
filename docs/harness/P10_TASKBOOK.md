@@ -11,10 +11,10 @@
 
 ### P10-M1: Local installation cutover checklist
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create a checklist for cutting over from dev-mode to packaged app as the primary workflow. Verify packaged app works for real use.
 **Depends on**: P10-000
-**Notes**: Not started.
+**Notes**: Done. Created P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md (9-section operator checklist covering build, install, verify packaged app, start/open, provider boundary, backup, personal data boundary, evidence capture) and P10_M1_CUTOVER_EVIDENCE_TEMPLATE.md (fillable redacted YAML template). Updated FIRST_RUN_CHECKLIST.md, INSTALL.md with cutover pointers. Updated 7 governance docs. No code changes. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M2: First real weekly note ingest
 

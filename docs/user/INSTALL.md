@@ -77,3 +77,8 @@ The app runs at `http://127.0.0.1:18790` by default.
 See the [First-Run Checklist](FIRST_RUN_CHECKLIST.md) for what to do after installation.
 
 If anything goes wrong, see [Troubleshooting](TROUBLESHOOTING.md).
+
+
+## P10 Cutover
+
+If cutting over from dev/repo mode to the packaged app, see `docs/harness/P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md` for the detailed procedure.

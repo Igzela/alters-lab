@@ -12,22 +12,22 @@ Last updated: 2026-05-27
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 done (Personal Pilot & Real-Use Cutover Boundary Plan)
-- P10-M1: ready_with_approval (Local installation cutover checklist)
+- P10-M1: done (Local installation cutover checklist + evidence template)
 
 ## What Was Just Completed
 
-P10-000: Personal Pilot & Real-Use Cutover Boundary Plan.
-- Created P10_000_PERSONAL_PILOT_AND_REAL_USE_CUTOVER_PLAN.md
-- Created P10_TASKBOOK.md, P10_REAL_USE_BOUNDARY.md, P10_P6_VALIDATION_BRIDGE.md, P10_PILOT_EVIDENCE_REQUIREMENTS.md
-- Updated PROJECT_BOARD, TASK_QUEUE, DECISION_RECORD, RISK_REGISTER, RUN_LOG, EVIDENCE_INDEX, START_HERE_FOR_NEW_SESSION, CURRENT_SESSION_CONTEXT
-- P10 defines: operational cutover, evidence discipline, friction discovery, P6 validation bridge
+P10-M1: Local installation cutover checklist + evidence template.
+- Created P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md (9-section operator checklist)
+- Created P10_M1_CUTOVER_EVIDENCE_TEMPLATE.md (fillable redacted YAML template)
+- Updated FIRST_RUN_CHECKLIST.md, INSTALL.md with cutover pointers
+- Updated 7 governance docs
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P10-000 is done. Next step:
-1. P10-M1: Local installation cutover checklist (ready_with_approval)
-2. P10-M2 through P10-M7: blocked
+P10-M1 is done. Next step:
+1. P10-M2: First real weekly note ingest (ready_with_approval after P10-M1 passes)
+2. P10-M3 through P10-M7: blocked
 
 New sessions must not claim P6 validated.
 

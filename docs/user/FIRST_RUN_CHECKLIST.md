@@ -82,3 +82,7 @@ This creates a `.tar.gz` in the `exports/` directory containing your product dat
 - Explore the History page to see calibration records accumulate
 - Optionally configure a provider for LLM-powered dialogue (see [Provider Configuration](../PROVIDER_CONFIGURATION.md))
 - Check `alters-lab status` anytime to see current state
+
+## P10 Cutover Note
+
+If you are cutting over from dev/repo mode to the packaged app, see `docs/harness/P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md` for the detailed cutover procedure and evidence template.
