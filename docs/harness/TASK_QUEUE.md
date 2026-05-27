@@ -868,10 +868,10 @@
 
 ### P10-M2: First real weekly note ingest
 
-**Status**: blocked
+**Status**: ready_for_human_execution
 **Goal**: Charlie writes real weekly note, ingests into Alters Lab.
 **Depends on**: P10-M1
-**Notes**: Not started.
+**Notes**: Instructions and evidence template created. Charlie must perform actual local app operation.
 
 ### P10-M3: First real weekly review session
 

@@ -16,18 +16,20 @@ Last updated: 2026-05-27
 
 ## What Was Just Completed
 
-P10-M1: Local installation cutover checklist + evidence template.
-- Created P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md (9-section operator checklist)
-- Created P10_M1_CUTOVER_EVIDENCE_TEMPLATE.md (fillable redacted YAML template)
-- Updated FIRST_RUN_CHECKLIST.md, INSTALL.md with cutover pointers
-- Updated 7 governance docs
+P10-M2: First real weekly note ingest instructions + evidence template.
+- Created P10_M2_FIRST_REAL_WEEKLY_NOTE_INGEST.md (operator instructions)
+- Created P10_M2_REAL_WEEKLY_NOTE_EVIDENCE_TEMPLATE.md (fillable redacted YAML template)
+- P10-M2 is ready_for_human_execution — Charlie must perform the actual local app operation
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P10-M1 is done. Next step:
-1. P10-M2: First real weekly note ingest (ready_with_approval after P10-M1 passes)
-2. P10-M3 through P10-M7: blocked
+P10-M2 instructions ready. Charlie must:
+1. Use packaged app to ingest a real weekly note
+2. Fill in the evidence template with redacted summary
+3. Confirm completion
+
+After Charlie confirms, mark P10-M2 done and proceed to P10-M3.
 
 New sessions must not claim P6 validated.
 

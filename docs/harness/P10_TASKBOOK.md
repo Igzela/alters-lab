@@ -18,10 +18,10 @@
 
 ### P10-M2: First real weekly note ingest
 
-**Status**: blocked
+**Status**: ready_for_human_execution
 **Goal**: Charlie writes a real weekly note and ingests it into Alters Lab. First real-use evidence artifact.
 **Depends on**: P10-M1
-**Notes**: Not started.
+**Notes**: Instructions and evidence template created. Charlie must perform the actual local app operation. Mark done only after Charlie confirms real ingest and provides redacted evidence.
 
 ### P10-M3: First real weekly review session
 

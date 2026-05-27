@@ -365,3 +365,5 @@
 | P10-000 | P10_PILOT_EVIDENCE_REQUIREMENTS.md | docs/harness/ | Evidence collection and commit policy |
 | P10-M1 | P10_M1_LOCAL_INSTALLATION_CUTOVER_CHECKLIST.md | docs/harness/ | 9-section operator checklist for packaged app cutover |
 | P10-M1 | P10_M1_CUTOVER_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable redacted YAML evidence template |
+| P10-M2 | P10_M2_FIRST_REAL_WEEKLY_NOTE_INGEST.md | docs/harness/ | Operator instructions for first real weekly note ingest |
+| P10-M2 | P10_M2_REAL_WEEKLY_NOTE_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable redacted YAML evidence template |
