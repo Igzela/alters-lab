@@ -9,9 +9,9 @@
 | G-005 | provider disabled/mock | 0 | none | none | false | false | keep | ProviderSettings page full CRUD. |
 | G-006 | backup | 0 | none | none | false | false | keep | CLI backup with dry-run verified. |
 | G-007 | uninstall/remove | 0 | none | none | false | false | keep | Verified by P9 lifecycle smoke. |
-| G-008 | reality score / calibration loop | 1 | frontend | medium | false | true | P11-M4 | Form submits score. No calibration loop UI. No drift visualization. No history detail. |
-| G-009 | pattern review | 1 | frontend | medium | false | true | P11-M4 | Backend works (POST /build, GET /list). No frontend page. |
-| G-010 | behavior validation | 1 | frontend | high | false | true | P11-M4 | Backend works (POST /evaluate, GET /report). No frontend page. P6 validation depends on this. |
+| G-008 | reality score / calibration loop | 1 | frontend | medium | false | true | P11-M4 (plan) / P11-M5 (implement) | Form submits score. No calibration loop UI. No drift visualization. No history detail. Planning in M4, implementation in M5. |
+| G-009 | pattern review | 1 | frontend | medium | false | true | P11-M4 (plan) / P11-M6 (implement) | Backend works (POST /build, GET /list). No frontend page. Planning in M4, implementation in M6. |
+| G-010 | behavior validation | 1 | frontend | high | false | true | P11-M4 (plan) / P11-M6 (implement) | Backend works (POST /evaluate, GET /report). No frontend page. P6 validation depends on this. Planning in M4, implementation in M6. |
 | G-011 | self-deception challenge | 1 | frontend | low | false | false | defer | Backend works. Supporting evidence for P6. No frontend. |
 | G-012 | alter recommendation | 1 | frontend | low | false | false | defer | Backend works. Supporting evidence for P6. No frontend. |
 | G-013 | P6 validation package | 1 | intentional_block | blocker | false | true | defer | Intentionally blocked until product complete. |
@@ -26,8 +26,8 @@
 ## Summary
 
 - **Tier 0 gaps**: 0 (all core workflows work)
-- **Tier 1 gaps**: 6 (3 frontend_gap, 1 e2e_gap, 1 intentional_block, 1 defer)
-- **Tier 2 gaps**: 6 (2 frontend, 1 data, 1 e2e, 2 defer)
+- **Tier 1 gaps**: 6 (5 frontend, 1 intentional_block; 3 P11-M4, 3 defer)
+- **Tier 2 gaps**: 6 (3 frontend, 2 data, 1 e2e; 1 P11-M3, 5 defer)
 - **Tier 3 gaps**: 1 (defer)
 
 ## Normal-Use Blockers

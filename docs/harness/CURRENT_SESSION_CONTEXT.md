@@ -29,6 +29,7 @@ P11-M2: Missing core workflow map.
 
 P11-M3: UX gaps and normal-use blockers — ready_with_approval.
 GPT must define UX gap analysis scope before Codex executes.
+P11-M3 is analysis only — no implementation, no code changes.
 
 After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
 

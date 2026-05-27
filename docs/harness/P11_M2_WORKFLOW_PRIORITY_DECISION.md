@@ -6,28 +6,29 @@
 
 ## Priority Recommendation
 
-### P11-M3 Focus: Calibration / History Visibility
+### P11-M3 Focus: Calibration / History Visibility (Analysis Only)
 
 **Rationale**: The CalibrationHistory page exists but only shows a list. Users need to see individual calibration records, trend data, and understand their calibration trajectory. This is the most visible gap for a user who has completed a few weekly reviews.
 
-**Scope**:
-- CalibrationHistory detail view (click into a record)
-- RealityScore page improvements (show recent scores, drift indicator)
-- Keep existing backend routes, add frontend read-only views
+**Scope** (analysis only — no implementation):
+- UX gap analysis for calibration/history visibility
+- RealityScore user experience analysis
+- Normal-use blocker identification
+- No code changes, no frontend implementation
 
 **What NOT to do in P11-M3**:
-- Do not build frontend for Phase 3-6 controlled write routes (snapshot intake, branches, alters, generation, draft review, promotion)
-- These are internal pipeline routes, not user-facing workflows
-- Users don't need to interact with snapshot intake, branch persistence, or alter persistence directly
+- Do not implement any frontend changes
+- Do not build frontend for Phase 3-6 controlled write routes
+- Do not add new API routes
 
-### P11-M4 Focus: Validation Readiness Frontends
+### P11-M4 Focus: Gap Closure Plan
 
-**Rationale**: These workflows are needed before P6 validation can be reconsidered. Backend exists, but no frontend visibility.
+**Rationale**: After M3 identifies UX gaps, M4 creates the closure plan for what needs to be built.
 
-**Scope**:
-- Pattern review frontend (view 4-week patterns)
-- Behavior validation frontend (view validation reports)
-- Data export/delete/archive frontend (data management visibility)
+**Scope** (planning only — no implementation):
+- Data model/API/frontend gap closure plan
+- Phase M5/M6 implementation batching
+- No code changes
 
 ### Defer
 
@@ -46,10 +47,10 @@ Historical Phase 3-6 routes (snapshot intake, branches, alter persistence, gener
 
 ## Recommended P11-M3/P11-M4 Split
 
-| Phase | Focus | Files to Create |
-|-------|-------|-----------------|
-| P11-M3 | Calibration / history visibility | UX gap analysis, frontend gap list |
-| P11-M4 | Gap closure plan | Implementation plan for M5/M6 |
-| P11-M5 | Product completion batch 1 | CalibrationHistory detail, RealityScore improvements |
-| P11-M6 | Product completion batch 2 | Pattern review frontend, behavior validation frontend, data management |
-| P11-M7 | Product completeness smoke and closeout | Final verification |
+| Phase | Focus | Type | Files to Create |
+|-------|-------|------|-----------------|
+| P11-M3 | Calibration / history visibility, UX gaps, normal-use blockers | analysis only | UX gap analysis, frontend gap list |
+| P11-M4 | Gap closure plan | planning only | Implementation plan for M5/M6 |
+| P11-M5 | Product completion batch 1 | implementation | CalibrationHistory detail, RealityScore improvements |
+| P11-M6 | Product completion batch 2 | implementation | Pattern review frontend, behavior validation frontend, data management |
+| P11-M7 | Product completeness smoke and closeout | verification | Final verification |
