@@ -312,3 +312,9 @@
 | P8-M5 | P8 E2E smoke tests | apps/api/tests/test_p8_e2e_product_smoke.py | 15 tests covering safe defaults, report contract, redaction, provider safety flags, P6 false flags. |
 | P8-M5 | P8 E2E validation evidence | docs/harness/P8_M5_E2E_PRODUCT_VALIDATION_EVIDENCE.json | Redacted JSON evidence from P8 smoke run. |
 | P8-M5 | P8-M5 contract doc | docs/harness/P8_M5_E2E_PRODUCT_VALIDATION.md | P8 E2E validation definition, smoke script architecture, safety guarantees. |
+| P8-M6 | Provider safety audit tool | tools/p8_provider_safety_audit.py | 7-section audit: grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary. |
+| P8-M6 | Provider safety audit tests | apps/api/tests/test_p8_provider_safety_audit.py | 35 tests covering classification, scan logic, all 7 audit sections, evidence contract. |
+| P8-M6 | Provider safety audit evidence | docs/harness/P8_M6_PROVIDER_SAFETY_AUDIT_EVIDENCE.json | Section-level PASS results, summary counts, no raw content. |
+| P8-M6 | P8-M6 contract doc | docs/harness/P8_M6_PROVIDER_SAFETY_AUDIT.md | Audit definition, patterns, classification rules, safety guarantees. |
+| P8-M7 | P8 closeout report | docs/harness/P8_CLOSEOUT_REPORT.md | Sealed as REAL_PROVIDER_READY_LOCAL_APP. All milestones done. Verification results. |
+| P8-M7 | P8 closeout evidence | docs/harness/P8_CLOSEOUT_EVIDENCE.json | Verification results, milestone table, provider capabilities, safety summary, known limitations. |

@@ -11,14 +11,9 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P7**: Sealed as `LOCAL_APP_RELEASE_CANDIDATE`. Debian package builds, frontend works, CLI launcher works.
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
 - **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
-- **P8-000**: Done. Real provider and product readiness boundary plan created.
-- **P8-M1**: Done. Provider adapter contract hardened.
-- **P8-M2**: Done. Connectivity check with /models endpoint, exact confirmation gating.
-- **P8-M3**: Done. Provider-backed dialogue preview with /chat/completions, injectable http_client.
-- **P8-M4**: Done. Weekly Review assistant mode. Advisory-only suggestions, copy-only UI.
-- **P8-M5**: Done. E2E product validation smoke. Package-context isolated HOME, all P8 provider paths validated.
-- **P8-M6**: Ready with approval. Provider Safety Audit.
-- **P8-M7**: Blocked. Not started.
+- **P8**: Sealed as `REAL_PROVIDER_READY_LOCAL_APP`. All milestones done. 1215 backend tests passing.
+- **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
+- **P9**: Blocked / not started. Do not start without explicit approval.
 - **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
 
 ## Reading Order

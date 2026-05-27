@@ -764,28 +764,28 @@
 
 ### P8-M4: Weekly Review Assistant Mode
 
-**Status**: blocked
+**Status**: done
 **Goal**: Use provider only as an optional assistant inside Weekly Review UI. User explicitly clicks "Generate suggestion", output cannot submit the review automatically, user must manually edit/confirm, action alignment scores remain user-submitted, no automatic scoring.
 **Depends on**: P8-M3
-**Notes**: Blocked.
+**Notes**: Done. Weekly review assistant schemas/service/API/frontend implemented. Reuses provider_dialogue_preview for actual provider calls. Advisory-only suggestions, copy-only UI. 25 service tests + 8 API tests. 1158 total backend tests.
 
 ### P8-M5: E2E Product Validation
 
-**Status**: blocked
+**Status**: done
 **Goal**: Run local app end-to-end: install package or package-context smoke, open frontend, configure mock provider, configure real provider only with explicit test secret if available, run weekly review flow with synthetic smoke data, verify packaged runtime writes to user data dir, verify backup still excludes secrets, verify P6 still not validated/sealed.
 **Depends on**: P8-M4
-**Notes**: Blocked.
+**Notes**: Done. E2E smoke script with package-context isolated HOME. 12 smoke sections (A-M). Evidence redacted (no provider output content). 22 smoke tests. 1173 total backend tests.
 
 ### P8-M6: Provider Safety Audit
 
-**Status**: blocked
+**Status**: done
 **Goal**: Explicit checks: no API key returned in API response, no API key in logs, no API key in frontend state beyond password input lifecycle, no provider output writes active YAML, no provider output writes rubric, no provider output creates behavior validation, no raw runtime records committed.
 **Depends on**: P8-M5
-**Notes**: Blocked.
+**Notes**: Done. 7 audit sections: grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary. All PASS. 35 tests. Fixed provider_config schema to use Literal[False]. Fixed provider_gateway to use public get_secret. 1215 total backend tests.
 
 ### P8-M7: P8 Closeout
 
-**Status**: blocked
+**Status**: done
 **Goal**: Seal P8 only if: real provider boundary is implemented safely, E2E validation passes, no secrets leaked, P6 remains separate, P7 local app remains installable.
 **Depends on**: P8-M6
 **Notes**: Blocked.
