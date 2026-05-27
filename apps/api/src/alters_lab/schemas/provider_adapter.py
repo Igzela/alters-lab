@@ -35,19 +35,19 @@ class ProviderAdapterResponse(BaseModel):
     provider_mode: ProviderMode
     dry_run: bool
     live_check: bool
-    network_call_made: bool
+    network_call_made: Literal[False]
     output_preview: str | None = None
-    output_persisted: bool = False
+    output_persisted: Literal[False] = False
     audit_event_id: str | None = None
     error_type: str | None = None
     message: str
-    secrets_redacted: bool = True
-    active_yaml_modified: bool = False
-    rubric_modified: bool = False
-    reality_score_created: bool = False
-    action_alignment_created: bool = False
-    p6_behavior_validated: bool = False
-    p6_sealed: bool = False
+    secrets_redacted: Literal[True] = True
+    active_yaml_modified: Literal[False] = False
+    rubric_modified: Literal[False] = False
+    reality_score_created: Literal[False] = False
+    action_alignment_created: Literal[False] = False
+    p6_behavior_validated: Literal[False] = False
+    p6_sealed: Literal[False] = False
 
 
 class ProviderAuditEvent(BaseModel):
@@ -60,23 +60,23 @@ class ProviderAuditEvent(BaseModel):
     status: AdapterStatus
     dry_run: bool
     live_check: bool
-    network_call_made: bool
-    output_persisted: bool
+    network_call_made: Literal[False]
+    output_persisted: Literal[False]
     latency_ms: int | None = None
     error_type: str | None = None
-    redacted: bool = True
-    prompt_recorded: bool = False
-    response_recorded: bool = False
-    secret_recorded: bool = False
+    redacted: Literal[True] = True
+    prompt_recorded: Literal[False] = False
+    response_recorded: Literal[False] = False
+    secret_recorded: Literal[False] = False
 
 
 class ProviderAdapterHealthResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    status: str = "ok"
-    component: str = "provider-adapter"
-    real_network_calls_enabled: bool = False
-    secrets_redacted: bool = True
+    status: Literal["ok"] = "ok"
+    component: Literal["provider-adapter"] = "provider-adapter"
+    real_network_calls_enabled: Literal[False] = False
+    secrets_redacted: Literal[True] = True
 
 
 class ProviderAdapterStatusResponse(BaseModel):
@@ -84,14 +84,14 @@ class ProviderAdapterStatusResponse(BaseModel):
 
     provider_mode: ProviderMode
     configured: bool
-    real_network_calls_enabled: bool = False
+    real_network_calls_enabled: Literal[False] = False
     supported_modes: list[ProviderMode] = Field(
         default_factory=lambda: ["disabled", "mock", "openai-compatible-http"]
     )
-    provider_output_persists_by_default: bool = False
-    provider_output_can_write_active_yaml: bool = False
-    provider_output_can_generate_reality_score: bool = False
-    provider_output_can_generate_action_alignment: bool = False
-    p6_behavior_validated: bool = False
-    p6_sealed: bool = False
-    secrets_redacted: bool = True
+    provider_output_persists_by_default: Literal[False] = False
+    provider_output_can_write_active_yaml: Literal[False] = False
+    provider_output_can_generate_reality_score: Literal[False] = False
+    provider_output_can_generate_action_alignment: Literal[False] = False
+    p6_behavior_validated: Literal[False] = False
+    p6_sealed: Literal[False] = False
+    secrets_redacted: Literal[True] = True

@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from alters_lab.schemas.provider_adapter import (
+    ProviderAdapterHealthResponse,
     ProviderAdapterRequest,
     ProviderAdapterResponse,
+    ProviderAdapterStatusResponse,
     ProviderAuditEvent,
 )
 from alters_lab.services.provider_adapter import (
@@ -206,3 +209,178 @@ def test_redact_provider_error_masks_details():
     result = redact_provider_error(exc)
     assert "abc123" not in result
     assert "ValueError" in result
+
+
+# --- Contract hardening: invalid constructions must be rejected ---
+
+
+def test_response_rejects_network_call_made_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=True,
+            message="test",
+        )
+
+
+def test_response_rejects_output_persisted_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            output_persisted=True, message="test",
+        )
+
+
+def test_response_rejects_active_yaml_modified_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            active_yaml_modified=True, message="test",
+        )
+
+
+def test_response_rejects_rubric_modified_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            rubric_modified=True, message="test",
+        )
+
+
+def test_response_rejects_reality_score_created_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            reality_score_created=True, message="test",
+        )
+
+
+def test_response_rejects_action_alignment_created_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            action_alignment_created=True, message="test",
+        )
+
+
+def test_response_rejects_p6_behavior_validated_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            p6_behavior_validated=True, message="test",
+        )
+
+
+def test_response_rejects_p6_sealed_true():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            p6_sealed=True, message="test",
+        )
+
+
+def test_response_rejects_secrets_redacted_false():
+    with pytest.raises(Exception):
+        ProviderAdapterResponse(
+            status="ok", provider_ready=True, provider_mode="mock",
+            dry_run=True, live_check=False, network_call_made=False,
+            secrets_redacted=False, message="test",
+        )
+
+
+def test_audit_rejects_network_call_made_true():
+    with pytest.raises(Exception):
+        ProviderAuditEvent(
+            provider_mode="mock", operation="preview", status="ok",
+            dry_run=True, live_check=False, network_call_made=True,
+            output_persisted=False,
+        )
+
+
+def test_audit_rejects_output_persisted_true():
+    with pytest.raises(Exception):
+        ProviderAuditEvent(
+            provider_mode="mock", operation="preview", status="ok",
+            dry_run=True, live_check=False, network_call_made=False,
+            output_persisted=True,
+        )
+
+
+def test_audit_rejects_prompt_recorded_true():
+    with pytest.raises(Exception):
+        ProviderAuditEvent(
+            provider_mode="mock", operation="preview", status="ok",
+            dry_run=True, live_check=False, network_call_made=False,
+            output_persisted=False, prompt_recorded=True,
+        )
+
+
+def test_audit_rejects_response_recorded_true():
+    with pytest.raises(Exception):
+        ProviderAuditEvent(
+            provider_mode="mock", operation="preview", status="ok",
+            dry_run=True, live_check=False, network_call_made=False,
+            output_persisted=False, response_recorded=True,
+        )
+
+
+def test_audit_rejects_secret_recorded_true():
+    with pytest.raises(Exception):
+        ProviderAuditEvent(
+            provider_mode="mock", operation="preview", status="ok",
+            dry_run=True, live_check=False, network_call_made=False,
+            output_persisted=False, secret_recorded=True,
+        )
+
+
+def test_audit_rejects_redacted_false():
+    with pytest.raises(Exception):
+        ProviderAuditEvent(
+            provider_mode="mock", operation="preview", status="ok",
+            dry_run=True, live_check=False, network_call_made=False,
+            output_persisted=False, redacted=False,
+        )
+
+
+def test_health_rejects_real_network_calls_enabled_true():
+    with pytest.raises(Exception):
+        ProviderAdapterHealthResponse(real_network_calls_enabled=True)
+
+
+def test_status_rejects_real_network_calls_enabled_true():
+    with pytest.raises(Exception):
+        ProviderAdapterStatusResponse(
+            provider_mode="mock", configured=True,
+            real_network_calls_enabled=True,
+        )
+
+
+def test_status_rejects_provider_output_can_write_active_yaml_true():
+    with pytest.raises(Exception):
+        ProviderAdapterStatusResponse(
+            provider_mode="mock", configured=True,
+            provider_output_can_write_active_yaml=True,
+        )
+
+
+def test_status_rejects_provider_output_can_generate_reality_score_true():
+    with pytest.raises(Exception):
+        ProviderAdapterStatusResponse(
+            provider_mode="mock", configured=True,
+            provider_output_can_generate_reality_score=True,
+        )
+
+
+def test_status_rejects_provider_output_can_generate_action_alignment_true():
+    with pytest.raises(Exception):
+        ProviderAdapterStatusResponse(
+            provider_mode="mock", configured=True,
+            provider_output_can_generate_action_alignment=True,
+        )
