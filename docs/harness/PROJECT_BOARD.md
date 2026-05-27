@@ -128,6 +128,21 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 
 P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **sealed as REAL_PROVIDER_READY_LOCAL_APP** — All P8 milestones done. 1215 backend tests passing.
 
+## Phase 9 — Release Hygiene & Install Readiness
+
+| ID | Title | Status |
+|----|-------|--------|
+| P9-000 | Release Hygiene & Install Readiness Boundary Plan | **done** |
+| P9-M1 | User-facing install / launch / uninstall docs | **ready_with_approval** |
+| P9-M2 | Disposable install/upgrade/remove verification | **blocked** |
+| P9-M3 | First-run onboarding guide | **blocked** |
+| P9-M4 | Provider setup and safety guide | **blocked** |
+| P9-M5 | Troubleshooting / doctor improvements | **blocked** |
+| P9-M6 | Release artifact checklist and version bump policy | **blocked** |
+| P9-M7 | P9 Closeout | **blocked** |
+
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **sealed as REAL_PROVIDER_READY_LOCAL_APP** — P9 status: **P9-000 done, P9-M1 ready_with_approval** — 1215 backend tests passing.
+
 ## Phase 5 Sealed Baseline
 
 Phase 5 Final Gate: **PASS**

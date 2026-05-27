@@ -788,4 +788,64 @@
 **Status**: done
 **Goal**: Seal P8 only if: real provider boundary is implemented safely, E2E validation passes, no secrets leaked, P6 remains separate, P7 local app remains installable.
 **Depends on**: P8-M6
+**Notes**: Done. P8 sealed as REAL_PROVIDER_READY_LOCAL_APP. All verification checks pass. 1215 backend tests. Provider safety audit 7 sections all PASS. Closeout report and evidence created.
+
+---
+
+## Phase 9 — Release Hygiene & Install Readiness
+
+### P9-000: Release Hygiene & Install Readiness Boundary Plan
+
+**Status**: done
+**Goal**: Define the next phase for turning the sealed local app into a usable personal release.
+**Depends on**: P8-M7 complete
+**Notes**: Created P9 plan, taskbook, release readiness boundary, and user-facing docs plan. Defined threat model, success standard, milestone table, and hard boundaries. Updated 8 governance docs. No code changes, no active YAML/rubric changes, no runtime records, no provider calls.
+
+### P9-M1: User-facing install / launch / uninstall docs
+
+**Status**: ready_with_approval
+**Goal**: Create clear documentation for installing, launching, and uninstalling the app from a .deb package.
+**Depends on**: P9-000 reviewed and approved
+**Notes**: Not started. Requires explicit approval.
+
+### P9-M2: Disposable install/upgrade/remove verification
+
+**Status**: blocked
+**Goal**: Verify install, upgrade, and remove work correctly in a disposable environment.
+**Depends on**: P9-M1
+**Notes**: Blocked.
+
+### P9-M3: First-run onboarding guide
+
+**Status**: blocked
+**Goal**: Create a first-run guide for new users.
+**Depends on**: P9-M2
+**Notes**: Blocked.
+
+### P9-M4: Provider setup and safety guide
+
+**Status**: blocked
+**Goal**: Create a guide for setting up a provider (mock or live).
+**Depends on**: P9-M2
+**Notes**: Blocked.
+
+### P9-M5: Troubleshooting / doctor improvements
+
+**Status**: blocked
+**Goal**: Improve `alters-lab doctor` and add troubleshooting docs.
+**Depends on**: P9-M3
+**Notes**: Blocked.
+
+### P9-M6: Release artifact checklist and version bump policy
+
+**Status**: blocked
+**Goal**: Create release checklist and version bump policy.
+**Depends on**: P9-M5
+**Notes**: Blocked.
+
+### P9-M7: P9 Closeout
+
+**Status**: blocked
+**Goal**: Seal P9 only if all release readiness criteria are met.
+**Depends on**: P9-M6
 **Notes**: Blocked.

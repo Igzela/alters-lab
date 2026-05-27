@@ -318,3 +318,16 @@
 | P8-M6 | P8-M6 contract doc | docs/harness/P8_M6_PROVIDER_SAFETY_AUDIT.md | Audit definition, patterns, classification rules, safety guarantees. |
 | P8-M7 | P8 closeout report | docs/harness/P8_CLOSEOUT_REPORT.md | Sealed as REAL_PROVIDER_READY_LOCAL_APP. All milestones done. Verification results. |
 | P8-M7 | P8 closeout evidence | docs/harness/P8_CLOSEOUT_EVIDENCE.json | Verification results, milestone table, provider capabilities, safety summary, known limitations. |
+| P8-M5-R1 | Redaction functions | tools/p8_e2e_product_smoke.py | _REDACT_FIELDS, _PROVIDER_OUTPUT_PATTERNS, _redact_sensitive_fields, _redact_string_value for evidence redaction. |
+| P8-M5-R1 | Redaction tests | apps/api/tests/test_p8_e2e_product_smoke.py | 7 redaction tests + 1 committed evidence test. 22 total smoke tests. |
+| P8-M6 | Safety audit tool | tools/p8_provider_safety_audit.py | 7-section audit: grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary. |
+| P8-M6 | Safety audit tests | apps/api/tests/test_p8_provider_safety_audit.py | 35 tests covering all 7 audit sections. |
+| P8-M6 | Safety audit evidence | docs/harness/P8_M6_PROVIDER_SAFETY_AUDIT_EVIDENCE.json | Section-level PASS results, summary counts, no raw content. |
+| P8-M6 | provider_config Literal[False] fix | apps/api/src/alters_lab/schemas/provider_config.py | Changed safety fields from bool to Literal[False]. |
+| P8-M6 | provider_gateway public API fix | apps/api/src/alters_lab/services/provider_gateway.py | Changed _resolve_secret to use public get_secret. |
+| P8-M7 | P8 closeout report | docs/harness/P8_CLOSEOUT_REPORT.md | Full verification table, 12 checks all PASS. |
+| P8-M7 | P8 closeout evidence | docs/harness/P8_CLOSEOUT_EVIDENCE.json | Structured evidence with all verification results. |
+| P9-000 | P9 plan | docs/harness/P9_000_RELEASE_HYGIENE_AND_INSTALL_READINESS_PLAN.md | Release hygiene boundary plan with milestone table, threat model, success standard, hard boundaries. |
+| P9-000 | P9 taskbook | docs/harness/P9_TASKBOOK.md | P9 milestone taskbook: P9-000 through P9-M7. |
+| P9-000 | Release readiness boundary | docs/harness/P9_RELEASE_READINESS_BOUNDARY.md | Hard boundaries, success standard, threat model. |
+| P9-000 | User-facing docs plan | docs/harness/P9_USER_FACING_DOCS_PLAN.md | 5 docs to create, 3 docs to update, review process. |

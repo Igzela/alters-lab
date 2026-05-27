@@ -137,6 +137,13 @@
 | R-131 | Dialogue preview sends excessive prompt content to provider | Low | Medium | P8-M3: prompt capped at 8000 chars, system_prompt at 4000 chars, tests verify caps enforced. | Active |
 | R-132 | Weekly review assistant suggestion mistaken for validated correction | Medium | Medium | P8-M4: suggestion_label="unverified_provider_suggestion", copy-only UI, no auto-submit, no score creation, no persistence. | Active |
 | R-133 | E2E smoke evidence mistaken for real P6 behavior validation | Low | Medium | P8-M5: evidence states "synthetic_smoke_only", P6 false flags enforced, no real weekly review data. | Active |
+| R-134 | Broken install prevents user from using app | Medium | Critical | P9-M2: disposable install smoke test in tmpdir or container before release. | Active |
+| R-135 | Upgrade loses user data or config | Medium | Critical | P9-M2: upgrade smoke with data preservation check. | Active |
+| R-136 | Uninstall leaks user data or secrets | Low | Critical | P9-M2: uninstall smoke, verify cleanup, secret grep. | Active |
+| R-137 | Docs diverge from actual CLI behavior | Medium | Medium | P9-M1/M3/M4: test instructions against actual CLI before publishing. | Active |
+| R-138 | User misunderstands P6 as validated | Medium | High | P9-M3: clear P6 state messaging in onboarding guide. | Active |
+| R-139 | Provider setup guide causes confusion | Medium | Medium | P9-M4: step-by-step instructions, mock vs live distinction. | Active |
+| R-140 | Secrets leaked through backup/support logs | Low | Critical | P9-M2: backup smoke, secret grep on all output. | Active |
 
 ## Risk Assessment
 

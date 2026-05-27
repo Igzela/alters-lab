@@ -691,3 +691,11 @@
 **Context**: P8-M5 needs to validate the full local app product path after P8 provider features. Real provider calls should not run by default in smoke tests. Package-context validation must use isolated HOME to avoid mutating host state.
 **Decision**: P8 E2E smoke script uses dpkg-deb -x into isolated temp install root with isolated HOME. All provider paths tested in mock/dry-run mode. Live provider support exists as optional flags (--allow-live-provider, --live-provider-confirmation) but is never invoked by default. Evidence is redacted (temp paths, no secrets, no raw provider output).
 **Consequences**: Smoke evidence proves product paths work without risking real provider calls or host state mutation. Live provider smoke can be explicitly invoked by human when needed.
+
+### Decision P9-000-01: P9 is release hygiene, not feature work
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P8 sealed the local app as REAL_PROVIDER_READY_LOCAL_APP. The app has backend, frontend, provider integration, Debian packaging, and CLI launcher. Before any real release or further feature work, the app needs install/uninstall docs, onboarding guides, troubleshooting docs, and a release checklist.
+**Decision**: P9 is defined as release hygiene and install readiness. It adds documentation, verification, and onboarding — not new features. P9 excludes SaaS/cloud deployment, multi-user support, mobile app, Windows/macOS packaging, automatic P6 validation, provider output persistence, and active YAML/rubric mutation.
+**Consequences**: P9 turns the sealed local app into a usable personal release without expanding the product boundary. P9-M1 (install docs) requires explicit approval before implementation begins.
