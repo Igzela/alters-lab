@@ -1,7 +1,7 @@
 # P10-M5-R2: P6 Validation Start Gate Reentry
 
 **Date:** 2026-05-28
-**Status:** awaiting_human_decision
+**Status:** done (START_P6_VALIDATION_NOW)
 
 ## Previous Blocker
 

@@ -6,12 +6,12 @@ Last updated: 2026-05-28
 
 - P7 sealed as `LOCAL_APP_RELEASE_CANDIDATE`
 - P7-R1 (frontend Weekly Review usability) complete
-- P6: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`
+- P6: `CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED`
 - P8: sealed as `REAL_PROVIDER_READY_LOCAL_APP`
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
-- P10: P10-000 through P10-M5 done (BLOCKED_BY_NEW_FRICTION); P10-M5-R2 awaiting Charlie's explicit decision; P10-M6/M7 blocked
+- P10: P10-000 through P10-M5 done; P10-M5-R2 done (START_P6_VALIDATION_NOW); P10-M6 ready_with_approval; P10-M7 blocked
 - P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
 
 ## Recent Product Pilot
@@ -28,25 +28,25 @@ P11-PILOT-1: Real-use product pilot.
 
 - P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION (commit cb5b457)
 - P11-PILOT-1: PASS (real-use product pilot)
-- P10-M5-R2: awaiting_human_decision (P6 validation reentry gate)
-- P6: CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
-- P6 validation has NOT started
+- P10-M5-R2: done (START_P6_VALIDATION_NOW)
+- P10-M5-R2-E1: done (decision recorded)
+- P6: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
+- P6 validation started: 2026-05-28
+- P6 is NOT validated, NOT sealed
+- P10-M6: ready_with_approval
 
 ## Latest Gate Update
 
-P10-M5-R2: Reopened P6 validation start gate using P11 closeout + P11-PILOT-1 as evidence.
-- Created decision doc + evidence template
+P10-M5-R2-E1: Recorded Charlie's START_P6_VALIDATION_NOW decision.
+- Created evidence doc
 - Updated 7 governance files
-- P6 remains NOT_VALIDATED / NOT_SEALED
-- P10-M6 blocked until Charlie explicitly chooses START
+- P6 state: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
+- Prior pilot/smoke evidence does NOT count for completion
+- P10-M6 ready to define Week 1 validation package
 
-## Next Decision
+## Next Task
 
-Charlie must explicitly reply with one of:
-- START_P6_VALIDATION_NOW
-- RUN_ONE_MORE_PILOT_PASS
-- DEFER_P6_VALIDATION
-- BLOCKED_BY_NEW_FRICTION
+P10-M6: Define Week 1 validation package — what to do this week, what local records count, what redacted evidence can be committed.
 
 New sessions must not claim P6 validated.
 

@@ -410,5 +410,6 @@
 | P11-PILOT-1 | P11-PILOT-1-real-use-product-pilot.md | docs/runs/ | Real-use product pilot: 10 workflows exercised, friction=none, boundary checks pass, GPT verdict PASS |
 | P10-M5-R2 | P10_M5_R2_P6_VALIDATION_REENTRY_DECISION.md | docs/harness/ | Reopened P6 validation start gate using P11 closeout + P11-PILOT-1 evidence |
 | P10-M5-R2 | P10_M5_R2_P6_VALIDATION_REENTRY_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable evidence template for P6 validation reentry decision |
+| P10-M5-R2-E1 | P10_M5_R2_P6_VALIDATION_START_EVIDENCE.md | docs/harness/ | Charlie's START_P6_VALIDATION_NOW decision recorded, P6 state VALIDATION_IN_PROGRESS |
 | DOC-HANDOFF-001 | AGENTS.md | ./ | Cross-agent bootstrap, hard boundaries, verification commands, and documentation maintenance rule |
 | DOC-HANDOFF-001 | README.md, CLAUDE.md, START_HERE_FOR_NEW_SESSION.md, CURRENT_SESSION_CONTEXT.md | ./, docs/harness/ | Handoff surface updated so new sessions see P11/Pilot state and commit-time doc maintenance expectations |

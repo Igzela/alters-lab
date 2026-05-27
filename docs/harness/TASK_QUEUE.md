@@ -896,17 +896,17 @@
 
 ### P10-M5-R2: Reopen P6 validation start gate after P11
 
-**Status**: awaiting_human_decision
+**Status**: done
 **Goal**: Reopen the P6 validation start decision gate using P11 closeout and P11-PILOT-1 as evidence.
 **Depends on**: P11-M7, P11-PILOT-1
-**Notes**: Decision-gate update only. P11 sealed product completeness. P11-PILOT-1 exercised 10 workflows with no friction. Previous blocker (product incompleteness) likely resolved. Decision options: START_P6_VALIDATION_NOW, RUN_ONE_MORE_PILOT_PASS, DEFER_P6_VALIDATION, BLOCKED_BY_NEW_FRICTION. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED. P10-M6 blocked until Charlie explicitly chooses START.
+**Notes**: Done. Decision: START_P6_VALIDATION_NOW. Charlie explicitly chose to start P6 validation. P6 state moves to CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED. P6 is NOT validated, NOT sealed. Prior pilot/smoke evidence does NOT count for completion. P10-M6 ready_with_approval.
 
 ### P10-M6: Week 1 validation package
 
-**Status**: blocked
-**Goal**: Package Week 1 evidence if P6 validation explicitly started.
-**Depends on**: P10-M5
-**Notes**: Conditional on explicit P6 validation start.
+**Status**: ready_with_approval
+**Goal**: Package Week 1 evidence during P6 validation window.
+**Depends on**: P10-M5-R2
+**Notes**: P6 validation started 2026-05-28. Define Week 1 validation package: what to do this week, what local records count, what redacted evidence can be committed.
 
 ### P10-M7: Pilot closeout / next phase decision
 

@@ -153,11 +153,11 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | P10-M3 | First real weekly review session | **done** |
 | P10-M4 | Real-use friction log and fix triage | **done** |
 | P10-M5 | P6 validation start decision gate | **done** |
-| P10-M5-R2 | Reopen P6 validation start gate after P11 | **awaiting_human_decision** |
-| P10-M6 | Week 1 validation package | **blocked** |
+| P10-M5-R2 | Reopen P6 validation start gate after P11 | **done** |
+| P10-M6 | Week 1 validation package | **ready_with_approval** |
 | P10-M7 | Pilot closeout / next phase decision | **blocked** |
 
-P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-M5-R2 awaiting_human_decision, P10-M6 blocked until START** — 1270 backend tests passing.
+P6 status: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P10 status: **P10-M5-R2 done (START_P6_VALIDATION_NOW), P10-M6 ready** — 1270 backend tests passing.
 
 ## Phase 11 — Product Completeness Before Validation
 
