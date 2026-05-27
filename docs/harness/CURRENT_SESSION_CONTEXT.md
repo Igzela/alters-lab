@@ -12,26 +12,25 @@ Last updated: 2026-05-27
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 through P10-M5 done (BLOCKED_BY_NEW_FRICTION), P10-M6/M7 blocked
-- P11: P11-000 done, P11-M1 done (inventory, R1/R2/R3), P11-M2 done (workflow gap map), P11-M3 done (UX gaps), P11-M4 done (gap closure plan), P11-M5 done (calibration/progress UX improvements)
+- P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
 
 ## What Was Just Completed
 
-P11-M5: Calibration and progress UX improvements.
-- CalibrationHistory: detail drill-down, trend indicator (↑/↓/→), score explanation section, date sorting
-- RealityScore: recent action alignment scores section, link to CalibrationHistory
-- P6Progress: user-facing labels ("Your Progress"), validation status ("Not started"), next-step guidance
-- WeeklyReview Step 5: verdict descriptions shown below selector
-- WeeklyReview Step 3: dynamic alter loading from GET /alter-dialogue/alters with fallback
-- 4 files changed, frontend build PASS, backend 1270 tests PASS
+P11-M7: Product completeness smoke and closeout.
+- Frontend build PASS, backend 1270 tests PASS
+- Deb package build PASS, safety inspect PASS
+- P7 local app smoke PASS, P8 E2E product smoke PASS
+- Frontend content smoke: all 7 required strings present
+- Boundary checks: all PASS
+- Created: P11_M7_PRODUCT_COMPLETENESS_SMOKE_EVIDENCE.json, P11_CLOSEOUT_REPORT.md, P11_CLOSEOUT_EVIDENCE.json
+- P11 milestones P11-000 through P11-M7 all PASS
 - No P6 claims, no provider calls, no backend changes
 
 ## Next Decision
 
-P11-M6: Product completion implementation batch 2 — ready_with_approval.
-GPT must define M6 scope before Codex executes.
-P11-M6 is implementation — new frontend pages (PatternReview, BehaviorValidation, DataManagement).
-
-After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
+After P11 closeout, the project should decide:
+1. Restart P10/P6 validation start gate — verify product completeness resolves BLOCKED_BY_NEW_FRICTION
+2. Or run one more real-use pilot pass before P6 validation
 
 New sessions must not claim P6 validated.
 

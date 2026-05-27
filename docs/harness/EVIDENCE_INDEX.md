@@ -395,3 +395,15 @@
 | P11-M5 | RealityScore.tsx | apps/web/src/pages/ | Recent scores section, CalibrationHistory link |
 | P11-M5 | P6Progress.tsx | apps/web/src/pages/ | User-facing labels, validation status, next-step guidance |
 | P11-M5 | WeeklyReview.tsx | apps/web/src/pages/ | Step 5 verdict descriptions, Step 3 dynamic alter loading |
+| P11-M5-R1 | RealityScore.tsx | apps/web/src/pages/ | Fix navigation to use typed page callback |
+| P11-M5-R1 | P6Progress.tsx | apps/web/src/pages/ | Fix validation wording to mention product completeness blocker |
+| P11-M5-R1 | App.tsx | apps/web/src/ | Pass typed navigation callback to RealityScore |
+| P11-M6 | PatternReview.tsx | apps/web/src/pages/ | Pattern review list/detail/build with P6 boundary copy |
+| P11-M6 | BehaviorValidation.tsx | apps/web/src/pages/ | Validation report/evaluate with P6 not-started banner |
+| P11-M6 | DataManagement.tsx | apps/web/src/pages/ | Record counts, export, manual delete, archive disabled notice |
+| P11-M6 | App.tsx | apps/web/src/ | Wire Patterns/Validation/Data nav and router |
+| P11-M6-R1 | DataManagement.tsx | apps/web/src/pages/ | Remove fabricated delete IDs, add manual record ID panel, archive disabled |
+| P11-M6-R1 | PatternReview.tsx | apps/web/src/pages/ | Add P6/provider evidence boundary copy |
+| P11-M7 | P11_M7_PRODUCT_COMPLETENESS_SMOKE_EVIDENCE.json | docs/harness/ | Smoke evidence: all builds pass, boundary checks pass, frontend content verified |
+| P11-M7 | P11_CLOSEOUT_REPORT.md | docs/harness/ | P11 closeout: product completeness established, P6 remains NOT_VALIDATED |
+| P11-M7 | P11_CLOSEOUT_EVIDENCE.json | docs/harness/ | Closeout evidence: all milestones PASS, P11 sealed |

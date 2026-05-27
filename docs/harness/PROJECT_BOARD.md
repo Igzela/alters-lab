@@ -171,10 +171,10 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-
 | P11-M3 | UX gaps and normal-use blockers | **done** |
 | P11-M4 | Data model/API/frontend gap closure plan | **done** |
 | P11-M5 | Product completion implementation batch 1 | **done** |
-| P11-M6 | Product completion implementation batch 2 | **ready_with_approval** |
-| P11-M7 | Product completeness smoke and closeout | **blocked** |
+| P11-M6 | Product completion implementation batch 2 | **done** |
+| P11-M7 | Product completeness smoke and closeout | **done** |
 
-P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P11 purpose: audit and complete app before P6 validation.
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P11 purpose: audit and complete app before P6 validation. **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION.**
 
 ## Phase 5 Sealed Baseline
 
