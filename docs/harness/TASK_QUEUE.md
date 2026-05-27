@@ -824,14 +824,14 @@
 
 ### P9-M4: Provider setup and safety guide
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create a guide for setting up a provider (mock or live).
 **Depends on**: P9-M2
-**Notes**: Blocked.
+**Notes**: Done. Created docs/user/PROVIDER_SETUP.md and docs/user/PROVIDER_SAFETY.md. Updated ProviderSettings.tsx with safety notes. Updated FIRST_RUN.md, README.md. 1255 backend tests passing. Frontend build PASS.
 
 ### P9-M5: Troubleshooting / doctor improvements
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Improve `alters-lab doctor` and add troubleshooting docs.
 **Depends on**: P9-M3
 **Notes**: Blocked.

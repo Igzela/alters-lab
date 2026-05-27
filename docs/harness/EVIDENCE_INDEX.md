@@ -344,3 +344,8 @@
 | P9-M3 | FIRST_RUN.md update | docs/user/FIRST_RUN.md | Added link to FIRST_RUN_CHECKLIST.md. |
 | P9-M3 | INSTALL.md update | docs/user/INSTALL.md | Added Next Steps section linking to FIRST_RUN_CHECKLIST.md. |
 | P9-M3 | README.md update | README.md | Added First-Run Checklist link to Documentation section. |
+| P9-M4 | Provider setup guide | docs/user/PROVIDER_SETUP.md | Provider modes (disabled/mock/openai-compatible-http), required fields, dry-run test, confirmation gating, P8 meaning, no real API key examples. |
+| P9-M4 | Provider safety guide | docs/user/PROVIDER_SAFETY.md | Secret storage, API key handling, backup behavior, output safety boundaries, confirmation gating table, network behavior, P6 boundary. |
+| P9-M4 | ProviderSettings.tsx update | apps/web/src/pages/ProviderSettings.tsx | Added safety notes panel: disabled default, mock no-network, live confirmation-gated, output advisory, key never displayed, links to docs. |
+| P9-M4 | FIRST_RUN.md update | docs/user/FIRST_RUN.md | Replaced inline provider setup with links to PROVIDER_SETUP.md and PROVIDER_SAFETY.md. |
+| P9-M4 | README.md update | README.md | Added Provider Setup and Provider Safety links to Documentation section. |

@@ -36,13 +36,9 @@ The default provider mode is **disabled**. Dialogue and weekly review features w
 
 You can switch to **mock provider** mode in the Provider Settings page (`http://127.0.0.1:18790` → Provider Settings). Mock mode returns simulated responses with no API key and no network calls.
 
-To enable real LLM-powered responses inside the app, you need to:
-1. Switch to **openai-compatible-http** mode in Provider Settings
-2. Enter your API base URL and model name
-3. Store your API key (keyring or local secrets file)
-4. Use the dry-run test to verify connectivity
+To enable real LLM-powered responses inside the app, see [Provider Setup](PROVIDER_SETUP.md).
 
-Live provider features (dialogue preview, weekly review assistant) require explicit confirmation before making network calls. Provider output is always labeled as unverified and never auto-submits reviews or scores.
+Live provider features (dialogue preview, weekly review assistant) require explicit confirmation before making network calls. Provider output is always labeled as unverified and never auto-submits reviews or scores. See [Provider Safety](PROVIDER_SAFETY.md) for details.
 
 ## Try a Smoke Test
 

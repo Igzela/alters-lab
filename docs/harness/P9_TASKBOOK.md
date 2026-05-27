@@ -32,14 +32,14 @@
 
 ### P9-M4: Provider setup and safety guide
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create a guide for setting up a provider (mock or live), explaining the safety model, confirmation gating, and what the provider can/cannot do.
 **Depends on**: P9-M2
-**Notes**: Blocked.
+**Notes**: Done. Created docs/user/PROVIDER_SETUP.md (disabled/mock/live modes, required fields, dry-run test, confirmation gating, P8 meaning) and docs/user/PROVIDER_SAFETY.md (secret storage, API key handling, backup behavior, output safety boundaries, confirmation gating, network behavior, P6 boundary). Updated ProviderSettings.tsx with safety notes panel. Updated FIRST_RUN.md, README.md to link to provider docs. Updated 7 governance docs. Frontend build PASS. Backend tests PASS.
 
 ### P9-M5: Troubleshooting / doctor improvements
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Improve the `alters-lab doctor` command to check for common issues: missing config, broken package, provider misconfiguration, data directory permissions. Add troubleshooting docs.
 **Depends on**: P9-M3
 **Notes**: Blocked.

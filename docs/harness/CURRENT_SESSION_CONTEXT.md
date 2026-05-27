@@ -14,24 +14,25 @@ Last updated: 2026-05-27
 - P9-M1 done (install/launch/uninstall docs)
 - P9-M2 done (disposable dpkg lifecycle verification)
 - P9-M3 done (first-run onboarding guide + Getting Started frontend page)
-- P9-M4 ready_with_approval (provider setup and safety guide)
-- P9-M5 through P9-M7 blocked
+- P9-M4 done (provider setup and safety guide + ProviderSettings safety notes)
+- P9-M5 ready_with_approval (troubleshooting / doctor improvements)
+- P9-M6 through P9-M7 blocked
 
 ## What Was Just Completed
 
-P9-M3: First-run onboarding guide.
-- Created docs/user/FIRST_RUN_CHECKLIST.md — 13-item checklist covering install verification, provider disabled default, mock mode, weekly review, backup, P6 boundary, provider advisory
-- Added Getting Started frontend page (apps/web/src/pages/GettingStarted.tsx) with 4 sections: provider disabled, weekly review, doctor, backup + boundary copy
-- Updated docs/user/FIRST_RUN.md, docs/user/INSTALL.md, README.md to link to checklist
+P9-M4: Provider setup and safety guide.
+- Created docs/user/PROVIDER_SETUP.md — provider modes, required fields, dry-run test, confirmation gating, P8 meaning
+- Created docs/user/PROVIDER_SAFETY.md — secret storage, API key handling, backup behavior, output safety boundaries, confirmation gating, network behavior, P6 boundary
+- Updated ProviderSettings.tsx with safety notes panel (6 bullet points + links to docs)
+- Updated docs/user/FIRST_RUN.md, README.md to link to provider docs
 - Updated 7 governance docs
 - 1255 backend tests passing
 - Frontend build PASS
-- No forbidden claims, no secrets, no active YAML/rubric changes
 
 ## Next Decision
 
-P9-M3 is done. Options:
-1. Begin P9-M4 (provider setup and safety guide) after explicit approval
+P9-M4 is done. Options:
+1. Begin P9-M5 (troubleshooting / doctor improvements) after explicit approval
 2. Other product work
 
 New sessions must not claim P6 validated.

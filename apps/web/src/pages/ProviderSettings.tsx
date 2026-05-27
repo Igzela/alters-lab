@@ -184,6 +184,18 @@ export default function ProviderSettings() {
     <div>
       <h2>Provider Settings</h2>
 
+      <section style={{ marginBottom: 16, padding: 12, border: '1px solid #444', borderRadius: 6, fontSize: 13, color: '#aaa' }}>
+        <strong style={{ color: '#fff' }}>Safety notes:</strong>
+        <ul style={{ margin: '6px 0 0 16px', padding: 0 }}>
+          <li>Default mode is <strong>disabled</strong> — no LLM calls, no API key needed</li>
+          <li><strong>Mock</strong> mode: no network, no API key, simulated responses for testing</li>
+          <li><strong>Live</strong> mode requires explicit configuration and confirmation before each network call</li>
+          <li>Provider output is <strong>unverified and advisory only</strong></li>
+          <li>API key is <strong>never displayed</strong> after storage</li>
+          <li>See <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SETUP.md" style={{ color: '#6ea8fe' }}>Provider Setup</a> and <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SAFETY.md" style={{ color: '#6ea8fe' }}>Provider Safety</a> for details</li>
+        </ul>
+      </section>
+
       <section style={{ marginBottom: 20 }}>
         <h3>Status</h3>
         <p>Mode: {status.provider_mode}</p>

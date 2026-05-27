@@ -63,7 +63,7 @@ curl -X POST http://127.0.0.1:18790/provider-config/secret \
   }'
 ```
 
-See [Provider Configuration](docs/PROVIDER_CONFIGURATION.md) for the full guide.
+See [Provider Setup](docs/user/PROVIDER_SETUP.md) for the full guide.
 
 ## Provider Configuration
 
@@ -131,7 +131,8 @@ All 8 phases complete:
 
 - [First-Run Checklist](docs/user/FIRST_RUN_CHECKLIST.md) — What to do after installation
 - [User Guide](docs/USER_GUIDE.md) — Quick start, workflow walkthrough, and reference
-- [Provider Configuration](docs/PROVIDER_CONFIGURATION.md) — How to configure LLM providers
+- [Provider Setup](docs/user/PROVIDER_SETUP.md) — How to configure LLM providers
+- [Provider Safety](docs/user/PROVIDER_SAFETY.md) — Secret handling, output safety, confirmation gating
 - [Product Specification](docs/product-spec.md) — System design and concepts
 - [Alter Generation Workflow](docs/alter-generation-workflow.md) — How alters are generated
 - [Branch Discovery Workflow](docs/branch-discovery-workflow.md) — How branches are discovered

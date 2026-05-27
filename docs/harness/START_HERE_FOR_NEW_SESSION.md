@@ -13,7 +13,7 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
 - **P8**: Sealed as `REAL_PROVIDER_READY_LOCAL_APP`. All milestones done. 1215 backend tests passing.
 - **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
-- **P9**: P9-000 done. P9-M1 done (install/launch/uninstall docs). P9-M2 done (disposable dpkg lifecycle verification). P9-M3 done (first-run onboarding guide + Getting Started frontend page). P9-M4 ready_with_approval (provider setup and safety guide). Rest blocked.
+- **P9**: P9-000 done. P9-M1 done (install/launch/uninstall docs). P9-M2 done (disposable dpkg lifecycle verification). P9-M3 done (first-run onboarding guide + Getting Started frontend page). P9-M4 done (provider setup and safety guide + ProviderSettings safety notes). P9-M5 ready_with_approval (troubleshooting / doctor improvements). Rest blocked.
 - **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
 
 ## Reading Order
