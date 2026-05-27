@@ -15,16 +15,17 @@ Last updated: 2026-05-27
 
 ## What Was Just Completed
 
-P10-M5-R1: Decision recorded — BLOCKED_BY_NEW_FRICTION.
-- Charlie corrected GPT: app is not yet functionally complete enough for normal use
-- P6 validation must NOT start
-- P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
-- P11 planning stub created (Product Completeness Before Validation)
+P11-M1: App capability inventory.
+- 9 frontend pages inventoried (3 usable, 5 partial, 1 static)
+- 130+ backend routes inventoried (all functional)
+- 6 CLI commands inventoried (all usable)
+- 11 workflows inventoried (9 usable, 1 partial, 1 blocked_by_design)
+- Top gaps: AlterDialogue, CalibrationHistory, RubricDelta, CheckpointPlan
 
 ## Next Decision
 
-P11-M1: Current app capability inventory — ready for GPT instruction.
-GPT must define what to inventory before Codex executes.
+P11-M2: Missing core workflow map — ready_with_approval.
+GPT must define what workflows to map before Codex executes.
 
 After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
 

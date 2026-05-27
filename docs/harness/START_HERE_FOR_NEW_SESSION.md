@@ -15,7 +15,7 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
 - **P9**: All milestones done (P9-000 through P9-M7). P9 closeout PASS. Install docs, lifecycle verification, onboarding guide, provider guide, troubleshooting/doctor, release checklist, version bump policy all complete. Closeout report: `docs/harness/P9_CLOSEOUT_REPORT.md`.
 - **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 done. P10-M1 done. P10-M2 done (first real weekly note ingested). P10-M3 done (first real weekly review session completed, action alignment score 0.75). P10-M4 done (friction log: 0 blocker friction, 3 low-severity accepted_no_fix). P10-M5 done — BLOCKED_BY_NEW_FRICTION (app not yet functionally complete for normal use). P6 validation must NOT start.
-- **P11**: Product Completeness Before Validation. P11-000 done (planning stub). P11 purpose: audit and complete missing app functionality before P6 validation. P11-M1 next (app capability inventory).
+- **P11**: Product Completeness Before Validation. P11-000 done (planning stub). P11-M1 done (app capability inventory: 9 pages, 130+ routes, 6 CLI commands, 11 workflows; top gaps: AlterDialogue, CalibrationHistory, RubricDelta, CheckpointPlan). P11-M2 next (missing core workflow map).
 - **P6 validation**: Not started. Starts after explicit human/GPT decision. Completes after 4 real weekly reviews, 21 days.
 
 ## Reading Order
