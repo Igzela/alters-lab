@@ -60,6 +60,8 @@
   "cleanup": {
     "server_stopped": true
   },
+  "live_provider_smoke_executed": false,
+  "live_provider_smoke_supported": false,
   "method": "dpkg-deb -x simulated install",
   "p6_behavior_validated": false,
   "p6_sealed": false,
@@ -75,7 +77,7 @@
       "message": "Mock adapter preview returned. No network call made.",
       "network_call_made": false,
       "output_persisted": false,
-      "output_preview": "[mock adapter preview] This is a deterministic placeholder response from the provider adapter. No real provider was called.",
+      "output_preview": "[redacted-provider-output]",
       "p6_behavior_validated": false,
       "p6_sealed": false,
       "provider_mode": "mock",
@@ -89,7 +91,7 @@
   "provider_config": {
     "config_set": {
       "base_url": null,
-      "key_name": "alters-lab/provider-api-key",
+      "key_name": "[redacted-secret]",
       "keyring_available": false,
       "mode": "mock",
       "model": null,
@@ -204,7 +206,7 @@
       "network_call_made": false,
       "output_label": "unverified_provider_preview",
       "output_persisted": false,
-      "output_preview": "[mock dialogue preview] This is a deterministic placeholder response from the provider dialogue preview. No real provider was called. Output is unverified.",
+      "output_preview": "[redacted-provider-output]",
       "p6_behavior_validated": false,
       "p6_sealed": false,
       "prompt_persisted": false,
@@ -438,7 +440,7 @@
       "secrets_redacted": true,
       "status": "ok",
       "status_code": null,
-      "suggestion": "[mock weekly review assistant] This is a deterministic placeholder suggestion. No real provider was called. Output is unverified.",
+      "suggestion": "[redacted-provider-output]",
       "suggestion_label": "unverified_provider_suggestion",
       "suggestion_persisted": false,
       "weekly_review_completed": false
@@ -464,7 +466,7 @@
       "secrets_redacted": true,
       "status": "ok",
       "status_code": null,
-      "suggestion": "[mock weekly review assistant] This is a deterministic placeholder suggestion. No real provider was called. Output is unverified.",
+      "suggestion": "[redacted-provider-output]",
       "suggestion_label": "unverified_provider_suggestion",
       "suggestion_persisted": false,
       "weekly_review_completed": false

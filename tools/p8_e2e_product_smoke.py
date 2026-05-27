@@ -109,6 +109,10 @@ def run_smoke(
     allow_live_provider: bool = False,
     live_confirmation: str | None = None,
 ) -> dict[str, Any]:
+    if allow_live_provider:
+        raise RuntimeError(
+            "Live provider E2E smoke is reserved for a future explicit task."
+        )
     temp_ctx = tempfile.TemporaryDirectory(prefix="alters-lab-p8-smoke-")
     temp_root = Path(temp_ctx.name)
     env: dict[str, str] | None = None
@@ -311,9 +315,13 @@ def run_smoke(
             },
             "p6_behavior_validated": False,
             "p6_sealed": False,
+            "live_provider_smoke_supported": False,
+            "live_provider_smoke_executed": False,
         }
 
         _assert_report_passes(report)
+
+        report = _redact_sensitive_fields(report)
 
         if not keep_temp:
             report = _redact_temp_paths(report, temp_root)
@@ -334,6 +342,28 @@ def _json_stdout(result: dict[str, Any]) -> dict[str, Any]:
         return json.loads(result["stdout"])
     except json.JSONDecodeError:
         return {"raw": result["stdout"]}
+
+
+_REDACT_FIELDS: dict[str, str] = {
+    "output_preview": "[redacted-provider-output]",
+    "suggestion": "[redacted-provider-output]",
+    "prompt": "[redacted-prompt]",
+    "raw_note": "[redacted-prompt]",
+    "api_key": "[redacted-secret]",
+    "authorization": "[redacted-secret]",
+    "key_name": "[redacted-secret]",
+}
+
+
+def _redact_sensitive_fields(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            k: _REDACT_FIELDS[k] if k in _REDACT_FIELDS else _redact_sensitive_fields(v)
+            for k, v in value.items()
+        }
+    if isinstance(value, list):
+        return [_redact_sensitive_fields(item) for item in value]
+    return value
 
 
 def _redact_temp_paths(value: Any, temp_root: Path) -> Any:

@@ -146,6 +146,59 @@ class TestProviderSafetyInSmoke:
         assert suggest["suggestion_persisted"] is False
         assert suggest["weekly_review_completed"] is False
 
+    def test_redact_sensitive_fields_output_preview(self):
+        data = {"output_preview": "some provider text", "status": "ok"}
+        redacted = smoke._redact_sensitive_fields(data)
+        assert redacted["output_preview"] == "[redacted-provider-output]"
+        assert redacted["status"] == "ok"
+
+    def test_redact_sensitive_fields_suggestion(self):
+        data = {"suggestion": "some suggestion text", "suggestion_label": "unverified"}
+        redacted = smoke._redact_sensitive_fields(data)
+        assert redacted["suggestion"] == "[redacted-provider-output]"
+        assert redacted["suggestion_label"] == "unverified"
+
+    def test_redact_sensitive_fields_preserves_safety_flags(self):
+        data = {
+            "output_preview": "text",
+            "suggestion": "text",
+            "prompt": "text",
+            "output_persisted": False,
+            "suggestion_persisted": False,
+            "prompt_persisted": False,
+            "response_content_persisted": False,
+            "network_call_made": False,
+            "p6_behavior_validated": False,
+        }
+        redacted = smoke._redact_sensitive_fields(data)
+        assert redacted["output_persisted"] is False
+        assert redacted["suggestion_persisted"] is False
+        assert redacted["prompt_persisted"] is False
+        assert redacted["response_content_persisted"] is False
+        assert redacted["network_call_made"] is False
+        assert redacted["p6_behavior_validated"] is False
+
+    def test_redact_sensitive_fields_nested(self):
+        data = {
+            "provider_adapter": {"preview": {"output_preview": "text"}},
+            "weekly_review_assistant": {"suggest": {"suggestion": "text"}},
+        }
+        redacted = smoke._redact_sensitive_fields(data)
+        assert redacted["provider_adapter"]["preview"]["output_preview"] == "[redacted-provider-output]"
+        assert redacted["weekly_review_assistant"]["suggest"]["suggestion"] == "[redacted-provider-output]"
+
+    def test_redact_sensitive_fields_key_name(self):
+        data = {"key_name": "alters-lab/provider-api-key", "mode": "mock"}
+        redacted = smoke._redact_sensitive_fields(data)
+        assert redacted["key_name"] == "[redacted-secret]"
+        assert redacted["mode"] == "mock"
+
+    def test_redact_sensitive_fields_preserves_secret_metadata(self):
+        data = {"secrets_redacted": True, "secret_storage": "keyring"}
+        redacted = smoke._redact_sensitive_fields(data)
+        assert redacted["secrets_redacted"] is True
+        assert redacted["secret_storage"] == "keyring"
+
     def test_evidence_excludes_secrets(self):
         evidence = {
             "provider_config": {"test": {"api_key": "sk-secret"}},
@@ -153,5 +206,18 @@ class TestProviderSafetyInSmoke:
         }
         evidence_str = json.dumps(evidence)
         assert "sk-secret" in evidence_str
-        # The smoke script redacts temp paths, but secrets are never in the report
-        # because request_json never returns api_key fields
+        # After redaction, api_key would be replaced
+        redacted = smoke._redact_sensitive_fields(evidence)
+        redacted_str = json.dumps(redacted)
+        assert "sk-secret" not in redacted_str
+
+    def test_committed_evidence_has_no_provider_output(self):
+        evidence_path = Path(__file__).resolve().parents[3] / "docs" / "harness" / "P8_M5_E2E_PRODUCT_VALIDATION_EVIDENCE.json"
+        if not evidence_path.exists():
+            pytest.skip("evidence file not present")
+        evidence_str = evidence_path.read_text(encoding="utf-8")
+        assert "mock adapter preview" not in evidence_str
+        assert "mock dialogue preview" not in evidence_str
+        assert "mock weekly review assistant" not in evidence_str
+        assert "deterministic placeholder" not in evidence_str
+        assert "[redacted-provider-output]" in evidence_str
