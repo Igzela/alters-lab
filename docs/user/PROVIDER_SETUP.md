@@ -51,15 +51,25 @@ The key is stored in your system keyring (preferred) or in `~/.config/alters-lab
 
 To delete a stored key, click **Delete Key**.
 
-### 3. Test the Connection
+### 3. Test Your Configuration
 
 In the **Dry Run** section:
 
 - Click **Test Provider Config**
 
-This runs a dry-run connectivity check against the provider's `/models` endpoint. No prompts are sent. No provider output is generated. If it fails, check your base URL, API key, and network connectivity.
+This verifies your local provider configuration shape and readiness — it checks whether mode, base URL, model, and key status are configured as expected. **No network call is made.** No prompt is sent. No provider output is generated.
 
-### 4. Use Provider Features
+### 4. Optional: Live Connectivity Check
+
+To verify that your configured provider endpoint is reachable:
+
+- Use the provider connectivity route in the API
+- This may call the configured provider's `/models` endpoint
+- **Requires explicit live confirmation** before making any network call
+- Sends no personal prompt
+- Proves only that the configured endpoint and key appear reachable — not that provider output is trusted
+
+### 5. Use Provider Features
 
 Once configured and tested:
 
@@ -82,7 +92,8 @@ P8 does **not** mean any specific provider account works. You still need to conf
 
 - **No real API key examples** are shown in this documentation
 - **Live provider calls are not run by default** — they require explicit user action
-- **Connectivity check requires explicit confirmation** before making network calls
+- **Dry-run test makes no network call** — it only checks local configuration
+- **Live connectivity check requires explicit confirmation** before making network calls
 - **Dialogue preview requires explicit confirmation** before each generation
 - **Weekly assistant live suggestion requires explicit confirmation** before each generation
 - Provider output is always labeled as **unverified and advisory only**

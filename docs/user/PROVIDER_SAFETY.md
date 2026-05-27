@@ -45,14 +45,14 @@ Provider output (dialogue responses, weekly review suggestions) is subject to st
 
 Every provider network call requires explicit user confirmation:
 
-| Action | Confirmation Required |
-|--------|----------------------|
-| Dry-run connectivity check | Yes (explicit click) |
-| Live connectivity check | Yes (exact confirmation string) |
-| Dialogue preview generation | Yes (explicit click) |
-| Weekly assistant live suggestion | Yes (explicit click) |
+| Action | Network Call | Confirmation Required |
+|--------|-------------|----------------------|
+| Dry-run config/provider test | No | Explicit click (local check only) |
+| Live connectivity check | Yes (may call `/models`) | Exact confirmation string |
+| Dialogue live preview | Yes (may send explicit prompt) | Exact confirmation string |
+| Weekly assistant live suggestion | Yes (may send selected/request context) | Exact confirmation string |
 
-No provider call happens automatically or in the background.
+Dry-run verifies local configuration shape and readiness — it makes no provider network call. No provider call happens automatically or in the background.
 
 ## Network Behavior
 
