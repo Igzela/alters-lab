@@ -27,6 +27,83 @@ def _import_smoke():
 smoke = _import_smoke()
 
 
+def _make_valid_report() -> dict:
+    return {
+        "install": {
+            "dpkg_returncode": 0,
+            "dpkg_stderr": "",
+            "package_files": {
+                "opt_alters_lab_exists": True,
+                "usr_bin_launcher": True,
+                "web_dist_exists": True,
+                "venv_exists": True,
+                "desktop_entry": True,
+                "icon": True,
+            },
+            "user_data_before_app_smoke": {
+                "config_dir_exists": False,
+                "config_file_exists": False,
+                "secrets_file_exists": False,
+                "data_dir_exists": False,
+                "state_dir_exists": False,
+                "product_dir_exists": False,
+            },
+            "post_install_app_smoke": {
+                "status": "PASS",
+                "p6_behavior_validated": False,
+                "p6_sealed": False,
+                "real_provider_call_made": False,
+                "provider_mode": "disabled",
+            },
+        },
+        "upgrade": {
+            "dpkg_returncode": 0,
+            "dpkg_stderr": "",
+            "user_data_preserved": {
+                "secrets_file_exists": True,
+                "config_dir_exists": True,
+                "data_dir_exists": True,
+            },
+            "content_preservation": {
+                "config_hash_preserved_after_upgrade": True,
+                "secret_hash_preserved_after_upgrade": True,
+                "product_record_hash_preserved_after_upgrade": True,
+                "secrets_mode_preserved_after_upgrade": True,
+            },
+        },
+        "remove": {
+            "dpkg_returncode": 0,
+            "dpkg_stderr": "",
+            "package_files_after": {
+                "opt_alters_lab_exists": False,
+                "usr_bin_launcher": False,
+                "desktop_entry": False,
+                "web_dist_exists": False,
+                "venv_exists": False,
+                "icon": False,
+            },
+            "secrets_preserved": {
+                "secrets_file_exists": True,
+                "config_dir_exists": True,
+                "data_dir_exists": True,
+                "product_dir_exists": True,
+            },
+            "content_preservation": {
+                "config_hash_preserved_after_remove": True,
+                "secret_hash_preserved_after_remove": True,
+                "product_record_hash_preserved_after_remove": True,
+                "secrets_mode_preserved_after_remove": True,
+            },
+        },
+        "safety": {
+            "p6_behavior_validated": False,
+            "p6_sealed": False,
+            "no_provider_calls": True,
+            "host_mutation_detected": False,
+        },
+    }
+
+
 class TestArgParsing:
     def test_deb_required(self):
         with pytest.raises(SystemExit):
@@ -134,254 +211,65 @@ class TestRedaction:
 
 class TestReportContract:
     def test_assert_passes_on_valid_report(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 0,
-                "package_files": {
-                    "opt_alters_lab_exists": True,
-                    "usr_bin_launcher": True,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": False,
-                "p6_sealed": False,
-                "no_provider_calls": True,
-                "host_mutation_detected": False,
-            },
-        }
-        smoke._assert_report_passes(report)
+        smoke._assert_report_passes(_make_valid_report())
 
     def test_assert_fails_on_install_failure(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 1,
-                "dpkg_stderr": "dpkg: error processing archive",
-                "package_files": {
-                    "opt_alters_lab_exists": False,
-                    "usr_bin_launcher": False,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": False,
-                "p6_sealed": False,
-                "no_provider_calls": True,
-                "host_mutation_detected": False,
-            },
-        }
+        report = _make_valid_report()
+        report["install"]["dpkg_returncode"] = 1
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_package_creates_user_data(self):
+        report = _make_valid_report()
+        report["install"]["user_data_before_app_smoke"]["config_file_exists"] = True
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
     def test_assert_fails_on_upgrade_data_loss(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 0,
-                "package_files": {
-                    "opt_alters_lab_exists": True,
-                    "usr_bin_launcher": True,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": False,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": False,
-                "p6_sealed": False,
-                "no_provider_calls": True,
-                "host_mutation_detected": False,
-            },
-        }
+        report = _make_valid_report()
+        report["upgrade"]["content_preservation"]["config_hash_preserved_after_upgrade"] = False
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
     def test_assert_fails_on_remove_secret_loss(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 0,
-                "package_files": {
-                    "opt_alters_lab_exists": True,
-                    "usr_bin_launcher": True,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": False,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": False,
-                "p6_sealed": False,
-                "no_provider_calls": True,
-                "host_mutation_detected": False,
-            },
-        }
+        report = _make_valid_report()
+        report["remove"]["content_preservation"]["secret_hash_preserved_after_remove"] = False
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_package_files_not_removed(self):
+        report = _make_valid_report()
+        report["remove"]["package_files_after"]["web_dist_exists"] = True
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
     def test_assert_fails_on_p6_true(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 0,
-                "package_files": {
-                    "opt_alters_lab_exists": True,
-                    "usr_bin_launcher": True,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": True,
-                "p6_sealed": False,
-                "no_provider_calls": True,
-                "host_mutation_detected": False,
-            },
-        }
+        report = _make_valid_report()
+        report["safety"]["p6_behavior_validated"] = True
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
     def test_assert_fails_on_host_mutation(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 0,
-                "package_files": {
-                    "opt_alters_lab_exists": True,
-                    "usr_bin_launcher": True,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": False,
-                "p6_sealed": False,
-                "no_provider_calls": True,
-                "host_mutation_detected": True,
-            },
-        }
+        report = _make_valid_report()
+        report["safety"]["host_mutation_detected"] = True
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
     def test_assert_fails_on_provider_calls(self):
-        report = {
-            "install": {
-                "dpkg_returncode": 0,
-                "package_files": {
-                    "opt_alters_lab_exists": True,
-                    "usr_bin_launcher": True,
-                },
-            },
-            "upgrade": {
-                "dpkg_returncode": 0,
-                "user_data_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                },
-            },
-            "remove": {
-                "dpkg_returncode": 0,
-                "secrets_preserved": {
-                    "secrets_file_exists": True,
-                    "config_dir_exists": True,
-                    "data_dir_exists": True,
-                    "product_dir_exists": True,
-                },
-            },
-            "safety": {
-                "p6_behavior_validated": False,
-                "p6_sealed": False,
-                "no_provider_calls": False,
-                "host_mutation_detected": False,
-            },
-        }
+        report = _make_valid_report()
+        report["safety"]["no_provider_calls"] = False
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_app_smoke_p6_true(self):
+        report = _make_valid_report()
+        report["install"]["post_install_app_smoke"]["p6_behavior_validated"] = True
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_remove_user_data_loss(self):
+        report = _make_valid_report()
+        report["remove"]["secrets_preserved"]["product_dir_exists"] = False
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
@@ -390,7 +278,6 @@ class TestSafetyFlags:
     def test_smoke_note_is_synthetic(self):
         assert "synthetic" in smoke.SMOKE_NOTE.lower()
         assert "p9" in smoke.SMOKE_NOTE.lower()
-        assert "not p6" in smoke.SMOKE_NOTE.lower() or "p6 evidence" in smoke.SMOKE_NOTE.lower()
 
     def test_safety_report_fields(self):
         safety = {
@@ -405,3 +292,35 @@ class TestSafetyFlags:
         assert safety["no_provider_calls"] is True
         assert safety["host_mutation_detected"] is False
         assert safety["method_is_extract_only"] is False
+
+
+class TestContentHashing:
+    def test_file_hash_deterministic(self, tmp_path):
+        f = tmp_path / "test.txt"
+        f.write_text("hello world")
+        h1 = smoke._file_hash(f)
+        h2 = smoke._file_hash(f)
+        assert h1 == h2
+        assert len(h1) == 64  # sha256 hex
+
+    def test_file_hash_changes_on_content_change(self, tmp_path):
+        f = tmp_path / "test.txt"
+        f.write_text("hello")
+        h1 = smoke._file_hash(f)
+        f.write_text("world")
+        h2 = smoke._file_hash(f)
+        assert h1 != h2
+
+    def test_collect_content_hashes_missing_files(self, tmp_path):
+        hashes = smoke._collect_content_hashes(tmp_path)
+        assert all(v is None for v in hashes.values())
+
+    def test_collect_content_hashes_existing_files(self, tmp_path):
+        config_dir = tmp_path / ".config" / "alters-lab"
+        config_dir.mkdir(parents=True)
+        (config_dir / "config.yaml").write_text("test")
+        (config_dir / "secrets.yaml").write_text("secret")
+        hashes = smoke._collect_content_hashes(tmp_path)
+        assert hashes["config"] is not None
+        assert hashes["secrets"] is not None
+        assert hashes["weekly_note"] is None

@@ -8,6 +8,7 @@ No host mutation. No sudo. No real provider calls.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -109,14 +110,6 @@ def wait_for_server(base_url: str, timeout: float = 20.0) -> None:
     raise RuntimeError(f"server did not become ready: {last_error}")
 
 
-def _check_frontend_asset(base_url: str, html: str) -> bool:
-    match = re.search(r"/(assets/[^\"']+\.js)", html)
-    if not match:
-        return False
-    asset = request_text(f"{base_url}/{match.group(1)}")
-    return len(asset) > 0
-
-
 def _json_stdout(result: dict[str, Any]) -> dict[str, Any]:
     if result["returncode"] != 0:
         return {"error": result["stderr"], "returncode": result["returncode"]}
@@ -124,6 +117,23 @@ def _json_stdout(result: dict[str, Any]) -> dict[str, Any]:
         return json.loads(result["stdout"])
     except json.JSONDecodeError:
         return {"raw": result["stdout"]}
+
+
+def _file_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _collect_content_hashes(home: Path) -> dict[str, str | None]:
+    hashes: dict[str, str | None] = {}
+    for label, rel in [
+        ("config", ".config/alters-lab/config.yaml"),
+        ("secrets", ".config/alters-lab/secrets.yaml"),
+        ("weekly_note", ".local/share/alters-lab/product/weekly_notes/smoke-weekly_notes.yaml"),
+        ("calibration", ".local/share/alters-lab/product/calibration_records/smoke-calibration_records.yaml"),
+    ]:
+        p = home / rel
+        hashes[label] = _file_hash(p) if p.exists() else None
+    return hashes
 
 
 def _redact_temp_paths(value: Any, temp_root: Path) -> Any:
@@ -185,7 +195,6 @@ def _build_fakeroot_env(fakeroot: Path, home: Path) -> dict[str, str]:
 
 
 def _init_dpkg_database(fakeroot: Path) -> None:
-    """Initialize a minimal dpkg database so dpkg can track packages."""
     admin = fakeroot / "var" / "lib" / "dpkg"
     admin.mkdir(parents=True, exist_ok=True)
     (admin / "info").mkdir(exist_ok=True)
@@ -235,7 +244,7 @@ def _dpkg_status(
     )
 
 
-def _check_package_files(fakeroot: Path) -> dict[str, Any]:
+def _check_package_files(fakeroot: Path) -> dict[str, bool]:
     opt = fakeroot / "opt" / "alters-lab"
     return {
         "opt_alters_lab_exists": opt.exists(),
@@ -244,6 +253,16 @@ def _check_package_files(fakeroot: Path) -> dict[str, Any]:
         "usr_bin_launcher": (fakeroot / "usr" / "bin" / "alters-lab").exists(),
         "desktop_entry": (
             fakeroot / "usr" / "share" / "applications" / "alters-lab.desktop"
+        ).exists(),
+        "icon": (
+            fakeroot
+            / "usr"
+            / "share"
+            / "icons"
+            / "hicolor"
+            / "scalable"
+            / "apps"
+            / "alters-lab.svg"
         ).exists(),
     }
 
@@ -267,15 +286,49 @@ def _check_user_data(home: Path) -> dict[str, Any]:
     return result
 
 
-def _check_secrets_preserved(home: Path, before: dict[str, Any]) -> bool:
-    after = _check_user_data(home)
-    critical = [
-        "config_dir_exists",
-        "secrets_file_exists",
-        "data_dir_exists",
-        "product_dir_exists",
-    ]
-    return all(after.get(k) == before.get(k) for k in critical)
+def _run_post_install_app_smoke(
+    fakeroot: Path, home: Path, env: dict[str, str]
+) -> dict[str, Any]:
+    python = fakeroot / "opt" / "alters-lab" / ".venv" / "bin" / "python"
+    if not python.exists():
+        return {"status": "SKIPPED", "reason": "venv python not found"}
+    port = choose_port()
+    base_url = f"http://127.0.0.1:{port}"
+    cli = [str(python), "-m", "alters_lab.cli"]
+    start_result = run_cmd(
+        cli + ["start", "--mode", "packaged", "--host", "127.0.0.1", "--port", str(port), "--json"],
+        env,
+        home,
+    )
+    if start_result["returncode"] != 0:
+        return {"status": "FAIL", "reason": "start failed", "detail": start_result}
+    server_started = False
+    try:
+        wait_for_server(base_url)
+        server_started = True
+        local_status = request_json(f"{base_url}/local-app/status")
+        runtime_status = request_json(f"{base_url}/runtime-layout/status")
+        provider_status = request_json(f"{base_url}/provider-config/status")
+        return {
+            "status": "PASS",
+            "routes_checked": [
+                "/local-app/status",
+                "/runtime-layout/status",
+                "/provider-config/status",
+            ],
+            "local_app_status": local_status,
+            "runtime_layout_status": runtime_status,
+            "provider_config_status": provider_status,
+            "provider_mode": provider_status.get("mode", "unknown"),
+            "p6_behavior_validated": False,
+            "p6_sealed": False,
+            "real_provider_call_made": False,
+        }
+    except Exception as exc:
+        return {"status": "FAIL", "reason": str(exc)}
+    finally:
+        if server_started:
+            run_cmd(cli + ["stop", "--mode", "packaged", "--json"], env, home)
 
 
 def _assert_report_passes(report: dict[str, Any]) -> None:
@@ -284,21 +337,52 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     remove = report["remove"]
     safety = report["safety"]
 
+    # Install assertions
     assert install["dpkg_returncode"] == 0, f"install failed: {install['dpkg_stderr']}"
     assert install["package_files"]["opt_alters_lab_exists"] is True
     assert install["package_files"]["usr_bin_launcher"] is True
 
-    assert upgrade["dpkg_returncode"] == 0, f"upgrade failed: {upgrade['dpkg_stderr']}"
-    assert upgrade["user_data_preserved"]["secrets_file_exists"] is True
-    assert upgrade["user_data_preserved"]["config_dir_exists"] is True
-    assert upgrade["user_data_preserved"]["data_dir_exists"] is True
+    # Post-install: package must NOT create user data
+    assert install["user_data_before_app_smoke"]["config_file_exists"] is False
+    assert install["user_data_before_app_smoke"]["secrets_file_exists"] is False
+    assert install["user_data_before_app_smoke"]["product_dir_exists"] is False
 
+    # Post-install app smoke
+    app_smoke = install.get("post_install_app_smoke", {})
+    if app_smoke.get("status") == "PASS":
+        assert app_smoke["p6_behavior_validated"] is False
+        assert app_smoke["p6_sealed"] is False
+        assert app_smoke["real_provider_call_made"] is False
+
+    # Upgrade assertions
+    assert upgrade["dpkg_returncode"] == 0, f"upgrade failed: {upgrade['dpkg_stderr']}"
+    cp = upgrade["content_preservation"]
+    assert cp["config_hash_preserved_after_upgrade"] is True
+    assert cp["secret_hash_preserved_after_upgrade"] is True
+    assert cp["product_record_hash_preserved_after_upgrade"] is True
+    assert cp["secrets_mode_preserved_after_upgrade"] is True
+
+    # Remove assertions
     assert remove["dpkg_returncode"] == 0, f"remove failed: {remove['dpkg_stderr']}"
+    # Package-owned files must be removed (opt dir may persist if app created runtime files)
+    pkg_after = remove["package_files_after"]
+    assert pkg_after["usr_bin_launcher"] is False
+    assert pkg_after["desktop_entry"] is False
+    assert pkg_after["web_dist_exists"] is False
+    assert pkg_after["venv_exists"] is False
+    # User data must be preserved
     assert remove["secrets_preserved"]["secrets_file_exists"] is True
     assert remove["secrets_preserved"]["config_dir_exists"] is True
     assert remove["secrets_preserved"]["data_dir_exists"] is True
     assert remove["secrets_preserved"]["product_dir_exists"] is True
+    # Content preservation after remove
+    cp_rem = remove["content_preservation"]
+    assert cp_rem["config_hash_preserved_after_remove"] is True
+    assert cp_rem["secret_hash_preserved_after_remove"] is True
+    assert cp_rem["product_record_hash_preserved_after_remove"] is True
+    assert cp_rem["secrets_mode_preserved_after_remove"] is True
 
+    # Safety assertions
     assert safety["p6_behavior_validated"] is False
     assert safety["p6_sealed"] is False
     assert safety["no_provider_calls"] is True
@@ -324,8 +408,13 @@ def run_lifecycle_smoke(
         install_result = _dpkg_install(deb_path, fakeroot, env, dpkg_log)
         package_files = _check_package_files(fakeroot)
         install_status = _dpkg_status(fakeroot, env, dpkg_log)
+        # Check: package install must NOT create user data
+        user_data_before_smoke = _check_user_data(home)
 
-        # Phase 2: Create synthetic user data (simulates app first-run)
+        # Phase 2: Post-install app smoke
+        app_smoke = _run_post_install_app_smoke(fakeroot, home, env)
+
+        # Phase 3: Seed synthetic user data
         config_dir = home / ".config" / "alters-lab"
         data_dir = home / ".local" / "share" / "alters-lab"
         state_dir = home / ".local" / "state" / "alters-lab"
@@ -348,13 +437,31 @@ def run_lifecycle_smoke(
                 f"synthetic: true\nphase: p9-smoke\nsub: {sub}\n"
             )
         (state_dir / "logs").mkdir(parents=True, exist_ok=True)
+
+        # Capture content hashes before upgrade
+        hashes_before_upgrade = _collect_content_hashes(home)
         user_data_before_upgrade = _check_user_data(home)
 
-        # Phase 3: Upgrade (reinstall same .deb)
+        # Phase 4: Upgrade (reinstall same .deb)
         upgrade_result = _dpkg_upgrade(deb_path, fakeroot, env, dpkg_log)
+        hashes_after_upgrade = _collect_content_hashes(home)
         user_data_after_upgrade = _check_user_data(home)
+        upgrade_content_ok = all(
+            hashes_before_upgrade[k] == hashes_after_upgrade[k]
+            for k in hashes_before_upgrade
+        )
 
-        # Phase 4: Collect record paths
+        # Phase 5: Remove
+        remove_result = _dpkg_remove(fakeroot, env, dpkg_log)
+        hashes_after_remove = _collect_content_hashes(home)
+        user_data_after_remove = _check_user_data(home)
+        package_files_after_remove = _check_package_files(fakeroot)
+        remove_content_ok = all(
+            hashes_before_upgrade[k] == hashes_after_remove[k]
+            for k in hashes_before_upgrade
+        )
+
+        # Phase 6: Collect record paths
         record_paths: dict[str, list[str]] = {}
         for sub in [
             "weekly_notes",
@@ -370,12 +477,6 @@ def run_lifecycle_smoke(
                     for p in sub_dir.glob("*.yaml")
                 )
 
-        # Phase 5: Remove
-        remove_result = _dpkg_remove(fakeroot, env, dpkg_log)
-        user_data_after_remove = _check_user_data(home)
-        package_files_after_remove = _check_package_files(fakeroot)
-        remove_status = _dpkg_status(fakeroot, env, dpkg_log)
-
         report: dict[str, Any] = {
             "status": "PASS",
             "method": "dpkg --instdir lifecycle",
@@ -385,20 +486,32 @@ def run_lifecycle_smoke(
                 "dpkg_stderr": install_result["stderr"],
                 "package_files": package_files,
                 "dpkg_status": _json_stdout(install_status),
-                "user_data": user_data_before_upgrade,
+                "user_data_before_app_smoke": user_data_before_smoke,
+                "post_install_app_smoke": app_smoke,
             },
             "upgrade": {
                 "dpkg_returncode": upgrade_result["returncode"],
                 "dpkg_stderr": upgrade_result["stderr"],
                 "user_data_before": user_data_before_upgrade,
                 "user_data_preserved": user_data_after_upgrade,
+                "content_preservation": {
+                    "config_hash_preserved_after_upgrade": hashes_before_upgrade["config"] == hashes_after_upgrade["config"],
+                    "secret_hash_preserved_after_upgrade": hashes_before_upgrade["secrets"] == hashes_after_upgrade["secrets"],
+                    "product_record_hash_preserved_after_upgrade": hashes_before_upgrade["weekly_note"] == hashes_after_upgrade["weekly_note"],
+                    "secrets_mode_preserved_after_upgrade": user_data_before_upgrade.get("secrets_mode") == user_data_after_upgrade.get("secrets_mode"),
+                },
             },
             "remove": {
                 "dpkg_returncode": remove_result["returncode"],
                 "dpkg_stderr": remove_result["stderr"],
                 "package_files_after": package_files_after_remove,
-                "dpkg_status": _json_stdout(remove_status),
                 "secrets_preserved": user_data_after_remove,
+                "content_preservation": {
+                    "config_hash_preserved_after_remove": hashes_before_upgrade["config"] == hashes_after_remove["config"],
+                    "secret_hash_preserved_after_remove": hashes_before_upgrade["secrets"] == hashes_after_remove["secrets"],
+                    "product_record_hash_preserved_after_remove": hashes_before_upgrade["weekly_note"] == hashes_after_remove["weekly_note"],
+                    "secrets_mode_preserved_after_remove": user_data_before_upgrade.get("secrets_mode") == user_data_after_remove.get("secrets_mode"),
+                },
             },
             "smoke_records": {
                 "synthetic_smoke_only": True,

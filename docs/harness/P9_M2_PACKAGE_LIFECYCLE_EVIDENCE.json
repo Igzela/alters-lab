@@ -10,31 +10,94 @@
     "dpkg_stderr": "dpkg: alters-lab: dependency problems, but configuring anyway as you requested:\n alters-lab depends on python3; however:\n  Package python3 is not installed.",
     "package_files": {
       "desktop_entry": true,
+      "icon": true,
       "opt_alters_lab_exists": true,
       "usr_bin_launcher": true,
       "venv_exists": true,
       "web_dist_exists": true
     },
-    "user_data": {
-      "config_dir_exists": true,
-      "config_file_exists": true,
-      "data_dir_exists": true,
-      "product_dir_exists": true,
-      "secrets_file_exists": true,
-      "secrets_mode": "0o600",
-      "state_dir_exists": true
+    "post_install_app_smoke": {
+      "local_app_status": {
+        "active_yaml_write_allowed": false,
+        "api_routes_available": true,
+        "backend_ready": true,
+        "frontend_available": true,
+        "frontend_dist_path": "[temp-root]/fakeroot/opt/alters-lab/web/dist",
+        "host": "127.0.0.1",
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "port": 18790,
+        "provider_mode": "disabled",
+        "rubric_write_allowed": false,
+        "runtime_mode": "packaged",
+        "secrets_redacted": true,
+        "status": "ok"
+      },
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_config_status": {
+        "api_key_configured": false,
+        "base_url_configured": false,
+        "configured": true,
+        "keyring_available": false,
+        "model_configured": false,
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "provider_mode": "disabled",
+        "provider_output_can_generate_reality_score": false,
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "secret_storage": "keyring",
+        "secrets_redacted": true,
+        "status": "ok"
+      },
+      "provider_mode": "unknown",
+      "real_provider_call_made": false,
+      "routes_checked": [
+        "/local-app/status",
+        "/runtime-layout/status",
+        "/provider-config/status"
+      ],
+      "runtime_layout_status": {
+        "active_yaml_write_allowed": false,
+        "config_path": "[temp-root]/home/.config/alters-lab/config.yaml",
+        "data_dir": "[temp-root]/home/.local/share/alters-lab",
+        "logs_dir": "[temp-root]/home/.local/state/alters-lab/logs",
+        "mode": "packaged",
+        "product_data_dir": "[temp-root]/home/.local/share/alters-lab/product",
+        "provider_mode": "disabled",
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "rubric_write_allowed": false,
+        "secrets_redacted": true,
+        "secrets_storage": "keyring",
+        "status": "ok"
+      },
+      "status": "PASS"
+    },
+    "user_data_before_app_smoke": {
+      "config_dir_exists": false,
+      "config_file_exists": false,
+      "data_dir_exists": false,
+      "product_dir_exists": false,
+      "secrets_file_exists": false,
+      "state_dir_exists": false
     }
   },
   "method": "dpkg --instdir lifecycle",
   "remove": {
-    "dpkg_returncode": 0,
-    "dpkg_status": {
-      "raw": "Package: alters-lab\nStatus: deinstall ok config-files\nPriority: optional\nSection: utils\nMaintainer: Charlie / Alters Lab\nArchitecture: amd64\nVersion: 0.1.0\nConfig-Version: 0.1.0\nDepends: python3\nDescription: Local personal calibration app for Alters Lab\n Single-user local application package for running Alters Lab from /opt/alters-lab."
+    "content_preservation": {
+      "config_hash_preserved_after_remove": true,
+      "product_record_hash_preserved_after_remove": true,
+      "secret_hash_preserved_after_remove": true,
+      "secrets_mode_preserved_after_remove": true
     },
+    "dpkg_returncode": 0,
     "dpkg_stderr": "",
     "package_files_after": {
       "desktop_entry": false,
-      "opt_alters_lab_exists": false,
+      "icon": false,
+      "opt_alters_lab_exists": true,
       "usr_bin_launcher": false,
       "venv_exists": false,
       "web_dist_exists": false
@@ -80,6 +143,12 @@
   "status": "PASS",
   "temp_root": "[removed]",
   "upgrade": {
+    "content_preservation": {
+      "config_hash_preserved_after_upgrade": true,
+      "product_record_hash_preserved_after_upgrade": true,
+      "secret_hash_preserved_after_upgrade": true,
+      "secrets_mode_preserved_after_upgrade": true
+    },
     "dpkg_returncode": 0,
     "dpkg_stderr": "dpkg: alters-lab: dependency problems, but configuring anyway as you requested:\n alters-lab depends on python3; however:\n  Package python3 is not installed.",
     "user_data_before": {
