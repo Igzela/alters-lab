@@ -368,3 +368,5 @@
 | P10-M2 | P10_M2_FIRST_REAL_WEEKLY_NOTE_INGEST.md | docs/harness/ | Operator instructions for first real weekly note ingest |
 | P10-M2 | P10_M2_REAL_WEEKLY_NOTE_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable redacted YAML evidence template |
 | P10-M2 | P10_M2_REAL_WEEKLY_NOTE_INGEST_EVIDENCE.md | docs/harness/ | Real-use evidence: first weekly note ingested via packaged app |
+| P10-M3 | P10_M3_FIRST_REAL_WEEKLY_REVIEW_SESSION.md | docs/harness/ | Operator instructions for first real weekly review session |
+| P10-M3 | P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE_TEMPLATE.md | docs/harness/ | Fillable redacted YAML evidence template for weekly review |

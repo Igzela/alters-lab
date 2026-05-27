@@ -84,3 +84,4 @@
 | P10-000 | 2026-05-27 | claude | done | Personal Pilot & Real-Use Cutover Boundary Plan. Created P10 plan, taskbook, real-use boundary, P6 validation bridge, pilot evidence requirements. Updated 8 governance docs. P6 remains NOT_VALIDATED/NOT_SEALED. |
 | P10-M1 | 2026-05-27 | claude | done | Local installation cutover checklist + evidence template. 9-section operator checklist, fillable YAML template. Updated FIRST_RUN_CHECKLIST, INSTALL. 7 governance docs. No code changes. |
 | P10-M2 | 2026-05-27 | claude | done | First real weekly note ingested via packaged app API. Real-use evidence recorded. P6 remains NOT_VALIDATED/NOT_SEALED. |
+| P10-M3 | 2026-05-27 | claude | ready_for_human_execution | First real weekly review session instructions + evidence template. Charlie must perform actual local app operation. |

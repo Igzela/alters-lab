@@ -25,10 +25,10 @@
 
 ### P10-M3: First real weekly review session
 
-**Status**: ready_with_approval
+**Status**: ready_for_human_execution
 **Goal**: Charlie runs a real weekly review session using Alters Lab. First real review cycle.
 **Depends on**: P10-M2
-**Notes**: Not started.
+**Notes**: Instructions and evidence template created. Charlie must perform the actual local app operation. Mark done only after Charlie confirms real weekly review and provides redacted evidence.
 
 ### P10-M4: Real-use friction log and fix triage
 

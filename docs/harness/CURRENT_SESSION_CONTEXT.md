@@ -11,23 +11,26 @@ Last updated: 2026-05-27
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
-- P10: P10-000 done, P10-M1 done, P10-M2 done
+- P10: P10-000 done, P10-M1 done, P10-M2 done, P10-M3 ready_for_human_execution
 
 ## What Was Just Completed
 
-P10-M2: First real weekly note ingested via packaged app.
-- Real weekly note ingested through API POST /obsidian-weekly-note/ingest
-- Record saved to local data dir
-- Evidence recorded in P10_M2_REAL_WEEKLY_NOTE_INGEST_EVIDENCE.md
+P10-M3 preparation: First real weekly review session instructions + evidence template.
+- Created P10_M3_FIRST_REAL_WEEKLY_REVIEW_SESSION.md (operator instructions)
+- Created P10_M3_REAL_WEEKLY_REVIEW_EVIDENCE_TEMPLATE.md (fillable redacted YAML template)
+- P10-M3 is ready_for_human_execution — Charlie must perform the actual local app operation
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P10-M3: First real weekly review session — ready_with_approval.
-Charlie must:
+P10-M3 instructions ready. Charlie must:
 1. Use packaged app to complete a real weekly review session
 2. Fill in the evidence template with redacted summary
 3. Confirm completion
+
+After Charlie confirms, mark P10-M3 done and proceed to P10-M4.
+
+New sessions must not claim P6 validated.
 
 ## Verification Commands
 

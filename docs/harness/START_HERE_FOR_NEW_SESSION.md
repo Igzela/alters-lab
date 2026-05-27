@@ -14,7 +14,7 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P8**: Sealed as `REAL_PROVIDER_READY_LOCAL_APP`. All milestones done. 1215 backend tests passing.
 - **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
 - **P9**: All milestones done (P9-000 through P9-M7). P9 closeout PASS. Install docs, lifecycle verification, onboarding guide, provider guide, troubleshooting/doctor, release checklist, version bump policy all complete. Closeout report: `docs/harness/P9_CLOSEOUT_REPORT.md`.
-- **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 done. P10-M1 done. P10-M2 done (first real weekly note ingested via packaged app). Next step: P10-M3 (first real weekly review session).
+- **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 done. P10-M1 done. P10-M2 done (first real weekly note ingested via packaged app). P10-M3 ready_for_human_execution (instructions ready, Charlie must perform real weekly review). Next step: P10-M3 human execution.
 - **P6 validation**: Not started. Starts after explicit human/GPT decision. Completes after 4 real weekly reviews, 21 days.
 
 ## Reading Order
