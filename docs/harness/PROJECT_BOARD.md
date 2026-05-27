@@ -168,8 +168,8 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-
 | P11-M1-R2 | Count consistency fix | **done** |
 | P11-M1-R3 | Provider mock wording fix | **done** |
 | P11-M2 | Missing core workflow map | **done** |
-| P11-M3 | UX gaps and normal-use blockers | **ready_with_approval** |
-| P11-M4 | Data model/API/frontend gap closure plan | **blocked** |
+| P11-M3 | UX gaps and normal-use blockers | **done** |
+| P11-M4 | Data model/API/frontend gap closure plan | **ready_with_approval** |
 | P11-M5 | Product completion implementation batch 1 | **blocked** |
 | P11-M6 | Product completion implementation batch 2 | **blocked** |
 | P11-M7 | Product completeness smoke and closeout | **blocked** |

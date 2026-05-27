@@ -93,3 +93,4 @@
 | P11-M1-R2 | 2026-05-27 | claude | done | Count consistency fix. Data record count 19→20. Workflow usable count 8→10. |
 | P11-M1-R3 | 2026-05-27 | claude | done | Provider mock wording fix. "Default mock" → "User-selectable in Provider Settings; no API key and no network required". P11-M1 PASS. |
 | P11-M2 | 2026-05-27 | claude | done | Missing core workflow map. 23 workflows classified into 4 tiers. 20 gaps identified. 0 normal-use blockers. 4 P6-reconsideration blockers. Priority: calibration/history visibility (M3), validation readiness frontends (M4). Defer Phase 3-6 route frontends. Created 3 files. |
+| P11-M3 | 2026-05-27 | claude | done | UX gaps and normal-use blockers. Normal-use journey audit (12 steps). Page-level UX audit (10 pages). Calibration/history UX findings. 12 UX gaps (UX-001 through UX-012). 0 blockers, 0 high, 3 medium, 9 low. No code changes. Created 3 files: UX gaps analysis, calibration/history analysis, blocker decision. P11-M4 ready. |

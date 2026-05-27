@@ -384,3 +384,6 @@
 | P11-M2 | P11_M2_MISSING_CORE_WORKFLOW_MAP.md | docs/harness/ | Workflow tier classification: 23 workflows, 4 tiers, core missing workflows identified |
 | P11-M2 | P11_M2_PRODUCT_COMPLETENESS_GAP_MATRIX.md | docs/harness/ | Gap matrix: 20 gaps with gap_id, tier, type, severity, blockers, recommended phase |
 | P11-M2 | P11_M2_WORKFLOW_PRIORITY_DECISION.md | docs/harness/ | Priority decision: calibration/history visibility (M3), validation readiness (M4), defer Phase 3-6 frontends |
+| P11-M3 | P11_M3_UX_GAPS_AND_NORMAL_USE_BLOCKERS.md | docs/harness/ | Normal-use journey audit (12 steps), page-level UX audit (10 pages), calibration/history UX findings, 12 UX gaps |
+| P11-M3 | P11_M3_CALIBRATION_HISTORY_UX_ANALYSIS.md | docs/harness/ | CalibrationHistory UX analysis: current state, must-have/should-have/nice-to-have requirements, key insight |
+| P11-M3 | P11_M3_NORMAL_USE_BLOCKER_DECISION.md | docs/harness/ | Blocker decision: 0 blockers, 0 high, 3 medium, 9 low. Normal weekly use works. P11-M4 can proceed. |
