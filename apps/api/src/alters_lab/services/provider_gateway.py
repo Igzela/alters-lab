@@ -1,7 +1,10 @@
-"""P5-M2 Provider Gateway Boundary service.
+"""P5-M2 / P8-M1 Provider Gateway Boundary service.
 
 All provider calls go through this single gateway. No feature module directly
 imports provider SDKs. Default mode is mock.
+
+P8-M1: Added real OpenAI-compatible HTTP provider integration.
+Bridges to provider_config service for YAML-based config resolution.
 """
 
 from __future__ import annotations
@@ -16,27 +19,82 @@ from alters_lab.schemas.provider_gateway import (
     ProviderGatewayResponse,
 )
 
-VALID_MODES = {"mock", "disabled", "openai_compatible_http"}
+VALID_MODES = {"mock", "disabled", "openai_compatible_http", "openai-compatible-http"}
 
 _MOCK_REPLIES = {
     "default": "I understand your question. As a mock provider, I'm simulating a thoughtful response based on the alter context provided.",
 }
 
 
+def _normalize_mode(value: str) -> str:
+    """Normalize provider mode to internal canonical form (underscore)."""
+    normalized = value.replace("-", "_")
+    if normalized in {"openai_compatible_http"}:
+        return normalized
+    return value
+
+
 def _get_provider_mode() -> str:
-    return os.environ.get("ALTERS_PROVIDER_MODE", "mock")
+    raw = os.environ.get("ALTERS_PROVIDER_MODE", "mock")
+    return _normalize_mode(raw)
 
 
 def _get_provider_base_url() -> str | None:
-    return os.environ.get("ALTERS_PROVIDER_BASE_URL")
+    env_val = os.environ.get("ALTERS_PROVIDER_BASE_URL")
+    if env_val:
+        return env_val
+    return _resolve_config_value("base_url")
 
 
 def _get_provider_api_key() -> str | None:
-    return os.environ.get("ALTERS_PROVIDER_API_KEY")
+    env_val = os.environ.get("ALTERS_PROVIDER_API_KEY")
+    if env_val:
+        return env_val
+    return _resolve_secret()
 
 
 def _get_provider_model() -> str:
-    return os.environ.get("ALTERS_PROVIDER_MODEL", "mock-model")
+    env_val = os.environ.get("ALTERS_PROVIDER_MODEL")
+    if env_val:
+        return env_val
+    config_model = _resolve_config_value("model")
+    return config_model or "mock-model"
+
+
+def _resolve_config_value(field: str) -> str | None:
+    """Resolve a config value from the provider config YAML, falling back to None."""
+    try:
+        from alters_lab.services.runtime_layout import resolve_runtime_layout, load_user_config
+        layout = resolve_runtime_layout()
+        config = load_user_config(layout)
+        provider = config.get("provider", {})
+        if not isinstance(provider, dict):
+            return None
+        openai = provider.get("openai_compatible_http", {})
+        if not isinstance(openai, dict):
+            return None
+        value = openai.get(field)
+        return value if isinstance(value, str) and value else None
+    except Exception:
+        return None
+
+
+def _resolve_secret() -> str | None:
+    """Resolve the API key from the secrets store (keyring or YAML fallback)."""
+    try:
+        from alters_lab.services.runtime_layout import resolve_runtime_layout
+        from alters_lab.services.provider_config import SecretStore, _load_state
+        layout = resolve_runtime_layout()
+        _, _, state = _load_state(layout)
+        store = SecretStore(layout)
+        if store.secret_configured(state.secret_storage, state.key_name):
+            # Read the actual value from the secrets store
+            if state.secret_storage == "keyring":
+                return store._keyring_get(state.key_name)
+            return store._fallback_get(state.key_name)
+        return None
+    except Exception:
+        return None
 
 
 def _redact_secrets(text: str) -> str:
@@ -118,7 +176,7 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
             status="error",
             mode=mode,
             model=_get_provider_model(),
-            content="Provider mode requires ALTERS_PROVIDER_BASE_URL and ALTERS_PROVIDER_API_KEY.",
+            content="Provider mode requires base_url and api_key. Configure via ALTERS_PROVIDER_BASE_URL / ALTERS_PROVIDER_API_KEY env vars, or via /provider-config endpoints.",
             persisted=False,
             active_yaml_modified=False,
         )
