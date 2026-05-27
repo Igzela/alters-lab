@@ -12,12 +12,13 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
 - **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
 - **P8-000**: Done. Real provider and product readiness boundary plan created.
-- **P8-M1**: Done. Provider adapter contract hardened. 26 new tests, 1030 total backend tests.
-- **P8-M2**: Done. Connectivity check with /models endpoint, exact confirmation gating, fake http_client in tests. 30 new tests, 1080 total backend tests.
-- **P8-M3**: Done. Provider-backed dialogue preview with /chat/completions, injectable http_client, prompt/system_prompt capping. 36 new tests, 1117 total backend tests.
-- **P8-M4**: Done. Weekly Review assistant mode. Reuses provider_dialogue_preview, advisory-only suggestions, copy-only UI. 33 new tests, 1158 total backend tests.
-- **P8-M5**: Ready with approval. E2E Product Validation.
-- **P8-M6 through P8-M7**: Blocked. Not started.
+- **P8-M1**: Done. Provider adapter contract hardened.
+- **P8-M2**: Done. Connectivity check with /models endpoint, exact confirmation gating.
+- **P8-M3**: Done. Provider-backed dialogue preview with /chat/completions, injectable http_client.
+- **P8-M4**: Done. Weekly Review assistant mode. Advisory-only suggestions, copy-only UI.
+- **P8-M5**: Done. E2E product validation smoke. Package-context isolated HOME, all P8 provider paths validated.
+- **P8-M6**: Ready with approval. Provider Safety Audit.
+- **P8-M7**: Blocked. Not started.
 - **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
 
 ## Reading Order
@@ -41,6 +42,7 @@ Personal future path simulation and calibration system. Not a content creation t
 
 - Run backend tests: `PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q`
 - Build frontend: `cd apps/web && npm run build`
-- Type check: `cd apps/web && npx tsc --noEmit`
 - Build Debian package: `python3 tools/build_deb.py`
+- Run P7 smoke: `python3 tools/p7_local_app_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json`
+- Run P8 smoke: `python3 tools/p8_e2e_product_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json`
 - Check git status: `git status`

@@ -12,25 +12,25 @@ Last updated: 2026-05-27
 - P8-M2: done (connectivity check with /models endpoint, exact confirmation gating)
 - P8-M3: done (provider-backed dialogue preview with /chat/completions, injectable http_client)
 - P8-M4: done (weekly review assistant mode, reuses provider_dialogue_preview)
-- P8-M5: ready_with_approval (E2E Product Validation)
-- P8-M6 through P8-M7: blocked
+- P8-M5: done (E2E product validation smoke, package-context isolated HOME)
+- P8-M6: ready_with_approval (Provider Safety Audit)
+- P8-M7: blocked
 - No active phase in progress
 
 ## What Was Just Completed
 
-P8-M4: Weekly Review Assistant Mode.
-- Created weekly review assistant schemas, service, API routes, and frontend UI
-- Reuses provider_dialogue_preview for actual provider calls (no separate unsafe path)
-- Advisory-only suggestions: suggestion_persisted=Literal[False], no auto-completion, no score creation
-- live_generation requires exact confirmation="run-live-weekly-review-assistant"
-- Frontend: Assistant Suggestion section in WeeklyReview Step 4 with copy-only buttons
-- 33 new tests (25 service + 8 API), 1158 total backend tests passing
-- Frontend build: PASS
-- P8-M5 ready_with_approval
+P8-M5: E2E Product Validation.
+- Created tools/p8_e2e_product_smoke.py for package-context isolated HOME smoke
+- Validates all P8 provider paths: adapter, connectivity, dialogue preview, weekly assistant
+- Validates weekly review flow with assistant suggestion
+- Validates backup/data safety
+- Package build, P7 smoke, P8 smoke all PASS
+- 15 new tests, 1173 total backend tests passing
+- P8-M6 ready_with_approval
 
 ## Next Decision
 
-P8-M5 (E2E Product Validation) is ready_with_approval.
+P8-M6 (Provider Safety Audit) is ready_with_approval.
 Requires explicit human/GPT approval before starting.
 
 ## Verification Commands
@@ -42,8 +42,14 @@ PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 # Frontend build
 cd apps/web && npm run build
 
-# Type check
-cd apps/web && npx tsc --noEmit
+# Package build
+python3 tools/build_deb.py
+
+# P7 smoke
+python3 tools/p7_local_app_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json
+
+# P8 smoke
+python3 tools/p8_e2e_product_smoke.py --deb dist/deb/alters-lab_0.1.0_amd64.deb --json
 
 # Git status
 git status

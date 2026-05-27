@@ -1,0 +1,478 @@
+{
+  "backup": {
+    "archive_path": "[temp-root]/home/.local/share/alters-lab/product/exports/alters_lab_backup_20260527T104218Z.tar.gz",
+    "dry_run": true,
+    "excluded_sections": [
+      "secrets",
+      "logs"
+    ],
+    "include_config": true,
+    "include_logs": false,
+    "included_sections": [
+      "data",
+      "config"
+    ],
+    "manifest": {
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "paths": {
+        "config_path": {
+          "exists": true,
+          "path": "[temp-root]/home/.config/alters-lab/config.yaml",
+          "redacted": false
+        },
+        "data_dir": {
+          "exists": true,
+          "path": "[temp-root]/home/.local/share/alters-lab",
+          "redacted": false
+        },
+        "exports_dir": {
+          "exists": false,
+          "path": "[temp-root]/home/.local/share/alters-lab/product/exports",
+          "redacted": false
+        },
+        "logs_dir": {
+          "exists": true,
+          "path": "[temp-root]/home/.local/state/alters-lab/logs",
+          "redacted": false
+        },
+        "product_data_dir": {
+          "exists": true,
+          "path": "[temp-root]/home/.local/share/alters-lab/product",
+          "redacted": false
+        },
+        "secrets_path": {
+          "exists": false,
+          "path": "[redacted-secret-path]",
+          "redacted": true
+        }
+      },
+      "runtime_mode": "packaged",
+      "secrets_redacted": true,
+      "status": "ok"
+    },
+    "missing_sections": [],
+    "p6_behavior_validated": false,
+    "p6_sealed": false,
+    "secrets_included": false,
+    "status": "planned"
+  },
+  "cleanup": {
+    "server_stopped": true
+  },
+  "method": "dpkg-deb -x simulated install",
+  "p6_behavior_validated": false,
+  "p6_sealed": false,
+  "port": 49641,
+  "provider_adapter": {
+    "preview": {
+      "action_alignment_created": false,
+      "active_yaml_modified": false,
+      "audit_event_id": "0eb0785f3ac44e2db94abbde734a88bd",
+      "dry_run": true,
+      "error_type": null,
+      "live_check": false,
+      "message": "Mock adapter preview returned. No network call made.",
+      "network_call_made": false,
+      "output_persisted": false,
+      "output_preview": "[mock adapter preview] This is a deterministic placeholder response from the provider adapter. No real provider was called.",
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_mode": "mock",
+      "provider_ready": true,
+      "reality_score_created": false,
+      "rubric_modified": false,
+      "secrets_redacted": true,
+      "status": "ok"
+    }
+  },
+  "provider_config": {
+    "config_set": {
+      "base_url": null,
+      "key_name": "alters-lab/provider-api-key",
+      "keyring_available": false,
+      "mode": "mock",
+      "model": null,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "secret_storage": "keyring",
+      "secrets_redacted": true,
+      "timeout_seconds": 60
+    },
+    "status_after": {
+      "api_key_configured": false,
+      "base_url_configured": false,
+      "configured": true,
+      "keyring_available": false,
+      "model_configured": false,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_mode": "mock",
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "secret_storage": "keyring",
+      "secrets_redacted": true,
+      "status": "ok"
+    },
+    "status_before": {
+      "api_key_configured": false,
+      "base_url_configured": false,
+      "configured": true,
+      "keyring_available": false,
+      "model_configured": false,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_mode": "disabled",
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "secret_storage": "keyring",
+      "secrets_redacted": true,
+      "status": "ok"
+    },
+    "test": {
+      "dry_run": true,
+      "live_check_supported": false,
+      "message": "Mock provider is ready; no network call made.",
+      "network_call_made": false,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_mode": "mock",
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "provider_ready": true,
+      "secrets_redacted": true,
+      "status": "ok"
+    }
+  },
+  "provider_connectivity": {
+    "check": {
+      "action_alignment_created": false,
+      "active_yaml_modified": false,
+      "audit_event_id": "a59eb97c516e42dfaa189cfa2feb01e5",
+      "auth_valid": true,
+      "configured": true,
+      "dry_run": true,
+      "error_type": null,
+      "latency_ms": null,
+      "live_check": false,
+      "message": "Mock connectivity ok.",
+      "network_call_made": false,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "prompt_content_sent": false,
+      "provider_mode": "mock",
+      "provider_reachable": true,
+      "reality_score_created": false,
+      "response_content_persisted": false,
+      "rubric_modified": false,
+      "secrets_redacted": true,
+      "status": "ok",
+      "status_code": null
+    },
+    "status": {
+      "configured": true,
+      "dry_run_default": true,
+      "key_configured": false,
+      "live_network_requires_confirmation": true,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_mode": "mock",
+      "provider_output_can_generate_action_alignment": false,
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "secrets_redacted": true
+    }
+  },
+  "provider_dialogue_preview": {
+    "generate": {
+      "action_alignment_created": false,
+      "active_yaml_modified": false,
+      "audit_event_id": "858503a5edde45d3a2015fb34693c178",
+      "configured": true,
+      "dry_run": true,
+      "error_type": null,
+      "latency_ms": null,
+      "live_generation": false,
+      "message": "Mock dialogue preview. No network call made.",
+      "network_call_made": false,
+      "output_label": "unverified_provider_preview",
+      "output_persisted": false,
+      "output_preview": "[mock dialogue preview] This is a deterministic placeholder response from the provider dialogue preview. No real provider was called. Output is unverified.",
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "prompt_persisted": false,
+      "provider_mode": "mock",
+      "reality_score_created": false,
+      "response_content_persisted": false,
+      "rubric_modified": false,
+      "save_session": false,
+      "secrets_redacted": true,
+      "status": "ok",
+      "status_code": null
+    },
+    "status": {
+      "configured": true,
+      "dry_run_default": true,
+      "live_generation_requires_confirmation": true,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "persistence_supported": false,
+      "provider_mode": "mock",
+      "provider_output_can_generate_action_alignment": false,
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "secrets_redacted": true
+    }
+  },
+  "routes": {
+    "/action-alignment/list": {
+      "data": {
+        "count": 0,
+        "scores": [],
+        "status": "ok"
+      },
+      "status": "ok"
+    },
+    "/local-app/status": {
+      "data": {
+        "active_yaml_write_allowed": false,
+        "api_routes_available": true,
+        "backend_ready": true,
+        "frontend_available": true,
+        "frontend_dist_path": "[temp-root]/pkgroot/opt/alters-lab/web/dist",
+        "host": "127.0.0.1",
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "port": 18790,
+        "provider_mode": "disabled",
+        "rubric_write_allowed": false,
+        "runtime_mode": "packaged",
+        "secrets_redacted": true,
+        "status": "ok"
+      },
+      "status": "ok"
+    },
+    "/obsidian-weekly-note/list": {
+      "data": {
+        "count": 0,
+        "records": [],
+        "status": "ok"
+      },
+      "status": "ok"
+    },
+    "/provider-adapter/status": {
+      "data": {
+        "configured": true,
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "provider_mode": "disabled",
+        "provider_output_can_generate_action_alignment": false,
+        "provider_output_can_generate_reality_score": false,
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "real_network_calls_enabled": false,
+        "secrets_redacted": true,
+        "supported_modes": [
+          "disabled",
+          "mock",
+          "openai-compatible-http"
+        ]
+      },
+      "status": "ok"
+    },
+    "/provider-config/status": {
+      "data": {
+        "api_key_configured": false,
+        "base_url_configured": false,
+        "configured": true,
+        "keyring_available": false,
+        "model_configured": false,
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "provider_mode": "disabled",
+        "provider_output_can_generate_reality_score": false,
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "secret_storage": "keyring",
+        "secrets_redacted": true,
+        "status": "ok"
+      },
+      "status": "ok"
+    },
+    "/provider-connectivity/status": {
+      "data": {
+        "configured": true,
+        "dry_run_default": true,
+        "key_configured": false,
+        "live_network_requires_confirmation": true,
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "provider_mode": "disabled",
+        "provider_output_can_generate_action_alignment": false,
+        "provider_output_can_generate_reality_score": false,
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "secrets_redacted": true
+      },
+      "status": "ok"
+    },
+    "/provider-dialogue-preview/status": {
+      "data": {
+        "configured": true,
+        "dry_run_default": true,
+        "live_generation_requires_confirmation": true,
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "persistence_supported": false,
+        "provider_mode": "disabled",
+        "provider_output_can_generate_action_alignment": false,
+        "provider_output_can_generate_reality_score": false,
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "secrets_redacted": true
+      },
+      "status": "ok"
+    },
+    "/runtime-layout/status": {
+      "data": {
+        "active_yaml_write_allowed": false,
+        "config_path": "[temp-root]/home/.config/alters-lab/config.yaml",
+        "data_dir": "[temp-root]/home/.local/share/alters-lab",
+        "logs_dir": "[temp-root]/home/.local/state/alters-lab/logs",
+        "mode": "packaged",
+        "product_data_dir": "[temp-root]/home/.local/share/alters-lab/product",
+        "provider_mode": "disabled",
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "rubric_write_allowed": false,
+        "secrets_redacted": true,
+        "secrets_storage": "keyring",
+        "status": "ok"
+      },
+      "status": "ok"
+    },
+    "/weekly-review-assistant/status": {
+      "data": {
+        "configured": true,
+        "dry_run_default": true,
+        "live_generation_requires_confirmation": true,
+        "p6_behavior_validated": false,
+        "p6_sealed": false,
+        "provider_mode": "disabled",
+        "provider_output_can_generate_action_alignment": false,
+        "provider_output_can_generate_reality_score": false,
+        "provider_output_can_write_active_yaml": false,
+        "provider_output_persists_by_default": false,
+        "secrets_redacted": true,
+        "suggestion_persistence_supported": false
+      },
+      "status": "ok"
+    },
+    "/weekly-review/list": {
+      "data": {
+        "count": 0,
+        "sessions": [],
+        "status": "ok"
+      },
+      "status": "ok"
+    }
+  },
+  "runtime_data": {
+    "home_product_dir": "[temp-root]/home/.local/share/alters-lab/product",
+    "record_paths": {
+      "calibration_records": [
+        ".local/share/alters-lab/product/calibration_records/action_alignment_20260527T104218Z_427a0d6d.yaml"
+      ],
+      "weekly_notes": [
+        ".local/share/alters-lab/product/weekly_notes/weekly_note_20260527_20260527T104218Z_9f7e0b8e.yaml"
+      ],
+      "weekly_reviews": [
+        ".local/share/alters-lab/product/weekly_reviews/weekly_review_20260527T104218Z_d17ac585.yaml"
+      ]
+    },
+    "synthetic_smoke_only": true
+  },
+  "status": "PASS",
+  "temp_root": "[removed]",
+  "weekly_review_assistant": {
+    "status": {
+      "configured": true,
+      "dry_run_default": true,
+      "live_generation_requires_confirmation": true,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "provider_mode": "mock",
+      "provider_output_can_generate_action_alignment": false,
+      "provider_output_can_generate_reality_score": false,
+      "provider_output_can_write_active_yaml": false,
+      "provider_output_persists_by_default": false,
+      "secrets_redacted": true,
+      "suggestion_persistence_supported": false
+    },
+    "suggest": {
+      "action_alignment_created": false,
+      "active_yaml_modified": false,
+      "audit_event_id": "c5b52b081cd34595b3ffdc4c844a42e3",
+      "configured": true,
+      "dry_run": true,
+      "error_type": null,
+      "latency_ms": null,
+      "live_generation": false,
+      "message": "Mock weekly review assistant suggestion. No network call made.",
+      "network_call_made": false,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "prompt_persisted": false,
+      "provider_mode": "mock",
+      "reality_score_created": false,
+      "response_content_persisted": false,
+      "rubric_modified": false,
+      "secrets_redacted": true,
+      "status": "ok",
+      "status_code": null,
+      "suggestion": "[mock weekly review assistant] This is a deterministic placeholder suggestion. No real provider was called. Output is unverified.",
+      "suggestion_label": "unverified_provider_suggestion",
+      "suggestion_persisted": false,
+      "weekly_review_completed": false
+    },
+    "suggest_with_session": {
+      "action_alignment_created": false,
+      "active_yaml_modified": false,
+      "audit_event_id": "9ce4a2bfa6a64b70b8fd4b0f3cb0afd0",
+      "configured": true,
+      "dry_run": true,
+      "error_type": null,
+      "latency_ms": null,
+      "live_generation": false,
+      "message": "Mock weekly review assistant suggestion. No network call made.",
+      "network_call_made": false,
+      "p6_behavior_validated": false,
+      "p6_sealed": false,
+      "prompt_persisted": false,
+      "provider_mode": "mock",
+      "reality_score_created": false,
+      "response_content_persisted": false,
+      "rubric_modified": false,
+      "secrets_redacted": true,
+      "status": "ok",
+      "status_code": null,
+      "suggestion": "[mock weekly review assistant] This is a deterministic placeholder suggestion. No real provider was called. Output is unverified.",
+      "suggestion_label": "unverified_provider_suggestion",
+      "suggestion_persisted": false,
+      "weekly_review_completed": false
+    }
+  },
+  "weekly_review_flow": {
+    "note_status": "saved",
+    "score_status": "saved",
+    "weekly_status": "completed"
+  }
+}

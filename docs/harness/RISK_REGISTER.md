@@ -136,6 +136,7 @@
 | R-130 | Dialogue preview output mistaken as verified content | Medium | Medium | P8-M3: output_label="unverified_provider_preview", message always states "unverified", no persistence, user must manually copy. | Active |
 | R-131 | Dialogue preview sends excessive prompt content to provider | Low | Medium | P8-M3: prompt capped at 8000 chars, system_prompt at 4000 chars, tests verify caps enforced. | Active |
 | R-132 | Weekly review assistant suggestion mistaken for validated correction | Medium | Medium | P8-M4: suggestion_label="unverified_provider_suggestion", copy-only UI, no auto-submit, no score creation, no persistence. | Active |
+| R-133 | E2E smoke evidence mistaken for real P6 behavior validation | Low | Medium | P8-M5: evidence states "synthetic_smoke_only", P6 false flags enforced, no real weekly review data. | Active |
 
 ## Risk Assessment
 

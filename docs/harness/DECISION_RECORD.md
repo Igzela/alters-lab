@@ -683,3 +683,11 @@
 **Context**: P8-M4 adds optional provider assistance inside the Weekly Review flow. The provider should help draft suggestions but must never auto-submit, auto-score, or persist output. The user must manually edit/confirm anything that becomes part of the weekly review record.
 **Decision**: Weekly review assistant reuses provider_dialogue_preview for actual provider calls (no separate unsafe path). Advisory-only suggestions with suggestion_persisted=Literal[False], weekly_review_completed=Literal[False], action_alignment_created=Literal[False]. Frontend provides copy-only buttons that fill local form fields but never auto-submit. live_generation requires exact confirmation="run-live-weekly-review-assistant".
 **Consequences**: Provider suggestion is unverified and advisory. User retains full control over review submission. No new provider code paths needed — reuses existing dialogue preview safety gates.
+
+### Decision P8-M5-01: P8 product validation uses package-context isolated HOME smoke by default; live provider checks remain optional and explicitly gated
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P8-M5 needs to validate the full local app product path after P8 provider features. Real provider calls should not run by default in smoke tests. Package-context validation must use isolated HOME to avoid mutating host state.
+**Decision**: P8 E2E smoke script uses dpkg-deb -x into isolated temp install root with isolated HOME. All provider paths tested in mock/dry-run mode. Live provider support exists as optional flags (--allow-live-provider, --live-provider-confirmation) but is never invoked by default. Evidence is redacted (temp paths, no secrets, no raw provider output).
+**Consequences**: Smoke evidence proves product paths work without risking real provider calls or host state mutation. Live provider smoke can be explicitly invoked by human when needed.

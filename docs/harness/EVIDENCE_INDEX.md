@@ -308,3 +308,7 @@
 | P8-M4 | Weekly review assistant tests | apps/api/tests/test_weekly_review_assistant.py, apps/api/tests/test_weekly_review_assistant_api.py | 33 tests covering health/status, disabled/mock/openai modes, confirmation gating, safety invariants, prompt builder, copy-only UI, no auto-completion, no scores. |
 | P8-M4 | Weekly review assistant frontend | apps/web/src/pages/WeeklyReview.tsx | Added Assistant Suggestion section in Step 4 with requested_help select, dry-run/live buttons, suggestion display, copy-to-field buttons. |
 | P8-M4 | P8-M4 contract doc | docs/harness/P8_M4_WEEKLY_REVIEW_ASSISTANT_MODE.md | Weekly review assistant definition, architecture, safety guarantees, and test coverage. |
+| P8-M5 | P8 E2E product smoke script | tools/p8_e2e_product_smoke.py | Package-context isolated HOME smoke validating all P8 provider paths, weekly review flow, backup/data safety. |
+| P8-M5 | P8 E2E smoke tests | apps/api/tests/test_p8_e2e_product_smoke.py | 15 tests covering safe defaults, report contract, redaction, provider safety flags, P6 false flags. |
+| P8-M5 | P8 E2E validation evidence | docs/harness/P8_M5_E2E_PRODUCT_VALIDATION_EVIDENCE.json | Redacted JSON evidence from P8 smoke run. |
+| P8-M5 | P8-M5 contract doc | docs/harness/P8_M5_E2E_PRODUCT_VALIDATION.md | P8 E2E validation definition, smoke script architecture, safety guarantees. |

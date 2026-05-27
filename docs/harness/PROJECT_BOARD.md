@@ -122,11 +122,11 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 | P8-M2 | Real Provider Dry-Run / Connectivity Check | **done** |
 | P8-M3 | Provider-Backed Dialogue Preview | **done** |
 | P8-M4 | Weekly Review Assistant Mode | **done** |
-| P8-M5 | E2E Product Validation | **ready_with_approval** |
-| P8-M6 | Provider Safety Audit | **blocked** |
+| P8-M5 | E2E Product Validation | **done** |
+| P8-M6 | Provider Safety Audit | **ready_with_approval** |
 | P8-M7 | P8 Closeout | **blocked** |
 
-P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **in_progress** — P8-000 plan complete, P8-M1 done, P8-M2 done, P8-M3 done, P8-M4 done, P8-M5 ready_with_approval, P8-M6 through P8-M7 blocked.
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **in_progress** — P8-000 plan complete, P8-M1 done, P8-M2 done, P8-M3 done, P8-M4 done, P8-M5 done, P8-M6 ready_with_approval, P8-M7 blocked.
 
 ## Phase 5 Sealed Baseline
 
@@ -255,4 +255,4 @@ Phase 2 Final Gate: **PASS**
 - P4-FINAL complete. P4-M5 rubric delta suggestions are suggestion-only. P4-M6 archive creation is explicit-only copy packaging. P4-M7 checkpoint regeneration is plan-only. Phase 4 closeout establishes a backend calibration loop sealed candidate. P5-000 remains blocked pending GPT/human review.
 - P5-FULL complete. Local product MVP: provider gateway (mock default), provider-backed dialogue, minimal frontend (Vite+React), storage boundary (YAML default), user workflow integration, phase 5 closeout PASS. 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 complete. P6 is personal long-term use hardening, not public productization. P6 success = behavior change after 4-week validation window. P6-M1 ready_with_approval. P7-000 blocked.
 - P6 runtime code complete accepted and merged to main at cdf4d4e6bf20c3ed160c429c1520dd1ec74917e1. P6-M1 through P6-M11 backend routes/services/schemas are implemented. P6-CODE-COMPLETE-R1 fixed the fake-ID validation blocker. 840 backend tests passing. P6 real-use validation is parked/postponed — it has not started, has not passed, and P6 is not sealed. P6 code-complete accepted as-is. See `docs/harness/P6_SKIP_DECISION.md`.
-- P8-000 done. Real provider and product readiness boundary plan created. P8-M1 done (provider adapter contract hardened). P8-M2 done (connectivity check with /models endpoint, exact confirmation gating, fake http_client in tests). P8-M3 done (provider-backed dialogue preview with /chat/completions, injectable http_client, prompt/system_prompt capping). P8-M4 done (weekly review assistant mode, reuses provider_dialogue_preview, advisory-only suggestions, copy-only UI). P8-M5 ready_with_approval. P8-M6 through P8-M7 blocked. P8 is not sealed. 1158 backend tests passing.
+- P8-000 done. Real provider and product readiness boundary plan created. P8-M1 done (provider adapter contract hardened). P8-M2 done (connectivity check with /models endpoint, exact confirmation gating, fake http_client in tests). P8-M3 done (provider-backed dialogue preview with /chat/completions, injectable http_client, prompt/system_prompt capping). P8-M4 done (weekly review assistant mode, reuses provider_dialogue_preview, advisory-only suggestions, copy-only UI). P8-M5 done (E2E product validation smoke, package-context isolated HOME, all P8 provider paths validated). P8-M6 ready_with_approval. P8-M7 blocked. P8 is not sealed. 1173 backend tests passing.
