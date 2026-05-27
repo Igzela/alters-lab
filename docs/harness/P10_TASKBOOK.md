@@ -18,14 +18,14 @@
 
 ### P10-M2: First real weekly note ingest
 
-**Status**: ready_for_human_execution
+**Status**: done
 **Goal**: Charlie writes a real weekly note and ingests it into Alters Lab. First real-use evidence artifact.
 **Depends on**: P10-M1
-**Notes**: Instructions and evidence template created. Charlie must perform the actual local app operation. Mark done only after Charlie confirms real ingest and provides redacted evidence.
+**Notes**: Done. Real weekly note ingested via packaged app API POST /obsidian-weekly-note/ingest. Record saved to local data dir. Evidence recorded in P10_M2_REAL_WEEKLY_NOTE_INGEST_EVIDENCE.md. P6 remains NOT_VALIDATED/NOT_SEALED.
 
 ### P10-M3: First real weekly review session
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Charlie runs a real weekly review session using Alters Lab. First real review cycle.
 **Depends on**: P10-M2
 **Notes**: Not started.
