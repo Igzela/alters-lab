@@ -2,6 +2,10 @@
 
 A personal future-branch simulation and calibration system.
 
+**New coding-agent sessions should start with [AGENTS.md](AGENTS.md), then [docs/harness/START_HERE_FOR_NEW_SESSION.md](docs/harness/START_HERE_FOR_NEW_SESSION.md).**
+
+Agents must keep the harness docs current after every commit-sized change so future Claude Code, Codex, or other coding-agent sessions can continue without reconstructing state from git log.
+
 ## Overview
 
 Alters System helps you explore potential future paths by modelling branching life decisions, generating alter versions of yourself for each path, and calibrating which branches best align with your values and energy.
@@ -102,19 +106,22 @@ Snapshot → Branches → Alters → Dialogue → Calibration
 
 ## Project Status
 
-All 8 phases complete:
+Current state: P0-P11 complete, P11 sealed as `PRODUCT_COMPLETE_BEFORE_VALIDATION`, and P6 still `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`.
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| P0 | ✅ Done | File-based workflow (YAML snapshots, branches, alters) |
-| P1 | ✅ Done | Data model and schema validation |
-| P2 | ✅ Done | Snapshot intake and branch discovery |
-| P3 | ✅ Done | Alter generation and draft review |
-| P4 | ✅ Done | Calibration loop MVP |
-| P5 | ✅ Done | Productization and provider gateway |
-| P6 | ✅ Code-complete | Personal long-term use hardening (validation skipped by decision) |
-| P7 | ✅ Done | Local app distribution (.deb, CLI, desktop integration) |
-| P8 | ✅ Done | Real provider integration and end-to-end validation |
+| P0 | Done | File-based workflow (YAML snapshots, branches, alters) |
+| P1 | Done | Data model and schema validation |
+| P2 | Done | Snapshot intake and branch discovery |
+| P3 | Done | Alter generation and draft review |
+| P4 | Done | Calibration loop MVP |
+| P5 | Done | Productization and provider gateway |
+| P6 | Code-complete only | Personal long-term use hardening; behavior validation not started |
+| P7 | Done | Local app distribution (.deb, CLI, desktop integration) |
+| P8 | Done | Provider-ready local app with safety gates and E2E validation |
+| P9 | Done | Release hygiene, install docs, lifecycle verification, doctor improvements |
+| P10 | Reentry gate awaiting human decision | P10-M5-R2 reopened validation start decision after P11/Pilot evidence; P6 validation did not start |
+| P11 | Sealed | Product completeness before validation, smoke PASS, pilot PASS |
 
 ## CLI Commands
 
@@ -134,6 +141,8 @@ All 8 phases complete:
 - [Provider Setup](docs/user/PROVIDER_SETUP.md) — How to configure LLM providers
 - [Provider Safety](docs/user/PROVIDER_SAFETY.md) — Secret handling, output safety, confirmation gating
 - [Troubleshooting](docs/user/TROUBLESHOOTING.md) — Common issues and how to fix them
+- [New Session Bootstrap](docs/harness/START_HERE_FOR_NEW_SESSION.md) — Agent handoff entry point
+- [Current Session Context](docs/harness/CURRENT_SESSION_CONTEXT.md) — Latest state and next decision
 - [Product Specification](docs/product-spec.md) — System design and concepts
 - [Alter Generation Workflow](docs/alter-generation-workflow.md) — How alters are generated
 - [Branch Discovery Workflow](docs/branch-discovery-workflow.md) — How branches are discovered
