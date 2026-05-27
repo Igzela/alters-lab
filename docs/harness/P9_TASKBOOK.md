@@ -18,14 +18,14 @@
 
 ### P9-M2: Disposable install/upgrade/remove verification
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Verify that install, upgrade, and remove work correctly in a disposable environment (tmpdir or container). Verify data preservation on upgrade, clean removal on uninstall, no secret leakage.
 **Depends on**: P9-M1
-**Notes**: Not started. Requires explicit approval.
+**Notes**: Done. Created tools/p9_package_lifecycle_smoke.py — actual dpkg lifecycle (install/upgrade/remove) in disposable fakeroot. 25 tests in test_p9_package_lifecycle_smoke.py. 1240 backend tests passing. Lifecycle smoke PASS: install places files, upgrade preserves user data, remove preserves secrets. No host mutation, no provider calls, p6 flags false. Method is not extract-only.
 
 ### P9-M3: First-run onboarding guide
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create a first-run guide that helps new users understand what the app does, how to configure it, and what the P6/P8 boundaries mean. Could be in-app or standalone docs.
 **Depends on**: P9-M2
 **Notes**: Blocked.

@@ -335,3 +335,6 @@
 | P9-M1 | First run guide | docs/user/FIRST_RUN.md | Launch, what is Alters Lab, provider mode, smoke test, P6/P7/P8 explanation, weekly review, stopping. |
 | P9-M1 | Uninstall guide | docs/user/UNINSTALL.md | Stop, remove, what's removed/preserved, full cleanup, reinstall, upgrade. |
 | P9-M1 | Data and backup guide | docs/user/DATA_AND_BACKUP.md | Data paths, backup command, options, restore, data safety, P6 runtime records. |
+| P9-M2 | Lifecycle smoke script | tools/p9_package_lifecycle_smoke.py | Disposable dpkg lifecycle smoke: install/upgrade/remove in fakeroot. Evidence redaction, safety flags. |
+| P9-M2 | Lifecycle smoke tests | apps/api/tests/test_p9_package_lifecycle_smoke.py | 25 tests: arg parsing, redaction, report contract, safety flags. |
+| P9-M2 | Verification doc | docs/harness/P9_M2_DISPOSABLE_INSTALL_VERIFICATION.md | Method, what it verifies, evidence redaction, hard boundaries, test coverage, usage. |

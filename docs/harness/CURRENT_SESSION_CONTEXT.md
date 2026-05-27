@@ -12,23 +12,26 @@ Last updated: 2026-05-27
 - P8 provider safety audit: 7 sections all PASS
 - P9-000 done (release hygiene boundary plan)
 - P9-M1 done (install/launch/uninstall docs)
-- P9-M2 ready_with_approval (disposable verification)
-- P9-M3 through P9-M7 blocked
+- P9-M2 done (disposable dpkg lifecycle verification)
+- P9-M3 ready_with_approval (first-run onboarding guide)
+- P9-M4 through P9-M7 blocked
 
 ## What Was Just Completed
 
-P9-M1: User-facing install/launch/uninstall docs.
-- Created docs/user/INSTALL.md — system requirements, install from .deb, build from source, installed paths, data paths, verification
-- Created docs/user/FIRST_RUN.md — launch, what is Alters Lab, provider mode, smoke test, P6/P7/P8 explanation, weekly review, stopping
-- Created docs/user/UNINSTALL.md — stop, remove, what's removed/preserved, full cleanup, reinstall, upgrade
-- Created docs/user/DATA_AND_BACKUP.md — data paths, backup command, options, restore, data safety, P6 runtime records
+P9-M2: Disposable dpkg lifecycle verification.
+- Created tools/p9_package_lifecycle_smoke.py — actual dpkg install/upgrade/remove in disposable fakeroot
+- Uses --instdir/--admindir/--force-not-root/--force-script-chrootless/--force-depends
+- 25 tests in apps/api/tests/test_p9_package_lifecycle_smoke.py
+- 1240 backend tests passing
+- Lifecycle smoke PASS: install places files, upgrade preserves user data, remove preserves secrets
+- No host mutation, no provider calls, p6 flags false, method_is_extract_only false
+- Created docs/harness/P9_M2_DISPOSABLE_INSTALL_VERIFICATION.md
 - Updated 8 governance docs
-- No code changes, no active YAML/rubric changes
 
 ## Next Decision
 
-P9-M1 is done. Options:
-1. Begin P9-M2 (disposable install/upgrade/remove verification) after explicit approval
+P9-M2 is done. Options:
+1. Begin P9-M3 (first-run onboarding guide) after explicit approval
 2. Begin real P6 validation later
 3. Other product work
 

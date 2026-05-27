@@ -810,17 +810,17 @@
 
 ### P9-M2: Disposable install/upgrade/remove verification
 
-**Status**: blocked
+**Status**: done
 **Goal**: Verify install, upgrade, and remove work correctly in a disposable environment.
 **Depends on**: P9-M1
-**Notes**: Blocked.
+**Notes**: Done. Created tools/p9_package_lifecycle_smoke.py — actual dpkg lifecycle in disposable fakeroot. 25 tests. 1240 backend tests passing. Lifecycle smoke PASS.
 
 ### P9-M3: First-run onboarding guide
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create a first-run guide for new users.
 **Depends on**: P9-M2
-**Notes**: Blocked.
+**Notes**: Ready. P9-M2 done.
 
 ### P9-M4: Provider setup and safety guide
 
