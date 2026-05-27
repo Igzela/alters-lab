@@ -338,3 +338,9 @@
 | P9-M2 | Lifecycle smoke script | tools/p9_package_lifecycle_smoke.py | Disposable dpkg lifecycle smoke: install/upgrade/remove in fakeroot. Evidence redaction, safety flags. |
 | P9-M2 | Lifecycle smoke tests | apps/api/tests/test_p9_package_lifecycle_smoke.py | 25 tests: arg parsing, redaction, report contract, safety flags. |
 | P9-M2 | Verification doc | docs/harness/P9_M2_DISPOSABLE_INSTALL_VERIFICATION.md | Method, what it verifies, evidence redaction, hard boundaries, test coverage, usage. |
+| P9-M3 | First-run checklist | docs/user/FIRST_RUN_CHECKLIST.md | 13-item user-facing checklist: install verification, open app, doctor, provider disabled default, mock mode, weekly note import, weekly review, backup, P6 boundary, provider advisory, project phases, next steps. |
+| P9-M3 | Getting Started page | apps/web/src/pages/GettingStarted.tsx | Frontend onboarding page with 4 sections: provider disabled, weekly review, doctor, backup + boundary copy. Static checklist with nav buttons. |
+| P9-M3 | App.tsx update | apps/web/src/App.tsx | Added 'getting-started' page type and Getting Started nav button. |
+| P9-M3 | FIRST_RUN.md update | docs/user/FIRST_RUN.md | Added link to FIRST_RUN_CHECKLIST.md. |
+| P9-M3 | INSTALL.md update | docs/user/INSTALL.md | Added Next Steps section linking to FIRST_RUN_CHECKLIST.md. |
+| P9-M3 | README.md update | README.md | Added First-Run Checklist link to Documentation section. |

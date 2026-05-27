@@ -13,27 +13,26 @@ Last updated: 2026-05-27
 - P9-000 done (release hygiene boundary plan)
 - P9-M1 done (install/launch/uninstall docs)
 - P9-M2 done (disposable dpkg lifecycle verification)
-- P9-M3 ready_with_approval (first-run onboarding guide)
-- P9-M4 through P9-M7 blocked
+- P9-M3 done (first-run onboarding guide + Getting Started frontend page)
+- P9-M4 ready_with_approval (provider setup and safety guide)
+- P9-M5 through P9-M7 blocked
 
 ## What Was Just Completed
 
-P9-M2: Disposable dpkg lifecycle verification.
-- Created tools/p9_package_lifecycle_smoke.py — actual dpkg install/upgrade/remove in disposable fakeroot
-- Uses --instdir/--admindir/--force-not-root/--force-script-chrootless/--force-depends
-- 25 tests in apps/api/tests/test_p9_package_lifecycle_smoke.py
-- 1240 backend tests passing
-- Lifecycle smoke PASS: install places files, upgrade preserves user data, remove preserves secrets
-- No host mutation, no provider calls, p6 flags false, method_is_extract_only false
-- Created docs/harness/P9_M2_DISPOSABLE_INSTALL_VERIFICATION.md
-- Updated 8 governance docs
+P9-M3: First-run onboarding guide.
+- Created docs/user/FIRST_RUN_CHECKLIST.md — 13-item checklist covering install verification, provider disabled default, mock mode, weekly review, backup, P6 boundary, provider advisory
+- Added Getting Started frontend page (apps/web/src/pages/GettingStarted.tsx) with 4 sections: provider disabled, weekly review, doctor, backup + boundary copy
+- Updated docs/user/FIRST_RUN.md, docs/user/INSTALL.md, README.md to link to checklist
+- Updated 7 governance docs
+- 1255 backend tests passing
+- Frontend build PASS
+- No forbidden claims, no secrets, no active YAML/rubric changes
 
 ## Next Decision
 
-P9-M2 is done. Options:
-1. Begin P9-M3 (first-run onboarding guide) after explicit approval
-2. Begin real P6 validation later
-3. Other product work
+P9-M3 is done. Options:
+1. Begin P9-M4 (provider setup and safety guide) after explicit approval
+2. Other product work
 
 New sessions must not claim P6 validated.
 
@@ -68,5 +67,4 @@ git status
 - No `alters/calibration/rubric.yaml` changes
 - No runtime records committed
 - No P6 validation claims
-- No P9-M1 start without explicit approval
 - No live provider calls without explicit configuration

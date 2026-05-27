@@ -7,8 +7,9 @@ import RubricDelta from './pages/RubricDelta'
 import CheckpointPlan from './pages/CheckpointPlan'
 import ProviderSettings from './pages/ProviderSettings'
 import WeeklyReview from './pages/WeeklyReview'
+import GettingStarted from './pages/GettingStarted'
 
-type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider'
+type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started'
 
 export default function App() {
   const [page, setPage] = useState<Page>('status')
@@ -27,6 +28,7 @@ export default function App() {
       <h1 style={{ fontSize: 20, marginBottom: 16 }}>Alters Lab — Local MVP</h1>
       <nav style={{ display: 'flex', gap: 4, marginBottom: 20, flexWrap: 'wrap' }}>
         <button style={navStyle('status')} onClick={() => setPage('status')}>Status</button>
+        <button style={navStyle('getting-started')} onClick={() => setPage('getting-started')}>Getting Started</button>
         <button style={navStyle('weekly')} onClick={() => setPage('weekly')}>Weekly Review</button>
         <button style={navStyle('dialogue')} onClick={() => setPage('dialogue')}>Dialogue</button>
         <button style={navStyle('reality')} onClick={() => setPage('reality')}>Reality Score</button>
@@ -43,6 +45,7 @@ export default function App() {
       {page === 'rubric' && <RubricDelta />}
       {page === 'checkpoint' && <CheckpointPlan />}
       {page === 'provider' && <ProviderSettings />}
+      {page === 'getting-started' && <GettingStarted onNavigate={setPage} />}
     </div>
   )
 }

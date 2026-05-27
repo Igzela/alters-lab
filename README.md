@@ -129,6 +129,7 @@ All 8 phases complete:
 
 ## Documentation
 
+- [First-Run Checklist](docs/user/FIRST_RUN_CHECKLIST.md) — What to do after installation
 - [User Guide](docs/USER_GUIDE.md) — Quick start, workflow walkthrough, and reference
 - [Provider Configuration](docs/PROVIDER_CONFIGURATION.md) — How to configure LLM providers
 - [Product Specification](docs/product-spec.md) — System design and concepts

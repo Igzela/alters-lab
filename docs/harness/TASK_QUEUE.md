@@ -817,14 +817,14 @@
 
 ### P9-M3: First-run onboarding guide
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create a first-run guide for new users.
 **Depends on**: P9-M2
-**Notes**: Ready. P9-M2 done.
+**Notes**: Done. Created docs/user/FIRST_RUN_CHECKLIST.md. Added Getting Started frontend page. Updated FIRST_RUN.md, INSTALL.md, README.md. 1255 backend tests passing. Frontend build PASS.
 
 ### P9-M4: Provider setup and safety guide
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create a guide for setting up a provider (mock or live).
 **Depends on**: P9-M2
 **Notes**: Blocked.

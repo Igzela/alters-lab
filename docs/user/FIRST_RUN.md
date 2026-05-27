@@ -2,6 +2,8 @@
 
 After installing Alters Lab, this guide walks you through launching the app and understanding what it does.
 
+For a step-by-step checklist, see [First-Run Checklist](FIRST_RUN_CHECKLIST.md).
+
 ## Start the App
 
 ```bash

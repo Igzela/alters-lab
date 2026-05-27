@@ -25,14 +25,14 @@
 
 ### P9-M3: First-run onboarding guide
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Create a first-run guide that helps new users understand what the app does, how to configure it, and what the P6/P8 boundaries mean. Could be in-app or standalone docs.
 **Depends on**: P9-M2
-**Notes**: Blocked.
+**Notes**: Done. Created docs/user/FIRST_RUN_CHECKLIST.md (13-item checklist covering install verification, provider disabled default, mock mode, weekly review, backup, P6 boundary, provider advisory). Added Getting Started frontend page with 4 sections and boundary copy. Updated FIRST_RUN.md, INSTALL.md, README.md to link to checklist. Updated 7 governance docs. Frontend build PASS. Backend tests PASS. No forbidden claims. No secrets. No active YAML/rubric changes.
 
 ### P9-M4: Provider setup and safety guide
 
-**Status**: blocked
+**Status**: ready_with_approval
 **Goal**: Create a guide for setting up a provider (mock or live), explaining the safety model, confirmation gating, and what the provider can/cannot do.
 **Depends on**: P9-M2
 **Notes**: Blocked.
