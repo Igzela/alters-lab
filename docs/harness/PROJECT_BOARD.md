@@ -77,7 +77,7 @@ todo → ready → running → review → done/failed
 | P6-BEHAVIOR-VALIDATION | Real 4-week behavior validation | **blocked_by_real_use_window** |
 | P6-CLOSEOUT | Final Phase 6 closeout | **blocked** |
 
-P6 state: **CODE_COMPLETE / P6_SKIPPED_VALIDATION** — human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
+P6 state: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P6 real-use validation is parked/postponed. It has not started, has not passed, and P6 is not sealed.
 
 ## Phase 7 — Local App Distribution / Debian Package / Independent Desktop Runtime
 
@@ -103,7 +103,7 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 - Package safety inspection: PASS
 - Package-context smoke: PASS
 - Closeout report: `docs/harness/P7_CLOSEOUT_REPORT.md`
-- P6: CODE_COMPLETE / P6_SKIPPED_VALIDATION
+- P6: CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 - P8: blocked / not started
 
 ## Phase 7 Repair / Usability Follow-up
@@ -126,7 +126,7 @@ P7 Final Gate: **LOCAL_APP_RELEASE_CANDIDATE**
 | P8-M6 | Provider Safety Audit | **blocked** |
 | P8-M7 | P8 Closeout | **blocked** |
 
-P6 status: **P6_SKIPPED_VALIDATION** — human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P6 real-use validation is parked/postponed. It has not started, has not passed, and P6 is not sealed.
 P8 status: **in_progress** — P8-000 plan complete, P8-M1 ready_with_approval, P8-M2 through P8-M7 blocked.
 
 ## Phase 5 Sealed Baseline
@@ -255,5 +255,5 @@ Phase 2 Final Gate: **PASS**
 - P4-CAL-LOOP-MVP complete pending GPT verdict. P4-M1R hardens full alter YAML injection. P4-M2/M3/M4 add explicit reality score records, evidence-only drift, and read-only calibration history. No provider, frontend, database, active YAML mutation, rubric mutation, archive, promotion, or regeneration trigger.
 - P4-FINAL complete. P4-M5 rubric delta suggestions are suggestion-only. P4-M6 archive creation is explicit-only copy packaging. P4-M7 checkpoint regeneration is plan-only. Phase 4 closeout establishes a backend calibration loop sealed candidate. P5-000 remains blocked pending GPT/human review.
 - P5-FULL complete. Local product MVP: provider gateway (mock default), provider-backed dialogue, minimal frontend (Vite+React), storage boundary (YAML default), user workflow integration, phase 5 closeout PASS. 802 tests passing. 17 new API routes. No active YAML modified. No secrets committed. No database migration. P6-000 complete. P6 is personal long-term use hardening, not public productization. P6 success = behavior change after 4-week validation window. P6-M1 ready_with_approval. P7-000 blocked.
-- P6 runtime code complete accepted and merged to main at cdf4d4e6bf20c3ed160c429c1520dd1ec74917e1. P6-M1 through P6-M11 backend routes/services/schemas are implemented. P6-CODE-COMPLETE-R1 fixed the fake-ID validation blocker. 840 backend tests passing. P6 behavior validation SKIPPED by explicit human decision (P6_SKIPPED_VALIDATION). P6 code-complete accepted as-is. See `docs/harness/P6_SKIP_DECISION.md`.
+- P6 runtime code complete accepted and merged to main at cdf4d4e6bf20c3ed160c429c1520dd1ec74917e1. P6-M1 through P6-M11 backend routes/services/schemas are implemented. P6-CODE-COMPLETE-R1 fixed the fake-ID validation blocker. 840 backend tests passing. P6 real-use validation is parked/postponed — it has not started, has not passed, and P6 is not sealed. P6 code-complete accepted as-is. See `docs/harness/P6_SKIP_DECISION.md`.
 - P8 complete. Real Provider Integration & E2E Validation sealed baseline: 1004 backend tests, 27 E2E tests, real provider integration PASS. P8 closeout report at `docs/harness/P8_CLOSEOUT_REPORT.md`.

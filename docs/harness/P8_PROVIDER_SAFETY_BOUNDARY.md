@@ -12,11 +12,13 @@
 
 ### Secret Handling
 
-1. API keys are stored in `~/.config/alters-lab/config.yaml` with `chmod 0600`.
-2. API responses never return provider keys. Status/config endpoints show `***`.
-3. Logs contain audit metadata only (provider name, status code, latency). Raw secrets are never logged.
-4. Frontend password inputs do not store keys in React state beyond the input lifecycle.
-5. Backup excludes secrets by default. Inclusion requires exact confirmation.
+1. `config.yaml` stores non-secret provider config only: provider mode, base_url, model, timeout, secret storage mode, key name. API keys must never be stored in `config.yaml`.
+2. Preferred secret storage is system keyring when available.
+3. Fallback secret storage is `~/.config/alters-lab/secrets.yaml` with `chmod 0600`.
+4. API responses never return API keys. Status/config endpoints show `***`.
+5. Logs never include API keys. Logs contain audit metadata only (provider name, status code, latency).
+6. Frontend never stores keys in localStorage. Password inputs do not store keys in React state beyond the input lifecycle.
+7. Backup excludes secrets by default. Inclusion requires exact confirmation.
 
 ### Provider Output Handling
 
