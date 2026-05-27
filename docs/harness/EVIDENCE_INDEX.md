@@ -391,3 +391,7 @@
 | P11-M4 | P11_M4_IMPLEMENTATION_BATCH_PLAN.md | docs/harness/ | M5 batch: 5 items (CalibrationHistory, RealityScore, P6Progress, Step 5, Step 3). M6 batch: 3 items (PatternReview, BehaviorValidation, DataManagement) |
 | P11-M4 | P11_M4_ACCEPTANCE_CRITERIA.md | docs/harness/ | Concrete acceptance criteria for M5 and M6 with build/test/feature/boundary checkboxes |
 | P11-M4 | P11_M4_RISK_AND_BOUNDARY_REVIEW.md | docs/harness/ | Risk assessment, hard boundaries, no-go conditions, boundary confirmation checklist |
+| P11-M5 | CalibrationHistory.tsx | apps/web/src/pages/ | Detail drill-down, trend indicator, score explanation, date sorting |
+| P11-M5 | RealityScore.tsx | apps/web/src/pages/ | Recent scores section, CalibrationHistory link |
+| P11-M5 | P6Progress.tsx | apps/web/src/pages/ | User-facing labels, validation status, next-step guidance |
+| P11-M5 | WeeklyReview.tsx | apps/web/src/pages/ | Step 5 verdict descriptions, Step 3 dynamic alter loading |

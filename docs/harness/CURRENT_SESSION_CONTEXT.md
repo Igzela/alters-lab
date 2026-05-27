@@ -12,22 +12,24 @@ Last updated: 2026-05-27
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 through P10-M5 done (BLOCKED_BY_NEW_FRICTION), P10-M6/M7 blocked
-- P11: P11-000 done, P11-M1 done (inventory, R1/R2/R3), P11-M2 done (workflow gap map), P11-M3 done (UX gaps), P11-M4 done (gap closure plan)
+- P11: P11-000 done, P11-M1 done (inventory, R1/R2/R3), P11-M2 done (workflow gap map), P11-M3 done (UX gaps), P11-M4 done (gap closure plan), P11-M5 done (calibration/progress UX improvements)
 
 ## What Was Just Completed
 
-P11-M4: Gap closure plan.
-- Key finding: all M5/M6 features are frontend-only (existing APIs sufficient)
-- M5 batch 1: 5 items — CalibrationHistory detail/trend/explanation, RealityScore history, P6Progress rewrite, Step 5 verdict explanation, optional Step 3 dynamic alters
-- M6 batch 2: 3 items — PatternReview page, BehaviorValidation page, DataManagement page
-- No backend changes required for any item
-- Created 4 files: gap closure plan, implementation batch plan, acceptance criteria, risk/boundary review
+P11-M5: Calibration and progress UX improvements.
+- CalibrationHistory: detail drill-down, trend indicator (↑/↓/→), score explanation section, date sorting
+- RealityScore: recent action alignment scores section, link to CalibrationHistory
+- P6Progress: user-facing labels ("Your Progress"), validation status ("Not started"), next-step guidance
+- WeeklyReview Step 5: verdict descriptions shown below selector
+- WeeklyReview Step 3: dynamic alter loading from GET /alter-dialogue/alters with fallback
+- 4 files changed, frontend build PASS, backend 1270 tests PASS
+- No P6 claims, no provider calls, no backend changes
 
 ## Next Decision
 
-P11-M5: Product completion implementation batch 1 — ready_with_approval.
-GPT must define M5 scope before Codex executes.
-P11-M5 is implementation — actual frontend code changes.
+P11-M6: Product completion implementation batch 2 — ready_with_approval.
+GPT must define M6 scope before Codex executes.
+P11-M6 is implementation — new frontend pages (PatternReview, BehaviorValidation, DataManagement).
 
 After P11-M7 (product completeness smoke and closeout), revisit P6 validation start decision.
 

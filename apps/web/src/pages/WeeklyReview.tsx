@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   completeWeeklyReview,
   editWeeklyNote,
+  fetchJson,
   fetchWeeklyReviewAssistantStatus,
   ingestWeeklyNote,
   scoreActionAlignment,
@@ -72,6 +73,17 @@ const verdicts: VerdictLabel[] = [
   'blocked_by_environment',
 ]
 
+const VERDICT_DESCRIPTIONS: Record<VerdictLabel, string> = {
+  aligned_progress: 'Actions matched your stated direction. You did what you intended.',
+  noisy_progress: 'You made progress, but not in your intended direction. Some drift.',
+  avoidance_disguised_as_work: 'Activity looked productive but avoided the real problem.',
+  recovery_week: 'You bounced back from a stall or setback. Restorative week.',
+  unstable_but_useful: 'Inconsistent, but some meaningful progress happened.',
+  blocked_by_environment: 'External factors prevented progress despite intention.',
+}
+
+type AlterOption = { id: string; name: string }
+
 type Step = 1 | 2 | 3 | 4 | 5 | 6
 
 export default function WeeklyReview() {
@@ -111,6 +123,24 @@ export default function WeeklyReview() {
   const [assistantLiveConfirmation, setAssistantLiveConfirmation] = useState('')
   const [assistantLoading, setAssistantLoading] = useState(false)
   const [assistantError, setAssistantError] = useState('')
+
+  const [alterOptions, setAlterOptions] = useState<AlterOption[]>([
+    { id: 'alter_A', name: 'alter_A' },
+    { id: 'alter_B', name: 'alter_B' },
+    { id: 'alter_C', name: 'alter_C' },
+    { id: 'alter_D', name: 'alter_D' },
+  ])
+
+  useEffect(() => {
+    fetchJson('/alter-dialogue/alters')
+      .then((res: unknown) => {
+        const data = res as { alters?: { alter_id: string }[] }
+        if (data.alters && data.alters.length > 0) {
+          setAlterOptions(data.alters.map(a => ({ id: a.alter_id, name: a.alter_id })))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const run = async (label: string, task: () => Promise<void>) => {
     setLoading(label)
@@ -331,10 +361,9 @@ export default function WeeklyReview() {
             Select alter
             <select style={inputStyle} value={selectedAlter} onChange={e => setSelectedAlter(e.target.value)}>
               <option value="">system recommended / blank</option>
-              <option value="alter_A">alter_A</option>
-              <option value="alter_B">alter_B</option>
-              <option value="alter_C">alter_C</option>
-              <option value="alter_D">alter_D</option>
+              {alterOptions.map(a => (
+                <option key={a.id} value={a.id}>{a.name}</option>
+              ))}
             </select>
           </label>
           <button style={buttonStyle} type="button" onClick={startReview} disabled={!!loading}>
@@ -434,8 +463,9 @@ export default function WeeklyReview() {
           <label style={{ display: 'grid', gap: 6, marginBottom: 10 }}>
             verdict_label
             <select style={inputStyle} value={verdictLabel} onChange={e => setVerdictLabel(e.target.value as VerdictLabel)}>
-              {verdicts.map(v => <option key={v} value={v}>{v}</option>)}
+              {verdicts.map(v => <option key={v} value={v}>{v.replace(/_/g, ' ')}</option>)}
             </select>
+            <span style={{ fontSize: 13, color: '#666' }}>{VERDICT_DESCRIPTIONS[verdictLabel]}</span>
           </label>
           <TextInput label="verdict_sentence" value={verdictSentence} onChange={setVerdictSentence} />
           <button
