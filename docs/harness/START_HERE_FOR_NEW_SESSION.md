@@ -10,11 +10,12 @@ Personal future path simulation and calibration system. Not a content creation t
 
 - **P7**: Sealed as `LOCAL_APP_RELEASE_CANDIDATE`. Debian package builds, frontend works, CLI launcher works.
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
-- **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Human decision to skip 4-week real-use validation. P6 code-complete accepted as-is.
+- **P6**: `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`. Real-use validation has not started. P6 validation requires explicit human/GPT decision.
 - **P8**: Sealed as `REAL_PROVIDER_READY_LOCAL_APP`. All milestones done. 1215 backend tests passing.
 - **P8 provider safety**: 7-section audit all PASS (grep scan, route audit, live constants, schema safety, evidence contract, secret policy, mutation boundary).
 - **P9**: All milestones done (P9-000 through P9-M7). P9 closeout PASS. Install docs, lifecycle verification, onboarding guide, provider guide, troubleshooting/doctor, release checklist, version bump policy all complete. Closeout report: `docs/harness/P9_CLOSEOUT_REPORT.md`.
-- **P6 validation**: Parked. No behavior validation started. No seal claim. No 4-week window.
+- **P10**: Personal Pilot & Real-Use Cutover phase. P10-000 boundary plan done. Next step: P10-M1 (local installation cutover checklist) after approval.
+- **P6 validation**: Not started. Requires 4 real weekly reviews, 21 days, explicit human/GPT decision.
 
 ## Reading Order
 

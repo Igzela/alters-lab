@@ -10,29 +10,24 @@ Last updated: 2026-05-27
 - P8: sealed as `REAL_PROVIDER_READY_LOCAL_APP`
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
-- P9-000 done (release hygiene boundary plan)
-- P9-M1 done (install/launch/uninstall docs)
-- P9-M2 done (disposable dpkg lifecycle verification)
-- P9-M3 done (first-run onboarding guide + Getting Started frontend page)
-- P9-M4 done (provider setup and safety guide + ProviderSettings safety notes)
-- P9-M7 done (P9 Closeout)
-- P9 sealed
+- P9: sealed (P9-000 through P9-M7 all done)
+- P10: P10-000 done (Personal Pilot & Real-Use Cutover Boundary Plan)
+- P10-M1: ready_with_approval (Local installation cutover checklist)
 
 ## What Was Just Completed
 
-P9-M7: P9 Closeout.
-- Created docs/harness/P9_CLOSEOUT_REPORT.md
-- All 7 milestones done, all 7 success criteria PASS
-- 1270 backend tests, frontend PASS, package PASS, lifecycle smoke PASS
-- No forbidden claims, no secrets, no version bump (docs/governance only)
+P10-000: Personal Pilot & Real-Use Cutover Boundary Plan.
+- Created P10_000_PERSONAL_PILOT_AND_REAL_USE_CUTOVER_PLAN.md
+- Created P10_TASKBOOK.md, P10_REAL_USE_BOUNDARY.md, P10_P6_VALIDATION_BRIDGE.md, P10_PILOT_EVIDENCE_REQUIREMENTS.md
+- Updated PROJECT_BOARD, TASK_QUEUE, DECISION_RECORD, RISK_REGISTER, RUN_LOG, EVIDENCE_INDEX, START_HERE_FOR_NEW_SESSION, CURRENT_SESSION_CONTEXT
+- P10 defines: operational cutover, evidence discipline, friction discovery, P6 validation bridge
 - P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P9 is sealed. Options:
-1. Start P10 (if planned) after explicit approval
-2. Real P6 validation using the local app
-3. Other product work
+P10-000 is done. Next step:
+1. P10-M1: Local installation cutover checklist (ready_with_approval)
+2. P10-M2 through P10-M7: blocked
 
 New sessions must not claim P6 validated.
 

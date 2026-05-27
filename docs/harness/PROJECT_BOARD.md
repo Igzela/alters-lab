@@ -143,6 +143,21 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 
 P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **sealed as REAL_PROVIDER_READY_LOCAL_APP** — P9 status: **all milestones done, P9 sealed** — 1270 backend tests passing.
 
+## Phase 10 — Personal Pilot & Real-Use Cutover
+
+| ID | Title | Status |
+|----|-------|--------|
+| P10-000 | Personal Pilot & Real-Use Cutover Boundary Plan | **done** |
+| P10-M1 | Local installation cutover checklist | **ready_with_approval** |
+| P10-M2 | First real weekly note ingest | **blocked** |
+| P10-M3 | First real weekly review session | **blocked** |
+| P10-M4 | Real-use friction log and fix triage | **blocked** |
+| P10-M5 | P6 validation start decision gate | **blocked** |
+| P10-M6 | Week 1 validation package | **blocked** |
+| P10-M7 | Pilot closeout / next phase decision | **blocked** |
+
+P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P10 status: **P10-000 done, P10-M1 ready_with_approval** — 1270 backend tests passing.
+
 ## Phase 5 Sealed Baseline
 
 Phase 5 Final Gate: **PASS**

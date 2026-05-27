@@ -358,3 +358,8 @@
 | P9-M6 | Release checklist | docs/harness/P9_RELEASE_CHECKLIST.md | Pre-release checks (backend tests, frontend build, package build, package safety, lifecycle smoke, forbidden claims, secret check, doctor output), doc checks, governance checks, post-release. |
 | P9-M6 | Version bump policy | docs/harness/P9_VERSION_BUMP_POLICY.md | SemVer rules (PATCH/MINOR/MAJOR), current history 0.1.0, where version lives, phase completion relationship. |
 | P9-M7 | P9 closeout report | docs/harness/P9_CLOSEOUT_REPORT.md | Final P9 closeout: milestone table, success standard verification, verification results, user docs list, governance artifacts, doctor improvements, preserved boundaries, known limitations. |
+| P10-000 | P10_000_PERSONAL_PILOT_AND_REAL_USE_CUTOVER_PLAN.md | docs/harness/ | P10 boundary plan: scope, milestones, excluded scope, hard boundaries |
+| P10-000 | P10_TASKBOOK.md | docs/harness/ | P10 milestone tracking |
+| P10-000 | P10_REAL_USE_BOUNDARY.md | docs/harness/ | What counts as real use vs synthetic |
+| P10-000 | P10_P6_VALIDATION_BRIDGE.md | docs/harness/ | P6 validation start conditions |
+| P10-000 | P10_PILOT_EVIDENCE_REQUIREMENTS.md | docs/harness/ | Evidence collection and commit policy |

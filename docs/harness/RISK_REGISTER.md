@@ -150,3 +150,10 @@
 - **Likelihood**: Low / Medium / High
 - **Impact**: Low / Medium / High
 - **Status**: Active / Mitigated / Closed
+| R-050 | Confusing P10 pilot with P6 validation | Medium | High | Clear separation in all docs; P10 milestones explicitly distinguish pilot from validation | Active |
+| R-051 | Using synthetic records as real P6 evidence | Medium | High | Evidence policy enforced; synthetic flag required on all summaries | Active |
+| R-052 | Overbuilding instead of using during P10 | Medium | Medium | P10 excluded scope blocks feature work; friction log captures real needs | Active |
+| R-053 | Provider suggestions influencing P6 validation improperly | Low | Medium | P6 validation criteria independent of provider; no provider-output-as-evidence | Active |
+| R-054 | Committing personal records to repo | Medium | High | Hard boundary: no raw records committed; redacted summaries only | Active |
+| R-055 | Install/runtime drift from packaged app | Medium | Medium | P10-M1 cutover checklist validates packaged app | Active |
+| R-056 | Ignoring friction because docs say it should work | Medium | Medium | Friction log captures real issues; product friction policy allows scoped fixes | Active |

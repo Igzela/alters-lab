@@ -699,3 +699,12 @@
 **Context**: P8 sealed the local app as REAL_PROVIDER_READY_LOCAL_APP. The app has backend, frontend, provider integration, Debian packaging, and CLI launcher. Before any real release or further feature work, the app needs install/uninstall docs, onboarding guides, troubleshooting docs, and a release checklist.
 **Decision**: P9 is defined as release hygiene and install readiness. It adds documentation, verification, and onboarding — not new features. P9 excludes SaaS/cloud deployment, multi-user support, mobile app, Windows/macOS packaging, automatic P6 validation, provider output persistence, and active YAML/rubric mutation.
 **Consequences**: P9 turns the sealed local app into a usable personal release without expanding the product boundary. P9-M1 (install docs) requires explicit approval before implementation begins.
+
+### Decision P10-000-01: P10 is operational cutover, not feature expansion
+
+**Date**: 2026-05-27
+**Status**: accepted
+**Context**: P9 sealed. P6 validation requires real usage data. Need to define what happens between "product ready" and "validation starts."
+**Decision**: P10 is an operational cutover / dogfood / real-use readiness phase. Not a feature expansion phase. P10 prepares for P6 validation but must not claim it has started.
+**Consequences**: P10 milestones focus on installation, real usage, friction discovery, and validation gating. No new product features during P10.
+**Alternatives**: Start P6 validation immediately (rejected — no real usage data yet). Continue feature expansion (rejected — delays real use).
