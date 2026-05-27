@@ -51,7 +51,7 @@
         "secrets_redacted": true,
         "status": "ok"
       },
-      "provider_mode": "unknown",
+      "provider_mode": "disabled",
       "real_provider_call_made": false,
       "routes_checked": [
         "/local-app/status",
@@ -102,6 +102,7 @@
       "venv_exists": false,
       "web_dist_exists": false
     },
+    "package_owned_payload_removed": true,
     "secrets_preserved": {
       "config_dir_exists": true,
       "config_file_exists": true,

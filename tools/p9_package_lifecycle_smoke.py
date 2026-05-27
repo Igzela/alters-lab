@@ -319,7 +319,7 @@ def _run_post_install_app_smoke(
             "local_app_status": local_status,
             "runtime_layout_status": runtime_status,
             "provider_config_status": provider_status,
-            "provider_mode": provider_status.get("mode", "unknown"),
+            "provider_mode": provider_status.get("provider_mode", "unknown"),
             "p6_behavior_validated": False,
             "p6_sealed": False,
             "real_provider_call_made": False,
@@ -350,6 +350,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     # Post-install app smoke
     app_smoke = install.get("post_install_app_smoke", {})
     if app_smoke.get("status") == "PASS":
+        assert app_smoke["provider_mode"] == "disabled"
         assert app_smoke["p6_behavior_validated"] is False
         assert app_smoke["p6_sealed"] is False
         assert app_smoke["real_provider_call_made"] is False
@@ -370,6 +371,10 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert pkg_after["desktop_entry"] is False
     assert pkg_after["web_dist_exists"] is False
     assert pkg_after["venv_exists"] is False
+    assert pkg_after["icon"] is False
+    # opt residual allowed only if package-owned payload was removed
+    if pkg_after.get("opt_alters_lab_exists"):
+        assert remove.get("package_owned_payload_removed") is True
     # User data must be preserved
     assert remove["secrets_preserved"]["secrets_file_exists"] is True
     assert remove["secrets_preserved"]["config_dir_exists"] is True
@@ -505,6 +510,10 @@ def run_lifecycle_smoke(
                 "dpkg_returncode": remove_result["returncode"],
                 "dpkg_stderr": remove_result["stderr"],
                 "package_files_after": package_files_after_remove,
+                "package_owned_payload_removed": all(
+                    not package_files_after_remove[k]
+                    for k in ["web_dist_exists", "venv_exists", "usr_bin_launcher", "desktop_entry", "icon"]
+                ),
                 "secrets_preserved": user_data_after_remove,
                 "content_preservation": {
                     "config_hash_preserved_after_remove": hashes_before_upgrade["config"] == hashes_after_remove["config"],

@@ -50,10 +50,10 @@ def _make_valid_report() -> dict:
             },
             "post_install_app_smoke": {
                 "status": "PASS",
+                "provider_mode": "disabled",
                 "p6_behavior_validated": False,
                 "p6_sealed": False,
                 "real_provider_call_made": False,
-                "provider_mode": "disabled",
             },
         },
         "upgrade": {
@@ -82,6 +82,7 @@ def _make_valid_report() -> dict:
                 "venv_exists": False,
                 "icon": False,
             },
+            "package_owned_payload_removed": True,
             "secrets_preserved": {
                 "secrets_file_exists": True,
                 "config_dir_exists": True,
@@ -264,6 +265,25 @@ class TestReportContract:
     def test_assert_fails_on_app_smoke_p6_true(self):
         report = _make_valid_report()
         report["install"]["post_install_app_smoke"]["p6_behavior_validated"] = True
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_fails_on_app_smoke_provider_not_disabled(self):
+        report = _make_valid_report()
+        report["install"]["post_install_app_smoke"]["provider_mode"] = "mock"
+        with pytest.raises(AssertionError):
+            smoke._assert_report_passes(report)
+
+    def test_assert_passes_with_opt_residual_and_payload_removed(self):
+        report = _make_valid_report()
+        report["remove"]["package_files_after"]["opt_alters_lab_exists"] = True
+        report["remove"]["package_owned_payload_removed"] = True
+        smoke._assert_report_passes(report)
+
+    def test_assert_fails_with_opt_residual_and_payload_not_removed(self):
+        report = _make_valid_report()
+        report["remove"]["package_files_after"]["opt_alters_lab_exists"] = True
+        report["remove"]["package_owned_payload_removed"] = False
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
