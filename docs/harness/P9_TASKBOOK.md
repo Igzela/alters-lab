@@ -53,7 +53,7 @@
 
 ### P9-M7: P9 Closeout
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Seal P9 only if: install/uninstall docs exist, disposable verification passes, onboarding guide exists, provider setup guide exists, doctor works, release checklist exists.
 **Depends on**: P9-M6
-**Notes**: Blocked.
+**Notes**: Done. Created P9_CLOSEOUT_REPORT.md. All 7 milestones done. All 7 success criteria PASS. 1270 backend tests. Frontend build PASS. Package build PASS. Lifecycle smoke PASS. No forbidden claims. No secrets. No version bump (docs/governance only per policy). P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED.

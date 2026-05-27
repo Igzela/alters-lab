@@ -357,3 +357,4 @@
 | P9-M5 | Doc updates | docs/user/INSTALL.md, FIRST_RUN.md, DATA_AND_BACKUP.md, UNINSTALL.md, README.md | Added TROUBLESHOOTING.md links. |
 | P9-M6 | Release checklist | docs/harness/P9_RELEASE_CHECKLIST.md | Pre-release checks (backend tests, frontend build, package build, package safety, lifecycle smoke, forbidden claims, secret check, doctor output), doc checks, governance checks, post-release. |
 | P9-M6 | Version bump policy | docs/harness/P9_VERSION_BUMP_POLICY.md | SemVer rules (PATCH/MINOR/MAJOR), current history 0.1.0, where version lives, phase completion relationship. |
+| P9-M7 | P9 closeout report | docs/harness/P9_CLOSEOUT_REPORT.md | Final P9 closeout: milestone table, success standard verification, verification results, user docs list, governance artifacts, doctor improvements, preserved boundaries, known limitations. |

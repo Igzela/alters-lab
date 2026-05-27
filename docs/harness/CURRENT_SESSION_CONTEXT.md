@@ -15,22 +15,24 @@ Last updated: 2026-05-27
 - P9-M2 done (disposable dpkg lifecycle verification)
 - P9-M3 done (first-run onboarding guide + Getting Started frontend page)
 - P9-M4 done (provider setup and safety guide + ProviderSettings safety notes)
-- P9-M6 done (release checklist + version bump policy)
-- P9-M7 ready_with_approval
+- P9-M7 done (P9 Closeout)
+- P9 sealed
 
 ## What Was Just Completed
 
-P9-M6: Release artifact checklist and version bump policy.
-- Created docs/harness/P9_RELEASE_CHECKLIST.md — pre-release checks, doc checks, governance checks, post-release
-- Created docs/harness/P9_VERSION_BUMP_POLICY.md — SemVer rules, current history, where version lives
-- No code changes, no active YAML/rubric changes
-- Updated 7 governance docs
+P9-M7: P9 Closeout.
+- Created docs/harness/P9_CLOSEOUT_REPORT.md
+- All 7 milestones done, all 7 success criteria PASS
+- 1270 backend tests, frontend PASS, package PASS, lifecycle smoke PASS
+- No forbidden claims, no secrets, no version bump (docs/governance only)
+- P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED
 
 ## Next Decision
 
-P9-M6 is done. Options:
-1. Begin P9-M7 (P9 Closeout) after explicit approval
-2. Other product work
+P9 is sealed. Options:
+1. Start P10 (if planned) after explicit approval
+2. Real P6 validation using the local app
+3. Other product work
 
 New sessions must not claim P6 validated.
 
