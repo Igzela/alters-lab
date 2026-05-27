@@ -1,0 +1,28 @@
+{
+  "allowed_by_category": {
+    "documentation": 3,
+    "source_code": 8,
+    "test": 18,
+    "tool": 12
+  },
+  "allowed_by_pattern": {
+    "anthropic_key_env": 1,
+    "api_key_env": 12,
+    "deterministic_placeholder": 7,
+    "mock_adapter_preview": 5,
+    "mock_dialogue_preview": 5,
+    "mock_weekly_review_assistant": 5,
+    "openai_key_env": 3,
+    "openrouter_key_env": 1,
+    "sk_prefix": 2
+  },
+  "allowed_count": 41,
+  "disallowed_by_category": {},
+  "disallowed_by_pattern": {},
+  "disallowed_count": 0,
+  "disallowed_files": [],
+  "p6_behavior_validated": false,
+  "p6_sealed": false,
+  "status": "PASS",
+  "total_findings": 41
+}

@@ -199,6 +199,12 @@ class TestProviderSafetyInSmoke:
         assert redacted["secrets_redacted"] is True
         assert redacted["secret_storage"] == "keyring"
 
+    def test_redact_message_field_with_provider_output(self):
+        data = {"message": "Mock adapter preview returned. No network call made."}
+        redacted = smoke._redact_sensitive_fields(data)
+        assert "mock adapter preview" not in redacted["message"].lower()
+        assert "[redacted-provider-output]" in redacted["message"]
+
     def test_evidence_excludes_secrets(self):
         evidence = {
             "provider_config": {"test": {"api_key": "sk-secret"}},

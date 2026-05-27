@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -354,15 +355,36 @@ _REDACT_FIELDS: dict[str, str] = {
     "key_name": "[redacted-secret]",
 }
 
+_PROVIDER_OUTPUT_PATTERNS = [
+    re.compile(r"mock adapter preview", re.IGNORECASE),
+    re.compile(r"mock dialogue preview", re.IGNORECASE),
+    re.compile(r"mock weekly review assistant", re.IGNORECASE),
+    re.compile(r"deterministic placeholder", re.IGNORECASE),
+]
+
+
+def _redact_string_value(value: str) -> str:
+    """Redact provider output content from string values."""
+    for pat in _PROVIDER_OUTPUT_PATTERNS:
+        value = pat.sub("[redacted-provider-output]", value)
+    return value
+
 
 def _redact_sensitive_fields(value: Any) -> Any:
     if isinstance(value, dict):
-        return {
-            k: _REDACT_FIELDS[k] if k in _REDACT_FIELDS else _redact_sensitive_fields(v)
-            for k, v in value.items()
-        }
+        result = {}
+        for k, v in value.items():
+            if k in _REDACT_FIELDS:
+                result[k] = _REDACT_FIELDS[k]
+            elif isinstance(v, str):
+                result[k] = _redact_string_value(_redact_sensitive_fields(v))
+            else:
+                result[k] = _redact_sensitive_fields(v)
+        return result
     if isinstance(value, list):
         return [_redact_sensitive_fields(item) for item in value]
+    if isinstance(value, str):
+        return _redact_string_value(value)
     return value
 
 
