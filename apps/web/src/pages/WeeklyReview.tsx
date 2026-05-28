@@ -13,7 +13,7 @@ import {
 import type { ActionAlignmentScore, VerdictLabel, WeeklyNoteRecord, WeeklyReviewSession } from '../types'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
-import { Input, Field, Select } from '../components/Input'
+import { Input, Field, Select, TextArea } from '../components/Input'
 import { Badge } from '../components/Badge'
 import { Banner } from '../components/Banner'
 import P6Progress from './P6Progress'
@@ -290,12 +290,11 @@ export default function WeeklyReview() {
           <Button variant="secondary" className="mb-3" onClick={() => setRawNote(NOTE_TEMPLATE)}>
             {t('weeklyReview.useTemplate')}
           </Button>
-          <textarea
-            className="w-full px-3 py-2 text-sm rounded-lg border outline-none transition-colors min-h-[280px] font-mono"
-            style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }}
+          <TextArea
             value={rawNote}
             onChange={e => setRawNote(e.target.value)}
             placeholder={NOTE_TEMPLATE}
+            rows={12}
           />
           <div className="mt-3">
             <Button variant="primary" onClick={ingest} disabled={!!loading || !rawNote.trim()}>
@@ -324,11 +323,10 @@ export default function WeeklyReview() {
           </Field>
           <Field label="observable_facts">
             {editEnabled ? (
-              <textarea
-                className="w-full px-3 py-2 text-sm rounded-lg border outline-none min-h-[100px]"
-                style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }}
+              <TextArea
                 value={editRecord.observable_facts.join('\n')}
                 onChange={e => setEditRecord({ ...editRecord, observable_facts: e.target.value.split('\n').map(v => v.trim()).filter(Boolean) })}
+                rows={4}
               />
             ) : (
               <ul className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.observable_facts.map((fact, i) => <li key={i}>{fact}</li>)}</ul>
@@ -383,10 +381,10 @@ export default function WeeklyReview() {
         <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step4Title')}</h3>
           <Field label={t('weeklyReview.reviewNote')}>
-            <textarea className="w-full px-3 py-2 text-sm rounded-lg border outline-none min-h-[80px]" style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }} value={reviewNote} onChange={e => setReviewNote(e.target.value)} />
+            <TextArea value={reviewNote} onChange={e => setReviewNote(e.target.value)} rows={4} />
           </Field>
           <Field label={t('weeklyReview.dialogueSummary')}>
-            <textarea className="w-full px-3 py-2 text-sm rounded-lg border outline-none min-h-[80px]" style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }} value={dialogueSummary} onChange={e => setDialogueSummary(e.target.value)} />
+            <TextArea value={dialogueSummary} onChange={e => setDialogueSummary(e.target.value)} rows={4} />
           </Field>
           <Field label={t('weeklyReview.primaryNextCorrection')}>
             <Input value={primaryNextCorrection} onChange={e => setPrimaryNextCorrection(e.target.value)} />

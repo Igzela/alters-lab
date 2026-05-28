@@ -84,7 +84,7 @@ git status
 - P12 not allowed: backend behavior changes, provider changes, active YAML mutation, real provider calls
 - P13 scope: UX hardening only (interaction integrity, i18n completion, design tokens, toast system, motion polish)
 - P13 not allowed: backend behavior changes, provider changes, active YAML mutation, real provider calls
-- Fresh P6 evidence collection blocked until P13 is closed
+- Fresh P6 evidence collection may now begin (P13 COMPLETE)
 
 ## Documentation Maintenance
 

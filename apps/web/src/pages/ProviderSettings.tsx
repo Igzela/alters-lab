@@ -6,7 +6,7 @@ import { Card } from '../components/Card'
 import { Input, Field, Select } from '../components/Input'
 import { Badge } from '../components/Badge'
 import { Banner } from '../components/Banner'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { SkeletonCard } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 type ProviderMode = 'disabled' | 'mock' | 'openai-compatible-http'
@@ -140,7 +140,13 @@ export default function ProviderSettings() {
       <ErrorDisplay message={error} onRetry={load} />
     </div>
   )
-  if (!config || !status) return <LoadingSpinner label={t('provider.loading')} />
+  if (!config || !status) return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('provider.title')}</h2>
+      <SkeletonCard />
+      <SkeletonCard />
+    </div>
+  )
 
   const hasUnsavedChanges = savedConfig
     ? JSON.stringify({

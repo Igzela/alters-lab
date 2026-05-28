@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { postJson, listActionAlignmentScores } from '../api'
 import type { ActionAlignmentScore } from '../types'
 import { Button } from '../components/Button'
+import { TextArea } from '../components/Input'
 import { Card } from '../components/Card'
 import { Select } from '../components/Input'
 import { Banner } from '../components/Banner'
@@ -116,12 +117,11 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
           <span className="w-6 text-center" style={{ color: '#fffce1' }}>{scores[d]}</span>
         </div>
       ))}
-      <textarea
-        className="w-full px-3 py-2 text-sm rounded-lg border outline-none transition-colors min-h-[60px]"
-        style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }}
+      <TextArea
         value={notes}
         onChange={e => setNotes(e.target.value)}
         placeholder={t('realityScore.notesPlaceholder')}
+        rows={3}
       />
       <Button variant="primary" accent="pink" onClick={submit} disabled={submitting}>
         {submitting ? t('realityScore.submitting') : t('realityScore.submitScore')}

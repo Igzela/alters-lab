@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, listActionAlignmentScores, listWeeklyReviews } from '../api'
 import { staggerFadeIn } from '../animations'
+import { formatDate } from '../dateFormat'
 import type { ActionAlignmentScore, VerdictLabel, WeeklyReviewSession } from '../types'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { Skeleton } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 function getVerdictDescriptions(t: (key: string) => string): Record<VerdictLabel, string> {
@@ -67,7 +68,14 @@ export default function CalibrationHistory() {
   const { t } = useTranslation()
 
   if (error && !data) return <ErrorDisplay message={error} onRetry={() => { setError(''); setRetryCount(c => c + 1) }} />
-  if (!data) return <LoadingSpinner label={t('history.loading')} />
+  if (!data) return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('history.title')}</h2>
+      <Skeleton lines={5} />
+      <Skeleton lines={4} />
+      <Skeleton lines={6} />
+    </div>
+  )
 
   const records = (data.records as Record<string, unknown>[]) || []
   const drift = (data.drift_evidence as Record<string, unknown>[]) || []
@@ -111,7 +119,7 @@ export default function CalibrationHistory() {
           <span className="text-xs" style={{ color: '#7c7c6f' }}>
             {t('history.note')} {session.weekly_note_record_id}
           </span><br />
-          {session.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{t('history.created')} {session.created_at}</span>}<br />
+          {session.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{t('history.created')} {formatDate(session.created_at)}</span>}<br />
           <span className="text-xs" style={{ color: '#7c7c6f' }}>Next correction: {session.next_week_primary_correction || t('history.pending')}</span>
         </Card>
       ))}
@@ -122,7 +130,7 @@ export default function CalibrationHistory() {
         <div
           key={score.score_id}
           data-stagger
-          className="p-3 rounded-xl cursor-pointer transition-all duration-200"
+          className="p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-white/5"
           style={{
             backgroundColor: selectedScore?.score_id === score.score_id ? '#242624' : '#1a1c1a',
             border: selectedScore?.score_id === score.score_id ? '1px solid #9d95ff' : '1px solid #242624',
@@ -133,7 +141,7 @@ export default function CalibrationHistory() {
           <span className="text-xs" style={{ color: '#7c7c6f' }}>
             {t('history.verdict')} {score.verdict_label.replace(/_/g, ' ')}
           </span><br />
-          {score.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{score.created_at}</span>}
+          {score.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{formatDate(score.created_at)}</span>}
 
           {selectedScore?.score_id === score.score_id && (
             <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: '#0e100f', border: '1px solid #242624' }}>

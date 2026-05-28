@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
 import { staggerFadeIn } from '../animations'
+import { formatDate } from '../dateFormat'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
 import { Banner } from '../components/Banner'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { Skeleton } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 interface TriggeredPattern {
@@ -111,7 +112,7 @@ export default function PatternReview() {
         {error && <span className="text-sm" style={{ color: '#ff4444' }}>{error}</span>}
       </div>
 
-      {loadingList && <LoadingSpinner label={t('patterns.loadingReviews')} />}
+      {loadingList && <Skeleton lines={4} />}
 
       {!loadingList && reviews.length === 0 && !error && (
         <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('patterns.noReviews')}</p>
@@ -122,7 +123,7 @@ export default function PatternReview() {
           key={r.review_id}
           data-stagger
           onClick={() => loadDetail(r.review_id)}
-          className="p-3 rounded-xl cursor-pointer transition-all duration-200"
+          className="p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-white/5"
           style={{
             backgroundColor: selected?.review_id === r.review_id ? '#242624' : '#1a1c1a',
             border: selected?.review_id === r.review_id ? '2px solid #ff8709' : '1px solid #242624',
@@ -134,12 +135,12 @@ export default function PatternReview() {
           </div>
           <div className="text-xs mt-1" style={{ color: '#7c7c6f' }}>
             {t('patterns.weeksEvaluated')} {r.weeks_evaluated} | {t('patterns.patternsTriggered')} {r.triggered_patterns.length}
-            {r.created_at && <span className="ml-2">{r.created_at}</span>}
+            {r.created_at && <span className="ml-2">{formatDate(r.created_at)}</span>}
           </div>
         </div>
       ))}
 
-      {loadingDetail && <LoadingSpinner label={t('patterns.loadingDetail')} />}
+      {loadingDetail && <Skeleton lines={3} />}
 
       {selected && !loadingDetail && (
         <Card accent="orange">

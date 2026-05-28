@@ -4,7 +4,7 @@ import { fetchJson } from '../api'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { SkeletonCard } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider'
@@ -35,7 +35,17 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
   }, [retryCount])
 
   if (error && !product) return <ErrorDisplay message={error} onRetry={() => { setError(''); setRetryCount(c => c + 1) }} />
-  if (!product || !localApp || !runtime || !provider) return <LoadingSpinner label={t('status.loading')} />
+  if (!product || !localApp || !runtime || !provider) return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('status.title')}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    </div>
+  )
 
   return (
     <div className="space-y-4">
