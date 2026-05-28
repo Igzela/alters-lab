@@ -4,13 +4,14 @@
 Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具。
 
 ## 当前阶段
-- P0-P13 全部完成（P13: UX hardening — interaction integrity, i18n completion, design tokens, toast, motion, product smoke）
+- P0-P14 全部完成（P14: Frontend polish — component standardization, date i18n, styled inputs, progress bar, JSON display, skip-to-content）
 - P11 已封印：PRODUCT_COMPLETE_BEFORE_VALIDATION
 - P12 已完成：P12-M7 决策 — 从零重启 P6 验证
 - P13 已完成：GPT PASS_WITH_GOVERNANCE_CLOSEOUT，P13 scope COMPLETE
+- P14 已完成：GPT PASS（BLOCKED_WITH_SMALL_R1 resolved — governance commit only），P14 scope COMPLETE
 - P6 状态：CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED
 - Week 1 证据已归档为历史（pre-P12），不计入 P6 closeout
-- 下一步：收集 fresh post-P13 证据（4 weekly reviews + 4 calibration records + 1 pattern review，跨越 21+ 天）
+- 下一步：收集 fresh post-P14 证据（4 weekly reviews + 4 calibration records + 1 pattern review，跨越 21+ 天）
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML

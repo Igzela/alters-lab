@@ -1041,3 +1041,56 @@
 **Goal**: Verify packaged app after P13 UX hardening and close out P13 governance.
 **Depends on**: P13-M5 (done)
 **Notes**: Done. GPT PASS_WITH_GOVERNANCE_CLOSEOUT. P13 scope COMPLETE. Fresh post-P13 P6 evidence may begin. P8 e2e product smoke PASS. Frontend build PASS. 1270 backend tests PASS. Deb build PASS. Browser verification PASS.
+
+---
+
+## Phase 14 — Frontend Polish (Pre-Validation)
+
+### P14-M1: Component standardization and date formatting
+
+**Status**: done
+**Goal**: Standardize shared frontend components and date formatting across all pages.
+**Depends on**: P13-M6 (done)
+**Notes**: Done. Component standardization and date formatting applied. 1270 backend tests PASS. Frontend build PASS.
+
+### P14-M1-R1: Fix date i18n — pass language explicitly
+
+**Status**: done
+**Goal**: Fix date formatting to pass language explicitly for proper i18n.
+**Depends on**: P14-M1 (done)
+**Notes**: Done. Date i18n fixed — language passed explicitly. 1270 backend tests PASS. Frontend build PASS.
+
+### P14-M2: Styled range inputs, select dark mode, session type i18n
+
+**Status**: done
+**Goal**: Style range inputs, add dark mode to select elements, add session type i18n.
+**Depends on**: P14-M1-R1 (done)
+**Notes**: Done. Styled range inputs, select dark mode, session type i18n applied. 1270 backend tests PASS. Frontend build PASS.
+
+### P14-M3: WeeklyReview step progress bar
+
+**Status**: done
+**Goal**: Add step progress bar to WeeklyReview flow.
+**Depends on**: P14-M2 (done)
+**Notes**: Done. WeeklyReview step progress bar added. 1270 backend tests PASS. Frontend build PASS.
+
+### P14-M4: Style JSON display blocks
+
+**Status**: done
+**Goal**: Style JSON display blocks for consistent appearance.
+**Depends on**: P14-M3 (done)
+**Notes**: Done. JSON display blocks styled. 1270 backend tests PASS. Frontend build PASS.
+
+### P14-M5: Skip-to-content link
+
+**Status**: done
+**Goal**: Add skip-to-content accessibility link.
+**Depends on**: P14-M4 (done)
+**Notes**: Done. Skip-to-content link added. 1270 backend tests PASS. Frontend build PASS.
+
+### P14-CLOSEOUT: Frontend polish governance closeout
+
+**Status**: done
+**Goal**: Close out P14 governance after GPT PASS.
+**Depends on**: P14-M5 (done)
+**Notes**: Done. GPT PASS (BLOCKED_WITH_SMALL_R1 resolved — governance commit only). P14 scope COMPLETE. Frontend build PASS. 1270 backend tests PASS. Deb build PASS. P8 e2e smoke PASS. No backend drift. No active YAML/rubric drift. No real provider calls. No P6 validated/sealed claims. Fresh post-P14 P6 evidence collection may begin.

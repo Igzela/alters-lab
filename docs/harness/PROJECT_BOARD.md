@@ -77,7 +77,7 @@ todo → ready → running → review → done/failed
 | P6-BEHAVIOR-VALIDATION | Real 4-week behavior validation | **blocked_by_real_use_window** |
 | P6-CLOSEOUT | Final Phase 6 closeout | **blocked** |
 
-P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh post-P13 P6 evidence collection may now begin.
+P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh post-P14 P6 evidence collection may now begin.
 
 ## Phase 7 — Local App Distribution / Debian Package / Independent Desktop Runtime
 
@@ -190,6 +190,21 @@ P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** �
 
 P13 scope: **COMPLETE** (M1-M6 all done). GPT PASS_WITH_GOVERNANCE_CLOSEOUT. Fresh post-P13 P6 evidence collection may begin.
 P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. 1270 backend tests passing. Frontend build PASS.
+
+## Phase 14 — Frontend Polish (Pre-Validation)
+
+| ID | Title | Status |
+|----|-------|--------|
+| P14-M1 | Component standardization and date formatting | **done** |
+| P14-M1-R1 | Fix date i18n — pass language explicitly | **done** |
+| P14-M2 | Styled range inputs, select dark mode, session type i18n | **done** |
+| P14-M3 | WeeklyReview step progress bar | **done** |
+| P14-M4 | Style JSON display blocks | **done** |
+| P14-M5 | Skip-to-content link | **done** |
+| P14-CLOSEOUT | Frontend polish governance closeout | **done** |
+
+P14 scope: **COMPLETE** (M1-M5 + R1 + CLOSEOUT all done). GPT PASS (BLOCKED_WITH_SMALL_R1 resolved — governance commit only).
+P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED — P14 scope: frontend polish before fresh P6 evidence. 1270 backend tests passing. Frontend build PASS. Deb build PASS. P8 e2e smoke PASS. Fresh post-P14 P6 evidence collection may begin.
 
 ## Phase 11 — Product Completeness Before Validation
 

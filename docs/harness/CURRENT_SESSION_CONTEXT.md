@@ -39,11 +39,20 @@ Last updated: 2026-05-28
 - P13-M5: done (motion polish)
 - P13-M6: done (product smoke and governance closeout — GPT PASS_WITH_GOVERNANCE_CLOSEOUT)
 - P13 scope: COMPLETE (M1-M6 all done)
+- P14-000: done (frontend polish plan)
+- P14-M1: done (component standardization and date formatting)
+- P14-M1-R1: done (fix date i18n — pass language explicitly)
+- P14-M2: done (styled range inputs, select dark mode, session type i18n)
+- P14-M3: done (WeeklyReview step progress bar)
+- P14-M4: done (style JSON display blocks)
+- P14-M5: done (skip-to-content link)
+- P14-CLOSEOUT: done (frontend polish governance closeout — GPT PASS)
+- P14 scope: COMPLETE (M1-M5 + R1 + CLOSEOUT all done)
 
 ## Next Task
 
-Fresh post-P13 P6 evidence collection may begin. Run weekly reviews to collect evidence (4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days).
-- P13 scope COMPLETE (GPT PASS_WITH_GOVERNANCE_CLOSEOUT)
+Fresh post-P14 P6 evidence collection may begin. Run weekly reviews to collect evidence (4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days).
+- P14 scope COMPLETE (GPT PASS — BLOCKED_WITH_SMALL_R1 resolved)
 - Collect fresh P6 evidence: 4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days
 - P6 behavior validation available via POST /behavior-validation/evaluate
 - P6 closeout available via GET /phase6-closeout/report
