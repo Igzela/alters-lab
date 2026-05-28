@@ -974,3 +974,17 @@
 **Goal**: Add lightweight GSAP motion layer for micro-feedback.
 **Depends on**: P12-M4 (done)
 **Notes**: Done. Installed gsap package. Created animations.ts with fadeIn, expandIn, collapseOut, pulseSuccess, shakeError. Added page entry fade to App.tsx, expand animation to GettingStarted steps, error shake to ErrorDisplay, success pulse to mark-complete buttons. Lightweight micro-feedback only. No business logic changes. No complex flashy animations. Frontend build PASS. 1270 backend tests PASS. Commit: 9e90ef3. R1: Added prefersReduced check to animations.ts — all GSAP animations skip when user has prefers-reduced-motion: reduce. Frontend build PASS, 1270 backend tests PASS, deb build PASS, boundary checks PASS. P12-M5 sealed. P12-M6 ready_with_approval.
+
+### P12-M6: Product smoke and real-use pilot
+
+**Status**: done
+**Goal**: Verify packaged app after all P12 UI improvements.
+**Depends on**: P12-M5 (done)
+**Notes**: Done. P8 e2e product smoke PASS (all routes ok, mock provider, weekly review flow). Frontend build PASS. 1270 backend tests PASS. Deb build PASS. Browser verification: Weekly Review (6-step wizard, progress stats), Getting Started (4 onboarding steps), Status (P6 state correct). No code changes — verification only. Commit: 024fa28. R1: Fixed governance inconsistency (PROJECT_BOARD P12-M7 was blocked, now ready_with_approval). P12-M6 sealed. P12-M7 ready_with_approval.
+
+### P12-M7: P6 validation restart decision
+
+**Status**: ready_with_approval
+**Goal**: Decision point — restart P6 validation or defer.
+**Depends on**: P12-M6 (done)
+**Notes**: P12 scope complete (M1-M6 all done). P6 validation restart decision pending. P6 state: CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED.
