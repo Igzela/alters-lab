@@ -437,3 +437,4 @@
 | P12-M5 | GSAP animations | apps/web/src/animations.ts | fadeIn, expandIn, collapseOut, pulseSuccess, shakeError utilities |
 | P12-M5 | Page entry animation | apps/web/src/App.tsx | Fade-in animation on page transitions |
 | P12-M5 | Error animation | apps/web/src/components/ErrorDisplay.tsx | Fade-in and shake animation on error display |
+| P12-M5-R1 | Reduced motion guard | apps/web/src/animations.ts | prefersReduced check skips all GSAP animations when user has prefers-reduced-motion: reduce |
