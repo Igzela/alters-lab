@@ -56,8 +56,8 @@ export default function CalibrationHistory() {
       .catch(e => setError(e.message))
   }, [])
 
-  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>
-  if (!data) return <p>Loading...</p>
+  if (error) return <p className="text-red-500 text-sm">Error: {error}</p>
+  if (!data) return <p className="text-gray-400">Loading...</p>
 
   const records = (data.records as Record<string, unknown>[]) || []
   const drift = (data.drift_evidence as Record<string, unknown>[]) || []
@@ -65,85 +65,83 @@ export default function CalibrationHistory() {
   const trend = getTrend(actionScores)
 
   return (
-    <div>
-      <h2>Calibration History</h2>
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Calibration History</h2>
 
-      <div style={{ padding: 12, marginBottom: 16, background: '#f0f4ff', borderRadius: 6, border: '1px solid #d0daf0' }}>
-        <h4 style={{ margin: '0 0 6px' }}>What does this page show?</h4>
-        <p style={{ margin: 0, fontSize: 14, color: '#444' }}>{SCORE_EXPLANATION}</p>
-        <p style={{ margin: '6px 0 0', fontSize: 13, color: '#666' }}>
+      <div className="p-3 mb-4 bg-blue-950/30 rounded-lg border border-blue-800/30">
+        <h4 className="text-sm font-medium mb-1">What does this page show?</h4>
+        <p className="text-sm text-gray-300">{SCORE_EXPLANATION}</p>
+        <p className="text-xs text-gray-400 mt-1">
           <strong>Weekly reviews</strong> are sessions where you reflect on your week.
           <strong> Action alignment scores</strong> measure how well your actions matched your intentions.
           <strong> Calibration records</strong> are the raw score data.
         </p>
       </div>
 
-      <h3>Weekly Reviews ({weeklyReviews.length})</h3>
-      {weeklyReviews.length === 0 && <p>No weekly reviews yet.</p>}
+      <h3 className="text-base font-medium">Weekly Reviews ({weeklyReviews.length})</h3>
+      {weeklyReviews.length === 0 && <p className="text-gray-400 text-sm">No weekly reviews yet.</p>}
       {weeklyReviews.map(session => (
-        <div key={session.session_id} style={{ padding: 8, marginBottom: 8, background: '#f6f8ff' }}>
+        <div key={session.session_id} className="p-2 bg-gray-800/50 rounded text-sm">
           <strong>{session.session_id}</strong> — {session.status}<br />
           Note: {session.weekly_note_record_id}<br />
-          {session.created_at && <span style={{ fontSize: 12, color: '#888' }}>Created: {session.created_at}</span>}<br />
+          {session.created_at && <span className="text-xs text-gray-500">Created: {session.created_at}</span>}<br />
           Next correction: {session.next_week_primary_correction || 'pending'}
         </div>
       ))}
 
-      <h3>Action Alignment ({actionScores.length}) {trendArrow(trend)}</h3>
-      {actionScores.length === 0 && <p>No action alignment records yet.</p>}
+      <h3 className="text-base font-medium">Action Alignment ({actionScores.length}) {trendArrow(trend)}</h3>
+      {actionScores.length === 0 && <p className="text-gray-400 text-sm">No action alignment records yet.</p>}
       {sortedScores.map(score => (
         <div
           key={score.score_id}
-          style={{
-            padding: 8,
-            marginBottom: 8,
-            background: selectedScore?.score_id === score.score_id ? '#e8f5e9' : '#f8fff6',
-            cursor: 'pointer',
-            border: selectedScore?.score_id === score.score_id ? '1px solid #4caf50' : '1px solid transparent',
-          }}
+          className={`p-2 rounded cursor-pointer text-sm transition-colors ${
+            selectedScore?.score_id === score.score_id
+              ? 'bg-green-950/40 border border-green-700/50'
+              : 'bg-gray-800/30 border border-transparent hover:bg-gray-800/50'
+          }`}
           onClick={() => setSelectedScore(selectedScore?.score_id === score.score_id ? null : score)}
         >
           <strong>{score.score_id}</strong> — {formatScore(score.action_alignment_score)}<br />
           Verdict: {score.verdict_label.replace(/_/g, ' ')}<br />
-          {score.created_at && <span style={{ fontSize: 12, color: '#888' }}>{score.created_at}</span>}
+          {score.created_at && <span className="text-xs text-gray-500">{score.created_at}</span>}
 
           {selectedScore?.score_id === score.score_id && (
-            <div style={{ marginTop: 10, padding: 10, background: '#fff', borderRadius: 4, border: '1px solid #ddd' }}>
-              <h4 style={{ margin: '0 0 8px' }}>Score Detail</h4>
-              <p><strong>Score:</strong> {formatScore(score.action_alignment_score)} (0.0 = no alignment, 1.0 = full alignment)</p>
-              <p><strong>Verdict:</strong> {VERDICT_DESCRIPTIONS[score.verdict_label] || score.verdict_label}</p>
-              <p><strong>Your words:</strong> {score.verdict_sentence || '(none)'}</p>
-              <p><strong>Dimensions:</strong></p>
-              <ul>
+            <div className="mt-2 p-3 bg-gray-800 rounded border border-gray-700">
+              <h4 className="text-sm font-medium mb-2">Score Detail</h4>
+              <p className="text-sm"><strong>Score:</strong> {formatScore(score.action_alignment_score)} (0.0 = no alignment, 1.0 = full alignment)</p>
+              <p className="text-sm"><strong>Verdict:</strong> {VERDICT_DESCRIPTIONS[score.verdict_label] || score.verdict_label}</p>
+              <p className="text-sm"><strong>Your words:</strong> {score.verdict_sentence || '(none)'}</p>
+              <p className="text-sm mt-1"><strong>Dimensions:</strong></p>
+              <ul className="list-disc list-inside text-sm text-gray-300 ml-2">
                 <li>Direction alignment: {formatScore(score.scores.direction_alignment)}</li>
                 <li>Execution consistency: {formatScore(score.scores.execution_consistency)}</li>
                 <li>Avoidance level: {formatScore(score.scores.avoidance_level)}</li>
               </ul>
-              <p><strong>Evidence:</strong></p>
-              <ul>
+              <p className="text-sm mt-1"><strong>Evidence:</strong></p>
+              <ul className="list-disc list-inside text-sm text-gray-300 ml-2">
                 <li>Action: {score.evidence.one_action_evidence || '(none)'}</li>
                 <li>Avoidance: {score.evidence.one_avoidance_or_friction_evidence || '(none)'}</li>
                 <li>Next correction: {score.evidence.one_next_correction || '(none)'}</li>
               </ul>
-              <p style={{ fontSize: 12, color: '#888' }}>Session: {score.session_id}</p>
+              <p className="text-xs text-gray-500 mt-2">Session: {score.session_id}</p>
             </div>
           )}
         </div>
       ))}
 
-      <h3>Scores ({String(data.count)})</h3>
-      {records.length === 0 && <p>No scores yet.</p>}
+      <h3 className="text-base font-medium">Scores ({String(data.count)})</h3>
+      {records.length === 0 && <p className="text-gray-400 text-sm">No scores yet.</p>}
       {records.map(r => (
-        <div key={String(r.id)} style={{ padding: 8, marginBottom: 8, background: '#f9f9f9' }}>
+        <div key={String(r.id)} className="p-2 bg-gray-800/30 rounded text-sm">
           <strong>{String(r.id)}</strong> — {String(r.alter_id)}<br />
           Actual: {JSON.stringify(r.actual_scores)}
         </div>
       ))}
       {drift.length > 0 && (
         <>
-          <h3>Drift Evidence</h3>
+          <h3 className="text-base font-medium">Drift Evidence</h3>
           {drift.map((d, i) => (
-            <div key={i} style={{ padding: 8, marginBottom: 8, background: '#fff3f3' }}>
+            <div key={i} className="p-2 bg-red-950/30 border border-red-800/30 rounded text-sm">
               Overall: {String(d.overall)} | Threshold exceeded: {String(d.threshold_exceeded)}
             </div>
           ))}

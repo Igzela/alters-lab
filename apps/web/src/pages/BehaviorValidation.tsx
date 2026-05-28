@@ -31,10 +31,19 @@ interface BehaviorValidationRecord {
 }
 
 const OUTCOME_COLORS: Record<string, string> = {
-  P6_BEHAVIOR_VALIDATED: '#4caf50',
-  P6_FAILED_TO_VALIDATE: '#e65100',
-  P6_USAGE_INVALID: '#b00020',
-  P6_INSUFFICIENT_DATA: '#888',
+  P6_BEHAVIOR_VALIDATED: 'text-green-400',
+  P6_FAILED_TO_VALIDATE: 'text-orange-400',
+  P6_USAGE_INVALID: 'text-red-500',
+  P6_INSUFFICIENT_DATA: 'text-gray-400',
+}
+
+function CheckItem({ label, checked }: { label: string; checked: boolean }) {
+  return (
+    <div className="text-xs p-1.5 bg-gray-800/50 rounded border border-gray-700">
+      <span className={checked ? 'text-green-400' : 'text-red-500'}>{checked ? 'yes' : 'no'}</span>
+      {' '}{label}
+    </div>
+  )
 }
 
 export default function BehaviorValidation() {
@@ -92,59 +101,64 @@ export default function BehaviorValidation() {
   }
 
   return (
-    <div>
-      <h2>Behavior Validation</h2>
-      <p style={{ color: '#888', fontSize: 12 }}>
-        Evaluates whether your behavior has improved based on weekly reviews, calibration records, and pattern reviews. This does NOT automatically validate P6 — validation requires explicit human approval.
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Behavior Validation</h2>
+      <p className="text-gray-500 text-xs">
+        Evaluates whether your behavior has improved based on weekly reviews, calibration records, and pattern reviews. This does NOT automatically validate P6.
       </p>
 
-      <div style={{ padding: 12, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 6, marginBottom: 16 }}>
-        <strong>P6 validation status: Not started.</strong> This page shows evaluation results only. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED until explicit human approval after product completeness closeout.
+      <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-lg mb-4">
+        <strong className="text-sm">P6 validation status: Not started.</strong>
+        <p className="text-xs text-gray-400 mt-1">P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED until explicit human approval after product completeness closeout.</p>
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <button onClick={evaluate} disabled={evaluating}>
+      <div className="mb-4">
+        <button
+          className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+          onClick={evaluate}
+          disabled={evaluating}
+        >
           {evaluating ? 'Evaluating...' : 'Run Evaluation'}
         </button>
-        {status && <span style={{ color: 'green', marginLeft: 8 }}>{status}</span>}
-        {error && <span style={{ color: 'red', marginLeft: 8 }}>{error}</span>}
+        {status && <span className="text-green-400 text-sm ml-2">{status}</span>}
+        {error && <span className="text-red-500 text-sm ml-2">{error}</span>}
       </div>
 
       {noReport && !record && (
-        <p style={{ color: '#888' }}>No validation report yet. Run an evaluation to generate one.</p>
+        <p className="text-gray-400 text-sm">No validation report yet. Run an evaluation to generate one.</p>
       )}
 
       {record && (
-        <div style={{ padding: 14, background: '#f6f8ff', borderRadius: 6, border: '1px solid #d0daf0' }}>
-          <h3 style={{ margin: '0 0 10px' }}>Validation Report</h3>
+        <div className="p-3.5 bg-blue-950/30 rounded-lg border border-blue-800/30">
+          <h3 className="text-sm font-medium mb-2">Validation Report</h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, marginBottom: 14 }}>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3">
             <div>
-              <strong style={{ color: OUTCOME_COLORS[record.outcome] || '#888', fontSize: 16 }}>
+              <strong className={`text-base ${OUTCOME_COLORS[record.outcome] || 'text-gray-400'}`}>
                 {record.outcome.replace(/_/g, ' ')}
               </strong>
             </div>
-            <div><strong>{record.weekly_review_count}</strong><br />weekly reviews</div>
-            <div><strong>{record.calibration_record_count}</strong><br />calibration records</div>
-            <div><strong>{record.pattern_review_count}</strong><br />pattern reviews</div>
+            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-gray-400 text-xs">weekly reviews</span></div>
+            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-gray-400 text-xs">calibration records</span></div>
+            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-gray-400 text-xs">pattern reviews</span></div>
             {record.evidence_window_days != null && (
-              <div><strong>{record.evidence_window_days}</strong><br />evidence window (days)</div>
+              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-gray-400 text-xs">evidence window (days)</span></div>
             )}
           </div>
 
-          <div style={{ padding: 10, background: '#fff', borderRadius: 4, border: '1px solid #e0e0e0', marginBottom: 12 }}>
-            <p style={{ margin: 0, fontSize: 14 }}>{record.message}</p>
+          <div className="p-2.5 bg-gray-800/50 rounded border border-gray-700 mb-3">
+            <p className="text-sm">{record.message}</p>
           </div>
 
-          <h4 style={{ margin: '0 0 8px' }}>Metrics</h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 14 }}>
+          <h4 className="text-sm font-medium mb-2">Metrics</h4>
+          <div className="grid grid-cols-3 gap-2 mb-3">
             <CheckItem label="Alignment improves" checked={record.metrics.action_alignment_score_improves} />
             <CheckItem label="Patterns reduce" checked={record.metrics.repeated_negative_patterns_reduce} />
             <CheckItem label="Correction rate improves" checked={record.metrics.primary_correction_completion_rate_improves} />
           </div>
 
-          <h4 style={{ margin: '0 0 8px' }}>Usage Integrity</h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 14 }}>
+          <h4 className="text-sm font-medium mb-2">Usage Integrity</h4>
+          <div className="grid grid-cols-2 gap-2 mb-3">
             <CheckItem label="Weekly notes honest" checked={record.usage_integrity.weekly_notes_completed_honestly} />
             <CheckItem label="Calibration records created" checked={record.usage_integrity.calibration_records_created} />
             <CheckItem label="Primary corrections set" checked={record.usage_integrity.primary_corrections_set} />
@@ -153,28 +167,17 @@ export default function BehaviorValidation() {
             <CheckItem label="Sessions not skipped" checked={record.usage_integrity.sessions_not_skipped_too_often} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, fontSize: 13 }}>
+          <div className="grid grid-cols-3 gap-2.5 text-xs">
             <div>Integrity valid: <strong>{record.usage_integrity_valid ? 'Yes' : 'No'}</strong></div>
             <div>Behavior improved: <strong>{record.behavior_improved ? 'Yes' : 'No'}</strong></div>
             <div>Evidence verified: <strong>{record.evidence_verified ? 'Yes' : 'No'}</strong></div>
           </div>
 
           {record.created_at && (
-            <p style={{ fontSize: 12, color: '#888', marginTop: 10 }}>Evaluated: {record.created_at}</p>
+            <p className="text-xs text-gray-500 mt-2">Evaluated: {record.created_at}</p>
           )}
         </div>
       )}
-    </div>
-  )
-}
-
-function CheckItem({ label, checked }: { label: string; checked: boolean }) {
-  return (
-    <div style={{ fontSize: 13, padding: 6, background: '#fff', borderRadius: 4, border: '1px solid #e0e0e0' }}>
-      <span style={{ color: checked ? '#4caf50' : '#b00020', marginRight: 6 }}>
-        {checked ? 'yes' : 'no'}
-      </span>
-      {label}
     </div>
   )
 }

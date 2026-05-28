@@ -54,47 +54,69 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
   }
 
   return (
-    <div>
-      <h2>Reality Score</h2>
-      <p style={{ color: '#888', fontSize: 12 }}>Scores require explicit user submission. No auto-inference from dialogue.</p>
-      <p style={{ padding: 10, background: '#fff7ed', border: '1px solid #fed7aa' }}>
+    <div className="space-y-3">
+      <h2 className="text-lg font-semibold">Reality Score</h2>
+      <p className="text-gray-500 text-xs">Scores require explicit user submission. No auto-inference from dialogue.</p>
+      <p className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded text-sm text-amber-200">
         This page is for manual score submission. For real weekly review, use Weekly Review.
       </p>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        {onNavigate && <button onClick={() => onNavigate('weekly')}>Go to Weekly Review</button>}
-        {onNavigate && <a href="#history" onClick={e => { e.preventDefault(); onNavigate('history') }}>View Calibration History</a>}
+      <div className="flex gap-2">
+        {onNavigate && (
+          <button className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" onClick={() => onNavigate('weekly')}>
+            Go to Weekly Review
+          </button>
+        )}
+        {onNavigate && (
+          <button className="px-3 py-1.5 text-sm text-blue-400 hover:text-blue-300" onClick={() => onNavigate('history')}>
+            View Calibration History
+          </button>
+        )}
       </div>
 
       {recentScores.length > 0 && (
-        <div style={{ marginBottom: 16, padding: 12, background: '#f6f8ff', borderRadius: 6, border: '1px solid #d0daf0' }}>
-          <h4 style={{ margin: '0 0 8px' }}>Recent Action Alignment Scores</h4>
-          <p style={{ margin: '0 0 8px', fontSize: 13, color: '#666' }}>
+        <div className="mb-4 p-3 bg-blue-950/30 rounded-lg border border-blue-800/30">
+          <h4 className="text-sm font-medium mb-2">Recent Action Alignment Scores</h4>
+          <p className="text-xs text-gray-400 mb-2">
             These scores come from your weekly reviews. Manual reality scores (submitted here) are separate calibration inputs.
           </p>
           {recentScores.map(s => (
-            <div key={s.score_id} style={{ padding: 6, marginBottom: 4, background: '#fff', borderRadius: 4 }}>
+            <div key={s.score_id} className="py-1 text-sm">
               <strong>{s.action_alignment_score.toFixed(2)}</strong> — {s.verdict_label.replace(/_/g, ' ')}
-              {s.created_at && <span style={{ fontSize: 12, color: '#888', marginLeft: 8 }}>{s.created_at}</span>}
+              {s.created_at && <span className="text-xs text-gray-500 ml-2">{s.created_at}</span>}
             </div>
           ))}
         </div>
       )}
 
-      <select value={pair} onChange={e => setPair(Number(e.target.value))} style={{ marginBottom: 12 }}>
+      <select
+        className="border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white mb-3"
+        value={pair}
+        onChange={e => setPair(Number(e.target.value))}
+      >
         {ALTERS.map((a, i) => <option key={a.alter} value={i}>{a.alter} / {a.branch}</option>)}
       </select>
       {DIMS.map(d => (
-        <div key={d} style={{ marginBottom: 8 }}>
-          <label>{d}: </label>
+        <div key={d} className="flex items-center gap-2 text-sm">
+          <label className="w-40 text-gray-300">{d}</label>
           <input type="range" min={1} max={5} value={scores[d]}
-            onChange={e => setScores({ ...scores, [d]: Number(e.target.value) })} />
-          <span>{scores[d]}</span>
+            onChange={e => setScores({ ...scores, [d]: Number(e.target.value) })} className="flex-1" />
+          <span className="w-6 text-center">{scores[d]}</span>
         </div>
       ))}
-      <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Notes..." style={{ width: '100%', minHeight: 60 }} />
-      <button onClick={submit} style={{ marginTop: 8 }}>Submit Score</button>
-      {status && <p style={{ color: 'green' }}>{status}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <textarea
+        className="w-full border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white placeholder-gray-500 min-h-[60px]"
+        value={notes}
+        onChange={e => setNotes(e.target.value)}
+        placeholder="Notes..."
+      />
+      <button
+        className="mt-2 px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+        onClick={submit}
+      >
+        Submit Score
+      </button>
+      {status && <p className="text-green-400 text-sm">{status}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   )
 }

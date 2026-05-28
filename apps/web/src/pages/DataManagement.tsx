@@ -69,98 +69,91 @@ export default function DataManagement() {
   }
 
   return (
-    <div>
-      <h2>Data Management</h2>
-      <p style={{ color: '#888', fontSize: 12 }}>
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Data Management</h2>
+      <p className="text-gray-500 text-xs">
         View, export, or delete your product data. All exports redact secrets. Deletion requires exact record id and explicit confirmation.
       </p>
 
-      {error && <p style={{ color: '#b00020' }}>{error}</p>}
-      {status && <p style={{ color: 'green' }}>{status}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {status && <p className="text-green-400 text-sm">{status}</p>}
 
       {manifest && (
         <>
-          <div style={{ marginBottom: 16 }}>
-            <button onClick={exportAll} style={{ marginRight: 8 }}>Export All Data</button>
+          <div className="mb-4">
+            <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" onClick={exportAll}>Export All Data</button>
           </div>
 
-          <h3 style={{ margin: '0 0 10px' }}>Record Counts</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 10, marginBottom: 16 }}>
+          <h3 className="text-sm font-medium mb-2">Record Counts</h3>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2.5 mb-4">
             {manifest.runtime_areas.map(area => (
-              <div key={area} style={{ padding: 10, background: '#fafafa', borderRadius: 6, border: '1px solid #ddd' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <strong>{area}</strong>
-                  <span style={{ fontSize: 14, color: '#333' }}>{manifest.record_counts[area] ?? 0}</span>
+              <div key={area} className="p-2.5 bg-gray-800/30 rounded-lg border border-gray-700">
+                <div className="flex justify-between items-center mb-1.5">
+                  <strong className="text-sm">{area}</strong>
+                  <span className="text-sm">{manifest.record_counts[area] ?? 0}</span>
                 </div>
-                <button
-                  onClick={() => exportArea(area)}
-                  style={{ fontSize: 12, padding: '2px 8px' }}
-                >
-                  Export
-                </button>
+                <button className="text-xs text-blue-400 hover:text-blue-300" onClick={() => exportArea(area)}>Export</button>
               </div>
             ))}
           </div>
 
-          <div style={{ padding: 10, background: '#f6f8ff', borderRadius: 6, border: '1px solid #d0daf0', fontSize: 13, color: '#555', marginBottom: 16 }}>
+          <div className="p-2.5 bg-blue-950/30 rounded-lg border border-blue-800/30 text-xs text-gray-400 mb-4">
             <div>Long-term save by default: <strong>{manifest.default_long_term_save ? 'Yes' : 'No'}</strong></div>
             <div>Export supported: <strong>{manifest.export_supported ? 'Yes' : 'No'}</strong></div>
             <div>Archive supported: <strong>{manifest.archive_supported ? 'Yes' : 'No'}</strong></div>
           </div>
 
-          <div style={{ padding: 10, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 6, marginBottom: 16, fontSize: 13 }}>
+          <div className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded-lg text-xs text-amber-200 mb-4">
             <strong>Archive:</strong> Archive requires exact record selection; disabled until record list/detail exists.
           </div>
         </>
       )}
 
-      <div style={{ padding: 12, background: '#fafafa', borderRadius: 6, border: '1px solid #ddd', marginBottom: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-          <h4 style={{ margin: 0 }}>Delete by Record ID</h4>
-          <button onClick={() => setShowDeletePanel(!showDeletePanel)} style={{ fontSize: 12 }}>
+      <div className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+        <div className="flex justify-between items-center mb-2">
+          <h4 className="text-sm font-medium">Delete by Record ID</h4>
+          <button className="text-xs text-gray-400 hover:text-white" onClick={() => setShowDeletePanel(!showDeletePanel)}>
             {showDeletePanel ? 'Hide' : 'Show'}
           </button>
         </div>
         {showDeletePanel && (
           <div>
-            <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
+            <p className="text-xs text-gray-400 mb-2">
               Use only when you know the exact local record id. Export first if unsure.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
+            <div className="grid grid-cols-2 gap-2 mb-2">
               <div>
-                <label style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Area</label>
+                <label className="text-xs text-gray-400 block mb-0.5">Area</label>
                 <input
+                  className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
                   value={deleteArea}
                   onChange={e => setDeleteArea(e.target.value)}
                   placeholder="e.g. weekly_reviews"
-                  style={{ width: '100%', padding: 4, boxSizing: 'border-box' }}
                 />
               </div>
               <div>
-                <label style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Record ID</label>
+                <label className="text-xs text-gray-400 block mb-0.5">Record ID</label>
                 <input
+                  className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
                   value={deleteRecordId}
                   onChange={e => setDeleteRecordId(e.target.value)}
                   placeholder="e.g. review_2026-W01"
-                  style={{ width: '100%', padding: 4, boxSizing: 'border-box' }}
                 />
               </div>
             </div>
-            <div style={{ marginBottom: 8 }}>
-              <label style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Type <strong>delete</strong> to confirm</label>
+            <div className="mb-2">
+              <label className="text-xs text-gray-400 block mb-0.5">Type <strong>delete</strong> to confirm</label>
               <input
+                className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
                 value={deleteConfirm}
                 onChange={e => setDeleteConfirm(e.target.value)}
                 placeholder="delete"
-                style={{ width: '100%', padding: 4, boxSizing: 'border-box' }}
               />
             </div>
             <button
+              className={`text-sm ${deleteArea && deleteRecordId && deleteConfirm === 'delete' ? 'text-red-500 hover:text-red-400' : 'text-gray-500'}`}
               onClick={executeDelete}
               disabled={!deleteArea || !deleteRecordId || deleteConfirm !== 'delete'}
-              style={{
-                color: deleteArea && deleteRecordId && deleteConfirm === 'delete' ? '#b00020' : '#888',
-              }}
             >
               Delete Record
             </button>

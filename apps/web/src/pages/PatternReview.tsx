@@ -26,9 +26,9 @@ const PATTERN_LABELS: Record<string, string> = {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  insufficient_data: '#888',
-  no_pattern: '#4caf50',
-  pattern_triggered: '#e65100',
+  insufficient_data: 'text-gray-400',
+  no_pattern: 'text-green-400',
+  pattern_triggered: 'text-orange-400',
 }
 
 export default function PatternReview() {
@@ -54,11 +54,7 @@ export default function PatternReview() {
     setError('')
     setStatus('')
     try {
-      const res = await postJson('/pattern-review/build', {
-        weekly_patterns: [],
-        save: true,
-        caller: 'api',
-      })
+      const res = await postJson('/pattern-review/build', { weekly_patterns: [], save: true, caller: 'api' })
       setStatus(`Review built: ${res.review.review_id}`)
       setSelected(res.review)
       loadList()
@@ -77,77 +73,78 @@ export default function PatternReview() {
   }
 
   return (
-    <div>
-      <h2>Pattern Review</h2>
-      <p style={{ color: '#888', fontSize: 12 }}>
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Pattern Review</h2>
+      <p className="text-gray-500 text-xs">
         Detects repeated behavioral patterns across weekly reviews. Patterns indicate recurring tendencies that may need attention.
       </p>
-      <div style={{ padding: 10, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 6, marginBottom: 16, fontSize: 13 }}>
+      <div className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded-lg mb-4 text-xs text-amber-200">
         Pattern review is supporting evidence only. It does not validate or seal P6. Provider output is not counted as evidence. P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED.
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <button onClick={buildReview} disabled={building}>
+      <div className="mb-4">
+        <button
+          className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+          onClick={buildReview}
+          disabled={building}
+        >
           {building ? 'Building...' : 'Build New Pattern Review'}
         </button>
-        {status && <span style={{ color: 'green', marginLeft: 8 }}>{status}</span>}
-        {error && <span style={{ color: 'red', marginLeft: 8 }}>{error}</span>}
+        {status && <span className="text-green-400 text-sm ml-2">{status}</span>}
+        {error && <span className="text-red-500 text-sm ml-2">{error}</span>}
       </div>
 
-      {reviews.length === 0 && <p style={{ color: '#888' }}>No pattern reviews yet. Build one to get started.</p>}
+      {reviews.length === 0 && <p className="text-gray-400 text-sm">No pattern reviews yet. Build one to get started.</p>}
 
       {reviews.map(r => (
         <div
           key={r.review_id}
           onClick={() => loadDetail(r.review_id)}
-          style={{
-            padding: 10,
-            marginBottom: 8,
-            border: selected?.review_id === r.review_id ? '2px solid #333' : '1px solid #ddd',
-            borderRadius: 6,
-            cursor: 'pointer',
-            background: '#fafafa',
-          }}
+          className={`p-2.5 rounded-lg cursor-pointer transition-colors ${
+            selected?.review_id === r.review_id
+              ? 'border-2 border-gray-600 bg-gray-800/50'
+              : 'border border-gray-700 hover:bg-gray-800/30'
+          }`}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <strong>{r.review_id}</strong>
-            <span style={{ color: STATUS_COLORS[r.status] || '#888', fontSize: 13 }}>{r.status.replace(/_/g, ' ')}</span>
+          <div className="flex justify-between items-center">
+            <strong className="text-sm">{r.review_id}</strong>
+            <span className={`text-xs ${STATUS_COLORS[r.status] || 'text-gray-400'}`}>{r.status.replace(/_/g, ' ')}</span>
           </div>
-          <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>
+          <div className="text-xs text-gray-400 mt-1">
             Weeks evaluated: {r.weeks_evaluated} | Patterns triggered: {r.triggered_patterns.length}
-            {r.created_at && <span style={{ marginLeft: 8 }}>{r.created_at}</span>}
+            {r.created_at && <span className="ml-2">{r.created_at}</span>}
           </div>
         </div>
       ))}
 
       {selected && (
-        <div style={{ marginTop: 16, padding: 14, background: '#f6f8ff', borderRadius: 6, border: '1px solid #d0daf0' }}>
-          <h3 style={{ margin: '0 0 10px' }}>Review Detail: {selected.review_id}</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, marginBottom: 12 }}>
-            <div><strong>{selected.weeks_evaluated}</strong><br />weeks evaluated</div>
-            <div><strong>{selected.triggered_patterns.length}</strong><br />patterns triggered</div>
+        <div className="mt-4 p-3.5 bg-blue-950/30 rounded-lg border border-blue-800/30">
+          <h3 className="text-sm font-medium mb-2">Review Detail: {selected.review_id}</h3>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3 text-sm">
+            <div><strong>{selected.weeks_evaluated}</strong><br /><span className="text-gray-400 text-xs">weeks evaluated</span></div>
+            <div><strong>{selected.triggered_patterns.length}</strong><br /><span className="text-gray-400 text-xs">patterns triggered</span></div>
             <div>
-              <strong style={{ color: STATUS_COLORS[selected.status] || '#888' }}>{selected.status.replace(/_/g, ' ')}</strong>
+              <strong className={STATUS_COLORS[selected.status] || 'text-gray-400'}>{selected.status.replace(/_/g, ' ')}</strong>
             </div>
           </div>
 
           {selected.triggered_patterns.length > 0 ? (
             <div>
-              <h4 style={{ margin: '0 0 8px' }}>Triggered Patterns</h4>
+              <h4 className="text-sm font-medium mb-2">Triggered Patterns</h4>
               {selected.triggered_patterns.map((tp, i) => (
-                <div key={i} style={{ padding: 8, marginBottom: 6, background: '#fff', borderRadius: 4, border: '1px solid #e0e0e0' }}>
+                <div key={i} className="p-2 mb-1.5 bg-gray-800/50 rounded border border-gray-700 text-sm">
                   <strong>{PATTERN_LABELS[tp.pattern] || tp.pattern}</strong>
-                  <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>
+                  <div className="text-xs text-gray-400 mt-1">
                     Occurrences: {tp.occurrences} | Confidence: {(tp.confidence * 100).toFixed(0)}%
                   </div>
-                  <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
+                  <div className="text-xs text-gray-500 mt-0.5">
                     Strategy: {tp.strategy_constraint}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p style={{ color: '#888' }}>No patterns triggered in this review.</p>
+            <p className="text-gray-400 text-sm">No patterns triggered in this review.</p>
           )}
         </div>
       )}

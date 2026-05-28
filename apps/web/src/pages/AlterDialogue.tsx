@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { fetchJson, postJson } from '../api'
+import { postJson } from '../api'
 
 const ALTERS = ['alter_A', 'alter_B', 'alter_C', 'alter_D']
 
@@ -28,27 +28,37 @@ export default function AlterDialogue() {
   }
 
   return (
-    <div>
-      <h2>Alter Dialogue</h2>
-      <p style={{ color: '#888', fontSize: 12 }}>⚠ Replies are not persisted unless explicitly saved. Provider output is not fact.</p>
-      <select value={alterId} onChange={e => setAlterId(e.target.value)} style={{ marginBottom: 8 }}>
+    <div className="space-y-3">
+      <h2 className="text-lg font-semibold">Alter Dialogue</h2>
+      <p className="text-gray-500 text-xs">Replies are not persisted unless explicitly saved. Provider output is not fact.</p>
+      <select
+        className="border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white"
+        value={alterId}
+        onChange={e => setAlterId(e.target.value)}
+      >
         {ALTERS.map(a => <option key={a} value={a}>{a}</option>)}
       </select>
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div className="flex gap-2">
         <input
+          className="flex-1 border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white placeholder-gray-500"
           value={message}
           onChange={e => setMessage(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
           placeholder="Type a message..."
-          style={{ flex: 1, padding: 8 }}
         />
-        <button onClick={send} disabled={loading}>{loading ? '...' : 'Send'}</button>
+        <button
+          className="px-4 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+          onClick={send}
+          disabled={loading}
+        >
+          {loading ? '...' : 'Send'}
+        </button>
       </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
       {reply && (
-        <div style={{ marginTop: 12, padding: 12, background: '#f5f5f5', borderRadius: 4 }}>
-          <strong>Reply:</strong>
-          <p style={{ whiteSpace: 'pre-wrap' }}>{reply}</p>
+        <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-700">
+          <strong className="text-sm">Reply:</strong>
+          <p className="text-sm whitespace-pre-wrap mt-1">{reply}</p>
         </div>
       )}
     </div>
