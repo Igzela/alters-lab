@@ -312,10 +312,10 @@ export default function WeeklyReview() {
           <Field label="session_type">
             {editEnabled ? (
               <Select value={editRecord.session_type} onChange={e => setEditRecord({ ...editRecord, session_type: e.target.value as WeeklyNoteRecord['session_type'] })}>
-                <option value="personal">personal</option>
-                <option value="project">project</option>
-                <option value="learning">learning</option>
-                <option value="relationship">relationship</option>
+                <option value="personal">{t('weeklyReview.typePersonal')}</option>
+                <option value="project">{t('weeklyReview.typeProject')}</option>
+                <option value="learning">{t('weeklyReview.typeLearning')}</option>
+                <option value="relationship">{t('weeklyReview.typeRelationship')}</option>
               </Select>
             ) : (
               <span className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.session_type}</span>

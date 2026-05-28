@@ -6,7 +6,11 @@
     "generating": "Generating...",
     "unknownError": "Unknown error",
     "dismiss": "Dismiss",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "typePersonal": "Personal",
+    "typeProject": "Project",
+    "typeLearning": "Learning",
+    "typeRelationship": "Relationship"
   },
   "app": {
     "title": "Alters Lab"

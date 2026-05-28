@@ -6,7 +6,11 @@
     "generating": "生成中...",
     "unknownError": "未知错误",
     "dismiss": "关闭",
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "typePersonal": "个人",
+    "typeProject": "项目",
+    "typeLearning": "学习",
+    "typeRelationship": "关系"
   },
   "app": {
     "title": "Alters Lab"
