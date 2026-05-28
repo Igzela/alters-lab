@@ -4,7 +4,9 @@
     "no": "否",
     "sending": "发送中...",
     "generating": "生成中...",
-    "unknownError": "未知错误"
+    "unknownError": "未知错误",
+    "dismiss": "关闭",
+    "loading": "加载中..."
   },
   "app": {
     "title": "Alters Lab"

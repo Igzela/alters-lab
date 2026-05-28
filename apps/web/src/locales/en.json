@@ -4,7 +4,9 @@
     "no": "No",
     "sending": "Sending...",
     "generating": "Generating...",
-    "unknownError": "Unknown error"
+    "unknownError": "Unknown error",
+    "dismiss": "Dismiss",
+    "loading": "Loading..."
   },
   "app": {
     "title": "Alters Lab"

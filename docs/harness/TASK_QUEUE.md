@@ -988,3 +988,56 @@
 **Goal**: Decision point — restart P6 validation or defer.
 **Depends on**: P12-M6 (done)
 **Notes**: Done. Decision: restart P6 validation from zero. P6 state updated to CODE_COMPLETE_VALIDATION_RESTARTED. Week 1 evidence preserved as historical (archived_pre_p12), not counted toward P6 closeout. Fresh post-P12 evidence collection begins. P12 scope COMPLETE (M1-M7 all done). Commit: c15e7ae. No code changes — governance only.
+
+---
+
+## Phase 13 — UX Hardening (Pre-Validation)
+
+### P13-000: UX hardening plan
+
+**Status**: done
+**Goal**: Define P13 scope as UX hardening pass before fresh P6 evidence collection.
+**Depends on**: P12-M7 (done)
+**Notes**: Done. Created P13 plan. Scope: interaction integrity, i18n completion, design tokens, toast system, motion polish, product smoke. P13 does not touch backend behavior, active YAML, or provider. P6 remains CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED.
+
+### P13-M1: Interaction integrity + accessibility baseline
+
+**Status**: done
+**Goal**: Fix interaction integrity issues and establish accessibility baseline across all frontend pages.
+**Depends on**: P13-000 (done)
+**Notes**: Done. Interaction integrity fixes and accessibility baseline applied. 1270 backend tests PASS. Frontend build PASS.
+
+### P13-M2: i18n completion + localized formatting
+
+**Status**: done
+**Goal**: Complete i18n coverage and add localized formatting (dates, numbers) across all pages.
+**Depends on**: P13-M1 (done)
+**Notes**: Done. Full i18n coverage across all pages, localized formatting added. 1270 backend tests PASS. Frontend build PASS.
+
+### P13-M3: Design token and component baseline
+
+**Status**: done
+**Goal**: Establish design tokens and component baseline for consistent theming.
+**Depends on**: P13-M2 (done)
+**Notes**: Done. Design tokens and component baseline established. 1270 backend tests PASS. Frontend build PASS.
+
+### P13-M4: Toast notification system
+
+**Status**: done
+**Goal**: Add toast notification system for transient user feedback.
+**Depends on**: P13-M3 (done)
+**Notes**: Done. Toast notification system implemented. 1270 backend tests PASS. Frontend build PASS.
+
+### P13-M5: Motion polish
+
+**Status**: done
+**Goal**: Polish motion/animation layer for consistent micro-feedback.
+**Depends on**: P13-M4 (done)
+**Notes**: Done. Motion polish applied. 1270 backend tests PASS. Frontend build PASS.
+
+### P13-M6: Product smoke and governance closeout
+
+**Status**: verified_pending_gpt
+**Goal**: Verify packaged app after P13 UX hardening and close out P13 governance.
+**Depends on**: P13-M5 (done)
+**Notes**: P8 e2e product smoke PASS. Frontend build PASS. 1270 backend tests PASS. Deb build PASS. Browser verification PASS. Local verification complete. Awaiting GPT verdict. P13 closeout pending GPT approval.

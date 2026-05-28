@@ -1,11 +1,14 @@
+import { useTranslation } from 'react-i18next'
+
 interface SkeletonProps {
   lines?: number
   className?: string
 }
 
 export function Skeleton({ lines = 3, className = '' }: SkeletonProps) {
+  const { t } = useTranslation()
   return (
-    <div className={`space-y-2 ${className}`} role="status" aria-label="Loading">
+    <div className={`space-y-2 ${className}`} role="status" aria-label={t('common.loading')}>
       {Array.from({ length: lines }, (_, i) => (
         <div
           key={i}
@@ -17,25 +20,26 @@ export function Skeleton({ lines = 3, className = '' }: SkeletonProps) {
           }}
         />
       ))}
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">{t('common.loading')}</span>
     </div>
   )
 }
 
 export function SkeletonCard({ className = '' }: { className?: string }) {
+  const { t } = useTranslation()
   return (
     <div
       className={`p-4 rounded-xl skeleton-shimmer ${className}`}
       style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}
       role="status"
-      aria-label="Loading"
+      aria-label={t('common.loading')}
     >
       <div className="space-y-2">
         <div style={{ height: '14px', width: '40%', backgroundColor: '#242624', borderRadius: '6px' }} />
         <div style={{ height: '12px', width: '80%', backgroundColor: '#242624', borderRadius: '6px' }} />
         <div style={{ height: '12px', width: '60%', backgroundColor: '#242624', borderRadius: '6px' }} />
       </div>
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">{t('common.loading')}</span>
     </div>
   )
 }

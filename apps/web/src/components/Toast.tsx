@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react'
+import { createContext, useContext, useState, useCallback, useRef } from 'react'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type ToastVariant = 'success' | 'error' | 'warning' | 'info'
 
@@ -37,6 +38,7 @@ const VARIANT_STYLES: Record<ToastVariant, { bg: string; border: string; icon: s
 }
 
 function ToastItemView({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
+  const { t } = useTranslation()
   const style = VARIANT_STYLES[toast.variant]
 
   return (
@@ -59,7 +61,7 @@ function ToastItemView({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id:
         onClick={() => onDismiss(toast.id)}
         className="text-xs flex-shrink-0 cursor-pointer border-none bg-transparent transition-colors"
         style={{ color: '#7c7c6f' }}
-        aria-label="Dismiss"
+        aria-label={t('common.dismiss')}
       >
         ✕
       </button>

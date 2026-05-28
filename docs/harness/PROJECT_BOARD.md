@@ -77,7 +77,7 @@ todo → ready → running → review → done/failed
 | P6-BEHAVIOR-VALIDATION | Real 4-week behavior validation | **blocked_by_real_use_window** |
 | P6-CLOSEOUT | Final Phase 6 closeout | **blocked** |
 
-P6 state: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P6 validation started 2026-05-28. Week 1 evidence committed. P6 is NOT validated, NOT sealed.
+P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh post-P12 evidence collection must NOT start until P13 is closed.
 
 ## Phase 7 — Local App Distribution / Debian Package / Independent Desktop Runtime
 
@@ -175,6 +175,20 @@ P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED**
 | P12-M7 | P6 validation restart decision | **done** |
 
 P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P12-M7 decision: restart P6 validation from zero. Week 1 evidence preserved as historical (pre-P12), not counted toward P6 closeout. Fresh post-P12 evidence collection begins now. P12 scope complete (M1-M7 all done).
+
+## Phase 13 — UX Hardening (Pre-Validation)
+
+| ID | Title | Status |
+|----|-------|--------|
+| P13-000 | UX hardening plan | **done** |
+| P13-M1 | Interaction integrity + accessibility baseline | **done** |
+| P13-M2 | i18n completion + localized formatting | **done** |
+| P13-M3 | Design token and component baseline | **done** |
+| P13-M4 | Toast notification system | **done** |
+| P13-M5 | Motion polish | **done** |
+| P13-M6 | Product smoke and governance closeout | **verified_pending_gpt** |
+
+P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED — P13 scope: UX hardening before fresh P6 evidence. 1270 backend tests passing. Frontend build PASS.
 
 ## Phase 11 — Product Completeness Before Validation
 
