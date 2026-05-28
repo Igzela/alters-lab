@@ -77,7 +77,7 @@ todo → ready → running → review → done/failed
 | P6-BEHAVIOR-VALIDATION | Real 4-week behavior validation | **blocked_by_real_use_window** |
 | P6-CLOSEOUT | Final Phase 6 closeout | **blocked** |
 
-P6 state: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P6 real-use validation is parked/postponed. It has not started, has not passed, and P6 is not sealed.
+P6 state: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P6 validation started 2026-05-28. Week 1 evidence committed. P6 is NOT validated, NOT sealed.
 
 ## Phase 7 — Local App Distribution / Debian Package / Independent Desktop Runtime
 
@@ -154,10 +154,10 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | P10-M4 | Real-use friction log and fix triage | **done** |
 | P10-M5 | P6 validation start decision gate | **done** |
 | P10-M5-R2 | Reopen P6 validation start gate after P11 | **done** |
-| P10-M6 | Week 1 validation package | **ready_for_human_execution** |
+| P10-M6 | Week 1 validation package | **done** |
 | P10-M7 | Pilot closeout / next phase decision | **blocked** |
 
-P6 status: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P10 status: **P10-M5-R2 done (START_P6_VALIDATION_NOW), P10-M6 ready** — 1270 backend tests passing.
+P6 status: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P10 status: **P10-M5-R2 done (START_P6_VALIDATION_NOW), P10-M6 done (Week 1 evidence committed)** — 1270 backend tests passing.
 
 ## Phase 11 — Product Completeness Before Validation
 

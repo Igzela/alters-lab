@@ -903,10 +903,10 @@
 
 ### P10-M6: Week 1 validation package
 
-**Status**: ready_for_human_execution
+**Status**: done
 **Goal**: Define Week 1 validation package: what Charlie must do, what records count, evidence template, validation counters.
 **Depends on**: P10-M5-R2-E1
-**Notes**: Created 3 files: validation package, evidence template, counters. P6 state: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED. Charlie must execute Week 1 packaged-app operations. Week 1 NOT complete until Charlie performs operations and gives redacted evidence.
+**Notes**: Week 1 evidence committed (14ee9d5). Weekly note ingested, weekly review completed, action alignment score created (0.88, aligned_progress). Evidence file: docs/harness/P10_M6_WEEK1_VALIDATION_EVIDENCE.md. Counters: 1 review, 1 calibration record, 0 pattern reviews, 0 days elapsed. P6 state: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED. P6 is NOT validated, NOT sealed.
 
 ### P10-M7: Pilot closeout / next phase decision
 

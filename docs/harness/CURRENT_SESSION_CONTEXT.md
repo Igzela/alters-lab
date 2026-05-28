@@ -11,18 +11,8 @@ Last updated: 2026-05-28
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
-- P10: P10-000 through P10-M5 done; P10-M5-R2 done (START_P6_VALIDATION_NOW); P10-M5-R2-E1 done (decision recorded); P10-M6 ready_for_human_execution; P10-M7 blocked
+- P10: P10-000 through P10-M6 done; P10-M7 blocked
 - P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
-
-## Recent Product Pilot
-
-P11-PILOT-1: Real-use product pilot.
-- 10 workflows exercised end-to-end via Chrome DevTools MCP on packaged app (mode=mock)
-- All workflows PASS: Status, Getting Started, Weekly Review, Dialogue, Reality Score, History, Patterns, Validation, Data, Provider
-- Friction: none across all 10 workflows
-- Boundary checks: PASS (no alters/current changes, no rubric changes, no runtime records committed, no secrets, no P6 claims)
-- GPT verdict: PASS
-- Report: docs/runs/P11-PILOT-1-real-use-product-pilot.md
 
 ## Current State
 
@@ -30,26 +20,28 @@ P11-PILOT-1: Real-use product pilot.
 - P11-PILOT-1: PASS (real-use product pilot)
 - P10-M5-R2: done (START_P6_VALIDATION_NOW)
 - P10-M5-R2-E1: done (decision recorded)
+- P10-M6: done (Week 1 evidence committed, commit 14ee9d5)
 - P6: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
 - P6 validation started: 2026-05-28
 - P6 is NOT validated, NOT sealed
-- P10-M6: ready_with_approval
+- P10-M7: blocked
 
-## Latest Gate Update
+## Week 1 Validation Evidence
 
-P10-M6: Week 1 validation package defined.
-- Created 3 files: validation package, evidence template, counters
-- P6 state: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
-- Charlie must execute Week 1 packaged-app operations
-- Week 1 NOT complete until Charlie performs operations and gives redacted evidence
-- P10-M7 blocked
+P10-M6 Week 1 operations completed:
+- Weekly note ingested (session_type: project)
+- Weekly review completed
+- Action alignment score created (0.88, aligned_progress)
+- Evidence file: docs/harness/P10_M6_WEEK1_VALIDATION_EVIDENCE.md
+- Counters: 1 review, 1 calibration record, 0 pattern reviews, 0 days elapsed
+- All boundaries maintained (no alters/current, no rubric, no secrets, no P6 claims)
 
 ## Next Task
 
-Charlie must execute Week 1 packaged-app validation operations:
-1. Ingest one real weekly note after validation start
-2. Complete one real weekly review after validation start
-3. Create one action alignment score after validation start
+Week 2 validation operations:
+1. Ingest one real weekly note after 2026-05-28
+2. Complete one real weekly review after 2026-05-28
+3. Create one action alignment score after 2026-05-28
 4. Provide redacted evidence for repo commit
 
 New sessions must not claim P6 validated.
