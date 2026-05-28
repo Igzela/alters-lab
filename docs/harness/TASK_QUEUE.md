@@ -1037,7 +1037,7 @@
 
 ### P13-M6: Product smoke and governance closeout
 
-**Status**: verified_pending_gpt
+**Status**: done
 **Goal**: Verify packaged app after P13 UX hardening and close out P13 governance.
 **Depends on**: P13-M5 (done)
-**Notes**: P8 e2e product smoke PASS. Frontend build PASS. 1270 backend tests PASS. Deb build PASS. Browser verification PASS. Local verification complete. Awaiting GPT verdict. P13 closeout pending GPT approval.
+**Notes**: Done. GPT PASS_WITH_GOVERNANCE_CLOSEOUT. P13 scope COMPLETE. Fresh post-P13 P6 evidence may begin. P8 e2e product smoke PASS. Frontend build PASS. 1270 backend tests PASS. Deb build PASS. Browser verification PASS.

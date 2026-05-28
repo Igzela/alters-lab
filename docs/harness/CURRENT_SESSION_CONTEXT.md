@@ -21,7 +21,7 @@ Last updated: 2026-05-28
 - P6: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED
 - P6 validation restarted from zero: 2026-05-28 (P12-M7 decision)
 - Week 1 evidence archived as historical (pre-P12), not counted
-- Fresh P6 evidence collection blocked until P13 closes
+- Fresh P6 evidence collection may now begin (P13 COMPLETE)
 - P12-M1: done (Tailwind visual baseline, all 13 pages converted, build passes)
 - P12-M2: done (Loading/Error system, 2 shared components, 8 pages updated)
 - P12-M3: done (i18n zh/en toggle, react-i18next, 15 pages/components updated, en/zh locale files, localStorage persistence)
@@ -37,14 +37,14 @@ Last updated: 2026-05-28
 - P13-M3: done (design token and component baseline)
 - P13-M4: done (toast notification system)
 - P13-M5: done (motion polish)
-- P13-M6: verified_pending_gpt (product smoke and governance closeout)
-- P13 scope: UX hardening before fresh P6 evidence
+- P13-M6: done (product smoke and governance closeout — GPT PASS_WITH_GOVERNANCE_CLOSEOUT)
+- P13 scope: COMPLETE (M1-M6 all done)
 
 ## Next Task
 
-P13-M6 product smoke verification passed locally. Awaiting GPT verdict. After P13 is closed, fresh P6 evidence collection may begin.
-- GPT verdict pending for P13-M6
-- Once P13 closed: collect fresh P6 evidence (4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days)
+Fresh post-P13 P6 evidence collection may begin. Run weekly reviews to collect evidence (4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days).
+- P13 scope COMPLETE (GPT PASS_WITH_GOVERNANCE_CLOSEOUT)
+- Collect fresh P6 evidence: 4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days
 - P6 behavior validation available via POST /behavior-validation/evaluate
 - P6 closeout available via GET /phase6-closeout/report
 

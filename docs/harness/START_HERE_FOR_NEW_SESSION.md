@@ -10,7 +10,7 @@ Personal future path simulation and calibration system. Not a content creation t
 
 - **P7**: Sealed as `LOCAL_APP_RELEASE_CANDIDATE`. Debian package builds, frontend works, CLI launcher works.
 - **P7-R1**: Frontend Weekly Review usability layer complete. All 6 steps wired, P6Progress panel showing P6 state with false flags.
-- **P6**: `CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED`. P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh evidence collection must NOT start until P13 closes.
+- **P6**: `CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED`. P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh post-P13 P6 evidence collection may now begin.
 - **P8**: Sealed as `REAL_PROVIDER_READY_LOCAL_APP`. All milestones done. 1215 backend tests passing.
 - **P8 provider safety**: 7-section audit all PASS.
 - **P9**: Sealed. Install docs, lifecycle verification, onboarding guide, provider guide, troubleshooting/doctor, release checklist, version bump policy all complete.
@@ -18,8 +18,8 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P11**: Sealed as `PRODUCT_COMPLETE_BEFORE_VALIDATION`.
 - **P11-PILOT-1**: PASS.
 - **P12**: Owner override — UI improvements during validation window. P12-000 through P12-M7 all done. P12 scope COMPLETE.
-- **P13**: UX hardening (pre-validation). P13-M1 through M5 done. P13-M6 product smoke verified, GPT verdict pending. 1270 backend tests passing. Frontend build PASS, deb build PASS, P8 e2e smoke PASS.
-- **P6 validation**: Restarted from zero (P12-M7 decision). P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. Week 1 evidence archived as historical (pre-P12), not counted. Fresh post-P12 evidence collection must NOT start until P13 is closed.
+- **P13**: UX hardening (pre-validation). P13-M1 through M6 all done. P13 scope COMPLETE (GPT PASS_WITH_GOVERNANCE_CLOSEOUT). 1270 backend tests passing. Frontend build PASS, deb build PASS, P8 e2e smoke PASS.
+- **P6 validation**: Restarted from zero (P12-M7 decision). P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. Week 1 evidence archived as historical (pre-P12), not counted. Fresh post-P13 P6 evidence collection may now begin.
 
 ## Reading Order
 

@@ -77,7 +77,7 @@ todo → ready → running → review → done/failed
 | P6-BEHAVIOR-VALIDATION | Real 4-week behavior validation | **blocked_by_real_use_window** |
 | P6-CLOSEOUT | Final Phase 6 closeout | **blocked** |
 
-P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh post-P12 evidence collection must NOT start until P13 is closed.
+P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P6 validation restarted from zero (P12-M7). Week 1 evidence archived as historical (pre-P12). Fresh post-P13 P6 evidence collection may now begin.
 
 ## Phase 7 — Local App Distribution / Debian Package / Independent Desktop Runtime
 
@@ -186,9 +186,10 @@ P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** �
 | P13-M3 | Design token and component baseline | **done** |
 | P13-M4 | Toast notification system | **done** |
 | P13-M5 | Motion polish | **done** |
-| P13-M6 | Product smoke and governance closeout | **verified_pending_gpt** |
+| P13-M6 | Product smoke and governance closeout | **done** |
 
-P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED — P13 scope: UX hardening before fresh P6 evidence. 1270 backend tests passing. Frontend build PASS.
+P13 scope: **COMPLETE** (M1-M6 all done). GPT PASS_WITH_GOVERNANCE_CLOSEOUT. Fresh post-P13 P6 evidence collection may begin.
+P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. 1270 backend tests passing. Frontend build PASS.
 
 ## Phase 11 — Product Completeness Before Validation
 
