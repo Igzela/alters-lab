@@ -13,7 +13,7 @@ Last updated: 2026-05-28
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 through P10-M6 done; P10-M7 blocked
 - P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
-- P12: Owner override — UI improvements during validation window. P12-000 done. P12-M1 (Tailwind) done. P12-M2 (Loading/Error) done. P12-M3 (i18n) ready_with_approval. P12-M4 through P12-M7 blocked.
+- P12: Owner override — UI improvements during validation window. P12-000 done. P12-M1 (Tailwind) done. P12-M2 (Loading/Error) done. P12-M3 (i18n) done. P12-M4 (Onboarding) ready_with_approval. P12-M5-M7 blocked.
 
 ## Current State
 
@@ -23,16 +23,17 @@ Last updated: 2026-05-28
 - Week 1 evidence preserved but not counted by default
 - P12-M1: done (Tailwind visual baseline, all 13 pages converted, build passes)
 - P12-M2: done (Loading/Error system, 2 shared components, 8 pages updated)
-- P12-M3: ready_with_approval (i18n zh/en toggle)
-- P12-M4 through P12-M7: blocked
+- P12-M3: done (i18n zh/en toggle, react-i18next, 15 pages/components updated, en/zh locale files)
+- P12-M4: ready_with_approval (New-user guided path)
+- P12-M5 through P12-M7: blocked
 - P10-M7: blocked
 
 ## Next Task
 
-P12-M3: i18n zh/en toggle
-1. Add i18n infrastructure (react-i18next or similar)
-2. Create en/zh translation files for all UI strings
-3. Add language toggle to UI
+P12-M4: New-user guided path
+1. Add onboarding flow for new users
+2. Guide through first steps (provider, weekly review, etc.)
+3. No GSAP yet (deferred to P12-M5)
 
 ## Verification Commands
 

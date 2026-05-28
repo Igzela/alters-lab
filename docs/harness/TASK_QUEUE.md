@@ -953,3 +953,10 @@
 **Goal**: Add consistent loading spinners/skeletons and error-state UI with retry to all async frontend pages.
 **Depends on**: P12-M1 (done)
 **Notes**: Done. Created shared LoadingSpinner and ErrorDisplay components. Updated 8 pages (DataManagement, RealityScore, PatternReview, ProviderSettings, BehaviorValidation, SystemStatus, CalibrationHistory, P6Progress) with loading states, button disabling, and error display. Build passes (14.88 kB CSS, 205.33 kB JS). 1270 backend tests pass. Deb build passes. No backend drift. No P6 false claims. GPT R1 verification: all checks PASS. P12-M3 ready_with_approval.
+
+### P12-M3: i18n zh/en toggle
+
+**Status**: done
+**Goal**: Add Chinese/English language toggle using react-i18next.
+**Depends on**: P12-M2 (done)
+**Notes**: Done. Installed react-i18next, i18next, i18next-browser-languagedetector. Created i18n.ts config with zh/en namespaces. Created en.json and zh.json locale files with full translations for all UI strings (nav, status, gettingStarted, weeklyReview, dialogue, realityScore, calibration, rubric, checkpoint, provider, patterns, validation, data, p6Progress, loading, history). Added language toggle button (EN/ZH) in App.tsx header. Updated all 15 pages/components with useTranslation() hook and t() calls. TypeScript check PASS. 1270 backend tests PASS. Frontend build PASS. No GSAP. No onboarding added. No P6 false claims. No provider secrets. P12-M4 ready_with_approval.

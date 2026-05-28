@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { listActionAlignmentScores, listWeeklyNotes, listWeeklyReviews } from '../api'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
@@ -10,6 +11,7 @@ type Counts = {
 }
 
 export default function P6Progress() {
+  const { t } = useTranslation()
   const [counts, setCounts] = useState<Counts | null>(null)
   const [error, setError] = useState('')
 
@@ -22,7 +24,7 @@ export default function P6Progress() {
           actionAlignment: scores.count,
         })
       })
-      .catch(e => setError(e instanceof Error ? e.message : 'Unable to load P6 progress'))
+      .catch(e => setError(e instanceof Error ? e.message : t('p6Progress.unableToLoad')))
   }, [])
 
   const weeksComplete = counts ? Math.min(4, counts.weeklyReviews) : 0
@@ -30,33 +32,33 @@ export default function P6Progress() {
 
   return (
     <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-      <h3 className="text-sm font-medium mb-2">Your Progress</h3>
-      {error && <ErrorDisplay message={`Progress unavailable: ${error}`} />}
-      {!counts && !error && <LoadingSpinner label="Loading progress..." />}
+      <h3 className="text-sm font-medium mb-2">{t('p6Progress.title')}</h3>
+      {error && <ErrorDisplay message={`${t('p6Progress.progressUnavailable')} ${error}`} />}
+      {!counts && !error && <LoadingSpinner label={t('p6Progress.loading')} />}
       {counts && (
         <>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 text-sm">
-            <div><strong>{counts.weeklyNotes}</strong><br /><span className="text-gray-400 text-xs">weekly notes ingested</span></div>
-            <div><strong>{counts.weeklyReviews}</strong><br /><span className="text-gray-400 text-xs">weekly reviews completed</span></div>
-            <div><strong>{counts.actionAlignment}</strong><br /><span className="text-gray-400 text-xs">alignment scores recorded</span></div>
+            <div><strong>{counts.weeklyNotes}</strong><br /><span className="text-gray-400 text-xs">{t('p6Progress.weeklyNotesIngested')}</span></div>
+            <div><strong>{counts.weeklyReviews}</strong><br /><span className="text-gray-400 text-xs">{t('p6Progress.weeklyReviewsCompleted')}</span></div>
+            <div><strong>{counts.actionAlignment}</strong><br /><span className="text-gray-400 text-xs">{t('p6Progress.alignmentScoresRecorded')}</span></div>
           </div>
 
           <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-700">
-            <h4 className="text-sm font-medium mb-1.5">Validation Status</h4>
+            <h4 className="text-sm font-medium mb-1.5">{t('p6Progress.validationStatus')}</h4>
             <p className="text-sm mb-1">
-              <strong>Not started.</strong> P6 validation requires 4 weekly reviews and 4 calibration records across 21+ days.
+              <strong>{t('p6Progress.notStarted')}</strong> {t('p6Progress.validationRequires')}
             </p>
             <p className="text-xs text-gray-400">
-              Weekly reviews: {weeksComplete}/4 | Alignment scores: {scoresComplete}/4 | 4-week window: not yet met
+              {t('p6Progress.weeklyReviews')} {weeksComplete}/4 | {t('p6Progress.alignmentScores')} {scoresComplete}/4 | {t('p6Progress.fourWeekWindow')}
             </p>
           </div>
 
           <div className="mt-2 text-xs text-gray-400">
-            <strong>Next step:</strong> Continue weekly reviews as pilot evidence; P6 validation start remains blocked until product completeness closeout.
+            <strong>{t('p6Progress.nextStep')}</strong> {t('p6Progress.nextStepDesc')}
           </div>
         </>
       )}
-      <p className="text-xs text-gray-500 mt-2">P6 behavior validated: false | P6 sealed: false</p>
+      <p className="text-xs text-gray-500 mt-2">{t('p6Progress.p6Validated')} | {t('p6Progress.p6Sealed')}</p>
     </section>
   )
 }

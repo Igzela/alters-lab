@@ -1,9 +1,12 @@
+import { useTranslation } from 'react-i18next'
+
 interface ErrorDisplayProps {
   message: string
   onRetry?: () => void
 }
 
 export default function ErrorDisplay({ message, onRetry }: ErrorDisplayProps) {
+  const { t } = useTranslation()
   return (
     <div className="p-3 bg-red-950/30 border border-red-800/50 rounded-lg text-sm text-red-400 flex items-start gap-2">
       <span className="flex-1">{message}</span>
@@ -12,7 +15,7 @@ export default function ErrorDisplay({ message, onRetry }: ErrorDisplayProps) {
           className="text-xs text-red-300 hover:text-red-200 underline shrink-0"
           onClick={onRetry}
         >
-          Retry
+          {t('loading.retry')}
         </button>
       )}
     </div>

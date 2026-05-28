@@ -426,3 +426,8 @@
 | P12-M2 | LoadingSpinner component | apps/web/src/components/LoadingSpinner.tsx | Shared CSS-animated SVG spinner with optional label |
 | P12-M2 | ErrorDisplay component | apps/web/src/components/ErrorDisplay.tsx | Shared error display with optional retry button |
 | P12-M2 | Loading states (8 pages) | apps/web/src/pages/ | DataManagement, RealityScore, PatternReview, ProviderSettings, BehaviorValidation, SystemStatus, CalibrationHistory, P6Progress all updated with loading/error states |
+| P12-M3 | i18n config | apps/web/src/i18n.ts | react-i18next setup with zh/en namespaces and browser language detection |
+| P12-M3 | English locale | apps/web/src/locales/en.json | Full English translations for all UI strings across 15 pages/components |
+| P12-M3 | Chinese locale | apps/web/src/locales/zh.json | Full Chinese translations for all UI strings across 15 pages/components |
+| P12-M3 | Language toggle | apps/web/src/App.tsx | EN/ZH toggle button in header, nav bar labels translated |
+| P12-M3 | Page i18n updates | apps/web/src/pages/ | All 15 pages/components updated with useTranslation() hook and t() calls |

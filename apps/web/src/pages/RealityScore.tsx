@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { postJson, listActionAlignmentScores } from '../api'
 import type { ActionAlignmentScore } from '../types'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -14,6 +15,7 @@ const ALTERS = [
 const DIMS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
 
 export default function RealityScore({ onNavigate }: { onNavigate?: (page: string) => void }) {
+  const { t } = useTranslation()
   const [pair, setPair] = useState(0)
   const [scores, setScores] = useState<Record<string, number>>({
     execution_discipline: 3,
@@ -56,7 +58,7 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
         source: 'explicit_user_submission',
         caller: 'api',
       })
-      setStatus(`Score recorded: ${res.record.id}`)
+      setStatus(`${t('realityScore.scoreRecorded')} ${res.record.id}`)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Unknown error')
     } finally {
@@ -66,29 +68,29 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold">Reality Score</h2>
-      <p className="text-gray-500 text-xs">Scores require explicit user submission. No auto-inference from dialogue.</p>
+      <h2 className="text-lg font-semibold">{t('realityScore.title')}</h2>
+      <p className="text-gray-500 text-xs">{t('realityScore.description')}</p>
       <p className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded text-sm text-amber-200">
-        This page is for manual score submission. For real weekly review, use Weekly Review.
+        {t('realityScore.manualNote')}
       </p>
       <div className="flex gap-2">
         {onNavigate && (
           <button className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" onClick={() => onNavigate('weekly')}>
-            Go to Weekly Review
+            {t('realityScore.goToWeeklyReview')}
           </button>
         )}
         {onNavigate && (
           <button className="px-3 py-1.5 text-sm text-blue-400 hover:text-blue-300" onClick={() => onNavigate('history')}>
-            View Calibration History
+            {t('realityScore.viewHistory')}
           </button>
         )}
       </div>
 
       {recentScores.length > 0 && (
         <div className="mb-4 p-3 bg-blue-950/30 rounded-lg border border-blue-800/30">
-          <h4 className="text-sm font-medium mb-2">Recent Action Alignment Scores</h4>
+          <h4 className="text-sm font-medium mb-2">{t('realityScore.recentScores')}</h4>
           <p className="text-xs text-gray-400 mb-2">
-            These scores come from your weekly reviews. Manual reality scores (submitted here) are separate calibration inputs.
+            {t('realityScore.recentScoresDesc')}
           </p>
           {recentScores.map(s => (
             <div key={s.score_id} className="py-1 text-sm">
@@ -118,14 +120,14 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
         className="w-full border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white placeholder-gray-500 min-h-[60px]"
         value={notes}
         onChange={e => setNotes(e.target.value)}
-        placeholder="Notes..."
+        placeholder={t('realityScore.notesPlaceholder')}
       />
       <button
         className="mt-2 px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
         onClick={submit}
         disabled={submitting}
       >
-        {submitting ? 'Submitting...' : 'Submit Score'}
+        {submitting ? t('realityScore.submitting') : t('realityScore.submitScore')}
       </button>
       {status && <p className="text-green-400 text-sm">{status}</p>}
       {error && <ErrorDisplay message={error} />}

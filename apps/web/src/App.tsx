@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import SystemStatus from './pages/SystemStatus'
 import AlterDialogue from './pages/AlterDialogue'
 import RealityScore from './pages/RealityScore'
@@ -16,6 +17,11 @@ type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' 
 
 export default function App() {
   const [page, setPage] = useState<Page>('status')
+  const { t, i18n } = useTranslation()
+
+  const toggleLang = () => {
+    i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en')
+  }
 
   const navBtn = (p: Page) =>
     `px-4 py-2 text-sm rounded-md transition-colors ${
@@ -26,20 +32,28 @@ export default function App() {
 
   return (
     <div className="font-sans max-w-[900px] mx-auto p-5">
-      <h1 className="text-xl font-semibold mb-4">Alters Lab</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold">{t('app.title')}</h1>
+        <button
+          onClick={toggleLang}
+          className="px-3 py-1.5 text-xs bg-gray-800 text-gray-300 rounded border border-gray-700 hover:bg-gray-700 hover:text-white transition-colors"
+        >
+          {i18n.language === 'en' ? '中文' : 'EN'}
+        </button>
+      </div>
       <nav className="flex gap-1 mb-5 flex-wrap">
-        <button className={navBtn('status')} onClick={() => setPage('status')}>Status</button>
-        <button className={navBtn('getting-started')} onClick={() => setPage('getting-started')}>Getting Started</button>
-        <button className={navBtn('weekly')} onClick={() => setPage('weekly')}>Weekly Review</button>
-        <button className={navBtn('dialogue')} onClick={() => setPage('dialogue')}>Dialogue</button>
-        <button className={navBtn('reality')} onClick={() => setPage('reality')}>Reality Score</button>
-        <button className={navBtn('history')} onClick={() => setPage('history')}>History</button>
-        <button className={navBtn('rubric')} onClick={() => setPage('rubric')}>Rubric Delta</button>
-        <button className={navBtn('checkpoint')} onClick={() => setPage('checkpoint')}>Checkpoint Plan</button>
-        <button className={navBtn('provider')} onClick={() => setPage('provider')}>Provider</button>
-        <button className={navBtn('patterns')} onClick={() => setPage('patterns')}>Patterns</button>
-        <button className={navBtn('validation')} onClick={() => setPage('validation')}>Validation</button>
-        <button className={navBtn('data')} onClick={() => setPage('data')}>Data</button>
+        <button className={navBtn('status')} onClick={() => setPage('status')}>{t('nav.status')}</button>
+        <button className={navBtn('getting-started')} onClick={() => setPage('getting-started')}>{t('nav.gettingStarted')}</button>
+        <button className={navBtn('weekly')} onClick={() => setPage('weekly')}>{t('nav.weeklyReview')}</button>
+        <button className={navBtn('dialogue')} onClick={() => setPage('dialogue')}>{t('nav.dialogue')}</button>
+        <button className={navBtn('reality')} onClick={() => setPage('reality')}>{t('nav.realityScore')}</button>
+        <button className={navBtn('history')} onClick={() => setPage('history')}>{t('nav.history')}</button>
+        <button className={navBtn('rubric')} onClick={() => setPage('rubric')}>{t('nav.rubricDelta')}</button>
+        <button className={navBtn('checkpoint')} onClick={() => setPage('checkpoint')}>{t('nav.checkpointPlan')}</button>
+        <button className={navBtn('provider')} onClick={() => setPage('provider')}>{t('nav.provider')}</button>
+        <button className={navBtn('patterns')} onClick={() => setPage('patterns')}>{t('nav.patterns')}</button>
+        <button className={navBtn('validation')} onClick={() => setPage('validation')}>{t('nav.validation')}</button>
+        <button className={navBtn('data')} onClick={() => setPage('data')}>{t('nav.data')}</button>
       </nav>
       {page === 'status' && <SystemStatus onNavigate={setPage} />}
       {page === 'weekly' && <WeeklyReview />}

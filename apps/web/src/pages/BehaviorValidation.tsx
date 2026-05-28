@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
@@ -49,6 +50,7 @@ function CheckItem({ label, checked }: { label: string; checked: boolean }) {
 }
 
 export default function BehaviorValidation() {
+  const { t } = useTranslation()
   const [record, setRecord] = useState<BehaviorValidationRecord | null>(null)
   const [noReport, setNoReport] = useState(false)
   const [evaluating, setEvaluating] = useState(false)
@@ -100,9 +102,9 @@ export default function BehaviorValidation() {
       })
       setRecord(res.validation)
       setNoReport(false)
-      setStatus(`Evaluation complete: ${res.validation.outcome}`)
+      setStatus(`${t('validation.evalComplete')} ${res.validation.outcome}`)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Evaluation failed')
+      setError(e instanceof Error ? e.message : t('validation.evalFailed'))
     } finally {
       setEvaluating(false)
     }
@@ -110,14 +112,14 @@ export default function BehaviorValidation() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Behavior Validation</h2>
+      <h2 className="text-lg font-semibold">{t('validation.title')}</h2>
       <p className="text-gray-500 text-xs">
-        Evaluates whether your behavior has improved based on weekly reviews, calibration records, and pattern reviews. This does NOT automatically validate P6.
+        {t('validation.description')}
       </p>
 
       <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-lg mb-4">
-        <strong className="text-sm">P6 validation status: Not started.</strong>
-        <p className="text-xs text-gray-400 mt-1">P6 remains CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED until explicit human approval after product completeness closeout.</p>
+        <strong className="text-sm">{t('validation.p6Status')}</strong>
+        <p className="text-xs text-gray-400 mt-1">{t('validation.p6Remains')}</p>
       </div>
 
       <div className="mb-4">
@@ -126,21 +128,21 @@ export default function BehaviorValidation() {
           onClick={evaluate}
           disabled={evaluating}
         >
-          {evaluating ? 'Evaluating...' : 'Run Evaluation'}
+          {evaluating ? t('validation.evaluating') : t('validation.runEvaluation')}
         </button>
         {status && <span className="text-green-400 text-sm ml-2">{status}</span>}
         {error && <span className="text-red-500 text-sm ml-2">{error}</span>}
       </div>
 
-      {loadingReport && <LoadingSpinner label="Loading validation report..." />}
+      {loadingReport && <LoadingSpinner label={t('validation.loading')} />}
 
       {!loadingReport && noReport && !record && (
-        <p className="text-gray-400 text-sm">No validation report yet. Run an evaluation to generate one.</p>
+        <p className="text-gray-400 text-sm">{t('validation.noReport')}</p>
       )}
 
       {record && (
         <div className="p-3.5 bg-blue-950/30 rounded-lg border border-blue-800/30">
-          <h3 className="text-sm font-medium mb-2">Validation Report</h3>
+          <h3 className="text-sm font-medium mb-2">{t('validation.validationReport')}</h3>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3">
             <div>
@@ -148,11 +150,11 @@ export default function BehaviorValidation() {
                 {record.outcome.replace(/_/g, ' ')}
               </strong>
             </div>
-            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-gray-400 text-xs">weekly reviews</span></div>
-            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-gray-400 text-xs">calibration records</span></div>
-            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-gray-400 text-xs">pattern reviews</span></div>
+            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-gray-400 text-xs">{t('validation.weeklyReviews')}</span></div>
+            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-gray-400 text-xs">{t('validation.calibrationRecords')}</span></div>
+            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-gray-400 text-xs">{t('validation.patternReviews')}</span></div>
             {record.evidence_window_days != null && (
-              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-gray-400 text-xs">evidence window (days)</span></div>
+              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-gray-400 text-xs">{t('validation.evidenceWindow')}</span></div>
             )}
           </div>
 
@@ -160,31 +162,31 @@ export default function BehaviorValidation() {
             <p className="text-sm">{record.message}</p>
           </div>
 
-          <h4 className="text-sm font-medium mb-2">Metrics</h4>
+          <h4 className="text-sm font-medium mb-2">{t('validation.metrics')}</h4>
           <div className="grid grid-cols-3 gap-2 mb-3">
-            <CheckItem label="Alignment improves" checked={record.metrics.action_alignment_score_improves} />
-            <CheckItem label="Patterns reduce" checked={record.metrics.repeated_negative_patterns_reduce} />
-            <CheckItem label="Correction rate improves" checked={record.metrics.primary_correction_completion_rate_improves} />
+            <CheckItem label={t('validation.alignmentImproves')} checked={record.metrics.action_alignment_score_improves} />
+            <CheckItem label={t('validation.patternsReduce')} checked={record.metrics.repeated_negative_patterns_reduce} />
+            <CheckItem label={t('validation.correctionImproves')} checked={record.metrics.primary_correction_completion_rate_improves} />
           </div>
 
-          <h4 className="text-sm font-medium mb-2">Usage Integrity</h4>
+          <h4 className="text-sm font-medium mb-2">{t('validation.usageIntegrity')}</h4>
           <div className="grid grid-cols-2 gap-2 mb-3">
-            <CheckItem label="Weekly notes honest" checked={record.usage_integrity.weekly_notes_completed_honestly} />
-            <CheckItem label="Calibration records created" checked={record.usage_integrity.calibration_records_created} />
-            <CheckItem label="Primary corrections set" checked={record.usage_integrity.primary_corrections_set} />
-            <CheckItem label="Failure reviews honest" checked={record.usage_integrity.failure_reviews_honest} />
-            <CheckItem label="Self-deception not softened" checked={record.usage_integrity.self_deception_risk_not_softened} />
-            <CheckItem label="Sessions not skipped" checked={record.usage_integrity.sessions_not_skipped_too_often} />
+            <CheckItem label={t('validation.weeklyNotesHonest')} checked={record.usage_integrity.weekly_notes_completed_honestly} />
+            <CheckItem label={t('validation.calibrationCreated')} checked={record.usage_integrity.calibration_records_created} />
+            <CheckItem label={t('validation.correctionsSet')} checked={record.usage_integrity.primary_corrections_set} />
+            <CheckItem label={t('validation.failureHonest')} checked={record.usage_integrity.failure_reviews_honest} />
+            <CheckItem label={t('validation.selfDeception')} checked={record.usage_integrity.self_deception_risk_not_softened} />
+            <CheckItem label={t('validation.sessionsNotSkipped')} checked={record.usage_integrity.sessions_not_skipped_too_often} />
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 text-xs">
-            <div>Integrity valid: <strong>{record.usage_integrity_valid ? 'Yes' : 'No'}</strong></div>
-            <div>Behavior improved: <strong>{record.behavior_improved ? 'Yes' : 'No'}</strong></div>
-            <div>Evidence verified: <strong>{record.evidence_verified ? 'Yes' : 'No'}</strong></div>
+            <div>{t('validation.integrityValid')} <strong>{record.usage_integrity_valid ? t('validation.yes') : t('validation.no')}</strong></div>
+            <div>{t('validation.behaviorImproved')} <strong>{record.behavior_improved ? t('validation.yes') : t('validation.no')}</strong></div>
+            <div>{t('validation.evidenceVerified')} <strong>{record.evidence_verified ? t('validation.yes') : t('validation.no')}</strong></div>
           </div>
 
           {record.created_at && (
-            <p className="text-xs text-gray-500 mt-2">Evaluated: {record.created_at}</p>
+            <p className="text-xs text-gray-500 mt-2">{t('validation.evaluated')} {record.created_at}</p>
           )}
         </div>
       )}

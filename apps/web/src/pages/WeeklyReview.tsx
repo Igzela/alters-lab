@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   completeWeeklyReview,
   editWeeklyNote,
@@ -66,6 +67,7 @@ type AlterOption = { id: string; name: string }
 type Step = 1 | 2 | 3 | 4 | 5 | 6
 
 export default function WeeklyReview() {
+  const { t } = useTranslation()
   const [step, setStep] = useState<Step>(1)
   const [rawNote, setRawNote] = useState('')
   const [noteRecord, setNoteRecord] = useState<WeeklyNoteRecord | null>(null)
@@ -128,7 +130,7 @@ export default function WeeklyReview() {
     try {
       await task()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Unknown error')
+      setError(e instanceof Error ? e.message : t('weeklyReview.unknownError'))
     } finally {
       setLoading('')
     }
@@ -140,7 +142,7 @@ export default function WeeklyReview() {
     setEditRecord(result.record)
     setPrimaryNextCorrection(result.record.desired_correction)
     setOneNextCorrection(result.record.desired_correction)
-    setMessage(`Saved weekly note ${result.record.record_id}`)
+    setMessage(`${t('weeklyReview.savedNote')} ${result.record.record_id}`)
     setStep(2)
   })
 
@@ -159,14 +161,14 @@ export default function WeeklyReview() {
     setEditRecord(result.record)
     setEditEnabled(false)
     setCorrectionNote('')
-    setMessage('Extracted fields updated from explicit correction.')
+    setMessage(t('weeklyReview.fieldsUpdated'))
   })
 
   const startReview = () => run('starting review', async () => {
     if (!noteRecord) return
     const result = await startWeeklyReview(noteRecord.record_id, selectedAlter || null)
     setSession(result.session)
-    setMessage(`Started review ${result.session.session_id}`)
+    setMessage(`${t('weeklyReview.reviewStarted')} ${result.session.session_id}`)
     setStep(4)
   })
 
@@ -181,7 +183,7 @@ export default function WeeklyReview() {
     })
     setSession(result.session)
     setOneNextCorrection(result.session.next_week_primary_correction || primaryNextCorrection)
-    setMessage('Review completed.')
+    setMessage(t('weeklyReview.reviewCompleted'))
     setStep(5)
   })
 
@@ -205,7 +207,7 @@ export default function WeeklyReview() {
     })
     setScore(result.score)
     setScorePath(result.score_path)
-    setMessage(`Action alignment saved ${result.score.score_id}`)
+    setMessage(`${t('weeklyReview.alignmentSaved')} ${result.score.score_id}`)
     setStep(6)
   })
 
@@ -256,8 +258,8 @@ export default function WeeklyReview() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Weekly Review</h2>
-      <p className="text-gray-500 text-xs">This is the primary P6 weekly review entry point. Records created here are week evidence, not P6 validation.</p>
+      <h2 className="text-lg font-semibold">{t('weeklyReview.title')}</h2>
+      <p className="text-gray-500 text-xs">{t('weeklyReview.description')}</p>
       <P6Progress />
 
       <div className="flex gap-2 flex-wrap mb-4">
@@ -269,19 +271,19 @@ export default function WeeklyReview() {
             onClick={() => setStep(n as Step)}
             disabled={n > 1 && !noteRecord}
           >
-            Step {n}
+            {t(`weeklyReview.step${n}`)}
           </button>
         ))}
       </div>
 
-      {error && <p className="text-red-500 text-sm">Error: {error}</p>}
+      {error && <p className="text-red-500 text-sm">{t('weeklyReview.error')} {error}</p>}
       {message && <p className="text-green-400 text-sm">{message}</p>}
 
       {step === 1 && (
         <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-          <h3 className="text-sm font-medium mb-2">Step 1: Paste Weekly Note</h3>
+          <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step1Title')}</h3>
           <button className={`${btn} mb-2.5`} type="button" onClick={() => setRawNote(NOTE_TEMPLATE)}>
-            Use template
+            {t('weeklyReview.useTemplate')}
           </button>
           <textarea
             className={`${input} min-h-[280px] font-mono`}
@@ -290,16 +292,16 @@ export default function WeeklyReview() {
             placeholder={NOTE_TEMPLATE}
           />
           <button className={`${btn} mt-2.5`} type="button" onClick={ingest} disabled={!!loading || !rawNote.trim()}>
-            {loading === 'ingesting' ? 'Ingesting...' : 'Ingest note'}
+            {loading === 'ingesting' ? t('weeklyReview.ingesting') : t('weeklyReview.ingestNote')}
           </button>
-          {noteRecord && <p className="text-sm text-gray-400 mt-2">Saved weekly_note_record_id: {noteRecord.record_id}</p>}
+          {noteRecord && <p className="text-sm text-gray-400 mt-2">{t('weeklyReview.savedRecordId')} {noteRecord.record_id}</p>}
         </section>
       )}
 
       {step === 2 && noteRecord && editRecord && (
         <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-          <h3 className="text-sm font-medium mb-2">Step 2: Review Extracted Record</h3>
-          <p className="text-sm text-gray-400 mb-2">Raw note preserved: {noteRecord.raw_note_preserved ? 'Yes' : 'No'}</p>
+          <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step2Title')}</h3>
+          <p className="text-sm text-gray-400 mb-2">{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? 'Yes' : 'No'}</p>
           <Field label="session_type" value={editRecord.session_type} editing={editEnabled} onChange={v => setEditRecord({ ...editRecord, session_type: v as WeeklyNoteRecord['session_type'] })} />
           <label className={field}>
             observable_facts
@@ -325,92 +327,92 @@ export default function WeeklyReview() {
           )}
           <div className="flex gap-2 flex-wrap">
             <button className={btn} type="button" onClick={() => setEditEnabled(!editEnabled)}>
-              {editEnabled ? 'Cancel edit' : 'Edit extracted fields'}
+              {editEnabled ? t('weeklyReview.cancelEdit') : t('weeklyReview.editFields')}
             </button>
-            {editEnabled && <button className={btn} type="button" onClick={saveEdit} disabled={!!loading || !correctionNote.trim()}>Save edit</button>}
-            <button className={btn} type="button" onClick={() => setStep(3)}>Continue</button>
+            {editEnabled && <button className={btn} type="button" onClick={saveEdit} disabled={!!loading || !correctionNote.trim()}>{t('weeklyReview.saveEdit')}</button>}
+            <button className={btn} type="button" onClick={() => setStep(3)}>{t('weeklyReview.continue')}</button>
           </div>
         </section>
       )}
 
       {step === 3 && noteRecord && (
         <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-          <h3 className="text-sm font-medium mb-2">Step 3: Start Review Session</h3>
+          <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step3Title')}</h3>
           <label className={field}>
-            Select alter
+            {t('weeklyReview.selectAlter')}
             <select className={input} value={selectedAlter} onChange={e => setSelectedAlter(e.target.value)}>
-              <option value="">system recommended / blank</option>
+              <option value="">{t('weeklyReview.systemRecommended')}</option>
               {alterOptions.map(a => (
                 <option key={a.id} value={a.id}>{a.name}</option>
               ))}
             </select>
           </label>
           <button className={btn} type="button" onClick={startReview} disabled={!!loading}>
-            {loading === 'starting review' ? 'Starting...' : 'Start review'}
+            {loading === 'starting review' ? t('weeklyReview.starting') : t('weeklyReview.startReview')}
           </button>
-          {session && <p className="text-sm text-gray-400 mt-2">weekly_review_session_id: {session.session_id}</p>}
+          {session && <p className="text-sm text-gray-400 mt-2">{t('weeklyReview.sessionId')} {session.session_id}</p>}
         </section>
       )}
 
       {step === 4 && session && (
         <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-          <h3 className="text-sm font-medium mb-2">Step 4: Complete Review</h3>
-          <TextArea label="review_note" value={reviewNote} onChange={setReviewNote} />
-          <TextArea label="dialogue_summary optional" value={dialogueSummary} onChange={setDialogueSummary} />
-          <TextInput label="primary_next_correction" value={primaryNextCorrection} onChange={setPrimaryNextCorrection} />
-          <TextInput label="supporting_action_1 optional" value={supportingAction1} onChange={setSupportingAction1} />
-          <TextInput label="supporting_action_2 optional" value={supportingAction2} onChange={setSupportingAction2} />
+          <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step4Title')}</h3>
+          <TextArea label={t('weeklyReview.reviewNote')} value={reviewNote} onChange={setReviewNote} />
+          <TextArea label={t('weeklyReview.dialogueSummary')} value={dialogueSummary} onChange={setDialogueSummary} />
+          <TextInput label={t('weeklyReview.primaryNextCorrection')} value={primaryNextCorrection} onChange={setPrimaryNextCorrection} />
+          <TextInput label={t('weeklyReview.supportingAction1')} value={supportingAction1} onChange={setSupportingAction1} />
+          <TextInput label={t('weeklyReview.supportingAction2')} value={supportingAction2} onChange={setSupportingAction2} />
 
           <div className="border border-gray-600 rounded-lg p-3.5 mb-4 bg-gray-800/30">
-            <h4 className="text-sm font-medium mb-1.5">Assistant Suggestion</h4>
-            <p className="text-xs text-gray-400 mb-2">Provider output is advisory and unverified. You must manually copy/edit anything that becomes part of the review.</p>
+            <h4 className="text-sm font-medium mb-1.5">{t('weeklyReview.assistantSuggestion')}</h4>
+            <p className="text-xs text-gray-400 mb-2">{t('weeklyReview.providerAdvisory')}</p>
             <label className={field}>
-              Requested help
+              {t('weeklyReview.requestedHelp')}
               <select className={input} value={assistantHelp} onChange={e => setAssistantHelp(e.target.value)}>
-                <option value="general_review_suggestion">General review suggestion</option>
-                <option value="summarize_facts">Summarize facts</option>
-                <option value="identify_friction">Identify friction</option>
-                <option value="draft_primary_correction">Draft primary correction</option>
-                <option value="suggest_supporting_actions">Suggest supporting actions</option>
-                <option value="challenge_avoidance">Challenge avoidance</option>
+                <option value="general_review_suggestion">{t('weeklyReview.generalSuggestion')}</option>
+                <option value="summarize_facts">{t('weeklyReview.summarizeFacts')}</option>
+                <option value="identify_friction">{t('weeklyReview.identifyFriction')}</option>
+                <option value="draft_primary_correction">{t('weeklyReview.draftCorrection')}</option>
+                <option value="suggest_supporting_actions">{t('weeklyReview.suggestActions')}</option>
+                <option value="challenge_avoidance">{t('weeklyReview.challengeAvoidance')}</option>
               </select>
             </label>
             <div className="flex gap-2 flex-wrap mb-2.5">
               <button className={btn} type="button" onClick={() => loadAssistantStatus()} disabled={assistantLoading}>
-                Check provider status
+                {t('weeklyReview.checkProvider')}
               </button>
               <button className={btn} type="button" onClick={() => generateSuggestion(false)} disabled={!!loading || assistantLoading}>
-                {loading === 'generating suggestion' ? 'Generating...' : 'Generate dry-run suggestion'}
+                {loading === 'generating suggestion' ? t('weeklyReview.generating') : t('weeklyReview.generateDryRun')}
               </button>
             </div>
             {assistantStatus && (
-              <p className="text-xs text-gray-400">Provider mode: {assistantStatus.provider_mode} | Configured: {assistantStatus.configured ? 'yes' : 'no'}</p>
+              <p className="text-xs text-gray-400">{t('weeklyReview.providerMode')} {assistantStatus.provider_mode} | {t('provider.configured')} {assistantStatus.configured ? 'yes' : 'no'}</p>
             )}
             {assistantStatus?.configured && assistantStatus.provider_mode === 'openai-compatible-http' && (
               <div className="mt-2">
                 <label className="grid gap-1.5 mb-2">
-                  Live confirmation
+                  {t('weeklyReview.liveConfirmation')}
                   <input className={input} value={assistantLiveConfirmation} onChange={e => setAssistantLiveConfirmation(e.target.value)} placeholder="run-live-weekly-review-assistant" />
                 </label>
                 <button className={btn} type="button" onClick={() => generateSuggestion(true)} disabled={!!loading || assistantLoading || assistantLiveConfirmation !== 'run-live-weekly-review-assistant'}>
-                  Generate live provider suggestion
+                  {t('weeklyReview.generateLive')}
                 </button>
               </div>
             )}
             {assistantError && <p className="text-red-500 text-sm mt-2">{assistantError}</p>}
             {assistantSuggestion && (
               <div className="mt-2.5 p-2.5 border border-gray-600 rounded bg-white">
-                <p className="text-xs font-semibold text-gray-400 mb-1.5">Unverified provider suggestion</p>
+                <p className="text-xs font-semibold text-gray-400 mb-1.5">{t('weeklyReview.unverifiedSuggestion')}</p>
                 <pre className="whitespace-pre-wrap text-sm text-gray-800 m-0">{assistantSuggestion}</pre>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <button className={`${btn} bg-gray-500 hover:bg-gray-400`} type="button" onClick={() => setReviewNote(assistantSuggestion)}>
-                    Copy to review_note
+                    {t('weeklyReview.copyToReviewNote')}
                   </button>
                   <button className={`${btn} bg-gray-500 hover:bg-gray-400`} type="button" onClick={() => setDialogueSummary(assistantSuggestion)}>
-                    Copy to dialogue_summary
+                    {t('weeklyReview.copyToDialogue')}
                   </button>
                   <button className={`${btn} bg-gray-500 hover:bg-gray-400`} type="button" onClick={() => setPrimaryNextCorrection(assistantSuggestion)}>
-                    Copy to primary_next_correction
+                    {t('weeklyReview.copyToCorrection')}
                   </button>
                 </div>
               </div>
@@ -418,13 +420,13 @@ export default function WeeklyReview() {
           </div>
 
           <button className={btn} type="button" onClick={completeReview} disabled={!!loading || !reviewNote.trim() || !primaryNextCorrection.trim()}>
-            {loading === 'completing review' ? 'Completing...' : 'Complete review'}
+            {loading === 'completing review' ? t('weeklyReview.completing') : t('weeklyReview.completeReview')}
           </button>
           {session.status === 'completed' && (
             <div className="mt-2 text-sm text-gray-300">
-              <p>Status: completed</p>
-              <p>next_week_primary_correction: {session.next_week_primary_correction}</p>
-              <p>supporting_actions: {session.supporting_actions.join(', ') || 'none'}</p>
+              <p>{t('weeklyReview.statusCompleted')}</p>
+              <p>{t('weeklyReview.nextCorrection')} {session.next_week_primary_correction}</p>
+              <p>{t('weeklyReview.supportingActions')} {session.supporting_actions.join(', ') || t('weeklyReview.none')}</p>
             </div>
           )}
         </section>
@@ -432,34 +434,34 @@ export default function WeeklyReview() {
 
       {step === 5 && session && (
         <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-          <h3 className="text-sm font-medium mb-2">Step 5: Action Alignment Score</h3>
-          <Slider label="Did my actions match my endorsed direction?" value={directionAlignment} onChange={setDirectionAlignment} />
-          <Slider label="Did I actually execute consistently?" value={executionConsistency} onChange={setExecutionConsistency} />
-          <Slider label="How much avoidance/friction was present? Higher means more avoidance." value={avoidanceLevel} onChange={setAvoidanceLevel} />
-          <TextInput label="one_action_evidence" value={oneActionEvidence} onChange={setOneActionEvidence} />
-          <TextInput label="one_avoidance_or_friction_evidence" value={oneAvoidanceEvidence} onChange={setOneAvoidanceEvidence} />
-          <TextInput label="one_next_correction" value={oneNextCorrection} onChange={setOneNextCorrection} />
+          <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step5Title')}</h3>
+          <Slider label={t('weeklyReview.directionQuestion')} value={directionAlignment} onChange={setDirectionAlignment} />
+          <Slider label={t('weeklyReview.consistencyQuestion')} value={executionConsistency} onChange={setExecutionConsistency} />
+          <Slider label={t('weeklyReview.avoidanceQuestion')} value={avoidanceLevel} onChange={setAvoidanceLevel} />
+          <TextInput label={t('weeklyReview.actionEvidence')} value={oneActionEvidence} onChange={setOneActionEvidence} />
+          <TextInput label={t('weeklyReview.avoidanceEvidence')} value={oneAvoidanceEvidence} onChange={setOneAvoidanceEvidence} />
+          <TextInput label={t('weeklyReview.nextCorrectionEvidence')} value={oneNextCorrection} onChange={setOneNextCorrection} />
           <label className={field}>
-            verdict_label
+            {t('weeklyReview.verdictLabel')}
             <select className={input} value={verdictLabel} onChange={e => setVerdictLabel(e.target.value as VerdictLabel)}>
               {verdicts.map(v => <option key={v} value={v}>{v.replace(/_/g, ' ')}</option>)}
             </select>
             <span className="text-sm text-gray-400 mt-0.5">{VERDICT_DESCRIPTIONS[verdictLabel]}</span>
           </label>
-          <TextInput label="verdict_sentence" value={verdictSentence} onChange={setVerdictSentence} />
+          <TextInput label={t('weeklyReview.verdictSentence')} value={verdictSentence} onChange={setVerdictSentence} />
           <button
             className={btn}
             type="button"
             onClick={submitScore}
             disabled={!!loading || !oneActionEvidence.trim() || !oneAvoidanceEvidence.trim() || !oneNextCorrection.trim() || !verdictSentence.trim()}
           >
-            {loading === 'saving score' ? 'Saving...' : 'Save action alignment'}
+            {loading === 'saving score' ? t('weeklyReview.saving') : t('weeklyReview.saveAlignment')}
           </button>
           {score && (
             <div className="mt-2 text-sm text-gray-300">
-              <p>score_id / calibration_record_id: {score.score_id}</p>
-              <p>action_alignment_score: {score.action_alignment_score}</p>
-              {scorePath && <p>saved path: {scorePath}</p>}
+              <p>{t('weeklyReview.scoreId')} {score.score_id}</p>
+              <p>{t('weeklyReview.alignmentScore')} {score.action_alignment_score}</p>
+              {scorePath && <p>{t('weeklyReview.savedPath')} {scorePath}</p>}
             </div>
           )}
         </section>
@@ -467,17 +469,17 @@ export default function WeeklyReview() {
 
       {step === 6 && noteRecord && session && score && (
         <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
-          <h3 className="text-sm font-medium mb-2">Step 6: Completion Summary</h3>
+          <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step6Title')}</h3>
           <div className="text-sm text-gray-300 space-y-1">
-            <p>weekly_note_record_id: {noteRecord.record_id}</p>
-            <p>weekly_review_session_id: {session.session_id}</p>
-            <p>action_alignment_score_id: {score.score_id}</p>
-            <p>action_alignment_score: {score.action_alignment_score}</p>
-            <p>P6 behavior validated: false</p>
-            <p>P6 sealed: false</p>
+            <p>{t('weeklyReview.noteRecordId')} {noteRecord.record_id}</p>
+            <p>{t('weeklyReview.reviewSessionId')} {session.session_id}</p>
+            <p>{t('weeklyReview.scoreRecordId')} {score.score_id}</p>
+            <p>{t('weeklyReview.alignmentScore')} {score.action_alignment_score}</p>
+            <p>{t('weeklyReview.p6Validated')}</p>
+            <p>{t('weeklyReview.p6Sealed')}</p>
           </div>
-          <p className="text-xs text-gray-400 mt-2">This is Week evidence, not P6 validation. P6 requires 4 real weekly reviews, 4 calibration records, and 1 pattern review across the validation window.</p>
-          <button className={`${btn} mt-2.5`} type="button" onClick={reset}>Reset flow</button>
+          <p className="text-xs text-gray-400 mt-2">{t('weeklyReview.weekEvidenceNote')}</p>
+          <button className={`${btn} mt-2.5`} type="button" onClick={reset}>{t('weeklyReview.resetFlow')}</button>
         </section>
       )}
     </div>

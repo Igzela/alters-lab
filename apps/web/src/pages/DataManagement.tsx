@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
@@ -13,6 +14,7 @@ interface Manifest {
 }
 
 export default function DataManagement() {
+  const { t } = useTranslation()
   const [manifest, setManifest] = useState<Manifest | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -28,9 +30,9 @@ export default function DataManagement() {
     setError('')
     fetchJson('/p6-data-retention/manifest')
       .then(setManifest)
-      .catch(e => setError(e instanceof Error ? e.message : 'Unable to load manifest'))
+      .catch(e => setError(e instanceof Error ? e.message : t('data.unableToLoad')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [t])
 
   useEffect(() => { loadManifest() }, [loadManifest])
 
@@ -40,9 +42,9 @@ export default function DataManagement() {
     setActionLoading('export')
     try {
       const res = await postJson('/p6-data-retention/export', { areas: [], caller: 'api' })
-      setStatus(`Exported to: ${res.path || 'unknown path'}`)
+      setStatus(`${t('data.exportedTo')} ${res.path || 'unknown path'}`)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Export failed')
+      setError(e instanceof Error ? e.message : t('data.exportFailed'))
     } finally {
       setActionLoading('')
     }
@@ -54,9 +56,9 @@ export default function DataManagement() {
     setActionLoading(`export-${area}`)
     try {
       const res = await postJson('/p6-data-retention/export', { areas: [area], caller: 'api' })
-      setStatus(`Exported ${area} to: ${res.path || 'unknown path'}`)
+      setStatus(`${t('data.exported')} ${area} ${t('data.exportedTo')} ${res.path || 'unknown path'}`)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Export failed')
+      setError(e instanceof Error ? e.message : t('data.exportFailed'))
     } finally {
       setActionLoading('')
     }
@@ -73,14 +75,14 @@ export default function DataManagement() {
         confirmation: 'delete',
         caller: 'api',
       })
-      setStatus(`Deleted: ${deleteArea}/${deleteRecordId}`)
+      setStatus(`${t('data.deleted')} ${deleteArea}/${deleteRecordId}`)
       setShowDeletePanel(false)
       setDeleteArea('')
       setDeleteRecordId('')
       setDeleteConfirm('')
       loadManifest()
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Delete failed')
+      setError(e instanceof Error ? e.message : t('data.deleteFailed'))
     } finally {
       setActionLoading('')
     }
@@ -88,15 +90,15 @@ export default function DataManagement() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Data Management</h2>
+      <h2 className="text-lg font-semibold">{t('data.title')}</h2>
       <p className="text-gray-500 text-xs">
-        View, export, or delete your product data. All exports redact secrets. Deletion requires exact record id and explicit confirmation.
+        {t('data.description')}
       </p>
 
       {error && <ErrorDisplay message={error} onRetry={loadManifest} />}
       {status && <p className="text-green-400 text-sm">{status}</p>}
 
-      {loading && <LoadingSpinner label="Loading manifest..." />}
+      {loading && <LoadingSpinner label={t('data.loading')} />}
 
       {error && !manifest && !loading && (
         <ErrorDisplay message={error} onRetry={loadManifest} />
@@ -110,11 +112,11 @@ export default function DataManagement() {
               onClick={exportAll}
               disabled={!!actionLoading}
             >
-              {actionLoading === 'export' ? 'Exporting...' : 'Export All Data'}
+              {actionLoading === 'export' ? t('data.exporting') : t('data.exportAll')}
             </button>
           </div>
 
-          <h3 className="text-sm font-medium mb-2">Record Counts</h3>
+          <h3 className="text-sm font-medium mb-2">{t('data.recordCounts')}</h3>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2.5 mb-4">
             {manifest.runtime_areas.map(area => (
               <div key={area} className="p-2.5 bg-gray-800/30 rounded-lg border border-gray-700">
@@ -127,39 +129,39 @@ export default function DataManagement() {
                   onClick={() => exportArea(area)}
                   disabled={!!actionLoading}
                 >
-                  {actionLoading === `export-${area}` ? 'Exporting...' : 'Export'}
+                  {actionLoading === `export-${area}` ? t('data.exporting') : t('data.export')}
                 </button>
               </div>
             ))}
           </div>
 
           <div className="p-2.5 bg-blue-950/30 rounded-lg border border-blue-800/30 text-xs text-gray-400 mb-4">
-            <div>Long-term save by default: <strong>{manifest.default_long_term_save ? 'Yes' : 'No'}</strong></div>
-            <div>Export supported: <strong>{manifest.export_supported ? 'Yes' : 'No'}</strong></div>
-            <div>Archive supported: <strong>{manifest.archive_supported ? 'Yes' : 'No'}</strong></div>
+            <div>{t('data.longTermSave')} <strong>{manifest.default_long_term_save ? t('provider.yes') : t('provider.no')}</strong></div>
+            <div>{t('data.exportSupported')} <strong>{manifest.export_supported ? t('provider.yes') : t('provider.no')}</strong></div>
+            <div>{t('data.archiveSupported')} <strong>{manifest.archive_supported ? t('provider.yes') : t('provider.no')}</strong></div>
           </div>
 
           <div className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded-lg text-xs text-amber-200 mb-4">
-            <strong>Archive:</strong> Archive requires exact record selection; disabled until record list/detail exists.
+            <strong>{t('data.archive')}</strong> {t('data.archiveDisabled')}
           </div>
         </>
       )}
 
       <div className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
         <div className="flex justify-between items-center mb-2">
-          <h4 className="text-sm font-medium">Delete by Record ID</h4>
+          <h4 className="text-sm font-medium">{t('data.deleteById')}</h4>
           <button className="text-xs text-gray-400 hover:text-white" onClick={() => setShowDeletePanel(!showDeletePanel)}>
-            {showDeletePanel ? 'Hide' : 'Show'}
+            {showDeletePanel ? t('data.hide') : t('data.show')}
           </button>
         </div>
         {showDeletePanel && (
           <div>
             <p className="text-xs text-gray-400 mb-2">
-              Use only when you know the exact local record id. Export first if unsure.
+              {t('data.deleteWarning')}
             </p>
             <div className="grid grid-cols-2 gap-2 mb-2">
               <div>
-                <label className="text-xs text-gray-400 block mb-0.5">Area</label>
+                <label className="text-xs text-gray-400 block mb-0.5">{t('data.area')}</label>
                 <input
                   className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
                   value={deleteArea}
@@ -168,7 +170,7 @@ export default function DataManagement() {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-400 block mb-0.5">Record ID</label>
+                <label className="text-xs text-gray-400 block mb-0.5">{t('data.recordId')}</label>
                 <input
                   className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
                   value={deleteRecordId}
@@ -178,7 +180,7 @@ export default function DataManagement() {
               </div>
             </div>
             <div className="mb-2">
-              <label className="text-xs text-gray-400 block mb-0.5">Type <strong>delete</strong> to confirm</label>
+              <label className="text-xs text-gray-400 block mb-0.5">{t('data.typeDelete')}</label>
               <input
                 className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
                 value={deleteConfirm}
@@ -191,7 +193,7 @@ export default function DataManagement() {
               onClick={executeDelete}
               disabled={!deleteArea || !deleteRecordId || deleteConfirm !== 'delete' || !!actionLoading}
             >
-              {actionLoading === 'delete' ? 'Deleting...' : 'Delete Record'}
+              {actionLoading === 'delete' ? t('data.deleting') : t('data.deleteRecord')}
             </button>
           </div>
         )}
