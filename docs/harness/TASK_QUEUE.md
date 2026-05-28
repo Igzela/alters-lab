@@ -915,6 +915,13 @@
 **Depends on**: P10-M6
 **Notes**: Created docs/harness/P10_M6_VALIDATION_WINDOW_CHANGE_CONTROL.md. Defines change classification (blocker/high/medium/low), change log format, allowed/disallowed changes during validation window.
 
+### P10-M6-PREP1: Validation runbook and future week templates
+
+**Status**: done
+**Goal**: Create validation runbook and future week evidence templates.
+**Depends on**: P10-M6
+**Notes**: Created P10_M6_VALIDATION_RUNBOOK.md (weekly cycle protocol, count rules, pattern review timing, friction classification, backup routine). Created Week 2-4 evidence templates with expected counters.
+
 ### P10-M7: Pilot closeout / next phase decision
 
 **Status**: blocked
