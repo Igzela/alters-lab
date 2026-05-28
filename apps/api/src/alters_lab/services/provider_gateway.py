@@ -35,8 +35,11 @@ def _normalize_mode(value: str) -> str:
 
 
 def _get_provider_mode() -> str:
-    raw = os.environ.get("ALTERS_PROVIDER_MODE", "mock")
-    return _normalize_mode(raw)
+    raw = os.environ.get("ALTERS_PROVIDER_MODE")
+    if raw:
+        return _normalize_mode(raw)
+    config_mode = _resolve_config_value("mode")
+    return _normalize_mode(config_mode) if config_mode else "mock"
 
 
 def _get_provider_base_url() -> str | None:

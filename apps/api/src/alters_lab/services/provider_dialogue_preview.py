@@ -265,21 +265,34 @@ def run_provider_dialogue_preview(
     # Live generation with exact confirmation.
     client = http_client or _default_http_client
     base_url = state.base_url.rstrip("/")
-    url = f"{base_url}/chat/completions"
     api_key = _get_provider_api_key(layout) or ""
-    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    is_anthropic = "/anthropic" in base_url or "anthropic" in base_url.lower()
 
     system_content = _truncate(request.system_prompt or DEFAULT_SYSTEM_PROMPT, SYSTEM_PROMPT_MAX_LEN)
     user_content = _truncate(request.prompt, PROMPT_MAX_LEN)
-    payload = json.dumps({
-        "model": state.model,
-        "messages": [
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": user_content},
-        ],
-        "temperature": _clamp_temperature(request.temperature),
-        "max_tokens": _clamp_max_tokens(request.max_tokens),
-    }).encode("utf-8")
+
+    if is_anthropic:
+        url = f"{base_url}/v1/messages"
+        headers = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "Content-Type": "application/json"}
+        payload = json.dumps({
+            "model": state.model,
+            "system": system_content,
+            "messages": [{"role": "user", "content": user_content}],
+            "max_tokens": _clamp_max_tokens(request.max_tokens) or 1024,
+            **({"temperature": _clamp_temperature(request.temperature)} if request.temperature is not None else {}),
+        }).encode("utf-8")
+    else:
+        url = f"{base_url}/chat/completions"
+        headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+        payload = json.dumps({
+            "model": state.model,
+            "messages": [
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": user_content},
+            ],
+            "temperature": _clamp_temperature(request.temperature),
+            "max_tokens": _clamp_max_tokens(request.max_tokens),
+        }).encode("utf-8")
 
     start = time.monotonic()
     try:
@@ -289,7 +302,10 @@ def run_provider_dialogue_preview(
         if 200 <= status_code < 300:
             try:
                 data = json.loads(body)
-                output = data["choices"][0]["message"]["content"]
+                if is_anthropic:
+                    output = "".join(block.get("text", "") for block in data.get("content", []) if block.get("type") == "text")
+                else:
+                    output = data["choices"][0]["message"]["content"]
             except (json.JSONDecodeError, KeyError, IndexError, TypeError):
                 audit = build_provider_dialogue_preview_audit_event(
                     provider_mode="openai-compatible-http", status="error",

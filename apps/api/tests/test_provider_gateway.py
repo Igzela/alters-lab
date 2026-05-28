@@ -20,14 +20,10 @@ from alters_lab.services.provider_gateway import (
 )
 
 
-def test_default_mode_is_mock():
-    original = os.environ.get("ALTERS_PROVIDER_MODE")
-    try:
-        os.environ.pop("ALTERS_PROVIDER_MODE", None)
-        assert _get_provider_mode() == "mock"
-    finally:
-        if original is not None:
-            os.environ["ALTERS_PROVIDER_MODE"] = original
+def test_default_mode_is_mock(monkeypatch):
+    monkeypatch.delenv("ALTERS_PROVIDER_MODE", raising=False)
+    monkeypatch.setattr("alters_lab.services.provider_gateway._resolve_config_value", lambda f: None)
+    assert _get_provider_mode() == "mock"
 
 
 def test_mock_gateway_works():
