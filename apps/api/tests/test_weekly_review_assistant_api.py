@@ -6,6 +6,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+import alters_lab.services.weekly_review_assistant as wr_service
 from alters_lab.main import app
 from alters_lab.services.provider_config import (
     ProviderConfigUpdateRequest,
@@ -49,8 +50,12 @@ def test_status_route():
     assert data["suggestion_persistence_supported"] is False
 
 
-def test_suggest_dry_run_default():
-    resp = client.post("/weekly-review-assistant/suggest", json={})
+def test_suggest_dry_run_default(monkeypatch, tmp_path: Path):
+    lay = _layout(tmp_path)
+    mock_state = type("S", (), {"mode": "disabled", "secret_storage": "secrets_yaml_fallback", "key_name": "test-key"})()
+    monkeypatch.setattr(wr_service, "_load_state", lambda layout=None: (lay, None, mock_state))
+    c = TestClient(app)
+    resp = c.post("/weekly-review-assistant/suggest", json={})
     assert resp.status_code == 200
     data = resp.json()
     assert data["status"] == "skipped"  # disabled by default

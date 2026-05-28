@@ -43,6 +43,7 @@ apps/web/node_modules/
 apps/web/dist/
 .env
 .env.local
+secrets.yaml
 build/deb/
 dist/deb/
 *.deb

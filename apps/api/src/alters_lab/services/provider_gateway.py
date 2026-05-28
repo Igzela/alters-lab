@@ -70,6 +70,11 @@ def _resolve_config_value(field: str) -> str | None:
         provider = config.get("provider", {})
         if not isinstance(provider, dict):
             return None
+        # Check provider-level fields first (e.g., "mode")
+        value = provider.get(field)
+        if isinstance(value, str) and value:
+            return value
+        # Check openai_compatible_http sub-section
         openai = provider.get("openai_compatible_http", {})
         if not isinstance(openai, dict):
             return None
@@ -180,21 +185,59 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
 
     try:
         import httpx
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {
-            "model": request.model or _get_provider_model(),
-            "messages": request.messages,
-            "temperature": request.temperature,
-            "max_tokens": request.max_tokens,
-        }
-        resp = httpx.post(f"{base_url}/chat/completions", json=payload, headers=headers, timeout=30.0)
-        resp.raise_for_status()
-        data = resp.json()
-        content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
-        usage = data.get("usage")
+
+        model = request.model or _get_provider_model()
+        is_anthropic = "/anthropic" in base_url or "anthropic" in base_url.lower()
+
+        if is_anthropic:
+            # Anthropic Messages API format
+            headers = {
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "Content-Type": "application/json",
+            }
+            # Extract system message if present
+            system_msg = None
+            user_messages = []
+            for msg in request.messages:
+                if msg.get("role") == "system":
+                    system_msg = msg.get("content", "")
+                else:
+                    user_messages.append(msg)
+            payload: dict = {
+                "model": model,
+                "messages": user_messages,
+                "max_tokens": request.max_tokens or 1024,
+            }
+            if system_msg:
+                payload["system"] = system_msg
+            if request.temperature is not None:
+                payload["temperature"] = request.temperature
+            resp = httpx.post(f"{base_url}/v1/messages", json=payload, headers=headers, timeout=60.0)
+            resp.raise_for_status()
+            data = resp.json()
+            content = ""
+            for block in data.get("content", []):
+                if block.get("type") == "text":
+                    content += block.get("text", "")
+            usage = data.get("usage")
+        else:
+            # OpenAI-compatible format
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": model,
+                "messages": request.messages,
+                "temperature": request.temperature,
+                "max_tokens": request.max_tokens,
+            }
+            resp = httpx.post(f"{base_url}/chat/completions", json=payload, headers=headers, timeout=30.0)
+            resp.raise_for_status()
+            data = resp.json()
+            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+            usage = data.get("usage")
     except Exception as exc:
         return ProviderGatewayResponse(
             status="error",

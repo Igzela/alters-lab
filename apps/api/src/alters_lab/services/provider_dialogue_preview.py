@@ -83,9 +83,9 @@ def build_provider_dialogue_preview_health() -> ProviderDialoguePreviewHealthRes
 def build_provider_dialogue_preview_status(
     layout: RuntimeLayout | None = None,
 ) -> ProviderDialoguePreviewStatusResponse:
-    _, _, state = _load_state(layout)
-    secrets = SecretStore(layout) if layout else None
-    key_configured = bool(secrets and secrets.secret_configured(state.secret_storage, state.key_name))
+    resolved_layout, _, state = _load_state(layout)
+    secrets = SecretStore(resolved_layout)
+    key_configured = secrets.secret_configured(state.secret_storage, state.key_name)
     configured = state.mode in {"disabled", "mock"} or (
         state.mode == "openai-compatible-http"
         and bool(state.base_url) and bool(state.model) and key_configured
@@ -120,7 +120,7 @@ def run_provider_dialogue_preview(
     layout: RuntimeLayout | None = None,
     http_client: HttpClient | None = None,
 ) -> ProviderDialoguePreviewResponse:
-    _, _, state = _load_state(layout)
+    resolved_layout, _, state = _load_state(layout)
     # Real provider network calls always use saved state.mode, not request.mode.
     # request.mode is only used for mock/disabled preview selection.
     saved_mode = state.mode
@@ -186,8 +186,8 @@ def run_provider_dialogue_preview(
             message="Mock dialogue preview. No network call made.",
         )
 
-    secrets = SecretStore(layout) if layout else None
-    key_configured = bool(secrets and secrets.secret_configured(state.secret_storage, state.key_name))
+    secrets = SecretStore(resolved_layout)
+    key_configured = secrets.secret_configured(state.secret_storage, state.key_name)
     configured = bool(state.base_url) and bool(state.model) and key_configured
 
     if not configured:
@@ -374,8 +374,8 @@ def run_provider_dialogue_preview(
 
 
 def _get_provider_api_key(layout: RuntimeLayout | None = None) -> str | None:
-    _, _, state = _load_state(layout)
-    secrets = SecretStore(layout) if layout else None
+    resolved_layout, _, state = _load_state(layout)
+    secrets = SecretStore(resolved_layout)
     if not secrets:
         return None
     if not secrets.secret_configured(state.secret_storage, state.key_name):

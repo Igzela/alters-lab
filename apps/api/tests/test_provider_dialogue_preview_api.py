@@ -23,8 +23,15 @@ def _layout(tmp_path: Path) -> RuntimeLayout:
     )
 
 
+def _mock_state(mode: str, **extra):
+    defaults = {"secret_storage": "secrets_yaml_fallback", "key_name": "test-key"}
+    defaults.update(extra)
+    return type("S", (), {"mode": mode, **defaults})()
+
+
 def test_dialogue_preview_health(monkeypatch, tmp_path: Path):
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, type("S", (), {"mode": "disabled"})()))
+    lay = _layout(tmp_path)
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, _mock_state("disabled")))
     client = TestClient(app)
 
     response = client.get("/provider-dialogue-preview/health")
@@ -37,7 +44,8 @@ def test_dialogue_preview_health(monkeypatch, tmp_path: Path):
 
 
 def test_dialogue_preview_status(monkeypatch, tmp_path: Path):
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, type("S", (), {"mode": "mock"})()))
+    lay = _layout(tmp_path)
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, _mock_state("mock")))
     client = TestClient(app)
 
     response = client.get("/provider-dialogue-preview/status")
@@ -50,7 +58,8 @@ def test_dialogue_preview_status(monkeypatch, tmp_path: Path):
 
 
 def test_dialogue_preview_generate_mock(monkeypatch, tmp_path: Path):
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, type("S", (), {"mode": "mock"})()))
+    lay = _layout(tmp_path)
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, _mock_state("mock")))
     client = TestClient(app)
 
     response = client.post(
@@ -68,7 +77,8 @@ def test_dialogue_preview_generate_mock(monkeypatch, tmp_path: Path):
 
 
 def test_dialogue_preview_generate_disabled(monkeypatch, tmp_path: Path):
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, type("S", (), {"mode": "disabled"})()))
+    lay = _layout(tmp_path)
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, _mock_state("disabled")))
     client = TestClient(app)
 
     response = client.post(
@@ -83,8 +93,9 @@ def test_dialogue_preview_generate_disabled(monkeypatch, tmp_path: Path):
 
 
 def test_dialogue_preview_generate_blocks_persist(monkeypatch, tmp_path: Path):
-    state = type("S", (), {"mode": "openai-compatible-http", "base_url": "http://127.0.0.1:9999/v1", "model": "m", "secret_storage": "secrets_yaml_fallback", "key_name": "k"})()
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, state))
+    lay = _layout(tmp_path)
+    state = _mock_state("openai-compatible-http", base_url="http://127.0.0.1:9999/v1", model="m")
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, state))
     client = TestClient(app)
 
     response = client.post(
@@ -99,7 +110,8 @@ def test_dialogue_preview_generate_blocks_persist(monkeypatch, tmp_path: Path):
 
 
 def test_dialogue_preview_generate_no_api_key_leak(monkeypatch, tmp_path: Path):
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, type("S", (), {"mode": "mock"})()))
+    lay = _layout(tmp_path)
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, _mock_state("mock")))
     client = TestClient(app)
 
     response = client.post(
@@ -114,7 +126,8 @@ def test_dialogue_preview_generate_no_api_key_leak(monkeypatch, tmp_path: Path):
 
 
 def test_dialogue_preview_generate_no_yaml_writes(monkeypatch, tmp_path: Path):
-    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (None, None, type("S", (), {"mode": "mock"})()))
+    lay = _layout(tmp_path)
+    monkeypatch.setattr(preview_service, "_load_state", lambda layout=None: (lay, None, _mock_state("mock")))
     client = TestClient(app)
 
     response = client.post(

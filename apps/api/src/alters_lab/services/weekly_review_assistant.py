@@ -146,9 +146,9 @@ def build_weekly_review_assistant_health() -> WeeklyReviewAssistantHealthRespons
 def build_weekly_review_assistant_status(
     layout: RuntimeLayout | None = None,
 ) -> WeeklyReviewAssistantStatusResponse:
-    _, _, state = _load_state(layout)
-    secrets = SecretStore(layout) if layout else None
-    key_configured = bool(secrets and secrets.secret_configured(state.secret_storage, state.key_name))
+    resolved_layout, _, state = _load_state(layout)
+    secrets = SecretStore(resolved_layout)
+    key_configured = secrets.secret_configured(state.secret_storage, state.key_name)
     configured = state.mode in {"disabled", "mock"} or (
         state.mode == "openai-compatible-http"
         and bool(state.base_url) and bool(state.model) and key_configured
@@ -164,7 +164,7 @@ def run_weekly_review_assistant(
     layout: RuntimeLayout | None = None,
     http_client: Callable | None = None,
 ) -> WeeklyReviewAssistantResponse:
-    _, _, state = _load_state(layout)
+    resolved_layout, _, state = _load_state(layout)
     saved_mode = state.mode
 
     # Block: save_suggestion=true in P8-M4
@@ -242,8 +242,8 @@ def run_weekly_review_assistant(
         )
 
     # openai-compatible-http path
-    secrets = SecretStore(layout) if layout else None
-    key_configured = bool(secrets and secrets.secret_configured(state.secret_storage, state.key_name))
+    secrets = SecretStore(resolved_layout)
+    key_configured = secrets.secret_configured(state.secret_storage, state.key_name)
     configured = bool(state.base_url) and bool(state.model) and key_configured
 
     if not configured:
