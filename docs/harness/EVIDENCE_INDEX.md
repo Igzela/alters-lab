@@ -418,5 +418,6 @@
 | P10-M6-R1 | P10_M6_WEEK1_VALIDATION_EVIDENCE.md, P10_M6_WEEK1_VALIDATION_EVIDENCE_TEMPLATE.md, 6 governance docs | docs/harness/ | Finalize Week 1 validation evidence governance |
 | P10-M6-CC1 | P10_M6_VALIDATION_WINDOW_CHANGE_CONTROL.md | docs/harness/ | Validation-window change control: allowed/disallowed changes during P6 validation |
 | P10-M6-PREP1 | P10_M6_VALIDATION_RUNBOOK.md, P10_M6_WEEK2_VALIDATION_EVIDENCE_TEMPLATE.md, P10_M6_WEEK3_VALIDATION_EVIDENCE_TEMPLATE.md, P10_M6_WEEK4_VALIDATION_EVIDENCE_TEMPLATE.md | docs/harness/ | Validation runbook and future week evidence templates |
+| P10-M6-UXT1 | P10_M6_UXT1_USABILITY_TRIAGE.md | docs/harness/ | Usability triage: 0 blocker, 0 high, 1 medium, 4 low. Week 2 can proceed. |
 | DOC-HANDOFF-001 | AGENTS.md | ./ | Cross-agent bootstrap, hard boundaries, verification commands, and documentation maintenance rule |
 | DOC-HANDOFF-001 | README.md, CLAUDE.md, START_HERE_FOR_NEW_SESSION.md, CURRENT_SESSION_CONTEXT.md | ./, docs/harness/ | Handoff surface updated so new sessions see P11/Pilot state and commit-time doc maintenance expectations |
