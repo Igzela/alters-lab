@@ -51,8 +51,8 @@ class TestNormalizeMode:
     def test_disabled_unchanged(self):
         assert _normalize_mode("disabled") == "disabled"
 
-    def test_unknown_unchanged(self):
-        assert _normalize_mode("something-else") == "something-else"
+    def test_unknown_normalized(self):
+        assert _normalize_mode("something-else") == "something_else"
 
 
 class TestGetProviderModeNormalization:

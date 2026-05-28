@@ -25,6 +25,7 @@ from alters_lab.services.provider_config import (
     SecretStore,
     _load_state,
 )
+from alters_lab.services.provider_gateway import ANTHROPIC_API_VERSION
 from alters_lab.services.runtime_layout import RuntimeLayout
 
 LIVE_CONFIRMATION = "run-live-provider-dialogue-preview"
@@ -201,6 +202,16 @@ def run_provider_dialogue_preview(
             audit_event_id=audit.event_id,
             message="openai-compatible-http is not configured. Set base_url, model, and API key.",
         )
+        audit = build_provider_dialogue_preview_audit_event(
+            provider_mode="openai-compatible-http", status="blocked",
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+        )
+        return ProviderDialoguePreviewResponse(
+            status="blocked", provider_mode="openai-compatible-http", configured=False,
+            dry_run=request.dry_run, live_generation=False, network_call_made=False,
+            audit_event_id=audit.event_id,
+            message="openai-compatible-http is not configured. Set base_url, model, and API key.",
+        )
 
     if request.dry_run:
         audit = build_provider_dialogue_preview_audit_event(
@@ -265,20 +276,20 @@ def run_provider_dialogue_preview(
     # Live generation with exact confirmation.
     client = http_client or _default_http_client
     base_url = state.base_url.rstrip("/")
-    api_key = _get_provider_api_key(layout) or ""
-    is_anthropic = "/anthropic" in base_url or "anthropic" in base_url.lower()
+    api_key = _get_provider_api_key(resolved_layout=resolved_layout, state=state) or ""
+    is_anthropic = "anthropic" in base_url.lower()
 
     system_content = _truncate(request.system_prompt or DEFAULT_SYSTEM_PROMPT, SYSTEM_PROMPT_MAX_LEN)
     user_content = _truncate(request.prompt, PROMPT_MAX_LEN)
 
     if is_anthropic:
         url = f"{base_url}/v1/messages"
-        headers = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "Content-Type": "application/json"}
+        headers = {"x-api-key": api_key, "anthropic-version": ANTHROPIC_API_VERSION, "Content-Type": "application/json"}
         payload = json.dumps({
             "model": state.model,
             "system": system_content,
             "messages": [{"role": "user", "content": user_content}],
-            "max_tokens": _clamp_max_tokens(request.max_tokens) or 1024,
+            "max_tokens": _clamp_max_tokens(request.max_tokens),
             **({"temperature": _clamp_temperature(request.temperature)} if request.temperature is not None else {}),
         }).encode("utf-8")
     else:
@@ -389,11 +400,16 @@ def run_provider_dialogue_preview(
         )
 
 
-def _get_provider_api_key(layout: RuntimeLayout | None = None) -> str | None:
-    resolved_layout, _, state = _load_state(layout)
-    secrets = SecretStore(resolved_layout)
-    if not secrets:
-        return None
+def _get_provider_api_key(
+    layout: RuntimeLayout | None = None,
+    resolved_layout: RuntimeLayout | None = None,
+    state: Any | None = None,
+) -> str | None:
+    if resolved_layout is not None and state is not None:
+        secrets = SecretStore(resolved_layout)
+    else:
+        resolved_layout, _, state = _load_state(layout)
+        secrets = SecretStore(resolved_layout)
     if not secrets.secret_configured(state.secret_storage, state.key_name):
         return None
     return secrets.get_secret(state.secret_storage, state.key_name)

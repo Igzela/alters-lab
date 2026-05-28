@@ -90,9 +90,6 @@ def _build_user_prompt(request: WeeklyReviewAssistantRequest) -> str:
     if request.review_context:
         parts.append(f"Review context:\n{request.review_context}")
 
-    if not parts:
-        parts.append("No context provided. Provide a general review suggestion.")
-
     return "\n\n".join(parts)
 
 

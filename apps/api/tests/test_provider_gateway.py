@@ -61,8 +61,9 @@ def test_env_api_key_not_returned():
         os.environ["ALTERS_PROVIDER_MODE"] = "mock"
         os.environ["ALTERS_PROVIDER_API_KEY"] = "sk-test-secret-key-12345"
         resp = get_provider_config_status()
-        assert resp.api_key_value == "[redacted]"
-        assert resp.no_secrets_exposed is True
+        # Gateway never returns actual key material
+        assert resp.api_key_configured is True
+        assert "sk-test" not in str(resp.model_dump())
     finally:
         if original is not None:
             os.environ["ALTERS_PROVIDER_MODE"] = original

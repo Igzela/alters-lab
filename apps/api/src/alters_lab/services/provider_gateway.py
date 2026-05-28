@@ -19,7 +19,9 @@ from alters_lab.schemas.provider_gateway import (
     ProviderGatewayResponse,
 )
 
-VALID_MODES = {"mock", "disabled", "openai_compatible_http", "openai-compatible-http"}
+VALID_MODES = {"mock", "disabled", "openai_compatible_http"}
+
+ANTHROPIC_API_VERSION = "2023-06-01"
 
 _MOCK_REPLIES = {
     "default": "I understand your question. As a mock provider, I'm simulating a thoughtful response based on the alter context provided.",
@@ -28,10 +30,7 @@ _MOCK_REPLIES = {
 
 def _normalize_mode(value: str) -> str:
     """Normalize provider mode to internal canonical form (underscore)."""
-    normalized = value.replace("-", "_")
-    if normalized in {"openai_compatible_http"}:
-        return normalized
-    return value
+    return value.replace("-", "_")
 
 
 def _get_provider_mode() -> str:
@@ -168,7 +167,7 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
             model=request.model or _get_provider_model(),
             content=redacted,
             usage={"prompt_tokens": 0, "completion_tokens": len(content.split()), "total_tokens": len(content.split())},
-            redaction_summary={"fields_redacted": 0, "api_key_exposed": False},
+            redaction_summary={"fields_redacted": _count_redactions(content, redacted), "api_key_exposed": False},
             persisted=False,
             active_yaml_modified=False,
         )
@@ -190,16 +189,18 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
         import httpx
 
         model = request.model or _get_provider_model()
-        is_anthropic = "/anthropic" in base_url or "anthropic" in base_url.lower()
+        is_anthropic = "anthropic" in base_url.lower()
+        timeout = float(_resolve_config_value("timeout_seconds") or 60)
+
+        max_tokens = max(1, request.max_tokens) if request.max_tokens else 800
+        temperature = request.temperature if request.temperature is not None else 0.2
 
         if is_anthropic:
-            # Anthropic Messages API format
             headers = {
                 "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
+                "anthropic-version": ANTHROPIC_API_VERSION,
                 "Content-Type": "application/json",
             }
-            # Extract system message if present
             system_msg = None
             user_messages = []
             for msg in request.messages:
@@ -210,13 +211,12 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
             payload: dict = {
                 "model": model,
                 "messages": user_messages,
-                "max_tokens": request.max_tokens or 1024,
+                "max_tokens": max_tokens,
             }
             if system_msg:
                 payload["system"] = system_msg
-            if request.temperature is not None:
-                payload["temperature"] = request.temperature
-            resp = httpx.post(f"{base_url}/v1/messages", json=payload, headers=headers, timeout=60.0)
+            payload["temperature"] = temperature
+            resp = httpx.post(f"{base_url}/v1/messages", json=payload, headers=headers, timeout=timeout)
             resp.raise_for_status()
             data = resp.json()
             content = ""
@@ -225,7 +225,6 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
                     content += block.get("text", "")
             usage = data.get("usage")
         else:
-            # OpenAI-compatible format
             headers = {
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
@@ -233,14 +232,23 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
             payload = {
                 "model": model,
                 "messages": request.messages,
-                "temperature": request.temperature,
-                "max_tokens": request.max_tokens,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
             }
-            resp = httpx.post(f"{base_url}/chat/completions", json=payload, headers=headers, timeout=30.0)
+            resp = httpx.post(f"{base_url}/chat/completions", json=payload, headers=headers, timeout=timeout)
             resp.raise_for_status()
             data = resp.json()
             content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
             usage = data.get("usage")
+    except ModuleNotFoundError:
+        return ProviderGatewayResponse(
+            status="error",
+            mode=mode,
+            model=_get_provider_model(),
+            content="httpx package not installed. Install with: pip install httpx",
+            persisted=False,
+            active_yaml_modified=False,
+        )
     except Exception as exc:
         return ProviderGatewayResponse(
             status="error",
@@ -258,7 +266,7 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
         model=request.model or _get_provider_model(),
         content=redacted_content,
         usage=usage,
-        redaction_summary={"fields_redacted": 0, "api_key_exposed": False},
+        redaction_summary={"fields_redacted": _count_redactions(content, redacted_content), "api_key_exposed": False},
         persisted=False,
         active_yaml_modified=False,
     )
