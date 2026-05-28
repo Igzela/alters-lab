@@ -12,14 +12,15 @@
 | Pattern reviews after 2026-05-28 | 1 | Must evaluate valid post-start evidence |
 | Time window | 21 days / 4 ISO weeks | From validation start date |
 
-## Current Counters (Before Week 1)
+## Current Counters (After Week 1)
 
 | Counter | Current | Notes |
 |---------|---------|-------|
-| weekly_reviews_after_start | 0 | Pre-start reviews do not count |
-| calibration_or_action_alignment_records_after_start | 0 | Pre-start records do not count |
-| pattern_reviews_after_start | 0 | Pre-start reviews do not count |
-| days_elapsed_since_start | 0 | Calculated from 2026-05-28 |
+| weekly_reviews_after_start | 1 | Week 1 review completed |
+| calibration_or_action_alignment_records_after_start | 1 | Action alignment score created |
+| pattern_reviews_after_start | 0 | Not attempted in Week 1 |
+| days_elapsed_since_start | 0 | Same day as validation start |
+| p6_ready_for_closeout | false | Need 3 more reviews, 3 more records, 1 pattern review |
 
 ## What Does NOT Count
 
@@ -31,14 +32,21 @@
 - Provider output
 - Any record created before 2026-05-28
 
-## After Week 1 Execution
+## Week 1 Evidence Generated
 
-After Charlie completes Week 1 packaged-app operations, counters update to:
+| Record Type | Status | Reference |
+|-------------|--------|-----------|
+| Weekly note | Ingested | redacted_for_pii |
+| Weekly review | Completed | redacted_for_pii |
+| Action alignment | Scored | redacted_for_pii |
+| Pattern review | Not attempted | N/A |
 
-| Counter | Expected After Week 1 |
-|---------|----------------------|
-| weekly_reviews_after_start | 1 |
-| calibration_or_action_alignment_records_after_start | 1 |
-| pattern_reviews_after_start | 0 or 1 (optional) |
-| days_elapsed_since_start | 7 (approximately) |
-| p6_ready_for_closeout | false (need 3 more weeks) |
+## Progress to P6 Closeout
+
+| Requirement | Current | Remaining | Status |
+|-------------|---------|-----------|--------|
+| Weekly reviews | 1 | 3 | In progress |
+| Calibration records | 1 | 3 | In progress |
+| Pattern reviews | 0 | 1 | Not started |
+| Time window | 0 days | 21 days | Just started |
+| P6 ready for closeout | false | - | Blocked by requirements |
