@@ -7,12 +7,13 @@ import { Card } from '../components/Card'
 import { Input, Select } from '../components/Input'
 import { Banner } from '../components/Banner'
 
-const ALTERS = [
-  { id: 'alter_A', label: 'Alter A' },
-  { id: 'alter_B', label: 'Alter B' },
-  { id: 'alter_C', label: 'Alter C' },
-  { id: 'alter_D', label: 'Alter D' },
-]
+const ALTERS = ['alter_A', 'alter_B', 'alter_C', 'alter_D']
+const ALTER_LABELS: Record<string, string> = {
+  alter_A: 'common.alterA',
+  alter_B: 'common.alterB',
+  alter_C: 'common.alterC',
+  alter_D: 'common.alterD',
+}
 
 export default function AlterDialogue() {
   const { t } = useTranslation()
@@ -52,7 +53,7 @@ export default function AlterDialogue() {
       <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('dialogue.title')}</h2>
       <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('dialogue.description')}</p>
       <Select value={alterId} onChange={e => setAlterId(e.target.value)}>
-        {ALTERS.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
+        {ALTERS.map(a => <option key={a} value={a}>{t(ALTER_LABELS[a])}</option>)}
       </Select>
       <div className="flex gap-2">
         <Input

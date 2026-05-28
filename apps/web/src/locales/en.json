@@ -11,7 +11,11 @@
     "typeProject": "Project",
     "typeLearning": "Learning",
     "typeRelationship": "Relationship",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "alterA": "Alter A",
+    "alterB": "Alter B",
+    "alterC": "Alter C",
+    "alterD": "Alter D"
   },
   "app": {
     "title": "Alters Lab"

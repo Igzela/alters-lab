@@ -11,7 +11,11 @@
     "typeProject": "项目",
     "typeLearning": "学习",
     "typeRelationship": "关系",
-    "skipToContent": "跳转到内容"
+    "skipToContent": "跳转到内容",
+    "alterA": "角色 A",
+    "alterB": "角色 B",
+    "alterC": "角色 C",
+    "alterD": "角色 D"
   },
   "app": {
     "title": "Alters Lab"
