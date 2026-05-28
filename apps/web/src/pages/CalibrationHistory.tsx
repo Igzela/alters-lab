@@ -65,7 +65,7 @@ export default function CalibrationHistory() {
     }
   }, [data, weeklyReviews, actionScores])
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   if (error && !data) return <ErrorDisplay message={error} onRetry={() => { setError(''); setRetryCount(c => c + 1) }} />
   if (!data) return (
@@ -119,7 +119,7 @@ export default function CalibrationHistory() {
           <span className="text-xs" style={{ color: '#7c7c6f' }}>
             {t('history.note')} {session.weekly_note_record_id}
           </span><br />
-          {session.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{t('history.created')} {formatDate(session.created_at)}</span>}<br />
+          {session.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{t('history.created')} {formatDate(session.created_at, i18n.language)}</span>}<br />
           <span className="text-xs" style={{ color: '#7c7c6f' }}>Next correction: {session.next_week_primary_correction || t('history.pending')}</span>
         </Card>
       ))}
@@ -141,7 +141,7 @@ export default function CalibrationHistory() {
           <span className="text-xs" style={{ color: '#7c7c6f' }}>
             {t('history.verdict')} {score.verdict_label.replace(/_/g, ' ')}
           </span><br />
-          {score.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{formatDate(score.created_at)}</span>}
+          {score.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{formatDate(score.created_at, i18n.language)}</span>}
 
           {selectedScore?.score_id === score.score_id && (
             <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: '#0e100f', border: '1px solid #242624' }}>

@@ -41,7 +41,7 @@ const STATUS_BADGE: Record<string, 'muted' | 'success' | 'warning'> = {
 }
 
 export default function PatternReview() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [reviews, setReviews] = useState<PatternReviewRecord[]>([])
   const [selected, setSelected] = useState<PatternReviewRecord | null>(null)
   const [building, setBuilding] = useState(false)
@@ -135,7 +135,7 @@ export default function PatternReview() {
           </div>
           <div className="text-xs mt-1" style={{ color: '#7c7c6f' }}>
             {t('patterns.weeksEvaluated')} {r.weeks_evaluated} | {t('patterns.patternsTriggered')} {r.triggered_patterns.length}
-            {r.created_at && <span className="ml-2">{formatDate(r.created_at)}</span>}
+            {r.created_at && <span className="ml-2">{formatDate(r.created_at, i18n.language)}</span>}
           </div>
         </div>
       ))}
