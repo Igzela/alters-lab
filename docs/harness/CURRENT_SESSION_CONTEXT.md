@@ -13,7 +13,7 @@ Last updated: 2026-05-28
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 through P10-M6 done; P10-M7 blocked
 - P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
-- P12: Owner override — UI improvements during validation window. P12-000 done. P12-M1 (Tailwind) ready_with_approval. P12-M2 through P12-M7 blocked.
+- P12: Owner override — UI improvements during validation window. P12-000 done. P12-M1 (Tailwind) done. P12-M2 (Loading/Error) ready_with_approval. P12-M3 through P12-M7 blocked.
 
 ## Current State
 
@@ -21,16 +21,17 @@ Last updated: 2026-05-28
 - P6: CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED
 - P6 validation paused: 2026-05-28 (owner override for UI improvements)
 - Week 1 evidence preserved but not counted by default
-- P12-M1: ready_with_approval (Tailwind visual baseline)
-- P12-M2 through P12-M7: blocked
+- P12-M1: done (Tailwind visual baseline, all 13 pages converted, build passes)
+- P12-M2: ready_with_approval (Loading and error-state system)
+- P12-M3 through P12-M7: blocked
 - P10-M7: blocked
 
 ## Next Task
 
-P12-M1: Tailwind visual baseline
-1. Install Tailwind CSS in frontend
-2. Convert all pages to Tailwind classes
-3. Visual baseline pass for all existing pages
+P12-M2: Loading and error-state system
+1. Add loading spinners/skeletons to all async pages
+2. Add consistent error-state UI with retry
+3. Verify all API call failure modes display cleanly
 
 ## Verification Commands
 

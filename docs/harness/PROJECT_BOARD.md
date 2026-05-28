@@ -166,8 +166,8 @@ P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED**
 | ID | Title | Status |
 |----|-------|--------|
 | P12-000 | Owner override plan and validation pause | **done** |
-| P12-M1 | Tailwind visual baseline | **ready_with_approval** |
-| P12-M2 | Loading and error-state system | **blocked** |
+| P12-M1 | Tailwind visual baseline | **done** |
+| P12-M2 | Loading and error-state system | **ready_with_approval** |
 | P12-M3 | i18n zh/en toggle | **blocked** |
 | P12-M4 | New-user guided path | **blocked** |
 | P12-M5 | GSAP motion layer | **blocked** |

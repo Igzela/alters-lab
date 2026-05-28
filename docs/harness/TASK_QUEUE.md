@@ -942,7 +942,14 @@
 
 ### P12-M1: Tailwind visual baseline
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Add Tailwind CSS as the visual baseline for all frontend pages.
 **Depends on**: P12-000 (done)
-**Notes**: Not started. Pending approval.
+**Notes**: Done. Installed Tailwind CSS v4 with @tailwindcss/vite plugin. Created index.css with @import "tailwindcss". Added vite-env.d.ts for CSS type declarations. Converted all 13 frontend pages from inline styles to Tailwind CSS: App.tsx, SystemStatus, GettingStarted, AlterDialogue, RubricDelta, CheckpointPlan, RealityScore, CalibrationHistory, ProviderSettings, PatternReview, BehaviorValidation, DataManagement, P6Progress, WeeklyReview. Dark theme: gray-800 backgrounds, gray-700 borders, white text. Build passes (14.88 kB CSS, 205.33 kB JS). 1270 backend tests pass. Deb build passes. No GSAP/i18n added. No backend drift. Commit: bd6c58d. GPT R1 verification: all checks PASS.
+
+### P12-M2: Loading and error-state system
+
+**Status**: ready_with_approval
+**Goal**: Add consistent loading spinners/skeletons and error-state UI with retry to all async frontend pages.
+**Depends on**: P12-M1 (done)
+**Notes**: Pending approval.

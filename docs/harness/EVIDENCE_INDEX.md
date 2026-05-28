@@ -422,3 +422,4 @@
 | DOC-HANDOFF-001 | AGENTS.md | ./ | Cross-agent bootstrap, hard boundaries, verification commands, and documentation maintenance rule |
 | DOC-HANDOFF-001 | README.md, CLAUDE.md, START_HERE_FOR_NEW_SESSION.md, CURRENT_SESSION_CONTEXT.md | ./, docs/harness/ | Handoff surface updated so new sessions see P11/Pilot state and commit-time doc maintenance expectations |
 | P12-000 | P12_000_UI_OVERRIDE_PLAN.md | docs/harness/ | Owner override plan: P6 validation paused for product change, P12 UI improvement milestones defined |
+| P12-M1 | Tailwind CSS conversion (20 files) | apps/web/ | Tailwind v4 installed, all 13 pages converted from inline styles, dark theme applied, build passes |
