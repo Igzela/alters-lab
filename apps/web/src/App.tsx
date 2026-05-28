@@ -59,6 +59,13 @@ export default function App() {
   return (
     <ToastProvider>
     <div className="min-h-screen" style={{ backgroundColor: '#0e100f', color: '#fffce1' }}>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-lg focus:text-sm"
+        style={{ backgroundColor: '#242624', color: '#fffce1' }}
+      >
+        {t('common.skipToContent')}
+      </a>
       <div className="max-w-[960px] mx-auto px-6 py-8">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>

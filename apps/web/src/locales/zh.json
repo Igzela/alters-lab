@@ -10,7 +10,8 @@
     "typePersonal": "个人",
     "typeProject": "项目",
     "typeLearning": "学习",
-    "typeRelationship": "关系"
+    "typeRelationship": "关系",
+    "skipToContent": "跳转到内容"
   },
   "app": {
     "title": "Alters Lab"
