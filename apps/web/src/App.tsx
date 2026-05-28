@@ -20,7 +20,9 @@ export default function App() {
   const { t, i18n } = useTranslation()
 
   const toggleLang = () => {
-    i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en')
+    const next = i18n.language === 'en' ? 'zh' : 'en'
+    i18n.changeLanguage(next)
+    localStorage.setItem('alters_lab_language', next)
   }
 
   const navBtn = (p: Page) =>
