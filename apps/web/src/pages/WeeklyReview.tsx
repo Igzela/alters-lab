@@ -263,7 +263,14 @@ export default function WeeklyReview() {
       <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('weeklyReview.description')}</p>
       <P6Progress />
 
-      <div className="flex gap-2 flex-wrap mb-4">
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-xs" style={{ color: '#7c7c6f' }}>{step}/6</span>
+          <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: '#242624' }}>
+            <div className="h-1 rounded-full transition-all duration-300" style={{ backgroundColor: '#9d95ff', width: `${(step / 6) * 100}%` }} />
+          </div>
+        </div>
+        <div className="flex gap-2 flex-wrap">
         {[1, 2, 3, 4, 5, 6].map(n => (
           <button
             key={n}
@@ -279,6 +286,7 @@ export default function WeeklyReview() {
             {t(`weeklyReview.step${n}`)}
           </button>
         ))}
+        </div>
       </div>
 
       {error && <Banner variant="error">{t('weeklyReview.error')} {error}</Banner>}
