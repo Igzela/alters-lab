@@ -438,3 +438,5 @@
 | P12-M5 | Page entry animation | apps/web/src/App.tsx | Fade-in animation on page transitions |
 | P12-M5 | Error animation | apps/web/src/components/ErrorDisplay.tsx | Fade-in and shake animation on error display |
 | P12-M5-R1 | Reduced motion guard | apps/web/src/animations.ts | prefersReduced check skips all GSAP animations when user has prefers-reduced-motion: reduce |
+| P12-M6 | P8 product smoke PASS | tools/p8_e2e_product_smoke.py | All routes ok, mock provider works, weekly review flow completes, no real provider calls |
+| P12-M6 | Browser verification | http://127.0.0.1:18790 | Weekly Review (6-step wizard, progress), Getting Started (4 onboarding steps), Status (P6 state correct) |

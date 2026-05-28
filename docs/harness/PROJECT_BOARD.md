@@ -171,7 +171,7 @@ P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED**
 | P12-M3 | i18n zh/en toggle | **done** |
 | P12-M4 | New-user guided path | **done** |
 | P12-M5 | GSAP motion layer | **done** |
-| P12-M6 | Product smoke and real-use pilot | **ready_with_approval** |
+| P12-M6 | Product smoke and real-use pilot | **done** |
 | P12-M7 | P6 validation restart decision | **blocked** |
 
 P6 state: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED** — Owner override: Charlie requested UI improvements during validation window. P6 validation paused. Week 1 evidence preserved but not counted by default.
