@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { postJson } from '../api'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Input, Select } from '../components/Input'
+import { Banner } from '../components/Banner'
 
 const ALTERS = ['alter_A', 'alter_B', 'alter_C', 'alter_D']
 
@@ -30,38 +34,30 @@ export default function AlterDialogue() {
   }
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-semibold">{t('dialogue.title')}</h2>
-      <p className="text-gray-500 text-xs">{t('dialogue.description')}</p>
-      <select
-        className="border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white"
-        value={alterId}
-        onChange={e => setAlterId(e.target.value)}
-      >
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('dialogue.title')}</h2>
+      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('dialogue.description')}</p>
+      <Select value={alterId} onChange={e => setAlterId(e.target.value)}>
         {ALTERS.map(a => <option key={a} value={a}>{a}</option>)}
-      </select>
+      </Select>
       <div className="flex gap-2">
-        <input
-          className="flex-1 border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white placeholder-gray-500"
+        <Input
           value={message}
           onChange={e => setMessage(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
           placeholder={t('dialogue.placeholder')}
+          className="flex-1"
         />
-        <button
-          className="px-4 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-          onClick={send}
-          disabled={loading}
-        >
+        <Button variant="primary" accent="blue" onClick={send} disabled={loading}>
           {loading ? '...' : t('dialogue.send')}
-        </button>
+        </Button>
       </div>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <Banner variant="error">{error}</Banner>}
       {reply && (
-        <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-700">
+        <Card accent="blue">
           <strong className="text-sm">{t('dialogue.reply')}</strong>
-          <p className="text-sm whitespace-pre-wrap mt-1">{reply}</p>
-        </div>
+          <p className="text-sm whitespace-pre-wrap mt-1" style={{ color: '#c4c2b8' }}>{reply}</p>
+        </Card>
       )}
     </div>
   )

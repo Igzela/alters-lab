@@ -11,6 +11,11 @@ import {
   suggestWeeklyReviewAssistant,
 } from '../api'
 import type { ActionAlignmentScore, VerdictLabel, WeeklyNoteRecord, WeeklyReviewSession } from '../types'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Input, Field, Select } from '../components/Input'
+import { Badge } from '../components/Badge'
+import { Banner } from '../components/Banner'
 import P6Progress from './P6Progress'
 
 const today = new Date().toISOString().slice(0, 10)
@@ -39,10 +44,6 @@ One concrete friction or avoidance point.
 ## Desired Correction
 One primary correction for next week.
 `
-
-const btn = 'px-3 py-2 text-sm bg-gray-800 text-white rounded border border-gray-700 hover:bg-gray-700 disabled:opacity-50'
-const input = 'w-full px-2.5 py-2 border border-gray-600 rounded text-sm bg-gray-800 text-white'
-const field = 'grid gap-1.5 mb-3'
 
 const verdicts: VerdictLabel[] = [
   'aligned_progress',
@@ -258,15 +259,19 @@ export default function WeeklyReview() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('weeklyReview.title')}</h2>
-      <p className="text-gray-500 text-xs">{t('weeklyReview.description')}</p>
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('weeklyReview.title')}</h2>
+      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('weeklyReview.description')}</p>
       <P6Progress />
 
       <div className="flex gap-2 flex-wrap mb-4">
         {[1, 2, 3, 4, 5, 6].map(n => (
           <button
             key={n}
-            className={`${btn} ${step === n ? 'bg-gray-800 text-white' : 'bg-transparent text-gray-400 border border-gray-600 hover:text-white hover:bg-gray-800/50'}`}
+            className="px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-none cursor-pointer"
+            style={{
+              backgroundColor: step === n ? '#242624' : 'transparent',
+              color: step === n ? '#fffce1' : '#7c7c6f',
+            }}
             type="button"
             onClick={() => setStep(n as Step)}
             disabled={n > 1 && !noteRecord}
@@ -276,250 +281,259 @@ export default function WeeklyReview() {
         ))}
       </div>
 
-      {error && <p className="text-red-500 text-sm">{t('weeklyReview.error')} {error}</p>}
-      {message && <p className="text-green-400 text-sm">{message}</p>}
+      {error && <Banner variant="error">{t('weeklyReview.error')} {error}</Banner>}
+      {message && <Banner variant="success">{message}</Banner>}
 
       {step === 1 && (
-        <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
+        <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step1Title')}</h3>
-          <button className={`${btn} mb-2.5`} type="button" onClick={() => setRawNote(NOTE_TEMPLATE)}>
+          <Button variant="secondary" className="mb-3" onClick={() => setRawNote(NOTE_TEMPLATE)}>
             {t('weeklyReview.useTemplate')}
-          </button>
+          </Button>
           <textarea
-            className={`${input} min-h-[280px] font-mono`}
+            className="w-full px-3 py-2 text-sm rounded-lg border outline-none transition-colors min-h-[280px] font-mono"
+            style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }}
             value={rawNote}
             onChange={e => setRawNote(e.target.value)}
             placeholder={NOTE_TEMPLATE}
           />
-          <button className={`${btn} mt-2.5`} type="button" onClick={ingest} disabled={!!loading || !rawNote.trim()}>
-            {loading === 'ingesting' ? t('weeklyReview.ingesting') : t('weeklyReview.ingestNote')}
-          </button>
-          {noteRecord && <p className="text-sm text-gray-400 mt-2">{t('weeklyReview.savedRecordId')} {noteRecord.record_id}</p>}
-        </section>
+          <div className="mt-3">
+            <Button variant="primary" onClick={ingest} disabled={!!loading || !rawNote.trim()}>
+              {loading === 'ingesting' ? t('weeklyReview.ingesting') : t('weeklyReview.ingestNote')}
+            </Button>
+          </div>
+          {noteRecord && <p className="text-sm mt-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.savedRecordId')} {noteRecord.record_id}</p>}
+        </Card>
       )}
 
       {step === 2 && noteRecord && editRecord && (
-        <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
+        <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step2Title')}</h3>
-          <p className="text-sm text-gray-400 mb-2">{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? 'Yes' : 'No'}</p>
-          <Field label="session_type" value={editRecord.session_type} editing={editEnabled} onChange={v => setEditRecord({ ...editRecord, session_type: v as WeeklyNoteRecord['session_type'] })} />
-          <label className={field}>
-            observable_facts
+          <p className="text-sm mb-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? 'Yes' : 'No'}</p>
+          <Field label="session_type">
+            {editEnabled ? (
+              <Select value={editRecord.session_type} onChange={e => setEditRecord({ ...editRecord, session_type: e.target.value as WeeklyNoteRecord['session_type'] })}>
+                <option value="personal">personal</option>
+                <option value="project">project</option>
+                <option value="learning">learning</option>
+                <option value="relationship">relationship</option>
+              </Select>
+            ) : (
+              <span className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.session_type}</span>
+            )}
+          </Field>
+          <Field label="observable_facts">
             {editEnabled ? (
               <textarea
-                className={`${input} min-h-[100px]`}
+                className="w-full px-3 py-2 text-sm rounded-lg border outline-none min-h-[100px]"
+                style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }}
                 value={editRecord.observable_facts.join('\n')}
                 onChange={e => setEditRecord({ ...editRecord, observable_facts: e.target.value.split('\n').map(v => v.trim()).filter(Boolean) })}
               />
             ) : (
-              <ul className="text-sm text-gray-300">{noteRecord.observable_facts.map((fact, i) => <li key={i}>{fact}</li>)}</ul>
+              <ul className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.observable_facts.map((fact, i) => <li key={i}>{fact}</li>)}</ul>
             )}
-          </label>
-          <Field label="subjective_state" value={editRecord.subjective_state} editing={editEnabled} onChange={v => setEditRecord({ ...editRecord, subjective_state: v })} />
-          <Field label="primary_problem" value={editRecord.primary_problem} editing={editEnabled} onChange={v => setEditRecord({ ...editRecord, primary_problem: v })} />
-          <Field label="friction_or_avoidance_point" value={editRecord.friction_or_avoidance_point} editing={editEnabled} onChange={v => setEditRecord({ ...editRecord, friction_or_avoidance_point: v })} />
-          <Field label="desired_correction / primary correction" value={editRecord.desired_correction} editing={editEnabled} onChange={v => setEditRecord({ ...editRecord, desired_correction: v })} />
+          </Field>
+          <Field label="subjective_state">
+            {editEnabled ? <Input value={editRecord.subjective_state} onChange={e => setEditRecord({ ...editRecord, subjective_state: e.target.value })} /> : <span className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.subjective_state}</span>}
+          </Field>
+          <Field label="primary_problem">
+            {editEnabled ? <Input value={editRecord.primary_problem} onChange={e => setEditRecord({ ...editRecord, primary_problem: e.target.value })} /> : <span className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.primary_problem}</span>}
+          </Field>
+          <Field label="friction_or_avoidance_point">
+            {editEnabled ? <Input value={editRecord.friction_or_avoidance_point} onChange={e => setEditRecord({ ...editRecord, friction_or_avoidance_point: e.target.value })} /> : <span className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.friction_or_avoidance_point}</span>}
+          </Field>
+          <Field label="desired_correction / primary correction">
+            {editEnabled ? <Input value={editRecord.desired_correction} onChange={e => setEditRecord({ ...editRecord, desired_correction: e.target.value })} /> : <span className="text-sm" style={{ color: '#c4c2b8' }}>{noteRecord.desired_correction}</span>}
+          </Field>
           {editEnabled && (
-            <label className={field}>
-              correction_note
-              <input className={input} value={correctionNote} onChange={e => setCorrectionNote(e.target.value)} />
-            </label>
+            <Field label="correction_note">
+              <Input value={correctionNote} onChange={e => setCorrectionNote(e.target.value)} />
+            </Field>
           )}
           <div className="flex gap-2 flex-wrap">
-            <button className={btn} type="button" onClick={() => setEditEnabled(!editEnabled)}>
+            <Button variant="secondary" onClick={() => setEditEnabled(!editEnabled)}>
               {editEnabled ? t('weeklyReview.cancelEdit') : t('weeklyReview.editFields')}
-            </button>
-            {editEnabled && <button className={btn} type="button" onClick={saveEdit} disabled={!!loading || !correctionNote.trim()}>{t('weeklyReview.saveEdit')}</button>}
-            <button className={btn} type="button" onClick={() => setStep(3)}>{t('weeklyReview.continue')}</button>
+            </Button>
+            {editEnabled && <Button variant="primary" onClick={saveEdit} disabled={!!loading || !correctionNote.trim()}>{t('weeklyReview.saveEdit')}</Button>}
+            <Button variant="ghost" onClick={() => setStep(3)}>{t('weeklyReview.continue')}</Button>
           </div>
-        </section>
+        </Card>
       )}
 
       {step === 3 && noteRecord && (
-        <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
+        <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step3Title')}</h3>
-          <label className={field}>
-            {t('weeklyReview.selectAlter')}
-            <select className={input} value={selectedAlter} onChange={e => setSelectedAlter(e.target.value)}>
+          <Field label={t('weeklyReview.selectAlter')}>
+            <Select value={selectedAlter} onChange={e => setSelectedAlter(e.target.value)}>
               <option value="">{t('weeklyReview.systemRecommended')}</option>
               {alterOptions.map(a => (
                 <option key={a.id} value={a.id}>{a.name}</option>
               ))}
-            </select>
-          </label>
-          <button className={btn} type="button" onClick={startReview} disabled={!!loading}>
+            </Select>
+          </Field>
+          <Button variant="primary" onClick={startReview} disabled={!!loading}>
             {loading === 'starting review' ? t('weeklyReview.starting') : t('weeklyReview.startReview')}
-          </button>
-          {session && <p className="text-sm text-gray-400 mt-2">{t('weeklyReview.sessionId')} {session.session_id}</p>}
-        </section>
+          </Button>
+          {session && <p className="text-sm mt-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.sessionId')} {session.session_id}</p>}
+        </Card>
       )}
 
       {step === 4 && session && (
-        <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
+        <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step4Title')}</h3>
-          <TextArea label={t('weeklyReview.reviewNote')} value={reviewNote} onChange={setReviewNote} />
-          <TextArea label={t('weeklyReview.dialogueSummary')} value={dialogueSummary} onChange={setDialogueSummary} />
-          <TextInput label={t('weeklyReview.primaryNextCorrection')} value={primaryNextCorrection} onChange={setPrimaryNextCorrection} />
-          <TextInput label={t('weeklyReview.supportingAction1')} value={supportingAction1} onChange={setSupportingAction1} />
-          <TextInput label={t('weeklyReview.supportingAction2')} value={supportingAction2} onChange={setSupportingAction2} />
+          <Field label={t('weeklyReview.reviewNote')}>
+            <textarea className="w-full px-3 py-2 text-sm rounded-lg border outline-none min-h-[80px]" style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }} value={reviewNote} onChange={e => setReviewNote(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.dialogueSummary')}>
+            <textarea className="w-full px-3 py-2 text-sm rounded-lg border outline-none min-h-[80px]" style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }} value={dialogueSummary} onChange={e => setDialogueSummary(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.primaryNextCorrection')}>
+            <Input value={primaryNextCorrection} onChange={e => setPrimaryNextCorrection(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.supportingAction1')}>
+            <Input value={supportingAction1} onChange={e => setSupportingAction1(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.supportingAction2')}>
+            <Input value={supportingAction2} onChange={e => setSupportingAction2(e.target.value)} />
+          </Field>
 
-          <div className="border border-gray-600 rounded-lg p-3.5 mb-4 bg-gray-800/30">
+          <Card variant="raised">
             <h4 className="text-sm font-medium mb-1.5">{t('weeklyReview.assistantSuggestion')}</h4>
-            <p className="text-xs text-gray-400 mb-2">{t('weeklyReview.providerAdvisory')}</p>
-            <label className={field}>
-              {t('weeklyReview.requestedHelp')}
-              <select className={input} value={assistantHelp} onChange={e => setAssistantHelp(e.target.value)}>
+            <p className="text-xs mb-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.providerAdvisory')}</p>
+            <Field label={t('weeklyReview.requestedHelp')}>
+              <Select value={assistantHelp} onChange={e => setAssistantHelp(e.target.value)}>
                 <option value="general_review_suggestion">{t('weeklyReview.generalSuggestion')}</option>
                 <option value="summarize_facts">{t('weeklyReview.summarizeFacts')}</option>
                 <option value="identify_friction">{t('weeklyReview.identifyFriction')}</option>
                 <option value="draft_primary_correction">{t('weeklyReview.draftCorrection')}</option>
                 <option value="suggest_supporting_actions">{t('weeklyReview.suggestActions')}</option>
                 <option value="challenge_avoidance">{t('weeklyReview.challengeAvoidance')}</option>
-              </select>
-            </label>
+              </Select>
+            </Field>
             <div className="flex gap-2 flex-wrap mb-2.5">
-              <button className={btn} type="button" onClick={() => loadAssistantStatus()} disabled={assistantLoading}>
+              <Button variant="secondary" onClick={() => loadAssistantStatus()} disabled={assistantLoading}>
                 {t('weeklyReview.checkProvider')}
-              </button>
-              <button className={btn} type="button" onClick={() => generateSuggestion(false)} disabled={!!loading || assistantLoading}>
+              </Button>
+              <Button variant="secondary" onClick={() => generateSuggestion(false)} disabled={!!loading || assistantLoading}>
                 {loading === 'generating suggestion' ? t('weeklyReview.generating') : t('weeklyReview.generateDryRun')}
-              </button>
+              </Button>
             </div>
             {assistantStatus && (
-              <p className="text-xs text-gray-400">{t('weeklyReview.providerMode')} {assistantStatus.provider_mode} | {t('provider.configured')} {assistantStatus.configured ? 'yes' : 'no'}</p>
+              <p className="text-xs" style={{ color: '#7c7c6f' }}>{t('weeklyReview.providerMode')} {assistantStatus.provider_mode} | {t('provider.configured')} <Badge variant={assistantStatus.configured ? 'success' : 'muted'}>{assistantStatus.configured ? 'yes' : 'no'}</Badge></p>
             )}
             {assistantStatus?.configured && assistantStatus.provider_mode === 'openai-compatible-http' && (
               <div className="mt-2">
-                <label className="grid gap-1.5 mb-2">
-                  {t('weeklyReview.liveConfirmation')}
-                  <input className={input} value={assistantLiveConfirmation} onChange={e => setAssistantLiveConfirmation(e.target.value)} placeholder="run-live-weekly-review-assistant" />
-                </label>
-                <button className={btn} type="button" onClick={() => generateSuggestion(true)} disabled={!!loading || assistantLoading || assistantLiveConfirmation !== 'run-live-weekly-review-assistant'}>
+                <Field label={t('weeklyReview.liveConfirmation')}>
+                  <Input value={assistantLiveConfirmation} onChange={e => setAssistantLiveConfirmation(e.target.value)} placeholder="run-live-weekly-review-assistant" />
+                </Field>
+                <Button variant="primary" accent="blue" onClick={() => generateSuggestion(true)} disabled={!!loading || assistantLoading || assistantLiveConfirmation !== 'run-live-weekly-review-assistant'}>
                   {t('weeklyReview.generateLive')}
-                </button>
+                </Button>
               </div>
             )}
-            {assistantError && <p className="text-red-500 text-sm mt-2">{assistantError}</p>}
+            {assistantError && <Banner variant="error" className="mt-2">{assistantError}</Banner>}
             {assistantSuggestion && (
-              <div className="mt-2.5 p-2.5 border border-gray-600 rounded bg-white">
-                <p className="text-xs font-semibold text-gray-400 mb-1.5">{t('weeklyReview.unverifiedSuggestion')}</p>
-                <pre className="whitespace-pre-wrap text-sm text-gray-800 m-0">{assistantSuggestion}</pre>
+              <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: '#fffce1', color: '#0e100f' }}>
+                <p className="text-xs font-semibold mb-1.5" style={{ color: '#7c7c6f' }}>{t('weeklyReview.unverifiedSuggestion')}</p>
+                <pre className="whitespace-pre-wrap text-sm m-0" style={{ color: '#0e100f' }}>{assistantSuggestion}</pre>
                 <div className="flex gap-2 mt-2 flex-wrap">
-                  <button className={`${btn} bg-gray-500 hover:bg-gray-400`} type="button" onClick={() => setReviewNote(assistantSuggestion)}>
+                  <Button variant="secondary" onClick={() => setReviewNote(assistantSuggestion)}>
                     {t('weeklyReview.copyToReviewNote')}
-                  </button>
-                  <button className={`${btn} bg-gray-500 hover:bg-gray-400`} type="button" onClick={() => setDialogueSummary(assistantSuggestion)}>
+                  </Button>
+                  <Button variant="secondary" onClick={() => setDialogueSummary(assistantSuggestion)}>
                     {t('weeklyReview.copyToDialogue')}
-                  </button>
-                  <button className={`${btn} bg-gray-500 hover:bg-gray-400`} type="button" onClick={() => setPrimaryNextCorrection(assistantSuggestion)}>
+                  </Button>
+                  <Button variant="secondary" onClick={() => setPrimaryNextCorrection(assistantSuggestion)}>
                     {t('weeklyReview.copyToCorrection')}
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
-          </div>
+          </Card>
 
-          <button className={btn} type="button" onClick={completeReview} disabled={!!loading || !reviewNote.trim() || !primaryNextCorrection.trim()}>
-            {loading === 'completing review' ? t('weeklyReview.completing') : t('weeklyReview.completeReview')}
-          </button>
+          <div className="mt-3">
+            <Button variant="primary" onClick={completeReview} disabled={!!loading || !reviewNote.trim() || !primaryNextCorrection.trim()}>
+              {loading === 'completing review' ? t('weeklyReview.completing') : t('weeklyReview.completeReview')}
+            </Button>
+          </div>
           {session.status === 'completed' && (
-            <div className="mt-2 text-sm text-gray-300">
+            <div className="mt-2 text-sm" style={{ color: '#c4c2b8' }}>
               <p>{t('weeklyReview.statusCompleted')}</p>
               <p>{t('weeklyReview.nextCorrection')} {session.next_week_primary_correction}</p>
               <p>{t('weeklyReview.supportingActions')} {session.supporting_actions.join(', ') || t('weeklyReview.none')}</p>
             </div>
           )}
-        </section>
+        </Card>
       )}
 
       {step === 5 && session && (
-        <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
+        <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step5Title')}</h3>
           <Slider label={t('weeklyReview.directionQuestion')} value={directionAlignment} onChange={setDirectionAlignment} />
           <Slider label={t('weeklyReview.consistencyQuestion')} value={executionConsistency} onChange={setExecutionConsistency} />
           <Slider label={t('weeklyReview.avoidanceQuestion')} value={avoidanceLevel} onChange={setAvoidanceLevel} />
-          <TextInput label={t('weeklyReview.actionEvidence')} value={oneActionEvidence} onChange={setOneActionEvidence} />
-          <TextInput label={t('weeklyReview.avoidanceEvidence')} value={oneAvoidanceEvidence} onChange={setOneAvoidanceEvidence} />
-          <TextInput label={t('weeklyReview.nextCorrectionEvidence')} value={oneNextCorrection} onChange={setOneNextCorrection} />
-          <label className={field}>
-            {t('weeklyReview.verdictLabel')}
-            <select className={input} value={verdictLabel} onChange={e => setVerdictLabel(e.target.value as VerdictLabel)}>
+          <Field label={t('weeklyReview.actionEvidence')}>
+            <Input value={oneActionEvidence} onChange={e => setOneActionEvidence(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.avoidanceEvidence')}>
+            <Input value={oneAvoidanceEvidence} onChange={e => setOneAvoidanceEvidence(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.nextCorrectionEvidence')}>
+            <Input value={oneNextCorrection} onChange={e => setOneNextCorrection(e.target.value)} />
+          </Field>
+          <Field label={t('weeklyReview.verdictLabel')}>
+            <Select value={verdictLabel} onChange={e => setVerdictLabel(e.target.value as VerdictLabel)}>
               {verdicts.map(v => <option key={v} value={v}>{v.replace(/_/g, ' ')}</option>)}
-            </select>
-            <span className="text-sm text-gray-400 mt-0.5">{VERDICT_DESCRIPTIONS[verdictLabel]}</span>
-          </label>
-          <TextInput label={t('weeklyReview.verdictSentence')} value={verdictSentence} onChange={setVerdictSentence} />
-          <button
-            className={btn}
-            type="button"
+            </Select>
+            <span className="text-sm mt-0.5" style={{ color: '#7c7c6f' }}>{VERDICT_DESCRIPTIONS[verdictLabel]}</span>
+          </Field>
+          <Field label={t('weeklyReview.verdictSentence')}>
+            <Input value={verdictSentence} onChange={e => setVerdictSentence(e.target.value)} />
+          </Field>
+          <Button
+            variant="primary"
             onClick={submitScore}
             disabled={!!loading || !oneActionEvidence.trim() || !oneAvoidanceEvidence.trim() || !oneNextCorrection.trim() || !verdictSentence.trim()}
           >
             {loading === 'saving score' ? t('weeklyReview.saving') : t('weeklyReview.saveAlignment')}
-          </button>
+          </Button>
           {score && (
-            <div className="mt-2 text-sm text-gray-300">
-              <p>{t('weeklyReview.scoreId')} {score.score_id}</p>
-              <p>{t('weeklyReview.alignmentScore')} {score.action_alignment_score}</p>
-              {scorePath && <p>{t('weeklyReview.savedPath')} {scorePath}</p>}
+            <div className="mt-2 text-sm" style={{ color: '#c4c2b8' }}>
+              <p>{t('weeklyReview.scoreId')} <Badge variant="lilac">{score.score_id}</Badge></p>
+              <p>{t('weeklyReview.alignmentScore')} <strong>{score.action_alignment_score}</strong></p>
+              {scorePath && <p>{t('weeklyReview.savedPath')} <span style={{ color: '#7c7c6f' }}>{scorePath}</span></p>}
             </div>
           )}
-        </section>
+        </Card>
       )}
 
       {step === 6 && noteRecord && session && score && (
-        <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
+        <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step6Title')}</h3>
-          <div className="text-sm text-gray-300 space-y-1">
-            <p>{t('weeklyReview.noteRecordId')} {noteRecord.record_id}</p>
-            <p>{t('weeklyReview.reviewSessionId')} {session.session_id}</p>
-            <p>{t('weeklyReview.scoreRecordId')} {score.score_id}</p>
-            <p>{t('weeklyReview.alignmentScore')} {score.action_alignment_score}</p>
+          <div className="text-sm space-y-1" style={{ color: '#c4c2b8' }}>
+            <p>{t('weeklyReview.noteRecordId')} <Badge variant="info">{noteRecord.record_id}</Badge></p>
+            <p>{t('weeklyReview.reviewSessionId')} <Badge variant="lilac">{session.session_id}</Badge></p>
+            <p>{t('weeklyReview.scoreRecordId')} <Badge variant="pink">{score.score_id}</Badge></p>
+            <p>{t('weeklyReview.alignmentScore')} <strong>{score.action_alignment_score}</strong></p>
             <p>{t('weeklyReview.p6Validated')}</p>
             <p>{t('weeklyReview.p6Sealed')}</p>
           </div>
-          <p className="text-xs text-gray-400 mt-2">{t('weeklyReview.weekEvidenceNote')}</p>
-          <button className={`${btn} mt-2.5`} type="button" onClick={reset}>{t('weeklyReview.resetFlow')}</button>
-        </section>
+          <p className="text-xs mt-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.weekEvidenceNote')}</p>
+          <Button variant="secondary" className="mt-3" onClick={reset}>{t('weeklyReview.resetFlow')}</Button>
+        </Card>
       )}
     </div>
-  )
-}
-
-function Field({ label, value, editing, onChange }: { label: string; value: string; editing: boolean; onChange: (value: string) => void }) {
-  return (
-    <label className={field}>
-      <span className="text-sm text-gray-300">{label}</span>
-      {editing ? <input className={input} value={value} onChange={e => onChange(e.target.value)} /> : <span className="text-sm text-gray-300">{value}</span>}
-    </label>
-  )
-}
-
-function TextInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return (
-    <label className={field}>
-      <span className="text-sm text-gray-300">{label}</span>
-      <input className={input} value={value} onChange={e => onChange(e.target.value)} />
-    </label>
-  )
-}
-
-function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return (
-    <label className={field}>
-      <span className="text-sm text-gray-300">{label}</span>
-      <textarea className={`${input} min-h-[80px]`} value={value} onChange={e => onChange(e.target.value)} />
-    </label>
   )
 }
 
 function Slider({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
     <label className="grid gap-1.5 mb-3">
-      <span className="text-sm text-gray-300">{label}</span>
+      <span className="text-sm" style={{ color: '#c4c2b8' }}>{label}</span>
       <div className="flex items-center gap-2.5">
         <input className="flex-1" type="range" min={0} max={1} step={0.05} value={value} onChange={e => onChange(Number(e.target.value))} />
-        <input className={`${input} max-w-[120px]`} type="number" min={0} max={1} step={0.05} value={value} onChange={e => onChange(Number(e.target.value))} />
+        <Input className="max-w-[120px]" type="number" min={0} max={1} step={0.05} value={value} onChange={e => onChange(Number(e.target.value))} />
       </div>
     </label>
   )

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, listActionAlignmentScores, listWeeklyReviews } from '../api'
 import type { ActionAlignmentScore, VerdictLabel, WeeklyReviewSession } from '../types'
+import { Card } from '../components/Card'
+import { Badge } from '../components/Badge'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
 
@@ -70,86 +72,99 @@ export default function CalibrationHistory() {
     return t('history.firstScore')
   }
 
+  const trendBadge: Record<typeof trend, 'success' | 'error' | 'info' | 'muted'> = {
+    up: 'success',
+    down: 'error',
+    stable: 'info',
+    first: 'muted',
+  }
+
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('history.title')}</h2>
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('history.title')}</h2>
 
-      <div className="p-3 mb-4 bg-blue-950/30 rounded-lg border border-blue-800/30">
+      <Card accent="lilac">
         <h4 className="text-sm font-medium mb-1">{t('history.whatShows')}</h4>
-        <p className="text-sm text-gray-300">{t('history.scoreExplanation')}</p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-sm" style={{ color: '#c4c2b8' }}>{t('history.scoreExplanation')}</p>
+        <p className="text-xs mt-1" style={{ color: '#7c7c6f' }}>
           <strong>{t('history.weeklyReviews')}</strong> are sessions where you reflect on your week.
           <strong> {t('history.actionAlignment')}</strong> measure how well your actions matched your intentions.
           <strong> Calibration records</strong> are the raw score data.
         </p>
-      </div>
+      </Card>
 
       <h3 className="text-base font-medium">{t('history.weeklyReviews')} ({weeklyReviews.length})</h3>
-      {weeklyReviews.length === 0 && <p className="text-gray-400 text-sm">{t('history.noReviews')}</p>}
+      {weeklyReviews.length === 0 && <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('history.noReviews')}</p>}
       {weeklyReviews.map(session => (
-        <div key={session.session_id} className="p-2 bg-gray-800/50 rounded text-sm">
-          <strong>{session.session_id}</strong> — {session.status}<br />
-          {t('history.note')} {session.weekly_note_record_id}<br />
-          {session.created_at && <span className="text-xs text-gray-500">{t('history.created')} {session.created_at}</span>}<br />
-          Next correction: {session.next_week_primary_correction || t('history.pending')}
-        </div>
+        <Card key={session.session_id}>
+          <strong className="text-sm">{session.session_id}</strong> — <Badge variant="info">{session.status}</Badge><br />
+          <span className="text-xs" style={{ color: '#7c7c6f' }}>
+            {t('history.note')} {session.weekly_note_record_id}
+          </span><br />
+          {session.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{t('history.created')} {session.created_at}</span>}<br />
+          <span className="text-xs" style={{ color: '#7c7c6f' }}>Next correction: {session.next_week_primary_correction || t('history.pending')}</span>
+        </Card>
       ))}
 
-      <h3 className="text-base font-medium">{t('history.actionAlignment')} ({actionScores.length}) {trendArrowText(trend)}</h3>
-      {actionScores.length === 0 && <p className="text-gray-400 text-sm">{t('history.noScores')}</p>}
+      <h3 className="text-base font-medium">{t('history.actionAlignment')} ({actionScores.length}) <Badge variant={trendBadge[trend]}>{trendArrowText(trend)}</Badge></h3>
+      {actionScores.length === 0 && <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('history.noScores')}</p>}
       {sortedScores.map(score => (
         <div
           key={score.score_id}
-          className={`p-2 rounded cursor-pointer text-sm transition-colors ${
-            selectedScore?.score_id === score.score_id
-              ? 'bg-green-950/40 border border-green-700/50'
-              : 'bg-gray-800/30 border border-transparent hover:bg-gray-800/50'
-          }`}
+          className="p-3 rounded-xl cursor-pointer transition-all duration-200"
+          style={{
+            backgroundColor: selectedScore?.score_id === score.score_id ? '#242624' : '#1a1c1a',
+            border: selectedScore?.score_id === score.score_id ? '1px solid #9d95ff' : '1px solid #242624',
+          }}
           onClick={() => setSelectedScore(selectedScore?.score_id === score.score_id ? null : score)}
         >
-          <strong>{score.score_id}</strong> — {formatScore(score.action_alignment_score)}<br />
-          {t('history.verdict')} {score.verdict_label.replace(/_/g, ' ')}<br />
-          {score.created_at && <span className="text-xs text-gray-500">{score.created_at}</span>}
+          <strong className="text-sm">{score.score_id}</strong> — {formatScore(score.action_alignment_score)}<br />
+          <span className="text-xs" style={{ color: '#7c7c6f' }}>
+            {t('history.verdict')} {score.verdict_label.replace(/_/g, ' ')}
+          </span><br />
+          {score.created_at && <span className="text-xs" style={{ color: '#7c7c6f' }}>{score.created_at}</span>}
 
           {selectedScore?.score_id === score.score_id && (
-            <div className="mt-2 p-3 bg-gray-800 rounded border border-gray-700">
+            <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: '#0e100f', border: '1px solid #242624' }}>
               <h4 className="text-sm font-medium mb-2">{t('history.scoreDetail')}</h4>
               <p className="text-sm"><strong>{t('history.score')}</strong> {formatScore(score.action_alignment_score)} (0.0 = no alignment, 1.0 = full alignment)</p>
               <p className="text-sm"><strong>{t('history.verdict')}</strong> {verdictDescriptions[score.verdict_label] || score.verdict_label}</p>
               <p className="text-sm"><strong>{t('history.yourWords')}</strong> {score.verdict_sentence || t('history.none')}</p>
               <p className="text-sm mt-1"><strong>{t('history.dimensions')}</strong></p>
-              <ul className="list-disc list-inside text-sm text-gray-300 ml-2">
+              <ul className="list-disc list-inside text-sm ml-2" style={{ color: '#c4c2b8' }}>
                 <li>{t('history.directionAlignment')} {formatScore(score.scores.direction_alignment)}</li>
                 <li>{t('history.executionConsistency')} {formatScore(score.scores.execution_consistency)}</li>
                 <li>{t('history.avoidanceLevel')} {formatScore(score.scores.avoidance_level)}</li>
               </ul>
               <p className="text-sm mt-1"><strong>{t('history.evidence')}</strong></p>
-              <ul className="list-disc list-inside text-sm text-gray-300 ml-2">
+              <ul className="list-disc list-inside text-sm ml-2" style={{ color: '#c4c2b8' }}>
                 <li>{t('history.action')} {score.evidence.one_action_evidence || t('history.none')}</li>
                 <li>{t('history.avoidance')} {score.evidence.one_avoidance_or_friction_evidence || t('history.none')}</li>
                 <li>{t('history.nextCorrection')} {score.evidence.one_next_correction || t('history.none')}</li>
               </ul>
-              <p className="text-xs text-gray-500 mt-2">{t('history.session')} {score.session_id}</p>
+              <p className="text-xs mt-2" style={{ color: '#7c7c6f' }}>{t('history.session')} {score.session_id}</p>
             </div>
           )}
         </div>
       ))}
 
       <h3 className="text-base font-medium">{t('history.scores')} ({String(data.count)})</h3>
-      {records.length === 0 && <p className="text-gray-400 text-sm">{t('history.noRecords')}</p>}
+      {records.length === 0 && <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('history.noRecords')}</p>}
       {records.map(r => (
-        <div key={String(r.id)} className="p-2 bg-gray-800/30 rounded text-sm">
-          <strong>{String(r.id)}</strong> — {String(r.alter_id)}<br />
-          Actual: {JSON.stringify(r.actual_scores)}
-        </div>
+        <Card key={String(r.id)}>
+          <strong className="text-sm">{String(r.id)}</strong> — {String(r.alter_id)}<br />
+          <span className="text-xs" style={{ color: '#c4c2b8' }}>Actual: {JSON.stringify(r.actual_scores)}</span>
+        </Card>
       ))}
       {drift.length > 0 && (
         <>
           <h3 className="text-base font-medium">{t('history.driftEvidence')}</h3>
           {drift.map((d, i) => (
-            <div key={i} className="p-2 bg-red-950/30 border border-red-800/30 rounded text-sm">
-              Overall: {String(d.overall)} | Threshold exceeded: {String(d.threshold_exceeded)}
-            </div>
+            <Card key={i} accent="orange">
+              <span className="text-sm">
+                Overall: {String(d.overall)} | Threshold exceeded: {String(d.threshold_exceeded)}
+              </span>
+            </Card>
           ))}
         </>
       )}

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson } from '../api'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Badge } from '../components/Badge'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
 
@@ -35,39 +38,47 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('status.title')}</h2>
-      <button
-        className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
-        type="button"
-        onClick={() => onNavigate?.('weekly')}
-      >
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('status.title')}</h2>
+      <Button variant="primary" onClick={() => onNavigate?.('weekly')}>
         {t('status.startWeeklyReview')}
-      </button>
-      <h3 className="text-base font-medium">{t('status.localApp')}</h3>
-      <div className="space-y-1 text-sm text-gray-300">
-        <p>{t('status.runtimeMode')} {String(runtime.mode)}</p>
-        <p>{t('status.configPath')} {String(runtime.config_path)}</p>
-        <p>{t('status.productDataDir')} {String(runtime.product_data_dir)}</p>
-        <p>{t('status.frontendAvailable')} {localApp.frontend_available ? 'Yes' : 'No'}</p>
-        <p>{t('status.providerMode')} {String(provider.provider_mode)}</p>
-      </div>
-      <h3 className="text-base font-medium">{t('status.p6State')}</h3>
-      <div className="space-y-1 text-sm text-gray-300">
-        <p>{t('status.runtime')} CODE_COMPLETE</p>
-        <p>{t('status.behaviorValidation')} NOT_VALIDATED</p>
-        <p>{t('status.seal')} NOT_SEALED</p>
-      </div>
-      <h3 className="text-base font-medium">{t('status.productSurface')}</h3>
-      <div className="space-y-1 text-sm text-gray-300">
-        <p>{t('status.phase3')} {String(product.phase3_status)}</p>
-        <p>{t('status.phase4')} {String(product.phase4_status)}</p>
-        <p>{t('status.storage')} {String(product.storage_backend)}</p>
-        <p>{t('status.noSecretsExposed')} {product.no_secrets_exposed ? 'Yes' : 'No'}</p>
-      </div>
-      <h3 className="text-base font-medium">{t('status.safeEndpoints')}</h3>
-      <ul className="list-disc list-inside text-sm text-gray-300">
-        {(product.safe_public_endpoints as string[]).map(e => <li key={e}>{e}</li>)}
-      </ul>
+      </Button>
+
+      <Card>
+        <h3 className="text-sm font-medium mb-2">{t('status.localApp')}</h3>
+        <div className="space-y-1 text-sm" style={{ color: '#c4c2b8' }}>
+          <p>{t('status.runtimeMode')} <Badge variant="info">{String(runtime.mode)}</Badge></p>
+          <p>{t('status.configPath')} <span style={{ color: '#7c7c6f' }}>{String(runtime.config_path)}</span></p>
+          <p>{t('status.productDataDir')} <span style={{ color: '#7c7c6f' }}>{String(runtime.product_data_dir)}</span></p>
+          <p>{t('status.frontendAvailable')} <Badge variant={localApp.frontend_available ? 'success' : 'error'}>{localApp.frontend_available ? 'Yes' : 'No'}</Badge></p>
+          <p>{t('status.providerMode')} <Badge variant="info">{String(provider.provider_mode)}</Badge></p>
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="text-sm font-medium mb-2">{t('status.p6State')}</h3>
+        <div className="space-y-1 text-sm" style={{ color: '#c4c2b8' }}>
+          <p>{t('status.runtime')} <Badge variant="info">CODE_COMPLETE</Badge></p>
+          <p>{t('status.behaviorValidation')} <Badge variant="warning">NOT_VALIDATED</Badge></p>
+          <p>{t('status.seal')} <Badge variant="muted">NOT_SEALED</Badge></p>
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="text-sm font-medium mb-2">{t('status.productSurface')}</h3>
+        <div className="space-y-1 text-sm" style={{ color: '#c4c2b8' }}>
+          <p>{t('status.phase3')} <Badge variant="success">{String(product.phase3_status)}</Badge></p>
+          <p>{t('status.phase4')} <Badge variant="success">{String(product.phase4_status)}</Badge></p>
+          <p>{t('status.storage')} <Badge variant="info">{String(product.storage_backend)}</Badge></p>
+          <p>{t('status.noSecretsExposed')} <Badge variant={product.no_secrets_exposed ? 'success' : 'error'}>{product.no_secrets_exposed ? 'Yes' : 'No'}</Badge></p>
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="text-sm font-medium mb-2">{t('status.safeEndpoints')}</h3>
+        <ul className="list-disc list-inside text-sm" style={{ color: '#c4c2b8' }}>
+          {(product.safe_public_endpoints as string[]).map(e => <li key={e}>{e}</li>)}
+        </ul>
+      </Card>
     </div>
   )
 }

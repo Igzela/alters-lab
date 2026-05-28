@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Badge } from '../components/Badge'
+import { Banner } from '../components/Banner'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
 
@@ -33,17 +37,17 @@ interface BehaviorValidationRecord {
   p6_sealed: boolean
 }
 
-const OUTCOME_COLORS: Record<string, string> = {
-  P6_BEHAVIOR_VALIDATED: 'text-green-400',
-  P6_FAILED_TO_VALIDATE: 'text-orange-400',
-  P6_USAGE_INVALID: 'text-red-500',
-  P6_INSUFFICIENT_DATA: 'text-gray-400',
+const OUTCOME_BADGE: Record<string, 'success' | 'warning' | 'error' | 'muted'> = {
+  P6_BEHAVIOR_VALIDATED: 'success',
+  P6_FAILED_TO_VALIDATE: 'warning',
+  P6_USAGE_INVALID: 'error',
+  P6_INSUFFICIENT_DATA: 'muted',
 }
 
 function CheckItem({ label, checked }: { label: string; checked: boolean }) {
   return (
-    <div className="text-xs p-1.5 bg-gray-800/50 rounded border border-gray-700">
-      <span className={checked ? 'text-green-400' : 'text-red-500'}>{checked ? 'yes' : 'no'}</span>
+    <div className="text-xs p-2 rounded-lg" style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}>
+      <Badge variant={checked ? 'success' : 'error'}>{checked ? 'yes' : 'no'}</Badge>
       {' '}{label}
     </div>
   )
@@ -112,53 +116,47 @@ export default function BehaviorValidation() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('validation.title')}</h2>
-      <p className="text-gray-500 text-xs">
-        {t('validation.description')}
-      </p>
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('validation.title')}</h2>
+      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('validation.description')}</p>
 
-      <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-lg mb-4">
-        <strong className="text-sm">{t('validation.p6Status')}</strong>
-        <p className="text-xs text-gray-400 mt-1">{t('validation.p6Remains')}</p>
-      </div>
+      <Banner variant="warning">
+        <strong>{t('validation.p6Status')}</strong>
+        <p className="text-xs mt-1" style={{ color: '#7c7c6f' }}>{t('validation.p6Remains')}</p>
+      </Banner>
 
-      <div className="mb-4">
-        <button
-          className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-          onClick={evaluate}
-          disabled={evaluating}
-        >
+      <div className="flex items-center gap-3 mb-4">
+        <Button variant="primary" accent="orange" onClick={evaluate} disabled={evaluating}>
           {evaluating ? t('validation.evaluating') : t('validation.runEvaluation')}
-        </button>
-        {status && <span className="text-green-400 text-sm ml-2">{status}</span>}
-        {error && <span className="text-red-500 text-sm ml-2">{error}</span>}
+        </Button>
+        {status && <span className="text-sm" style={{ color: '#0ae448' }}>{status}</span>}
+        {error && <span className="text-sm" style={{ color: '#ff4444' }}>{error}</span>}
       </div>
 
       {loadingReport && <LoadingSpinner label={t('validation.loading')} />}
 
       {!loadingReport && noReport && !record && (
-        <p className="text-gray-400 text-sm">{t('validation.noReport')}</p>
+        <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('validation.noReport')}</p>
       )}
 
       {record && (
-        <div className="p-3.5 bg-blue-950/30 rounded-lg border border-blue-800/30">
-          <h3 className="text-sm font-medium mb-2">{t('validation.validationReport')}</h3>
+        <Card accent="orange">
+          <h3 className="text-sm font-medium mb-3">{t('validation.validationReport')}</h3>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3">
             <div>
-              <strong className={`text-base ${OUTCOME_COLORS[record.outcome] || 'text-gray-400'}`}>
+              <Badge variant={OUTCOME_BADGE[record.outcome] || 'muted'}>
                 {record.outcome.replace(/_/g, ' ')}
-              </strong>
+              </Badge>
             </div>
-            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-gray-400 text-xs">{t('validation.weeklyReviews')}</span></div>
-            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-gray-400 text-xs">{t('validation.calibrationRecords')}</span></div>
-            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-gray-400 text-xs">{t('validation.patternReviews')}</span></div>
+            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.weeklyReviews')}</span></div>
+            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.calibrationRecords')}</span></div>
+            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.patternReviews')}</span></div>
             {record.evidence_window_days != null && (
-              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-gray-400 text-xs">{t('validation.evidenceWindow')}</span></div>
+              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.evidenceWindow')}</span></div>
             )}
           </div>
 
-          <div className="p-2.5 bg-gray-800/50 rounded border border-gray-700 mb-3">
+          <div className="p-2.5 rounded-lg mb-3" style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}>
             <p className="text-sm">{record.message}</p>
           </div>
 
@@ -179,16 +177,16 @@ export default function BehaviorValidation() {
             <CheckItem label={t('validation.sessionsNotSkipped')} checked={record.usage_integrity.sessions_not_skipped_too_often} />
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 text-xs">
+          <div className="grid grid-cols-3 gap-2.5 text-xs" style={{ color: '#c4c2b8' }}>
             <div>{t('validation.integrityValid')} <strong>{record.usage_integrity_valid ? t('validation.yes') : t('validation.no')}</strong></div>
             <div>{t('validation.behaviorImproved')} <strong>{record.behavior_improved ? t('validation.yes') : t('validation.no')}</strong></div>
             <div>{t('validation.evidenceVerified')} <strong>{record.evidence_verified ? t('validation.yes') : t('validation.no')}</strong></div>
           </div>
 
           {record.created_at && (
-            <p className="text-xs text-gray-500 mt-2">{t('validation.evaluated')} {record.created_at}</p>
+            <p className="text-xs mt-2" style={{ color: '#7c7c6f' }}>{t('validation.evaluated')} {record.created_at}</p>
           )}
-        </div>
+        </Card>
       )}
     </div>
   )

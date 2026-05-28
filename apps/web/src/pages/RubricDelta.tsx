@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { postJson } from '../api'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
 
 export default function RubricDelta() {
   const { t } = useTranslation()
@@ -22,24 +24,20 @@ export default function RubricDelta() {
   }
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-semibold">{t('rubricDelta.title')}</h2>
-      <p className="text-gray-500 text-xs">{t('rubricDelta.description')}</p>
-      <button
-        className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-        onClick={generate}
-        disabled={loading}
-      >
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('rubricDelta.title')}</h2>
+      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('rubricDelta.description')}</p>
+      <Button variant="primary" accent="pink" onClick={generate} disabled={loading}>
         {loading ? '...' : t('rubricDelta.generate')}
-      </button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      </Button>
+      {error && <p className="text-sm" style={{ color: '#ff4444' }}>{error}</p>}
       {data && (
-        <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-700">
+        <Card accent="pink">
           <p className="text-sm">{t('rubricDelta.status')} {String(data.status)}</p>
-          <pre className="text-xs text-gray-300 mt-2 whitespace-pre-wrap">
+          <pre className="text-xs mt-2 whitespace-pre-wrap" style={{ color: '#c4c2b8' }}>
             {data.suggestions ? JSON.stringify(data.suggestions as Record<string, unknown>, null, 2) : ''}
           </pre>
-        </div>
+        </Card>
       )}
     </div>
   )

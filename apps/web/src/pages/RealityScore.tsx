@@ -2,6 +2,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { postJson, listActionAlignmentScores } from '../api'
 import type { ActionAlignmentScore } from '../types'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Select } from '../components/Input'
+import { Banner } from '../components/Banner'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
 
@@ -67,69 +71,62 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
   }
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-semibold">{t('realityScore.title')}</h2>
-      <p className="text-gray-500 text-xs">{t('realityScore.description')}</p>
-      <p className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded text-sm text-amber-200">
-        {t('realityScore.manualNote')}
-      </p>
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('realityScore.title')}</h2>
+      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('realityScore.description')}</p>
+
+      <Banner variant="warning">{t('realityScore.manualNote')}</Banner>
+
       <div className="flex gap-2">
         {onNavigate && (
-          <button className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" onClick={() => onNavigate('weekly')}>
+          <Button variant="secondary" accent="pink" onClick={() => onNavigate('weekly')}>
             {t('realityScore.goToWeeklyReview')}
-          </button>
+          </Button>
         )}
         {onNavigate && (
-          <button className="px-3 py-1.5 text-sm text-blue-400 hover:text-blue-300" onClick={() => onNavigate('history')}>
+          <Button variant="ghost" accent="pink" onClick={() => onNavigate('history')}>
             {t('realityScore.viewHistory')}
-          </button>
+          </Button>
         )}
       </div>
 
       {recentScores.length > 0 && (
-        <div className="mb-4 p-3 bg-blue-950/30 rounded-lg border border-blue-800/30">
+        <Card accent="pink">
           <h4 className="text-sm font-medium mb-2">{t('realityScore.recentScores')}</h4>
-          <p className="text-xs text-gray-400 mb-2">
+          <p className="text-xs mb-2" style={{ color: '#7c7c6f' }}>
             {t('realityScore.recentScoresDesc')}
           </p>
           {recentScores.map(s => (
             <div key={s.score_id} className="py-1 text-sm">
               <strong>{s.action_alignment_score.toFixed(2)}</strong> — {s.verdict_label.replace(/_/g, ' ')}
-              {s.created_at && <span className="text-xs text-gray-500 ml-2">{s.created_at}</span>}
+              {s.created_at && <span className="text-xs ml-2" style={{ color: '#7c7c6f' }}>{s.created_at}</span>}
             </div>
           ))}
-        </div>
+        </Card>
       )}
 
-      <select
-        className="border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white mb-3"
-        value={pair}
-        onChange={e => setPair(Number(e.target.value))}
-      >
+      <Select value={pair} onChange={e => setPair(Number(e.target.value))} className="mb-3">
         {ALTERS.map((a, i) => <option key={a.alter} value={i}>{a.alter} / {a.branch}</option>)}
-      </select>
+      </Select>
       {DIMS.map(d => (
-        <div key={d} className="flex items-center gap-2 text-sm">
-          <label className="w-40 text-gray-300">{d}</label>
+        <div key={d} className="flex items-center gap-3 text-sm">
+          <label className="w-40" style={{ color: '#c4c2b8' }}>{d}</label>
           <input type="range" min={1} max={5} value={scores[d]}
             onChange={e => setScores({ ...scores, [d]: Number(e.target.value) })} className="flex-1" />
-          <span className="w-6 text-center">{scores[d]}</span>
+          <span className="w-6 text-center" style={{ color: '#fffce1' }}>{scores[d]}</span>
         </div>
       ))}
       <textarea
-        className="w-full border border-gray-600 rounded px-3 py-2 text-sm bg-gray-800 text-white placeholder-gray-500 min-h-[60px]"
+        className="w-full px-3 py-2 text-sm rounded-lg border outline-none transition-colors min-h-[60px]"
+        style={{ backgroundColor: '#1a1c1a', color: '#fffce1', borderColor: '#42433d' }}
         value={notes}
         onChange={e => setNotes(e.target.value)}
         placeholder={t('realityScore.notesPlaceholder')}
       />
-      <button
-        className="mt-2 px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-        onClick={submit}
-        disabled={submitting}
-      >
+      <Button variant="primary" accent="pink" onClick={submit} disabled={submitting}>
         {submitting ? t('realityScore.submitting') : t('realityScore.submitScore')}
-      </button>
-      {status && <p className="text-green-400 text-sm">{status}</p>}
+      </Button>
+      {status && <Banner variant="success">{status}</Banner>}
       {error && <ErrorDisplay message={error} />}
     </div>
   )

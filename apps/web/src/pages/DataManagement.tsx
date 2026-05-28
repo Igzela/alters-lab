@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Input, Field } from '../components/Input'
+import { Banner } from '../components/Banner'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
 
@@ -90,114 +94,88 @@ export default function DataManagement() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('data.title')}</h2>
-      <p className="text-gray-500 text-xs">
-        {t('data.description')}
-      </p>
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('data.title')}</h2>
+      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('data.description')}</p>
 
       {error && <ErrorDisplay message={error} onRetry={loadManifest} />}
-      {status && <p className="text-green-400 text-sm">{status}</p>}
+      {status && <Banner variant="success">{status}</Banner>}
 
       {loading && <LoadingSpinner label={t('data.loading')} />}
 
-      {error && !manifest && !loading && (
+      {!manifest && !loading && error && (
         <ErrorDisplay message={error} onRetry={loadManifest} />
       )}
 
       {manifest && (
         <>
           <div className="mb-4">
-            <button
-              className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-              onClick={exportAll}
-              disabled={!!actionLoading}
-            >
+            <Button variant="primary" onClick={exportAll} disabled={!!actionLoading}>
               {actionLoading === 'export' ? t('data.exporting') : t('data.exportAll')}
-            </button>
+            </Button>
           </div>
 
           <h3 className="text-sm font-medium mb-2">{t('data.recordCounts')}</h3>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2.5 mb-4">
             {manifest.runtime_areas.map(area => (
-              <div key={area} className="p-2.5 bg-gray-800/30 rounded-lg border border-gray-700">
+              <Card key={area}>
                 <div className="flex justify-between items-center mb-1.5">
                   <strong className="text-sm">{area}</strong>
-                  <span className="text-sm">{manifest.record_counts[area] ?? 0}</span>
+                  <span className="text-sm" style={{ color: '#c4c2b8' }}>{manifest.record_counts[area] ?? 0}</span>
                 </div>
-                <button
-                  className="text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50"
-                  onClick={() => exportArea(area)}
-                  disabled={!!actionLoading}
-                >
+                <Button variant="ghost" onClick={() => exportArea(area)} disabled={!!actionLoading}>
                   {actionLoading === `export-${area}` ? t('data.exporting') : t('data.export')}
-                </button>
-              </div>
+                </Button>
+              </Card>
             ))}
           </div>
 
-          <div className="p-2.5 bg-blue-950/30 rounded-lg border border-blue-800/30 text-xs text-gray-400 mb-4">
-            <div>{t('data.longTermSave')} <strong>{manifest.default_long_term_save ? t('provider.yes') : t('provider.no')}</strong></div>
-            <div>{t('data.exportSupported')} <strong>{manifest.export_supported ? t('provider.yes') : t('provider.no')}</strong></div>
-            <div>{t('data.archiveSupported')} <strong>{manifest.archive_supported ? t('provider.yes') : t('provider.no')}</strong></div>
-          </div>
+          <Card>
+            <div className="text-xs space-y-1" style={{ color: '#7c7c6f' }}>
+              <div>{t('data.longTermSave')} <strong style={{ color: '#c4c2b8' }}>{manifest.default_long_term_save ? t('provider.yes') : t('provider.no')}</strong></div>
+              <div>{t('data.exportSupported')} <strong style={{ color: '#c4c2b8' }}>{manifest.export_supported ? t('provider.yes') : t('provider.no')}</strong></div>
+              <div>{t('data.archiveSupported')} <strong style={{ color: '#c4c2b8' }}>{manifest.archive_supported ? t('provider.yes') : t('provider.no')}</strong></div>
+            </div>
+          </Card>
 
-          <div className="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded-lg text-xs text-amber-200 mb-4">
+          <Banner variant="warning">
             <strong>{t('data.archive')}</strong> {t('data.archiveDisabled')}
-          </div>
+          </Banner>
         </>
       )}
 
-      <div className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+      <Card>
         <div className="flex justify-between items-center mb-2">
           <h4 className="text-sm font-medium">{t('data.deleteById')}</h4>
-          <button className="text-xs text-gray-400 hover:text-white" onClick={() => setShowDeletePanel(!showDeletePanel)}>
+          <Button variant="ghost" onClick={() => setShowDeletePanel(!showDeletePanel)}>
             {showDeletePanel ? t('data.hide') : t('data.show')}
-          </button>
+          </Button>
         </div>
         {showDeletePanel && (
           <div>
-            <p className="text-xs text-gray-400 mb-2">
+            <p className="text-xs mb-3" style={{ color: '#7c7c6f' }}>
               {t('data.deleteWarning')}
             </p>
             <div className="grid grid-cols-2 gap-2 mb-2">
-              <div>
-                <label className="text-xs text-gray-400 block mb-0.5">{t('data.area')}</label>
-                <input
-                  className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
-                  value={deleteArea}
-                  onChange={e => setDeleteArea(e.target.value)}
-                  placeholder="e.g. weekly_reviews"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 block mb-0.5">{t('data.recordId')}</label>
-                <input
-                  className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
-                  value={deleteRecordId}
-                  onChange={e => setDeleteRecordId(e.target.value)}
-                  placeholder="e.g. review_2026-W01"
-                />
-              </div>
+              <Field label={t('data.area')}>
+                <Input value={deleteArea} onChange={e => setDeleteArea(e.target.value)} placeholder="e.g. weekly_reviews" />
+              </Field>
+              <Field label={t('data.recordId')}>
+                <Input value={deleteRecordId} onChange={e => setDeleteRecordId(e.target.value)} placeholder="e.g. review_2026-W01" />
+              </Field>
             </div>
-            <div className="mb-2">
-              <label className="text-xs text-gray-400 block mb-0.5">{t('data.typeDelete')}</label>
-              <input
-                className="w-full px-2 py-1 text-sm border border-gray-600 rounded bg-gray-800 text-white"
-                value={deleteConfirm}
-                onChange={e => setDeleteConfirm(e.target.value)}
-                placeholder="delete"
-              />
-            </div>
-            <button
-              className={`text-sm ${deleteArea && deleteRecordId && deleteConfirm === 'delete' && !actionLoading ? 'text-red-500 hover:text-red-400' : 'text-gray-500'}`}
+            <Field label={t('data.typeDelete')}>
+              <Input value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} placeholder="delete" />
+            </Field>
+            <Button
+              variant="danger"
               onClick={executeDelete}
               disabled={!deleteArea || !deleteRecordId || deleteConfirm !== 'delete' || !!actionLoading}
             >
               {actionLoading === 'delete' ? t('data.deleting') : t('data.deleteRecord')}
-            </button>
+            </Button>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

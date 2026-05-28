@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { expandIn, pulseSuccess } from '../animations'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Badge } from '../components/Badge'
+import { ProgressBar } from '../components/ProgressBar'
 
 type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
 
@@ -82,87 +86,80 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('gettingStarted.title')}</h2>
+      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('gettingStarted.title')}</h2>
 
-      <div className="p-3 bg-gray-800/50 rounded border border-gray-700">
-        <p className="text-sm text-gray-300">
+      <Card>
+        <p className="text-sm mb-2" style={{ color: '#c4c2b8' }}>
           {t('gettingStarted.progress')} {doneCount}/{steps.length}
         </p>
-        <div className="mt-2 h-1.5 bg-gray-700 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-green-500 rounded-full transition-all duration-300"
-            style={{ width: `${(doneCount / steps.length) * 100}%` }}
-          />
-        </div>
-      </div>
+        <ProgressBar value={doneCount} max={steps.length} accent="green" />
+      </Card>
 
       {steps.map(step => (
         <div
           key={step.id}
-          className={`border rounded-lg overflow-hidden transition-colors ${
-            completed.has(step.id)
-              ? 'border-green-700 bg-green-900/10'
+          className="rounded-xl overflow-hidden transition-all duration-200"
+          style={{
+            backgroundColor: completed.has(step.id) ? 'rgba(10, 228, 72, 0.05)' : '#1a1c1a',
+            border: completed.has(step.id)
+              ? '1px solid rgba(10, 228, 72, 0.3)'
               : expanded === step.id
-                ? 'border-gray-500 bg-gray-800/30'
-                : 'border-gray-700 bg-gray-800/20'
-          }`}
+                ? '1px solid #42433d'
+                : '1px solid #242624',
+          }}
         >
           <button
-            className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-gray-800/40 transition-colors"
+            className="w-full px-4 py-3 flex items-center gap-3 text-left transition-colors"
+            style={{ backgroundColor: 'transparent' }}
             onClick={() => toggleStep(step.id)}
           >
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
-              completed.has(step.id)
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-700 text-gray-300'
-            }`}>
+            <span
+              className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+              style={{
+                backgroundColor: completed.has(step.id) ? '#0ae448' : '#242624',
+                color: completed.has(step.id) ? '#0e100f' : '#7c7c6f',
+              }}
+            >
               {completed.has(step.id) ? '✓' : step.id}
             </span>
-            <span className={`text-sm font-medium ${completed.has(step.id) ? 'text-green-400' : 'text-white'}`}>
+            <span className="text-sm font-medium" style={{ color: completed.has(step.id) ? '#0ae448' : '#fffce1' }}>
               {step.title}
             </span>
           </button>
 
           {expanded === step.id && (
             <div ref={el => { if (el) stepRefs.current.set(step.id, el) }} className="px-4 pb-4 pt-1 space-y-3">
-              <p className="text-sm text-gray-400 leading-relaxed">{step.desc}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#7c7c6f' }}>{step.desc}</p>
               <div className="flex gap-2">
                 {step.navigate && (
-                  <button
-                    className="px-3 py-1.5 text-xs bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors"
-                    onClick={() => onNavigate(step.navigate!)}
-                  >
+                  <Button variant="secondary" onClick={() => onNavigate(step.navigate!)}>
                     {step.action}
-                  </button>
+                  </Button>
                 )}
-                <button
-                  className={`px-3 py-1.5 text-xs rounded transition-colors ${
-                    completed.has(step.id)
-                      ? 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                      : 'bg-green-700 text-white hover:bg-green-600'
-                  }`}
+                <Button
+                  variant={completed.has(step.id) ? 'ghost' : 'primary'}
                   onClick={(e) => {
                     markComplete(step.id)
                     if (!completed.has(step.id)) pulseSuccess(e.currentTarget)
                   }}
                 >
                   {completed.has(step.id) ? t('gettingStarted.markIncomplete') : t('gettingStarted.markComplete')}
-                </button>
+                </Button>
               </div>
             </div>
           )}
         </div>
       ))}
 
-      <div className="mb-6 p-4 border border-gray-600 rounded-lg">
+      <Card>
         <h3 className="text-sm font-medium mb-2">{t('gettingStarted.boundaries')}</h3>
-        <p className="text-gray-400 text-sm leading-relaxed">
-          <strong>{t('gettingStarted.p6')}</strong> {t('gettingStarted.p6Desc')}<br />
-          <strong>{t('gettingStarted.p7')}</strong> {t('gettingStarted.p7Desc')}<br />
-          <strong>{t('gettingStarted.p8')}</strong> {t('gettingStarted.p8Desc')}<br />
-          <strong>{t('gettingStarted.providerOutput')}</strong> {t('gettingStarted.providerOutputDesc')}
+        <p className="text-sm leading-relaxed" style={{ color: '#7c7c6f' }}>
+          <strong style={{ color: '#c4c2b8' }}>{t('gettingStarted.p6')}</strong> {t('gettingStarted.p6Desc')}<br />
+          <strong style={{ color: '#c4c2b8' }}>{t('gettingStarted.p7')}</strong> {t('gettingStarted.p7Desc')}<br />
+          <strong style={{ color: '#c4c2b8' }}>{t('gettingStarted.p8')}</strong> {t('gettingStarted.p8Desc')}<br />
+          <strong style={{ color: '#c4c2b8' }}>{t('gettingStarted.providerOutput')}</strong> {t('gettingStarted.providerOutputDesc')}
         </p>
-      </div>
+      </Card>
     </div>
   )
 }
