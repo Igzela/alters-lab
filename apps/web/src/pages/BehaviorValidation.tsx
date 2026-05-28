@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
+import { formatDate } from '../dateFormat'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
 import { Banner } from '../components/Banner'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { Skeleton } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 interface BehaviorValidationRecord {
@@ -44,17 +45,17 @@ const OUTCOME_BADGE: Record<string, 'success' | 'warning' | 'error' | 'muted'> =
   P6_INSUFFICIENT_DATA: 'muted',
 }
 
-function CheckItem({ label, checked }: { label: string; checked: boolean }) {
+function CheckItem({ label, checked, yesLabel, noLabel }: { label: string; checked: boolean; yesLabel: string; noLabel: string }) {
   return (
     <div className="text-xs p-2 rounded-lg" style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}>
-      <Badge variant={checked ? 'success' : 'error'}>{checked ? 'yes' : 'no'}</Badge>
+      <Badge variant={checked ? 'success' : 'error'}>{checked ? yesLabel : noLabel}</Badge>
       {' '}{label}
     </div>
   )
 }
 
 export default function BehaviorValidation() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [record, setRecord] = useState<BehaviorValidationRecord | null>(null)
   const [noReport, setNoReport] = useState(false)
   const [evaluating, setEvaluating] = useState(false)
@@ -129,10 +130,10 @@ export default function BehaviorValidation() {
           {evaluating ? t('validation.evaluating') : t('validation.runEvaluation')}
         </Button>
         {status && <span className="text-sm" style={{ color: '#0ae448' }}>{status}</span>}
-        {error && <span className="text-sm" style={{ color: '#ff4444' }}>{error}</span>}
+        {error && <Banner variant="error">{error}</Banner>}
       </div>
 
-      {loadingReport && <LoadingSpinner label={t('validation.loading')} />}
+      {loadingReport && <Skeleton lines={4} />}
 
       {!loadingReport && noReport && !record && (
         <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('validation.noReport')}</p>
@@ -162,19 +163,19 @@ export default function BehaviorValidation() {
 
           <h4 className="text-sm font-medium mb-2">{t('validation.metrics')}</h4>
           <div className="grid grid-cols-3 gap-2 mb-3">
-            <CheckItem label={t('validation.alignmentImproves')} checked={record.metrics.action_alignment_score_improves} />
-            <CheckItem label={t('validation.patternsReduce')} checked={record.metrics.repeated_negative_patterns_reduce} />
-            <CheckItem label={t('validation.correctionImproves')} checked={record.metrics.primary_correction_completion_rate_improves} />
+            <CheckItem label={t('validation.alignmentImproves')} checked={record.metrics.action_alignment_score_improves} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.patternsReduce')} checked={record.metrics.repeated_negative_patterns_reduce} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.correctionImproves')} checked={record.metrics.primary_correction_completion_rate_improves} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
           </div>
 
           <h4 className="text-sm font-medium mb-2">{t('validation.usageIntegrity')}</h4>
           <div className="grid grid-cols-2 gap-2 mb-3">
-            <CheckItem label={t('validation.weeklyNotesHonest')} checked={record.usage_integrity.weekly_notes_completed_honestly} />
-            <CheckItem label={t('validation.calibrationCreated')} checked={record.usage_integrity.calibration_records_created} />
-            <CheckItem label={t('validation.correctionsSet')} checked={record.usage_integrity.primary_corrections_set} />
-            <CheckItem label={t('validation.failureHonest')} checked={record.usage_integrity.failure_reviews_honest} />
-            <CheckItem label={t('validation.selfDeception')} checked={record.usage_integrity.self_deception_risk_not_softened} />
-            <CheckItem label={t('validation.sessionsNotSkipped')} checked={record.usage_integrity.sessions_not_skipped_too_often} />
+            <CheckItem label={t('validation.weeklyNotesHonest')} checked={record.usage_integrity.weekly_notes_completed_honestly} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.calibrationCreated')} checked={record.usage_integrity.calibration_records_created} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.correctionsSet')} checked={record.usage_integrity.primary_corrections_set} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.failureHonest')} checked={record.usage_integrity.failure_reviews_honest} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.selfDeception')} checked={record.usage_integrity.self_deception_risk_not_softened} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
+            <CheckItem label={t('validation.sessionsNotSkipped')} checked={record.usage_integrity.sessions_not_skipped_too_often} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 text-xs" style={{ color: '#c4c2b8' }}>
@@ -184,7 +185,7 @@ export default function BehaviorValidation() {
           </div>
 
           {record.created_at && (
-            <p className="text-xs mt-2" style={{ color: '#7c7c6f' }}>{t('validation.evaluated')} {record.created_at}</p>
+            <p className="text-xs mt-2" style={{ color: '#7c7c6f' }}>{t('validation.evaluated')} {formatDate(record.created_at, i18n.language)}</p>
           )}
         </Card>
       )}

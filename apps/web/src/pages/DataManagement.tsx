@@ -5,7 +5,8 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Input, Field } from '../components/Input'
 import { Banner } from '../components/Banner'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { Skeleton } from '../components/Skeleton'
+import { useToast } from '../components/Toast'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 interface Manifest {
@@ -19,6 +20,7 @@ interface Manifest {
 
 export default function DataManagement() {
   const { t } = useTranslation()
+  const { toast } = useToast()
   const [manifest, setManifest] = useState<Manifest | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -47,6 +49,7 @@ export default function DataManagement() {
     try {
       const res = await postJson('/p6-data-retention/export', { areas: [], caller: 'api' })
       setStatus(`${t('data.exportedTo')} ${res.path || 'unknown path'}`)
+      toast({ title: t('data.exported'), variant: 'success' })
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : t('data.exportFailed'))
     } finally {
@@ -61,6 +64,7 @@ export default function DataManagement() {
     try {
       const res = await postJson('/p6-data-retention/export', { areas: [area], caller: 'api' })
       setStatus(`${t('data.exported')} ${area} ${t('data.exportedTo')} ${res.path || 'unknown path'}`)
+      toast({ title: `${t('data.exported')} ${area}`, variant: 'success' })
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : t('data.exportFailed'))
     } finally {
@@ -80,6 +84,7 @@ export default function DataManagement() {
         caller: 'api',
       })
       setStatus(`${t('data.deleted')} ${deleteArea}/${deleteRecordId}`)
+      toast({ title: `${t('data.deleted')} ${deleteArea}/${deleteRecordId}`, variant: 'success' })
       setShowDeletePanel(false)
       setDeleteArea('')
       setDeleteRecordId('')
@@ -100,7 +105,7 @@ export default function DataManagement() {
       {error && <ErrorDisplay message={error} onRetry={loadManifest} />}
       {status && <Banner variant="success">{status}</Banner>}
 
-      {loading && <LoadingSpinner label={t('data.loading')} />}
+      {loading && <Skeleton lines={5} />}
 
       {!manifest && !loading && error && (
         <ErrorDisplay message={error} onRetry={loadManifest} />
