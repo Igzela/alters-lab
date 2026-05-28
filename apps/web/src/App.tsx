@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { fadeIn } from './animations'
 import SystemStatus from './pages/SystemStatus'
 import AlterDialogue from './pages/AlterDialogue'
 import RealityScore from './pages/RealityScore'
@@ -18,6 +19,11 @@ type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' 
 export default function App() {
   const [page, setPage] = useState<Page>('status')
   const { t, i18n } = useTranslation()
+  const pageRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (pageRef.current) fadeIn(pageRef.current)
+  }, [page])
 
   const toggleLang = () => {
     const next = i18n.language === 'en' ? 'zh' : 'en'
@@ -57,6 +63,7 @@ export default function App() {
         <button className={navBtn('validation')} onClick={() => setPage('validation')}>{t('nav.validation')}</button>
         <button className={navBtn('data')} onClick={() => setPage('data')}>{t('nav.data')}</button>
       </nav>
+      <div ref={pageRef}>
       {page === 'status' && <SystemStatus onNavigate={setPage} />}
       {page === 'weekly' && <WeeklyReview />}
       {page === 'dialogue' && <AlterDialogue />}
@@ -69,6 +76,7 @@ export default function App() {
       {page === 'patterns' && <PatternReview />}
       {page === 'validation' && <BehaviorValidation />}
       {page === 'data' && <DataManagement />}
+      </div>
     </div>
   )
 }

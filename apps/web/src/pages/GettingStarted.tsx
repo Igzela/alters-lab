@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { expandIn, pulseSuccess } from '../animations'
 
 type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
 
@@ -21,6 +22,15 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
   const { t } = useTranslation()
   const [completed, setCompleted] = useState<Set<number>>(loadCompleted)
   const [expanded, setExpanded] = useState<number | null>(1)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const stepRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+
+  useEffect(() => {
+    if (expanded !== null) {
+      const el = stepRefs.current.get(expanded)
+      if (el) expandIn(el)
+    }
+  }, [expanded])
 
   const toggleStep = (step: number) => {
     setExpanded(expanded === step ? null : step)
@@ -114,7 +124,7 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
           </button>
 
           {expanded === step.id && (
-            <div className="px-4 pb-4 pt-1 space-y-3">
+            <div ref={el => { if (el) stepRefs.current.set(step.id, el) }} className="px-4 pb-4 pt-1 space-y-3">
               <p className="text-sm text-gray-400 leading-relaxed">{step.desc}</p>
               <div className="flex gap-2">
                 {step.navigate && (
@@ -131,7 +141,10 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
                       ? 'bg-gray-700 text-gray-400 hover:bg-gray-600'
                       : 'bg-green-700 text-white hover:bg-green-600'
                   }`}
-                  onClick={() => markComplete(step.id)}
+                  onClick={(e) => {
+                    markComplete(step.id)
+                    if (!completed.has(step.id)) pulseSuccess(e.currentTarget)
+                  }}
                 >
                   {completed.has(step.id) ? t('gettingStarted.markIncomplete') : t('gettingStarted.markComplete')}
                 </button>
