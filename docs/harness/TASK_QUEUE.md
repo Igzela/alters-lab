@@ -949,7 +949,7 @@
 
 ### P12-M2: Loading and error-state system
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Add consistent loading spinners/skeletons and error-state UI with retry to all async frontend pages.
 **Depends on**: P12-M1 (done)
-**Notes**: Pending approval.
+**Notes**: Done. Created shared LoadingSpinner and ErrorDisplay components. Updated 8 pages (DataManagement, RealityScore, PatternReview, ProviderSettings, BehaviorValidation, SystemStatus, CalibrationHistory, P6Progress) with loading states, button disabling, and error display. Build passes (14.88 kB CSS, 205.33 kB JS). 1270 backend tests pass. Deb build passes. No backend drift. No P6 false claims. GPT R1 verification: all checks PASS. P12-M3 ready_with_approval.
