@@ -928,3 +928,21 @@
 **Goal**: Close out P10 pilot, decide next phase.
 **Depends on**: P10-M6
 **Notes**: Not started.
+
+---
+
+## Phase 12 — UI Product Improvements (Owner Override)
+
+### P12-000: Owner override plan and validation pause
+
+**Status**: done
+**Goal**: Record owner override decision to proceed with UI improvements during validation window. Pause P6 validation.
+**Depends on**: P10-M6-UXT1 (usability triage)
+**Notes**: Done. Created P12_000_UI_OVERRIDE_PLAN.md. P6 state changed to CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED. Week 1 evidence preserved but not counted by default. P12 milestone plan: M1 (Tailwind), M2 (Loading/Error), M3 (i18n), M4 (Onboarding), M5 (GSAP), M6 (Smoke), M7 (P6 restart).
+
+### P12-M1: Tailwind visual baseline
+
+**Status**: ready_with_approval
+**Goal**: Add Tailwind CSS as the visual baseline for all frontend pages.
+**Depends on**: P12-000 (done)
+**Notes**: Not started. Pending approval.

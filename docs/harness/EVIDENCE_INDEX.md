@@ -421,3 +421,4 @@
 | P10-M6-UXT1 | P10_M6_UXT1_USABILITY_TRIAGE.md | docs/harness/ | Usability triage: 0 blocker, 0 high, 1 medium, 4 low. Week 2 can proceed. |
 | DOC-HANDOFF-001 | AGENTS.md | ./ | Cross-agent bootstrap, hard boundaries, verification commands, and documentation maintenance rule |
 | DOC-HANDOFF-001 | README.md, CLAUDE.md, START_HERE_FOR_NEW_SESSION.md, CURRENT_SESSION_CONTEXT.md | ./, docs/harness/ | Handoff surface updated so new sessions see P11/Pilot state and commit-time doc maintenance expectations |
+| P12-000 | P12_000_UI_OVERRIDE_PLAN.md | docs/harness/ | Owner override plan: P6 validation paused for product change, P12 UI improvement milestones defined |

@@ -159,7 +159,22 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | P10-M6-PREP1 | Validation runbook and future week templates | **done** |
 | P10-M7 | Pilot closeout / next phase decision | **blocked** |
 
-P6 status: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P10 status: **P10-M5-R2 done (START_P6_VALIDATION_NOW), P10-M6 done (Week 1 evidence committed)** — 1270 backend tests passing.
+P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED** — P10 status: **P10-M5-R2 done (START_P6_VALIDATION_NOW), P10-M6 done (Week 1 evidence committed)** — 1270 backend tests passing.
+
+## Phase 12 — UI Product Improvements (Owner Override)
+
+| ID | Title | Status |
+|----|-------|--------|
+| P12-000 | Owner override plan and validation pause | **done** |
+| P12-M1 | Tailwind visual baseline | **ready_with_approval** |
+| P12-M2 | Loading and error-state system | **blocked** |
+| P12-M3 | i18n zh/en toggle | **blocked** |
+| P12-M4 | New-user guided path | **blocked** |
+| P12-M5 | GSAP motion layer | **blocked** |
+| P12-M6 | Product smoke and real-use pilot | **blocked** |
+| P12-M7 | P6 validation restart decision | **blocked** |
+
+P6 state: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED** — Owner override: Charlie requested UI improvements during validation window. P6 validation paused. Week 1 evidence preserved but not counted by default.
 
 ## Phase 11 — Product Completeness Before Validation
 
@@ -178,7 +193,7 @@ P6 status: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P10 statu
 | P11-M7 | Product completeness smoke and closeout | **done** |
 | P11-PILOT-1 | Real-use product pilot | **done** |
 
-P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P11 purpose: audit and complete app before P6 validation. **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION.** P11-PILOT-1: PASS (10 workflows, friction=none).
+P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED** — P11 purpose: audit and complete app before P6 validation. **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION.** P11-PILOT-1: PASS (10 workflows, friction=none).
 
 ## Phase 5 Sealed Baseline
 

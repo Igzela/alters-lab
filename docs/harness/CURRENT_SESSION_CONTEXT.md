@@ -6,48 +6,31 @@ Last updated: 2026-05-28
 
 - P7 sealed as `LOCAL_APP_RELEASE_CANDIDATE`
 - P7-R1 (frontend Weekly Review usability) complete
-- P6: `CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED`
+- P6: `CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED`
 - P8: sealed as `REAL_PROVIDER_READY_LOCAL_APP`
 - P8 all milestones done (P8-000 through P8-M7)
 - P8 provider safety audit: 7 sections all PASS
 - P9: sealed (P9-000 through P9-M7 all done)
 - P10: P10-000 through P10-M6 done; P10-M7 blocked
 - P11: P11-000 through P11-M7 done — **P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION**
+- P12: Owner override — UI improvements during validation window. P12-000 done. P12-M1 (Tailwind) ready_with_approval. P12-M2 through P12-M7 blocked.
 
 ## Current State
 
-- P11 sealed as PRODUCT_COMPLETE_BEFORE_VALIDATION (commit cb5b457)
-- P11-PILOT-1: PASS (real-use product pilot)
-- P10-M5-R2: done (START_P6_VALIDATION_NOW)
-- P10-M5-R2-E1: done (decision recorded)
-- P10-M6: done (Week 1 evidence committed, commit 14ee9d5)
-- P10-M6-R1: done (governance finalized, commit cdd30eb)
-- P10-M6-CC1: done (validation-window change control created)
-- P10-M6-PREP1: done (validation runbook and future week templates created)
-- P6: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
-- P6 validation started: 2026-05-28
-- P6 is NOT validated, NOT sealed
+- P12-000: done (owner override plan, P6 validation paused for product change)
+- P6: CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED
+- P6 validation paused: 2026-05-28 (owner override for UI improvements)
+- Week 1 evidence preserved but not counted by default
+- P12-M1: ready_with_approval (Tailwind visual baseline)
+- P12-M2 through P12-M7: blocked
 - P10-M7: blocked
-
-## Week 1 Validation Evidence
-
-P10-M6 Week 1 operations completed:
-- Weekly note ingested (session_type: project)
-- Weekly review completed
-- Action alignment score created (0.88, aligned_progress)
-- Evidence file: docs/harness/P10_M6_WEEK1_VALIDATION_EVIDENCE.md
-- Counters: 1 review, 1 calibration record, 0 pattern reviews, 0 days elapsed
-- All boundaries maintained (no alters/current, no rubric, no secrets, no P6 claims)
 
 ## Next Task
 
-Week 2 validation operations:
-1. Ingest one real weekly note after 2026-05-28
-2. Complete one real weekly review after 2026-05-28
-3. Create one action alignment score after 2026-05-28
-4. Provide redacted evidence for repo commit
-
-New sessions must not claim P6 validated.
+P12-M1: Tailwind visual baseline
+1. Install Tailwind CSS in frontend
+2. Convert all pages to Tailwind classes
+3. Visual baseline pass for all existing pages
 
 ## Verification Commands
 
@@ -81,6 +64,8 @@ git status
 - No runtime records committed
 - No P6 validation claims
 - No live provider calls without explicit configuration
+- P12 scope: frontend UI changes only (Tailwind, GSAP, i18n, loading states, onboarding)
+- P12 not allowed: backend behavior changes, provider changes, active YAML mutation, real provider calls
 
 ## Documentation Maintenance
 
