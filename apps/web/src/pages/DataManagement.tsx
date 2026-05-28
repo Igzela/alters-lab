@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { fetchJson, postJson } from '../api'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 interface Manifest {
   runtime_areas: string[]
@@ -12,38 +14,51 @@ interface Manifest {
 
 export default function DataManagement() {
   const [manifest, setManifest] = useState<Manifest | null>(null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
+  const [actionLoading, setActionLoading] = useState('')
   const [showDeletePanel, setShowDeletePanel] = useState(false)
   const [deleteArea, setDeleteArea] = useState('')
   const [deleteRecordId, setDeleteRecordId] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState('')
 
-  useEffect(() => {
+  const loadManifest = useCallback(() => {
+    setLoading(true)
+    setError('')
     fetchJson('/p6-data-retention/manifest')
       .then(setManifest)
       .catch(e => setError(e instanceof Error ? e.message : 'Unable to load manifest'))
+      .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => { loadManifest() }, [loadManifest])
 
   const exportAll = async () => {
     setError('')
     setStatus('')
+    setActionLoading('export')
     try {
       const res = await postJson('/p6-data-retention/export', { areas: [], caller: 'api' })
       setStatus(`Exported to: ${res.path || 'unknown path'}`)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Export failed')
+    } finally {
+      setActionLoading('')
     }
   }
 
   const exportArea = async (area: string) => {
     setError('')
     setStatus('')
+    setActionLoading(`export-${area}`)
     try {
       const res = await postJson('/p6-data-retention/export', { areas: [area], caller: 'api' })
       setStatus(`Exported ${area} to: ${res.path || 'unknown path'}`)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Export failed')
+    } finally {
+      setActionLoading('')
     }
   }
 
@@ -51,6 +66,7 @@ export default function DataManagement() {
     if (!deleteArea || !deleteRecordId || deleteConfirm !== 'delete') return
     setError('')
     setStatus('')
+    setActionLoading('delete')
     try {
       await postJson('/p6-data-retention/delete', {
         record: { area: deleteArea, record_id: deleteRecordId },
@@ -62,9 +78,11 @@ export default function DataManagement() {
       setDeleteArea('')
       setDeleteRecordId('')
       setDeleteConfirm('')
-      fetchJson('/p6-data-retention/manifest').then(setManifest).catch(() => {})
+      loadManifest()
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Delete failed')
+    } finally {
+      setActionLoading('')
     }
   }
 
@@ -75,13 +93,25 @@ export default function DataManagement() {
         View, export, or delete your product data. All exports redact secrets. Deletion requires exact record id and explicit confirmation.
       </p>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <ErrorDisplay message={error} onRetry={loadManifest} />}
       {status && <p className="text-green-400 text-sm">{status}</p>}
+
+      {loading && <LoadingSpinner label="Loading manifest..." />}
+
+      {error && !manifest && !loading && (
+        <ErrorDisplay message={error} onRetry={loadManifest} />
+      )}
 
       {manifest && (
         <>
           <div className="mb-4">
-            <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" onClick={exportAll}>Export All Data</button>
+            <button
+              className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+              onClick={exportAll}
+              disabled={!!actionLoading}
+            >
+              {actionLoading === 'export' ? 'Exporting...' : 'Export All Data'}
+            </button>
           </div>
 
           <h3 className="text-sm font-medium mb-2">Record Counts</h3>
@@ -92,7 +122,13 @@ export default function DataManagement() {
                   <strong className="text-sm">{area}</strong>
                   <span className="text-sm">{manifest.record_counts[area] ?? 0}</span>
                 </div>
-                <button className="text-xs text-blue-400 hover:text-blue-300" onClick={() => exportArea(area)}>Export</button>
+                <button
+                  className="text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50"
+                  onClick={() => exportArea(area)}
+                  disabled={!!actionLoading}
+                >
+                  {actionLoading === `export-${area}` ? 'Exporting...' : 'Export'}
+                </button>
               </div>
             ))}
           </div>
@@ -151,11 +187,11 @@ export default function DataManagement() {
               />
             </div>
             <button
-              className={`text-sm ${deleteArea && deleteRecordId && deleteConfirm === 'delete' ? 'text-red-500 hover:text-red-400' : 'text-gray-500'}`}
+              className={`text-sm ${deleteArea && deleteRecordId && deleteConfirm === 'delete' && !actionLoading ? 'text-red-500 hover:text-red-400' : 'text-gray-500'}`}
               onClick={executeDelete}
-              disabled={!deleteArea || !deleteRecordId || deleteConfirm !== 'delete'}
+              disabled={!deleteArea || !deleteRecordId || deleteConfirm !== 'delete' || !!actionLoading}
             >
-              Delete Record
+              {actionLoading === 'delete' ? 'Deleting...' : 'Delete Record'}
             </button>
           </div>
         )}

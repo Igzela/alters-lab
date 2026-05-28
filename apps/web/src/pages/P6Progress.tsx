@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { listActionAlignmentScores, listWeeklyNotes, listWeeklyReviews } from '../api'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 type Counts = {
   weeklyNotes: number
@@ -29,8 +31,8 @@ export default function P6Progress() {
   return (
     <section className="border border-gray-700 rounded-lg p-3.5 mb-4 bg-gray-800/20">
       <h3 className="text-sm font-medium mb-2">Your Progress</h3>
-      {error && <p className="text-red-500 text-sm">Progress unavailable: {error}</p>}
-      {!counts && !error && <p className="text-gray-400 text-sm">Loading progress...</p>}
+      {error && <ErrorDisplay message={`Progress unavailable: ${error}`} />}
+      {!counts && !error && <LoadingSpinner label="Loading progress..." />}
       {counts && (
         <>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 text-sm">

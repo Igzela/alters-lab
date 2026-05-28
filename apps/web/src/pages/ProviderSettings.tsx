@@ -1,5 +1,7 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { deleteJson, fetchJson, postJson } from '../api'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 type ProviderMode = 'disabled' | 'mock' | 'openai-compatible-http'
 type SecretStorage = 'keyring' | 'secrets_yaml_fallback'
@@ -54,6 +56,9 @@ export default function ProviderSettings() {
   const [testResult, setTestResult] = useState<TestResult | null>(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [storing, setStoring] = useState(false)
+  const [testing, setTesting] = useState(false)
 
   const load = () => {
     setError('')
@@ -81,6 +86,7 @@ export default function ProviderSettings() {
     if (!config) return
     setError('')
     setMessage('')
+    setSaving(true)
     postJson('/provider-config/config', {
       mode: config.mode,
       base_url: config.base_url || null,
@@ -91,36 +97,46 @@ export default function ProviderSettings() {
       explicit_user_configuration: config.mode === 'openai-compatible-http',
     })
       .then(() => { setMessage('Config saved'); load() })
-      .catch(e => setError(e.message))
+      .catch(e => setError(e instanceof Error ? e.message : 'Failed to save config'))
+      .finally(() => setSaving(false))
   }
 
   const storeSecret = () => {
     if (!config || !apiKey.trim()) return
     setError('')
     setMessage('')
+    setStoring(true)
     postJson('/provider-config/secret', {
       api_key: apiKey,
       storage: config.secret_storage,
       confirmation: 'store-secret',
     })
       .then(() => { setApiKey(''); setMessage('Secret stored'); load() })
-      .catch(e => setError(e.message))
+      .catch(e => setError(e instanceof Error ? e.message : 'Failed to store secret'))
+      .finally(() => setStoring(false))
   }
 
   const deleteSecret = () => {
     if (!config) return
     setError('')
     setMessage('')
+    setStoring(true)
     deleteJson('/provider-config/secret', {
       storage: config.secret_storage,
       confirmation: 'delete-secret',
     })
       .then(() => { setApiKey(''); setMessage('Secret deleted'); load() })
-      .catch(e => setError(e.message))
+      .catch(e => setError(e instanceof Error ? e.message : 'Failed to delete secret'))
+      .finally(() => setStoring(false))
   }
 
-  if (error) return <p className="text-red-500 text-sm">Error: {error}</p>
-  if (!config || !status) return <p className="text-gray-400">Loading...</p>
+  if (error && !config) return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Provider Settings</h2>
+      <ErrorDisplay message={error} onRetry={load} />
+    </div>
+  )
+  if (!config || !status) return <LoadingSpinner label="Loading provider settings..." />
 
   const hasUnsavedChanges = savedConfig
     ? JSON.stringify({
@@ -135,9 +151,11 @@ export default function ProviderSettings() {
   const testProvider = () => {
     if (hasUnsavedChanges) return
     setError('')
+    setTesting(true)
     postJson('/provider-config/test', { dry_run: true })
       .then(result => setTestResult(result as TestResult))
-      .catch(e => setError(e.message))
+      .catch(e => setError(e instanceof Error ? e.message : 'Provider test failed'))
+      .finally(() => setTesting(false))
   }
 
   return (
@@ -203,7 +221,9 @@ export default function ProviderSettings() {
             <option value="secrets_yaml_fallback">secrets_yaml_fallback</option>
           </select>
         </label>
-        <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" type="submit">Save Config</button>
+        <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50" type="submit" disabled={saving}>
+          {saving ? 'Saving...' : 'Save Config'}
+        </button>
       </form>
 
       <section>
@@ -213,20 +233,24 @@ export default function ProviderSettings() {
           <input className={input} type="password" autoComplete="off" value={apiKey} onChange={e => setApiKey(e.target.value)} />
         </label>
         <div className="flex gap-2">
-          <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" type="button" onClick={storeSecret}>Store Key</button>
-          <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700" type="button" onClick={deleteSecret}>Delete Key</button>
+          <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50" type="button" onClick={storeSecret} disabled={storing || !apiKey.trim()}>
+            {storing ? 'Storing...' : 'Store Key'}
+          </button>
+          <button className="px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50" type="button" onClick={deleteSecret} disabled={storing}>
+            {storing ? 'Deleting...' : 'Delete Key'}
+          </button>
         </div>
       </section>
 
       <section>
         <h3 className="text-base font-medium mb-2">Dry Run</h3>
         <button
-          className={`px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 ${hasUnsavedChanges ? 'opacity-50' : ''}`}
+          className={`px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 ${hasUnsavedChanges || testing ? 'opacity-50' : ''}`}
           type="button"
           onClick={testProvider}
-          disabled={hasUnsavedChanges}
+          disabled={hasUnsavedChanges || testing}
         >
-          Test Provider Config
+          {testing ? 'Testing...' : 'Test Provider Config'}
         </button>
         {hasUnsavedChanges && <p className="text-sm text-gray-400 mt-1">Save config before testing.</p>}
         {testResult && (

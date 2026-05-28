@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { fetchJson, listActionAlignmentScores, listWeeklyReviews } from '../api'
 import type { ActionAlignmentScore, VerdictLabel, WeeklyReviewSession } from '../types'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 const VERDICT_DESCRIPTIONS: Record<VerdictLabel, string> = {
   aligned_progress: 'Actions matched your stated direction. You did what you intended.',
@@ -56,8 +58,8 @@ export default function CalibrationHistory() {
       .catch(e => setError(e.message))
   }, [])
 
-  if (error) return <p className="text-red-500 text-sm">Error: {error}</p>
-  if (!data) return <p className="text-gray-400">Loading...</p>
+  if (error && !data) return <ErrorDisplay message={error} onRetry={() => { setError(''); window.location.reload() }} />
+  if (!data) return <LoadingSpinner label="Loading calibration history..." />
 
   const records = (data.records as Record<string, unknown>[]) || []
   const drift = (data.drift_evidence as Record<string, unknown>[]) || []

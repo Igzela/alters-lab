@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { postJson, listActionAlignmentScores } from '../api'
 import type { ActionAlignmentScore } from '../types'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 const ALTERS = [
   { alter: 'alter_A', branch: 'branch_A' },
@@ -23,19 +25,26 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
   const [status, setStatus] = useState('')
   const [error, setError] = useState('')
   const [recentScores, setRecentScores] = useState<ActionAlignmentScore[]>([])
+  const [submitting, setSubmitting] = useState(false)
+  const [loadingScores, setLoadingScores] = useState(true)
 
-  useEffect(() => {
+  const loadScores = useCallback(() => {
+    setLoadingScores(true)
     listActionAlignmentScores()
       .then(res => {
         const sorted = [...res.scores].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         setRecentScores(sorted.slice(0, 5))
       })
       .catch(() => {})
+      .finally(() => setLoadingScores(false))
   }, [])
+
+  useEffect(() => { loadScores() }, [loadScores])
 
   const submit = async () => {
     setError('')
     setStatus('')
+    setSubmitting(true)
     try {
       const res = await postJson('/calibration-loop/reality-scores', {
         score_id: `score_manual_${Date.now()}`,
@@ -50,6 +59,8 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
       setStatus(`Score recorded: ${res.record.id}`)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Unknown error')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -110,13 +121,14 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
         placeholder="Notes..."
       />
       <button
-        className="mt-2 px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+        className="mt-2 px-3 py-2 text-sm bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
         onClick={submit}
+        disabled={submitting}
       >
-        Submit Score
+        {submitting ? 'Submitting...' : 'Submit Score'}
       </button>
       {status && <p className="text-green-400 text-sm">{status}</p>}
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <ErrorDisplay message={error} />}
     </div>
   )
 }

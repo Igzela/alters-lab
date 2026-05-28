@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { fetchJson } from '../api'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider'
 
@@ -26,8 +28,8 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
       .catch(e => setError(e.message))
   }, [])
 
-  if (error) return <p className="text-red-600">Error: {error}</p>
-  if (!product || !localApp || !runtime || !provider) return <p className="text-gray-400">Loading...</p>
+  if (error && !product) return <ErrorDisplay message={error} onRetry={() => { setError(''); window.location.reload() }} />
+  if (!product || !localApp || !runtime || !provider) return <LoadingSpinner label="Loading system status..." />
 
   return (
     <div className="space-y-4">

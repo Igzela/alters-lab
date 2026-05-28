@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { fetchJson, postJson } from '../api'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 interface BehaviorValidationRecord {
   validation_id: string
@@ -50,10 +52,13 @@ export default function BehaviorValidation() {
   const [record, setRecord] = useState<BehaviorValidationRecord | null>(null)
   const [noReport, setNoReport] = useState(false)
   const [evaluating, setEvaluating] = useState(false)
+  const [loadingReport, setLoadingReport] = useState(true)
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
 
-  useEffect(() => {
+  const loadReport = useCallback(() => {
+    setLoadingReport(true)
+    setError('')
     fetchJson('/behavior-validation/report')
       .then(res => {
         if (res.status === 'no_report' || !res.validation) {
@@ -63,7 +68,10 @@ export default function BehaviorValidation() {
         }
       })
       .catch(() => setNoReport(true))
+      .finally(() => setLoadingReport(false))
   }, [])
+
+  useEffect(() => { loadReport() }, [loadReport])
 
   const evaluate = async () => {
     setEvaluating(true)
@@ -124,7 +132,9 @@ export default function BehaviorValidation() {
         {error && <span className="text-red-500 text-sm ml-2">{error}</span>}
       </div>
 
-      {noReport && !record && (
+      {loadingReport && <LoadingSpinner label="Loading validation report..." />}
+
+      {!loadingReport && noReport && !record && (
         <p className="text-gray-400 text-sm">No validation report yet. Run an evaluation to generate one.</p>
       )}
 

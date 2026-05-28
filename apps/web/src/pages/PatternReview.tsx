@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { fetchJson, postJson } from '../api'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 interface TriggeredPattern {
   pattern: string
@@ -35,17 +37,22 @@ export default function PatternReview() {
   const [reviews, setReviews] = useState<PatternReviewRecord[]>([])
   const [selected, setSelected] = useState<PatternReviewRecord | null>(null)
   const [building, setBuilding] = useState(false)
+  const [loadingList, setLoadingList] = useState(true)
+  const [loadingDetail, setLoadingDetail] = useState(false)
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
 
-  const loadList = () => {
+  const loadList = useCallback(() => {
+    setLoadingList(true)
+    setError('')
     fetchJson('/pattern-review/list')
       .then(res => {
         const sorted = [...res.reviews].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         setReviews(sorted)
       })
       .catch(e => setError(e instanceof Error ? e.message : 'Unable to load pattern reviews'))
-  }
+      .finally(() => setLoadingList(false))
+  }, [])
 
   useEffect(() => { loadList() }, [])
 
@@ -67,9 +74,11 @@ export default function PatternReview() {
 
   const loadDetail = (reviewId: string) => {
     setError('')
+    setLoadingDetail(true)
     fetchJson(`/pattern-review/${reviewId}`)
       .then(res => setSelected(res.review))
       .catch(e => setError(e instanceof Error ? e.message : 'Unable to load review'))
+      .finally(() => setLoadingDetail(false))
   }
 
   return (
@@ -94,7 +103,9 @@ export default function PatternReview() {
         {error && <span className="text-red-500 text-sm ml-2">{error}</span>}
       </div>
 
-      {reviews.length === 0 && <p className="text-gray-400 text-sm">No pattern reviews yet. Build one to get started.</p>}
+      {loadingList && <LoadingSpinner label="Loading reviews..." />}
+
+      {!loadingList && reviews.length === 0 && !error && <p className="text-gray-400 text-sm">No pattern reviews yet. Build one to get started.</p>}
 
       {reviews.map(r => (
         <div
@@ -117,7 +128,9 @@ export default function PatternReview() {
         </div>
       ))}
 
-      {selected && (
+      {loadingDetail && <LoadingSpinner label="Loading review detail..." />}
+
+      {selected && !loadingDetail && (
         <div className="mt-4 p-3.5 bg-blue-950/30 rounded-lg border border-blue-800/30">
           <h3 className="text-sm font-medium mb-2">Review Detail: {selected.review_id}</h3>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3 text-sm">
