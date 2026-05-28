@@ -8,6 +8,7 @@ import { Badge } from '../components/Badge'
 import { Banner } from '../components/Banner'
 import { SkeletonCard } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
+import { useToast } from '../components/Toast'
 
 type ProviderMode = 'disabled' | 'mock' | 'openai-compatible-http'
 type SecretStorage = 'keyring' | 'secrets_yaml_fallback'
@@ -53,6 +54,7 @@ type TestResult = {
 
 export default function ProviderSettings() {
   const { t } = useTranslation()
+  const { toast } = useToast()
   const [config, setConfig] = useState<ProviderConfig | null>(null)
   const [savedConfig, setSavedConfig] = useState<ProviderConfig | null>(null)
   const [status, setStatus] = useState<ProviderStatus | null>(null)
@@ -100,7 +102,7 @@ export default function ProviderSettings() {
       key_name: config.key_name,
       explicit_user_configuration: config.mode === 'openai-compatible-http',
     })
-      .then(() => { setMessage(t('provider.configSaved')); load() })
+      .then(() => { setMessage(t('provider.configSaved')); toast({ title: t('provider.configSaved'), variant: 'success' }); load() })
       .catch(e => setError(e instanceof Error ? e.message : t('provider.failedSave')))
       .finally(() => setSaving(false))
   }
@@ -115,7 +117,7 @@ export default function ProviderSettings() {
       storage: config.secret_storage,
       confirmation: 'store-secret',
     })
-      .then(() => { setApiKey(''); setMessage(t('provider.secretStored')); load() })
+      .then(() => { setApiKey(''); setMessage(t('provider.secretStored')); toast({ title: t('provider.secretStored'), variant: 'success' }); load() })
       .catch(e => setError(e instanceof Error ? e.message : t('provider.failedStore')))
       .finally(() => setStoring(false))
   }
@@ -129,7 +131,7 @@ export default function ProviderSettings() {
       storage: config.secret_storage,
       confirmation: 'delete-secret',
     })
-      .then(() => { setApiKey(''); setMessage(t('provider.secretDeleted')); load() })
+      .then(() => { setApiKey(''); setMessage(t('provider.secretDeleted')); toast({ title: t('provider.secretDeleted'), variant: 'success' }); load() })
       .catch(e => setError(e instanceof Error ? e.message : t('provider.failedDelete')))
       .finally(() => setStoring(false))
   }
