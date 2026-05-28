@@ -201,10 +201,13 @@ P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. 1270 
 | P14-M3 | WeeklyReview step progress bar | **done** |
 | P14-M4 | Style JSON display blocks | **done** |
 | P14-M5 | Skip-to-content link | **done** |
-| P14-CLOSEOUT | Frontend polish governance closeout | **done** |
+| P14-M6 | AlterDialogue labels, BehaviorValidation i18n, DataManagement toasts | **done** |
+| P14-M7 | ProviderSettings toast notifications | **done** |
+| P14-M8 | Alter labels i18n | **done** |
+| P14-FINAL-CLOSEOUT-E1 | Close frontend polish after M8 | **done** |
 
-P14 scope: **COMPLETE** (M1-M5 + R1 + CLOSEOUT all done). GPT PASS (BLOCKED_WITH_SMALL_R1 resolved — governance commit only).
-P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED — P14 scope: frontend polish before fresh P6 evidence. 1270 backend tests passing. Frontend build PASS. Deb build PASS. P8 e2e smoke PASS. Fresh post-P14 P6 evidence collection may begin.
+P14 scope: **COMPLETE** (M1-M8 + R1 + CLOSEOUT all done). GPT PASS. Fresh post-P14 P6 evidence collection may begin.
+P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED — P14 scope: frontend polish before fresh P6 evidence. 1270 backend tests passing. Frontend build PASS. Deb build PASS. P8 e2e smoke PASS.
 
 ## Phase 11 — Product Completeness Before Validation
 

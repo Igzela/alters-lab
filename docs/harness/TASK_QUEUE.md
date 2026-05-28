@@ -1093,4 +1093,32 @@
 **Status**: done
 **Goal**: Close out P14 governance after GPT PASS.
 **Depends on**: P14-M5 (done)
-**Notes**: Done. GPT PASS (BLOCKED_WITH_SMALL_R1 resolved — governance commit only). P14 scope COMPLETE. Frontend build PASS. 1270 backend tests PASS. Deb build PASS. P8 e2e smoke PASS. No backend drift. No active YAML/rubric drift. No real provider calls. No P6 validated/sealed claims. Fresh post-P14 P6 evidence collection may begin.
+**Notes**: Done. GPT PASS. P14 scope updated after M6-M8.
+
+### P14-M6: AlterDialogue labels, BehaviorValidation i18n, DataManagement toasts
+
+**Status**: done
+**Goal**: Friendly alter labels, BehaviorValidation i18n/datepicker/skeleton, DataManagement toast notifications.
+**Depends on**: P14-M5 (done)
+**Notes**: Done. AlterDialogue: friendly labels (Alter A-D), reply fade-in animation. BehaviorValidation: CheckItem i18n yes/no, Banner error, formatDate, Skeleton loading. DataManagement: toast for export/delete success, Skeleton loading. Frontend build PASS.
+
+### P14-M7: ProviderSettings toast notifications
+
+**Status**: done
+**Goal**: Add toast notifications for config save, secret store, and secret delete success.
+**Depends on**: P14-M6 (done)
+**Notes**: Done. Toast notifications for all provider config actions. Frontend build PASS.
+
+### P14-M8: Alter labels i18n
+
+**Status**: done
+**Goal**: Move Alter A-D labels to i18n keys.
+**Depends on**: P14-M7 (done)
+**Notes**: Done. Labels moved to common.alterA-D keys in en/zh locale files. Frontend build PASS.
+
+### P14-FINAL-CLOSEOUT-E1: Close frontend polish after M8
+
+**Status**: done
+**Goal**: Final P14 governance closeout after M6-M8.
+**Depends on**: P14-M8 (done)
+**Notes**: Done. GPT PASS. P14 scope COMPLETE (M1-M8 + R1). 1270 backend tests PASS. Frontend build PASS. Deb build PASS. P8 e2e smoke PASS. No backend drift. No active YAML/rubric drift. No real provider calls. No P6 validated/sealed claims. Fresh post-P14 P6 evidence collection may begin.

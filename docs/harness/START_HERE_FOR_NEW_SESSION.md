@@ -19,7 +19,7 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P11-PILOT-1**: PASS.
 - **P12**: Owner override — UI improvements during validation window. P12-000 through P12-M7 all done. P12 scope COMPLETE.
 - **P13**: UX hardening (pre-validation). P13-M1 through M6 all done. P13 scope COMPLETE (GPT PASS_WITH_GOVERNANCE_CLOSEOUT). 1270 backend tests passing. Frontend build PASS, deb build PASS, P8 e2e smoke PASS.
-- **P14**: Frontend polish (pre-validation). P14-M1 through M5 + R1 + CLOSEOUT all done. P14 scope COMPLETE (GPT PASS — BLOCKED_WITH_SMALL_R1 resolved). 1270 backend tests passing. Frontend build PASS, deb build PASS, P8 e2e smoke PASS.
+- **P14**: Frontend polish (pre-validation). P14-M1 through M8 + R1 all done. P14 scope COMPLETE (GPT PASS — FINAL-CLOSEOUT-E1). 1270 backend tests passing. Frontend build PASS, deb build PASS, P8 e2e smoke PASS.
 - **P6 validation**: Restarted from zero (P12-M7 decision). P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. Week 1 evidence archived as historical (pre-P12), not counted. Fresh post-P14 P6 evidence collection may now begin.
 
 ## Reading Order

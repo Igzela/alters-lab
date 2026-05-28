@@ -46,8 +46,11 @@ Last updated: 2026-05-28
 - P14-M3: done (WeeklyReview step progress bar)
 - P14-M4: done (style JSON display blocks)
 - P14-M5: done (skip-to-content link)
-- P14-CLOSEOUT: done (frontend polish governance closeout — GPT PASS)
-- P14 scope: COMPLETE (M1-M5 + R1 + CLOSEOUT all done)
+- P14-M6: done (AlterDialogue labels, BehaviorValidation i18n, DataManagement toasts)
+- P14-M7: done (ProviderSettings toast notifications)
+- P14-M8: done (Alter labels i18n)
+- P14-FINAL-CLOSEOUT-E1: done (close frontend polish after M8 — GPT PASS)
+- P14 scope: COMPLETE (M1-M8 + R1 all done)
 
 ## Next Task
 
