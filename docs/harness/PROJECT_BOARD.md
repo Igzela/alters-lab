@@ -155,6 +155,7 @@ P6 status: **CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED** — P8 status: **seale
 | P10-M5 | P6 validation start decision gate | **done** |
 | P10-M5-R2 | Reopen P6 validation start gate after P11 | **done** |
 | P10-M6 | Week 1 validation package | **done** |
+| P10-M6-CC1 | Validation-window change control | **done** |
 | P10-M7 | Pilot closeout / next phase decision | **blocked** |
 
 P6 status: **CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED** — P10 status: **P10-M5-R2 done (START_P6_VALIDATION_NOW), P10-M6 done (Week 1 evidence committed)** — 1270 backend tests passing.

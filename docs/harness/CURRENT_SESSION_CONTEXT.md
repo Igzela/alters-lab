@@ -21,6 +21,8 @@ Last updated: 2026-05-28
 - P10-M5-R2: done (START_P6_VALIDATION_NOW)
 - P10-M5-R2-E1: done (decision recorded)
 - P10-M6: done (Week 1 evidence committed, commit 14ee9d5)
+- P10-M6-R1: done (governance finalized, commit cdd30eb)
+- P10-M6-CC1: done (validation-window change control created)
 - P6: CODE_COMPLETE / VALIDATION_IN_PROGRESS / NOT_SEALED
 - P6 validation started: 2026-05-28
 - P6 is NOT validated, NOT sealed

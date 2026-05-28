@@ -416,5 +416,6 @@
 | P10-M6 | P10_M6_WEEK1_VALIDATION_EVIDENCE_TEMPLATE.md | docs/harness/ | Reusable evidence template for future validation weeks |
 | P10-M6 | P10_M6_VALIDATION_COUNTERS.md | docs/harness/ | Validation counters: 1 review, 1 calibration record, 0 pattern reviews, 0 days elapsed |
 | P10-M6-R1 | P10_M6_WEEK1_VALIDATION_EVIDENCE.md, P10_M6_WEEK1_VALIDATION_EVIDENCE_TEMPLATE.md, 6 governance docs | docs/harness/ | Finalize Week 1 validation evidence governance |
+| P10-M6-CC1 | P10_M6_VALIDATION_WINDOW_CHANGE_CONTROL.md | docs/harness/ | Validation-window change control: allowed/disallowed changes during P6 validation |
 | DOC-HANDOFF-001 | AGENTS.md | ./ | Cross-agent bootstrap, hard boundaries, verification commands, and documentation maintenance rule |
 | DOC-HANDOFF-001 | README.md, CLAUDE.md, START_HERE_FOR_NEW_SESSION.md, CURRENT_SESSION_CONTEXT.md | ./, docs/harness/ | Handoff surface updated so new sessions see P11/Pilot state and commit-time doc maintenance expectations |
