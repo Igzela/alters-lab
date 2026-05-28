@@ -432,3 +432,5 @@
 | P12-M3 | Language toggle | apps/web/src/App.tsx | EN/ZH toggle button in header, nav bar labels translated |
 | P12-M3 | Page i18n updates | apps/web/src/pages/ | All 15 pages/components updated with useTranslation() hook and t() calls |
 | P12-M3-R1 | localStorage persistence | apps/web/src/i18n.ts, apps/web/src/App.tsx | Read/write localStorage "alters_lab_language" for language persistence, default English |
+| P12-M4 | Guided onboarding wizard | apps/web/src/pages/GettingStarted.tsx | Step-by-step wizard with progress bar, expandable steps, localStorage-persisted completion |
+| P12-M4 | Guided path translations | apps/web/src/locales/en.json, apps/web/src/locales/zh.json | Updated gettingStarted section with guided path step titles, descriptions, actions |

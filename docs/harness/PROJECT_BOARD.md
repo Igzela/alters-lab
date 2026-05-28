@@ -169,8 +169,8 @@ P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED**
 | P12-M1 | Tailwind visual baseline | **done** |
 | P12-M2 | Loading and error-state system | **done** |
 | P12-M3 | i18n zh/en toggle | **done** |
-| P12-M4 | New-user guided path | **ready_with_approval** |
-| P12-M5 | GSAP motion layer | **blocked** |
+| P12-M4 | New-user guided path | **done** |
+| P12-M5 | GSAP motion layer | **ready_with_approval** |
 | P12-M6 | Product smoke and real-use pilot | **blocked** |
 | P12-M7 | P6 validation restart decision | **blocked** |
 

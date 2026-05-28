@@ -24,8 +24,9 @@ Last updated: 2026-05-28
 - P12-M1: done (Tailwind visual baseline, all 13 pages converted, build passes)
 - P12-M2: done (Loading/Error system, 2 shared components, 8 pages updated)
 - P12-M3: done (i18n zh/en toggle, react-i18next, 15 pages/components updated, en/zh locale files, localStorage persistence)
-- P12-M4: ready_with_approval (New-user guided path)
-- P12-M5 through P12-M7: blocked
+- P12-M4: done (New-user guided path, step-by-step wizard with progress bar)
+- P12-M5: ready_with_approval (GSAP motion layer)
+- P12-M6 through P12-M7: blocked
 - P10-M7: blocked
 
 ## Next Task

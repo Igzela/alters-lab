@@ -960,3 +960,10 @@
 **Goal**: Add Chinese/English language toggle using react-i18next.
 **Depends on**: P12-M2 (done)
 **Notes**: Done. Installed react-i18next, i18next, i18next-browser-languagedetector. Created i18n.ts config with zh/en namespaces. Created en.json and zh.json locale files with full translations for all UI strings (nav, status, gettingStarted, weeklyReview, dialogue, realityScore, calibration, rubric, checkpoint, provider, patterns, validation, data, p6Progress, loading, history). Added language toggle button (EN/ZH) in App.tsx header. Updated all 15 pages/components with useTranslation() hook and t() calls. TypeScript check PASS. 1270 backend tests PASS. Frontend build PASS. No GSAP. No onboarding added. No P6 false claims. No provider secrets. R1: Added localStorage persistence for language selection (default English, refresh preserves choice). R2: Governance updated to reflect localStorage persistence. Full verification PASS (1270 tests, deb build, boundary checks). Commit: 2e6e99f. P12-M4 ready_with_approval.
+
+### P12-M4: New-user guided path
+
+**Status**: done
+**Goal**: Add onboarding flow for new users with step-by-step guided path.
+**Depends on**: P12-M3 (done)
+**Notes**: Done. Rewrote GettingStarted.tsx as step-by-step wizard with progress bar, expandable steps, and localStorage-persisted completion state. 4 steps: check system health, configure provider, run first weekly review, backup data. Updated en.json and zh.json with guided path translations. Frontend build PASS. 1270 backend tests PASS. No GSAP. No P6 false claims. Commit: 3aa9eec. P12-M5 ready_with_approval.
