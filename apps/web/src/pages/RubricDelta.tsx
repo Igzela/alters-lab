@@ -35,7 +35,7 @@ export default function RubricDelta() {
       {data && (
         <Card accent="pink">
           <p className="text-sm">{t('rubricDelta.status')} {String(data.status)}</p>
-          <pre className="text-xs mt-2 whitespace-pre-wrap" style={{ color: '#c4c2b8' }}>
+          <pre className="text-xs mt-2 whitespace-pre-wrap overflow-auto max-h-[400px] p-3 rounded-lg font-mono" style={{ color: '#c4c2b8', backgroundColor: '#0e100f', border: '1px solid #242624' }}>
             {data.suggestions ? JSON.stringify(data.suggestions as Record<string, unknown>, null, 2) : ''}
           </pre>
         </Card>
