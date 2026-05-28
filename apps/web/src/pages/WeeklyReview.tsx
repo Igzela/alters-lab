@@ -309,7 +309,7 @@ export default function WeeklyReview() {
       {step === 2 && noteRecord && editRecord && (
         <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step2Title')}</h3>
-          <p className="text-sm mb-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? 'Yes' : 'No'}</p>
+          <p className="text-sm mb-2" style={{ color: '#7c7c6f' }}>{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? t('common.yes') : t('common.no')}</p>
           <Field label="session_type">
             {editEnabled ? (
               <Select value={editRecord.session_type} onChange={e => setEditRecord({ ...editRecord, session_type: e.target.value as WeeklyNoteRecord['session_type'] })}>

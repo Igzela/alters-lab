@@ -1,4 +1,11 @@
 {
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "sending": "Sending...",
+    "generating": "Generating...",
+    "unknownError": "Unknown error"
+  },
   "app": {
     "title": "Alters Lab"
   },
@@ -314,7 +321,8 @@
     "unableToLoadReview": "Unable to load review",
     "buildFailed": "Build failed",
     "loadingReviews": "Loading reviews...",
-    "loadingDetail": "Loading review detail..."
+    "loadingDetail": "Loading review detail...",
+    "reviewBuilt": "Review built"
   },
   "validation": {
     "title": "Behavior Validation",

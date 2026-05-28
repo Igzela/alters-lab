@@ -109,9 +109,11 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
           }}
         >
           <button
-            className="w-full px-4 py-3 flex items-center gap-3 text-left transition-colors"
+            className="w-full px-4 py-3 flex items-center gap-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d95ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0e100f]"
             style={{ backgroundColor: 'transparent' }}
             onClick={() => toggleStep(step.id)}
+            aria-expanded={expanded === step.id}
+            aria-controls={`step-content-${step.id}`}
           >
             <span
               className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
@@ -122,13 +124,21 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
             >
               {completed.has(step.id) ? '✓' : step.id}
             </span>
-            <span className="text-sm font-medium" style={{ color: completed.has(step.id) ? '#0ae448' : '#fffce1' }}>
+            <span className="text-sm font-medium flex-1" style={{ color: completed.has(step.id) ? '#0ae448' : '#fffce1' }}>
               {step.title}
             </span>
+            <svg
+              className="w-4 h-4 transition-transform duration-200 flex-shrink-0"
+              style={{ color: '#7c7c6f', transform: expanded === step.id ? 'rotate(180deg)' : 'rotate(0deg)' }}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+            </svg>
           </button>
 
           {expanded === step.id && (
-            <div ref={el => { if (el) stepRefs.current.set(step.id, el) }} className="px-4 pb-4 pt-1 space-y-3">
+            <div ref={el => { if (el) stepRefs.current.set(step.id, el) }} id={`step-content-${step.id}`} role="region" className="px-4 pb-4 pt-1 space-y-3">
               <p className="text-sm leading-relaxed" style={{ color: '#7c7c6f' }}>{step.desc}</p>
               <div className="flex gap-2">
                 {step.navigate && (

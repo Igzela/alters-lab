@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, postJson } from '../api'
+import { staggerFadeIn } from '../animations'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
@@ -47,6 +48,7 @@ export default function PatternReview() {
   const [loadingDetail, setLoadingDetail] = useState(false)
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
+  const cardsRef = useRef<HTMLDivElement>(null)
 
   const loadList = useCallback(() => {
     setLoadingList(true)
@@ -62,13 +64,20 @@ export default function PatternReview() {
 
   useEffect(() => { loadList() }, [])
 
+  useEffect(() => {
+    if (!loadingList && cardsRef.current) {
+      const cards = cardsRef.current.querySelectorAll('[data-stagger]')
+      staggerFadeIn(Array.from(cards) as HTMLElement[])
+    }
+  }, [loadingList, reviews])
+
   const buildReview = async () => {
     setBuilding(true)
     setError('')
     setStatus('')
     try {
       const res = await postJson('/pattern-review/build', { weekly_patterns: [], save: true, caller: 'api' })
-      setStatus(`Review built: ${res.review.review_id}`)
+      setStatus(`${t('patterns.reviewBuilt')}: ${res.review.review_id}`)
       setSelected(res.review)
       loadList()
     } catch (e: unknown) {
@@ -88,7 +97,7 @@ export default function PatternReview() {
   }
 
   return (
-    <div className="space-y-4">
+    <div ref={cardsRef} className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('patterns.title')}</h2>
       <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('patterns.description')}</p>
 
@@ -111,6 +120,7 @@ export default function PatternReview() {
       {reviews.map(r => (
         <div
           key={r.review_id}
+          data-stagger
           onClick={() => loadDetail(r.review_id)}
           className="p-3 rounded-xl cursor-pointer transition-all duration-200"
           style={{

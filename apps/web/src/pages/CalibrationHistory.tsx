@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fetchJson, listActionAlignmentScores, listWeeklyReviews } from '../api'
+import { staggerFadeIn } from '../animations'
 import type { ActionAlignmentScore, VerdictLabel, WeeklyReviewSession } from '../types'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
@@ -38,7 +39,9 @@ export default function CalibrationHistory() {
   const [weeklyReviews, setWeeklyReviews] = useState<WeeklyReviewSession[]>([])
   const [actionScores, setActionScores] = useState<ActionAlignmentScore[]>([])
   const [error, setError] = useState('')
+  const [retryCount, setRetryCount] = useState(0)
   const [selectedScore, setSelectedScore] = useState<ActionAlignmentScore | null>(null)
+  const cardsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     Promise.all([
@@ -52,11 +55,18 @@ export default function CalibrationHistory() {
         setActionScores(scores.scores)
       })
       .catch(e => setError(e.message))
-  }, [])
+  }, [retryCount])
+
+  useEffect(() => {
+    if (data && cardsRef.current) {
+      const cards = cardsRef.current.querySelectorAll('[data-stagger]')
+      staggerFadeIn(Array.from(cards) as HTMLElement[])
+    }
+  }, [data, weeklyReviews, actionScores])
 
   const { t } = useTranslation()
 
-  if (error && !data) return <ErrorDisplay message={error} onRetry={() => { setError(''); window.location.reload() }} />
+  if (error && !data) return <ErrorDisplay message={error} onRetry={() => { setError(''); setRetryCount(c => c + 1) }} />
   if (!data) return <LoadingSpinner label={t('history.loading')} />
 
   const records = (data.records as Record<string, unknown>[]) || []
@@ -80,7 +90,7 @@ export default function CalibrationHistory() {
   }
 
   return (
-    <div className="space-y-4">
+    <div ref={cardsRef} className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('history.title')}</h2>
 
       <Card accent="lilac">
@@ -96,7 +106,7 @@ export default function CalibrationHistory() {
       <h3 className="text-base font-medium">{t('history.weeklyReviews')} ({weeklyReviews.length})</h3>
       {weeklyReviews.length === 0 && <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('history.noReviews')}</p>}
       {weeklyReviews.map(session => (
-        <Card key={session.session_id}>
+        <Card key={session.session_id} data-stagger>
           <strong className="text-sm">{session.session_id}</strong> — <Badge variant="info">{session.status}</Badge><br />
           <span className="text-xs" style={{ color: '#7c7c6f' }}>
             {t('history.note')} {session.weekly_note_record_id}
@@ -111,6 +121,7 @@ export default function CalibrationHistory() {
       {sortedScores.map(score => (
         <div
           key={score.score_id}
+          data-stagger
           className="p-3 rounded-xl cursor-pointer transition-all duration-200"
           style={{
             backgroundColor: selectedScore?.score_id === score.score_id ? '#242624' : '#1a1c1a',

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { postJson } from '../api'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import ErrorDisplay from '../components/ErrorDisplay'
 
 export default function CheckpointPlan() {
   const { t } = useTranslation()
@@ -17,7 +18,7 @@ export default function CheckpointPlan() {
       const res = await postJson('/checkpoint-regeneration/plan', { caller: 'api' })
       setData(res)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Unknown error')
+      setError(e instanceof Error ? e.message : t('common.unknownError'))
     } finally {
       setLoading(false)
     }
@@ -28,9 +29,9 @@ export default function CheckpointPlan() {
       <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('checkpointPlan.title')}</h2>
       <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('checkpointPlan.description')}</p>
       <Button variant="primary" onClick={generate} disabled={loading}>
-        {loading ? '...' : t('checkpointPlan.generate')}
+        {loading ? t('common.generating') : t('checkpointPlan.generate')}
       </Button>
-      {error && <p className="text-sm" style={{ color: '#ff4444' }}>{error}</p>}
+      {error && <ErrorDisplay message={error} />}
       {data && (
         <Card>
           <p className="text-sm">{t('checkpointPlan.status')} {String(data.status)}</p>

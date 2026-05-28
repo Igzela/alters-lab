@@ -16,6 +16,7 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
   const [runtime, setRuntime] = useState<Record<string, unknown> | null>(null)
   const [provider, setProvider] = useState<Record<string, unknown> | null>(null)
   const [error, setError] = useState('')
+  const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
     Promise.all([
@@ -31,9 +32,9 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
         setProvider(nextProvider)
       })
       .catch(e => setError(e.message))
-  }, [])
+  }, [retryCount])
 
-  if (error && !product) return <ErrorDisplay message={error} onRetry={() => { setError(''); window.location.reload() }} />
+  if (error && !product) return <ErrorDisplay message={error} onRetry={() => { setError(''); setRetryCount(c => c + 1) }} />
   if (!product || !localApp || !runtime || !provider) return <LoadingSpinner label={t('status.loading')} />
 
   return (
@@ -49,7 +50,7 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
           <p>{t('status.runtimeMode')} <Badge variant="info">{String(runtime.mode)}</Badge></p>
           <p>{t('status.configPath')} <span style={{ color: '#7c7c6f' }}>{String(runtime.config_path)}</span></p>
           <p>{t('status.productDataDir')} <span style={{ color: '#7c7c6f' }}>{String(runtime.product_data_dir)}</span></p>
-          <p>{t('status.frontendAvailable')} <Badge variant={localApp.frontend_available ? 'success' : 'error'}>{localApp.frontend_available ? 'Yes' : 'No'}</Badge></p>
+          <p>{t('status.frontendAvailable')} <Badge variant={localApp.frontend_available ? 'success' : 'error'}>{localApp.frontend_available ? t('common.yes') : t('common.no')}</Badge></p>
           <p>{t('status.providerMode')} <Badge variant="info">{String(provider.provider_mode)}</Badge></p>
         </div>
       </Card>
@@ -69,7 +70,7 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
           <p>{t('status.phase3')} <Badge variant="success">{String(product.phase3_status)}</Badge></p>
           <p>{t('status.phase4')} <Badge variant="success">{String(product.phase4_status)}</Badge></p>
           <p>{t('status.storage')} <Badge variant="info">{String(product.storage_backend)}</Badge></p>
-          <p>{t('status.noSecretsExposed')} <Badge variant={product.no_secrets_exposed ? 'success' : 'error'}>{product.no_secrets_exposed ? 'Yes' : 'No'}</Badge></p>
+          <p>{t('status.noSecretsExposed')} <Badge variant={product.no_secrets_exposed ? 'success' : 'error'}>{product.no_secrets_exposed ? t('common.yes') : t('common.no')}</Badge></p>
         </div>
       </Card>
 

@@ -1,4 +1,11 @@
 {
+  "common": {
+    "yes": "是",
+    "no": "否",
+    "sending": "发送中...",
+    "generating": "生成中...",
+    "unknownError": "未知错误"
+  },
   "app": {
     "title": "Alters Lab"
   },
@@ -314,7 +321,8 @@
     "unableToLoadReview": "无法加载回顾",
     "buildFailed": "构建失败",
     "loadingReviews": "加载回顾中...",
-    "loadingDetail": "加载回顾详情中..."
+    "loadingDetail": "加载回顾详情中...",
+    "reviewBuilt": "回顾已构建"
   },
   "validation": {
     "title": "行为验证",

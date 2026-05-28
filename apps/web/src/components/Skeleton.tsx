@@ -1,0 +1,41 @@
+interface SkeletonProps {
+  lines?: number
+  className?: string
+}
+
+export function Skeleton({ lines = 3, className = '' }: SkeletonProps) {
+  return (
+    <div className={`space-y-2 ${className}`} role="status" aria-label="Loading">
+      {Array.from({ length: lines }, (_, i) => (
+        <div
+          key={i}
+          className="skeleton-shimmer rounded-lg"
+          style={{
+            height: '14px',
+            width: i === lines - 1 ? '60%' : '100%',
+            backgroundColor: '#242624',
+          }}
+        />
+      ))}
+      <span className="sr-only">Loading...</span>
+    </div>
+  )
+}
+
+export function SkeletonCard({ className = '' }: { className?: string }) {
+  return (
+    <div
+      className={`p-4 rounded-xl skeleton-shimmer ${className}`}
+      style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}
+      role="status"
+      aria-label="Loading"
+    >
+      <div className="space-y-2">
+        <div style={{ height: '14px', width: '40%', backgroundColor: '#242624', borderRadius: '6px' }} />
+        <div style={{ height: '12px', width: '80%', backgroundColor: '#242624', borderRadius: '6px' }} />
+        <div style={{ height: '12px', width: '60%', backgroundColor: '#242624', borderRadius: '6px' }} />
+      </div>
+      <span className="sr-only">Loading...</span>
+    </div>
+  )
+}

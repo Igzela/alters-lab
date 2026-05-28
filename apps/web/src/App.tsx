@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fadeIn } from './animations'
 import { Button } from './components/Button'
+import { ToastProvider } from './components/Toast'
 import SystemStatus from './pages/SystemStatus'
 import AlterDialogue from './pages/AlterDialogue'
 import RealityScore from './pages/RealityScore'
@@ -56,17 +57,18 @@ export default function App() {
   }
 
   return (
+    <ToastProvider>
     <div className="min-h-screen" style={{ backgroundColor: '#0e100f', color: '#fffce1' }}>
       <div className="max-w-[960px] mx-auto px-6 py-8">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>
             {t('app.title')}
           </h1>
-          <Button variant="ghost" onClick={toggleLang}>
+          <Button variant="ghost" onClick={toggleLang} aria-label={i18n.language === 'en' ? 'Switch to Chinese' : 'Switch to English'}>
             {i18n.language === 'en' ? '中文' : 'EN'}
           </Button>
         </header>
-        <nav className="flex gap-1 mb-8 flex-wrap items-center">
+        <nav className="flex gap-1 mb-8 flex-wrap items-center" role="navigation" aria-label={t('app.title')}>
           {navGroups.map((group, gi) => (
             <div key={gi} className="flex gap-1">
               {gi > 0 && (
@@ -76,10 +78,12 @@ export default function App() {
                 <button
                   key={p}
                   onClick={() => setPage(p)}
-                  className="px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-none cursor-pointer"
+                  aria-current={page === p ? 'page' : undefined}
+                  className="px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d95ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0e100f]"
                   style={{
                     backgroundColor: page === p ? '#242624' : 'transparent',
                     color: page === p ? '#fffce1' : '#7c7c6f',
+                    borderBottom: page === p ? '2px solid #9d95ff' : '2px solid transparent',
                   }}
                   onMouseEnter={e => { if (page !== p) e.currentTarget.style.color = '#c4c2b8' }}
                   onMouseLeave={e => { if (page !== p) e.currentTarget.style.color = '#7c7c6f' }}
@@ -90,7 +94,7 @@ export default function App() {
             </div>
           ))}
         </nav>
-        <div ref={pageRef}>
+        <main ref={pageRef} id="main-content" role="main">
           {page === 'status' && <SystemStatus onNavigate={setPage} />}
           {page === 'weekly' && <WeeklyReview />}
           {page === 'dialogue' && <AlterDialogue />}
@@ -103,8 +107,9 @@ export default function App() {
           {page === 'patterns' && <PatternReview />}
           {page === 'validation' && <BehaviorValidation />}
           {page === 'data' && <DataManagement />}
-        </div>
+        </main>
       </div>
     </div>
+    </ToastProvider>
   )
 }

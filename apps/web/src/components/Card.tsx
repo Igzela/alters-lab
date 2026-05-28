@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
 const accentBorders: Record<string, string> = {
   green: '#0ae448',
@@ -8,14 +8,14 @@ const accentBorders: Record<string, string> = {
   blue: '#00bae2',
 }
 
-interface CardProps {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'raised'
   accent?: keyof typeof accentBorders
   children: ReactNode
   className?: string
 }
 
-export function Card({ variant = 'default', accent, children, className = '' }: CardProps) {
+export function Card({ variant = 'default', accent, children, className = '', ...rest }: CardProps) {
   const bg = variant === 'raised' ? '#242624' : '#1a1c1a'
   const borderStyle = accent
     ? `1px solid ${accentBorders[accent]}40`
@@ -29,6 +29,7 @@ export function Card({ variant = 'default', accent, children, className = '' }: 
         border: borderStyle,
         borderLeft: accent ? `3px solid ${accentBorders[accent]}` : borderStyle,
       }}
+      {...rest}
     >
       {children}
     </div>

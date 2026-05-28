@@ -64,7 +64,7 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
       })
       setStatus(`${t('realityScore.scoreRecorded')} ${res.record.id}`)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Unknown error')
+      setError(e instanceof Error ? e.message : t('common.unknownError'))
     } finally {
       setSubmitting(false)
     }

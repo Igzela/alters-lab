@@ -49,7 +49,7 @@ export default function AlterDialogue() {
           className="flex-1"
         />
         <Button variant="primary" accent="blue" onClick={send} disabled={loading}>
-          {loading ? '...' : t('dialogue.send')}
+          {loading ? t('common.sending') : t('dialogue.send')}
         </Button>
       </div>
       {error && <Banner variant="error">{error}</Banner>}
