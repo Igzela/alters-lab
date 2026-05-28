@@ -967,3 +967,10 @@
 **Goal**: Add onboarding flow for new users with step-by-step guided path.
 **Depends on**: P12-M3 (done)
 **Notes**: Done. Rewrote GettingStarted.tsx as step-by-step wizard with progress bar, expandable steps, and localStorage-persisted completion state. 4 steps: check system health, configure provider, run first weekly review, backup data. Updated en.json and zh.json with guided path translations. Frontend build PASS. 1270 backend tests PASS. No GSAP. No P6 false claims. Commit: 3aa9eec. P12-M5 ready_with_approval.
+
+### P12-M5: GSAP motion layer
+
+**Status**: done
+**Goal**: Add lightweight GSAP motion layer for micro-feedback.
+**Depends on**: P12-M4 (done)
+**Notes**: Done. Installed gsap package. Created animations.ts with fadeIn, expandIn, collapseOut, pulseSuccess, shakeError. Added page entry fade to App.tsx, expand animation to GettingStarted steps, error shake to ErrorDisplay, success pulse to mark-complete buttons. Lightweight micro-feedback only. No business logic changes. No complex flashy animations. Frontend build PASS. 1270 backend tests PASS. Commit: 9e90ef3. P12-M6 ready_with_approval.
