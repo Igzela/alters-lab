@@ -172,9 +172,9 @@ P6 status: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED**
 | P12-M4 | New-user guided path | **done** |
 | P12-M5 | GSAP motion layer | **done** |
 | P12-M6 | Product smoke and real-use pilot | **done** |
-| P12-M7 | P6 validation restart decision | **ready_with_approval** |
+| P12-M7 | P6 validation restart decision | **done** |
 
-P6 state: **CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED** — Owner override: Charlie requested UI improvements during validation window. P6 validation paused. Week 1 evidence preserved but not counted by default.
+P6 state: **CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED** — P12-M7 decision: restart P6 validation from zero. Week 1 evidence preserved as historical (pre-P12), not counted toward P6 closeout. Fresh post-P12 evidence collection begins now. P12 scope complete (M1-M7 all done).
 
 ## Phase 11 — Product Completeness Before Validation
 

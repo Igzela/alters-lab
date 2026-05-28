@@ -1,8 +1,14 @@
 {
   "phase": "P6",
-  "status": "CODE_COMPLETE_R1_PENDING_REVIEW",
+  "status": "CODE_COMPLETE_VALIDATION_RESTARTED",
   "behavior_validation_status": "NOT_VALIDATED",
   "closeout_status": "BLOCKED_UNTIL_BEHAVIOR_VALIDATION",
+  "validation_restart": {
+    "restarted_at": "2026-05-28",
+    "reason": "P12 UI override complete (Tailwind, Loading/Error, i18n, Onboarding, GSAP, Product Smoke). Product surface changed. Fresh post-P12 evidence required.",
+    "pre_p12_evidence": "preserved as historical, not counted toward P6 closeout",
+    "week1_status": "archived_pre_p12"
+  },
   "generated_at": "2026-05-20",
   "review_blockers_fixed": [
     {

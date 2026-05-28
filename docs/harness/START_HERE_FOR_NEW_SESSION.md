@@ -17,8 +17,8 @@ Personal future path simulation and calibration system. Not a content creation t
 - **P10**: P10-000 through P10-M6 done. P10-M7 blocked.
 - **P11**: Sealed as `PRODUCT_COMPLETE_BEFORE_VALIDATION`.
 - **P11-PILOT-1**: PASS.
-- **P12**: Owner override — UI improvements during validation window. P12-000 done. P12-M1 (Tailwind) done. P12-M2 (Loading/Error) done. P12-M3 (i18n) done. P12-M4 (Onboarding) done. P12-M5 (GSAP) done. P12-M6 (Product smoke) done. P12-M7 ready_with_approval.
-- **P6 validation**: Paused. P12 scope complete. P6 validation restart decision at P12-M7.
+- **P12**: Owner override — UI improvements during validation window. P12-000 through P12-M7 all done. P12 scope COMPLETE.
+- **P6 validation**: Restarted from zero (P12-M7 decision). P6 state: CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED. Week 1 evidence archived as historical (pre-P12), not counted. Fresh post-P12 evidence collection begins now.
 
 ## Reading Order
 

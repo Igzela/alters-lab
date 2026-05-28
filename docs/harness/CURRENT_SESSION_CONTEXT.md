@@ -27,15 +27,16 @@ Last updated: 2026-05-28
 - P12-M4: done (New-user guided path, step-by-step wizard with progress bar)
 - P12-M5: done (GSAP motion layer, lightweight animations)
 - P12-M6: done (Product smoke and real-use pilot — P8 smoke PASS, browser verification PASS)
-- P12-M7: ready_with_approval (P6 validation restart decision)
+- P12-M7: done (P6 validation restart — restarted from zero, Week 1 evidence archived as historical)
+- P12 scope: COMPLETE (M1-M7 all done)
 - P10-M7: blocked
 
 ## Next Task
 
-P12-M4: New-user guided path
-1. Add onboarding flow for new users
-2. Guide through first steps (provider, weekly review, etc.)
-3. No GSAP yet (deferred to P12-M5)
+P6 validation is now restarted from zero. Fresh post-P12 evidence collection begins.
+- Next user action: Run weekly reviews to collect fresh evidence (4 weekly reviews + 4 calibration records + 1 pattern review across 21+ days)
+- P6 behavior validation available via POST /behavior-validation/evaluate
+- P6 closeout available via GET /phase6-closeout/report
 
 ## Verification Commands
 

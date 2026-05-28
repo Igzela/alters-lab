@@ -984,7 +984,7 @@
 
 ### P12-M7: P6 validation restart decision
 
-**Status**: ready_with_approval
+**Status**: done
 **Goal**: Decision point — restart P6 validation or defer.
 **Depends on**: P12-M6 (done)
-**Notes**: P12 scope complete (M1-M6 all done). P6 validation restart decision pending. P6 state: CODE_COMPLETE / VALIDATION_PAUSED_FOR_PRODUCT_CHANGE / NOT_SEALED.
+**Notes**: Done. Decision: restart P6 validation from zero. P6 state updated to CODE_COMPLETE_VALIDATION_RESTARTED. Week 1 evidence preserved as historical (archived_pre_p12), not counted toward P6 closeout. Fresh post-P12 evidence collection begins. P12 scope COMPLETE (M1-M7 all done). Commit pending. No code changes — governance only.

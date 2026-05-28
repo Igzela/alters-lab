@@ -4,11 +4,12 @@
 Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具。
 
 ## 当前阶段
-- P0-P11 全部完成（P6 验证被有意跳过）
+- P0-P12 全部完成（P12: Tailwind, Loading/Error, i18n, Onboarding, GSAP, Product Smoke, P6 Restart）
 - P11 已封印：PRODUCT_COMPLETE_BEFORE_VALIDATION
-- P11-PILOT-1 已完成：真实使用产品 pilot PASS，10 个可见工作流无阻塞摩擦
-- 产品状态：可本地运行的个人工具，功能完整，待 P6 行为验证
-- 下一步决策：P10-M5-R2 已重开 P6 validation start gate，等待 Charlie 明确选择 START_P6_VALIDATION_NOW / RUN_ONE_MORE_PILOT_PASS / DEFER_P6_VALIDATION / BLOCKED_BY_NEW_FRICTION
+- P12 已完成：P12-M7 决策 — 从零重启 P6 验证
+- P6 状态：CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED
+- Week 1 证据已归档为历史（pre-P12），不计入 P6 closeout
+- 下一步：收集 fresh post-P12 证据（4 weekly reviews + 4 calibration records + 1 pattern review，跨越 21+ 天）
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
