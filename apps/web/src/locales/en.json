@@ -21,6 +21,10 @@
     "title": "Alters Lab"
   },
   "nav": {
+    "overview": "Overview",
+    "calibration": "Calibration",
+    "analysis": "Analysis",
+    "system": "System",
     "status": "Status",
     "gettingStarted": "Getting Started",
     "weeklyReview": "Weekly Review",

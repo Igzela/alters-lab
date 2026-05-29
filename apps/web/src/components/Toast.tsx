@@ -30,11 +30,11 @@ export function useToast(): ToastContextValue {
   return ctx
 }
 
-const VARIANT_STYLES: Record<ToastVariant, { bg: string; border: string; icon: string }> = {
-  success: { bg: 'rgba(10, 228, 72, 0.1)', border: 'rgba(10, 228, 72, 0.3)', icon: '✓' },
-  error: { bg: 'rgba(255, 68, 68, 0.1)', border: 'rgba(255, 68, 68, 0.3)', icon: '✕' },
-  warning: { bg: 'rgba(255, 135, 9, 0.1)', border: 'rgba(255, 135, 9, 0.3)', icon: '!' },
-  info: { bg: 'rgba(0, 186, 226, 0.1)', border: 'rgba(0, 186, 226, 0.3)', icon: 'i' },
+const VARIANT_STYLES: Record<ToastVariant, { bg: string; border: string; color: string; icon: string }> = {
+  success: { bg: '#f0fdf4', border: '#bbf7d0', color: '#16a34a', icon: '✓' },
+  error: { bg: '#fef2f2', border: '#fecaca', color: '#dc2626', icon: '✕' },
+  warning: { bg: '#fffbeb', border: '#fde68a', color: '#d97706', icon: '!' },
+  info: { bg: '#eff6ff', border: '#bfdbfe', color: '#2563eb', icon: 'i' },
 }
 
 function ToastItemView({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
@@ -49,18 +49,18 @@ function ToastItemView({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id:
       style={{
         backgroundColor: style.bg,
         border: `1px solid ${style.border}`,
-        backdropFilter: 'blur(8px)',
+        boxShadow: '0 4px 12px rgba(28,25,23,0.1)',
       }}
     >
-      <span className="text-sm font-bold flex-shrink-0 mt-0.5" style={{ color: style.border }}>{style.icon}</span>
+      <span className="text-sm font-bold flex-shrink-0 mt-0.5" style={{ color: style.color }}>{style.icon}</span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium" style={{ color: '#fffce1' }}>{toast.title}</p>
-        {toast.description && <p className="text-xs mt-0.5" style={{ color: '#7c7c6f' }}>{toast.description}</p>}
+        <p className="text-sm font-medium" style={{ color: '#1c1917' }}>{toast.title}</p>
+        {toast.description && <p className="text-xs mt-0.5" style={{ color: '#78716c' }}>{toast.description}</p>}
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
         className="text-xs flex-shrink-0 cursor-pointer border-none bg-transparent transition-colors"
-        style={{ color: '#7c7c6f' }}
+        style={{ color: '#a8a29e' }}
         aria-label={t('common.dismiss')}
       >
         ✕

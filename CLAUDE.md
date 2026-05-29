@@ -15,7 +15,7 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
-- **前端**: React 18, TypeScript, Vite（已激活，P11 新增多个页面）
+- **前端**: React 18, TypeScript, Vite, Tailwind v4, TanStack Query, Phosphor Icons, Outfit + JetBrains Mono 字体
 - **存储**: YAML + JSON 文件（alters/ 目录），无数据库
 - **打包**: Debian (.deb)，CLI 入口 `alters-lab`
 - **测试**: pytest + httpx
@@ -114,4 +114,6 @@ PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 - SystemStatus (status), GettingStarted, WeeklyReview, AlterDialogue
 - RealityScore, CalibrationHistory, RubricDelta, CheckpointPlan
 - ProviderSettings, PatternReview, BehaviorValidation, DataManagement
-- 所有页面通过 App.tsx 路由，nav bar 导航
+- 所有页面通过 App.tsx 路由，侧边栏导航（桌面端 220px 固定侧边栏 + 移动端底部 tab bar）
+- 数据层：TanStack Query hooks（src/hooks/useApi.ts），替代手动 useState+useEffect
+- 设计风格：温暖专业（Notion/Obsidian 风格），Outfit 字体，amber-700 强调色

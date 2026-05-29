@@ -21,6 +21,10 @@
     "title": "Alters Lab"
   },
   "nav": {
+    "overview": "概览",
+    "calibration": "校准",
+    "analysis": "分析",
+    "system": "系统",
     "status": "状态",
     "gettingStarted": "快速开始",
     "weeklyReview": "周回顾",

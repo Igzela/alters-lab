@@ -1,6 +1,6 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { deleteJson, fetchJson, postJson } from '../api'
+import { useProviderConfig, useProviderStatus, useUpdateProviderConfig, useStoreSecret, useDeleteSecret, useTestProvider } from '../hooks/useApi'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Input, Field, Select } from '../components/Input'
@@ -20,29 +20,6 @@ type ProviderConfig = {
   timeout_seconds: number
   secret_storage: SecretStorage
   key_name: string
-  keyring_available: boolean
-  secrets_redacted: boolean
-  provider_output_persists_by_default: boolean
-  provider_output_can_write_active_yaml: boolean
-  provider_output_can_generate_reality_score: boolean
-  p6_behavior_validated: boolean
-  p6_sealed: boolean
-}
-
-type ProviderStatus = {
-  provider_mode: ProviderMode
-  configured: boolean
-  base_url_configured: boolean
-  model_configured: boolean
-  api_key_configured: boolean
-  secret_storage: SecretStorage
-  keyring_available: boolean
-  secrets_redacted: boolean
-  provider_output_persists_by_default: boolean
-  provider_output_can_write_active_yaml: boolean
-  provider_output_can_generate_reality_score: boolean
-  p6_behavior_validated: boolean
-  p6_sealed: boolean
 }
 
 type TestResult = {
@@ -55,124 +32,127 @@ type TestResult = {
 export default function ProviderSettings() {
   const { t } = useTranslation()
   const { toast } = useToast()
-  const [config, setConfig] = useState<ProviderConfig | null>(null)
-  const [savedConfig, setSavedConfig] = useState<ProviderConfig | null>(null)
-  const [status, setStatus] = useState<ProviderStatus | null>(null)
+
+  const configQuery = useProviderConfig()
+  const statusQuery = useProviderStatus()
+  const updateMutation = useUpdateProviderConfig()
+  const storeMutation = useStoreSecret()
+  const deleteMutation = useDeleteSecret()
+  const testMutation = useTestProvider()
+
+  const [localConfig, setLocalConfig] = useState<ProviderConfig | null>(null)
   const [apiKey, setApiKey] = useState('')
   const [testResult, setTestResult] = useState<TestResult | null>(null)
   const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [storing, setStoring] = useState(false)
-  const [testing, setTesting] = useState(false)
 
-  const load = () => {
-    setError('')
-    Promise.all([
-      fetchJson('/provider-config/config') as Promise<ProviderConfig>,
-      fetchJson('/provider-config/status') as Promise<ProviderStatus>,
-    ])
-      .then(([nextConfig, nextStatus]) => {
-        setConfig(nextConfig)
-        setSavedConfig(nextConfig)
-        setStatus(nextStatus)
-      })
-      .catch(e => setError(e.message))
-  }
+  const savedConfig = configQuery.data as ProviderConfig | undefined
+  const status = statusQuery.data as Record<string, unknown> | undefined
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    if (savedConfig && !localConfig) {
+      setLocalConfig(savedConfig as ProviderConfig)
+    }
+  }, [savedConfig, localConfig])
+
+  const config = localConfig
 
   const updateConfig = (patch: Partial<ProviderConfig>) => {
     if (!config) return
-    setConfig({ ...config, ...patch })
+    setLocalConfig({ ...config, ...patch })
   }
+
+  const hasUnsavedChanges = savedConfig && config
+    ? JSON.stringify({ mode: config.mode, base_url: config.base_url || null, model: config.model || null, timeout_seconds: config.timeout_seconds, secret_storage: config.secret_storage, key_name: config.key_name })
+      !== JSON.stringify({ mode: savedConfig.mode, base_url: savedConfig.base_url || null, model: savedConfig.model || null, timeout_seconds: savedConfig.timeout_seconds, secret_storage: savedConfig.secret_storage, key_name: savedConfig.key_name })
+    : false
 
   const saveConfig = (event: FormEvent) => {
     event.preventDefault()
     if (!config) return
-    setError('')
     setMessage('')
-    setSaving(true)
-    postJson('/provider-config/config', {
-      mode: config.mode,
-      base_url: config.base_url || null,
-      model: config.model || null,
-      timeout_seconds: config.timeout_seconds,
-      secret_storage: config.secret_storage,
-      key_name: config.key_name,
-      explicit_user_configuration: config.mode === 'openai-compatible-http',
-    })
-      .then(() => { setMessage(t('provider.configSaved')); toast({ title: t('provider.configSaved'), variant: 'success' }); load() })
-      .catch(e => setError(e instanceof Error ? e.message : t('provider.failedSave')))
-      .finally(() => setSaving(false))
+    updateMutation.mutate(
+      {
+        mode: config.mode,
+        base_url: config.base_url || null,
+        model: config.model || null,
+        timeout_seconds: config.timeout_seconds,
+        secret_storage: config.secret_storage,
+        key_name: config.key_name,
+        explicit_user_configuration: config.mode === 'openai-compatible-http',
+      },
+      {
+        onSuccess: () => {
+          setMessage(t('provider.configSaved'))
+          toast({ title: t('provider.configSaved'), variant: 'success' })
+          configQuery.refetch().then(res => { if (res.data) setLocalConfig(res.data as ProviderConfig) })
+        },
+      }
+    )
   }
 
   const storeSecret = () => {
     if (!config || !apiKey.trim()) return
-    setError('')
     setMessage('')
-    setStoring(true)
-    postJson('/provider-config/secret', {
-      api_key: apiKey,
-      storage: config.secret_storage,
-      confirmation: 'store-secret',
-    })
-      .then(() => { setApiKey(''); setMessage(t('provider.secretStored')); toast({ title: t('provider.secretStored'), variant: 'success' }); load() })
-      .catch(e => setError(e instanceof Error ? e.message : t('provider.failedStore')))
-      .finally(() => setStoring(false))
+    storeMutation.mutate(
+      { api_key: apiKey, storage: config.secret_storage, confirmation: 'store-secret' },
+      {
+        onSuccess: () => {
+          setApiKey('')
+          setMessage(t('provider.secretStored'))
+          toast({ title: t('provider.secretStored'), variant: 'success' })
+          statusQuery.refetch()
+        },
+      }
+    )
   }
 
   const deleteSecret = () => {
     if (!config) return
-    setError('')
     setMessage('')
-    setStoring(true)
-    deleteJson('/provider-config/secret', {
-      storage: config.secret_storage,
-      confirmation: 'delete-secret',
-    })
-      .then(() => { setApiKey(''); setMessage(t('provider.secretDeleted')); toast({ title: t('provider.secretDeleted'), variant: 'success' }); load() })
-      .catch(e => setError(e instanceof Error ? e.message : t('provider.failedDelete')))
-      .finally(() => setStoring(false))
+    deleteMutation.mutate(
+      { storage: config.secret_storage, confirmation: 'delete-secret' },
+      {
+        onSuccess: () => {
+          setApiKey('')
+          setMessage(t('provider.secretDeleted'))
+          toast({ title: t('provider.secretDeleted'), variant: 'success' })
+          statusQuery.refetch()
+        },
+      }
+    )
   }
+
+  const testProvider = () => {
+    if (hasUnsavedChanges) return
+    setTestResult(null)
+    testMutation.mutate(
+      { dry_run: true },
+      {
+        onSuccess: (res) => setTestResult(res as TestResult),
+      }
+    )
+  }
+
+  const error = configQuery.error || statusQuery.error || updateMutation.error || storeMutation.error || deleteMutation.error || testMutation.error
+  const mutating = updateMutation.isPending || storeMutation.isPending || deleteMutation.isPending
 
   if (error && !config) return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('provider.title')}</h2>
-      <ErrorDisplay message={error} onRetry={load} />
+      <h2 className="text-xl font-bold tracking-tight">{t('provider.title')}</h2>
+      <ErrorDisplay message={(error as Error).message} onRetry={() => { configQuery.refetch(); statusQuery.refetch() }} />
     </div>
   )
   if (!config || !status) return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('provider.title')}</h2>
+      <h2 className="text-xl font-bold tracking-tight">{t('provider.title')}</h2>
       <SkeletonCard />
       <SkeletonCard />
     </div>
   )
 
-  const hasUnsavedChanges = savedConfig
-    ? JSON.stringify({
-        mode: config.mode, base_url: config.base_url || null, model: config.model || null,
-        timeout_seconds: config.timeout_seconds, secret_storage: config.secret_storage, key_name: config.key_name,
-      }) !== JSON.stringify({
-        mode: savedConfig.mode, base_url: savedConfig.base_url || null, model: savedConfig.model || null,
-        timeout_seconds: savedConfig.timeout_seconds, secret_storage: savedConfig.secret_storage, key_name: savedConfig.key_name,
-      })
-    : false
-
-  const testProvider = () => {
-    if (hasUnsavedChanges) return
-    setError('')
-    setTesting(true)
-    postJson('/provider-config/test', { dry_run: true })
-      .then(result => setTestResult(result as TestResult))
-      .catch(e => setError(e instanceof Error ? e.message : t('provider.testFailed')))
-      .finally(() => setTesting(false))
-  }
-
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('provider.title')}</h2>
+      <h2 className="text-xl font-bold tracking-tight">{t('provider.title')}</h2>
 
       <Banner variant="info">
         <strong>{t('provider.safetyNotes')}</strong>
@@ -182,19 +162,19 @@ export default function ProviderSettings() {
           <li>{t('provider.liveMode')}</li>
           <li>{t('provider.outputAdvisory')}</li>
           <li>{t('provider.keyNeverDisplayed')}</li>
-          <li>See <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SETUP.md" className="underline" style={{ color: '#00bae2' }}>{t('provider.providerSetup')}</a> and <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SAFETY.md" className="underline" style={{ color: '#00bae2' }}>{t('provider.providerSafety')}</a> for details</li>
+          <li>See <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SETUP.md" className="underline" style={{ color: '#2563eb' }}>{t('provider.providerSetup')}</a> and <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SAFETY.md" className="underline" style={{ color: '#2563eb' }}>{t('provider.providerSafety')}</a> for details</li>
         </ul>
       </Banner>
 
       <Card>
         <h3 className="text-sm font-medium mb-2">{t('provider.status')}</h3>
-        <div className="text-sm space-y-1" style={{ color: '#c4c2b8' }}>
-          <p>{t('provider.mode')} <Badge variant="info">{status.provider_mode}</Badge></p>
+        <div className="text-sm space-y-1" style={{ color: '#78716c' }}>
+          <p>{t('provider.mode')} <Badge variant="info">{String(status.provider_mode)}</Badge></p>
           <p>{t('provider.configured')} <Badge variant={status.configured ? 'success' : 'muted'}>{status.configured ? t('provider.yes') : t('provider.no')}</Badge></p>
           <p>{t('provider.baseUrl')} <Badge variant={status.base_url_configured ? 'success' : 'warning'}>{status.base_url_configured ? t('provider.configuredLabel') : t('provider.missing')}</Badge></p>
           <p>{t('provider.model')} <Badge variant={status.model_configured ? 'success' : 'warning'}>{status.model_configured ? t('provider.configuredLabel') : t('provider.missing')}</Badge></p>
           <p>{t('provider.apiKey')} <Badge variant={status.api_key_configured ? 'success' : 'warning'}>{status.api_key_configured ? t('provider.stored') : t('provider.notStored')}</Badge></p>
-          <p>{t('provider.secretStorage')} <Badge variant="info">{status.secret_storage}</Badge></p>
+          <p>{t('provider.secretStorage')} <Badge variant="info">{String(status.secret_storage)}</Badge></p>
           <p>{t('provider.secretsRedacted')} <Badge variant={status.secrets_redacted ? 'success' : 'muted'}>{status.secrets_redacted ? t('provider.yes') : t('provider.no')}</Badge></p>
           <p>{t('provider.outputPersists')} <Badge variant={status.provider_output_persists_by_default ? 'success' : 'muted'}>{status.provider_output_persists_by_default ? t('provider.yes') : t('provider.no')}</Badge></p>
           <p>{t('provider.canWriteYaml')} <Badge variant={status.provider_output_can_write_active_yaml ? 'warning' : 'muted'}>{status.provider_output_can_write_active_yaml ? t('provider.yes') : t('provider.no')}</Badge></p>
@@ -228,8 +208,8 @@ export default function ProviderSettings() {
             <option value="secrets_yaml_fallback">secrets_yaml_fallback</option>
           </Select>
         </Field>
-        <Button variant="primary" type="submit" disabled={saving}>
-          {saving ? t('provider.saving') : t('provider.saveConfig')}
+        <Button variant="primary" type="submit" disabled={mutating}>
+          {mutating ? t('provider.saving') : t('provider.saveConfig')}
         </Button>
       </form>
 
@@ -239,11 +219,11 @@ export default function ProviderSettings() {
           <Input type="password" autoComplete="off" value={apiKey} onChange={e => setApiKey(e.target.value)} />
         </Field>
         <div className="flex gap-2">
-          <Button variant="primary" onClick={storeSecret} disabled={storing || !apiKey.trim()}>
-            {storing ? t('provider.storing') : t('provider.storeKey')}
+          <Button variant="primary" onClick={storeSecret} disabled={storeMutation.isPending || !apiKey.trim()}>
+            {storeMutation.isPending ? t('provider.storing') : t('provider.storeKey')}
           </Button>
-          <Button variant="danger" onClick={deleteSecret} disabled={storing}>
-            {storing ? t('provider.deleting') : t('provider.deleteKey')}
+          <Button variant="danger" onClick={deleteSecret} disabled={deleteMutation.isPending}>
+            {deleteMutation.isPending ? t('provider.deleting') : t('provider.deleteKey')}
           </Button>
         </div>
       </Card>
@@ -253,13 +233,13 @@ export default function ProviderSettings() {
         <Button
           variant="secondary"
           onClick={testProvider}
-          disabled={hasUnsavedChanges || testing}
+          disabled={hasUnsavedChanges || testMutation.isPending}
         >
-          {testing ? t('provider.testing') : t('provider.testConfig')}
+          {testMutation.isPending ? t('provider.testing') : t('provider.testConfig')}
         </Button>
-        {hasUnsavedChanges && <p className="text-sm mt-1" style={{ color: '#7c7c6f' }}>{t('provider.saveBeforeTest')}</p>}
+        {hasUnsavedChanges && <p className="text-sm mt-1" style={{ color: '#a8a29e' }}>{t('provider.saveBeforeTest')}</p>}
         {testResult && (
-          <div className="mt-3 text-sm space-y-1" style={{ color: '#c4c2b8' }}>
+          <div className="mt-3 text-sm space-y-1" style={{ color: '#78716c' }}>
             <p>Status: <Badge variant={testResult.provider_ready ? 'success' : 'error'}>{testResult.status}</Badge></p>
             <p>{t('provider.ready')} <Badge variant={testResult.provider_ready ? 'success' : 'muted'}>{testResult.provider_ready ? t('provider.yes') : t('provider.no')}</Badge></p>
             <p>{t('provider.networkCall')} <Badge variant={testResult.network_call_made ? 'info' : 'muted'}>{testResult.network_call_made ? t('provider.yes') : t('provider.no')}</Badge></p>

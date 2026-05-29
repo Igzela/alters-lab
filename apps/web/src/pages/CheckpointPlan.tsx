@@ -1,42 +1,28 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { postJson } from '../api'
+import { useGenerateCheckpointPlan } from '../hooks/useApi'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import ErrorDisplay from '../components/ErrorDisplay'
 
 export default function CheckpointPlan() {
   const { t } = useTranslation()
-  const [data, setData] = useState<Record<string, unknown> | null>(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const mutation = useGenerateCheckpointPlan()
 
-  const generate = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const res = await postJson('/checkpoint-regeneration/plan', { caller: 'api' })
-      setData(res)
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : t('common.unknownError'))
-    } finally {
-      setLoading(false)
-    }
-  }
+  const generate = () => mutation.mutate({ caller: 'api' })
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('checkpointPlan.title')}</h2>
-      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('checkpointPlan.description')}</p>
-      <Button variant="primary" onClick={generate} disabled={loading}>
-        {loading ? t('common.generating') : t('checkpointPlan.generate')}
+      <h2 className="text-xl font-bold tracking-tight">{t('checkpointPlan.title')}</h2>
+      <p className="text-sm" style={{ color: '#78716c' }}>{t('checkpointPlan.description')}</p>
+      <Button variant="primary" onClick={generate} disabled={mutation.isPending}>
+        {mutation.isPending ? t('common.generating') : t('checkpointPlan.generate')}
       </Button>
-      {error && <ErrorDisplay message={error} />}
-      {data && (
+      {mutation.error && <ErrorDisplay message={(mutation.error as Error).message} />}
+      {mutation.data && (
         <Card>
-          <p className="text-sm">{t('checkpointPlan.status')} {String(data.status)}</p>
-          <pre className="text-xs mt-2 whitespace-pre-wrap overflow-auto max-h-[400px] p-3 rounded-lg font-mono" style={{ color: '#c4c2b8', backgroundColor: '#0e100f', border: '1px solid #242624' }}>
-            {data.plan ? JSON.stringify(data.plan as Record<string, unknown>, null, 2) : ''}
+          <p className="text-sm">{t('checkpointPlan.status')} {String((mutation.data as Record<string, unknown>).status)}</p>
+          <pre className="text-xs mt-2 whitespace-pre-wrap overflow-auto max-h-[400px] p-3 rounded-lg font-mono" style={{ color: '#78716c', backgroundColor: '#f5f4f0', border: '1px solid #e8e6e1' }}>
+            {(mutation.data as Record<string, unknown>).plan ? JSON.stringify((mutation.data as Record<string, unknown>).plan as Record<string, unknown>, null, 2) : ''}
           </pre>
         </Card>
       )}

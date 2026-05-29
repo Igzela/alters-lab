@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fadeIn } from './animations'
-import { Button } from './components/Button'
 import { ToastProvider } from './components/Toast'
+import Sidebar from './components/Sidebar'
+import MobileNav from './components/MobileNav'
 import SystemStatus from './pages/SystemStatus'
 import AlterDialogue from './pages/AlterDialogue'
 import RealityScore from './pages/RealityScore'
@@ -18,105 +19,93 @@ import DataManagement from './pages/DataManagement'
 
 type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
 
-const navGroups: { pages: Page[]; accent: string }[] = [
-  { pages: ['status', 'getting-started'], accent: 'green' },
-  { pages: ['weekly', 'history', 'reality', 'rubric'], accent: 'lilac' },
-  { pages: ['dialogue', 'provider'], accent: 'blue' },
-  { pages: ['patterns', 'validation'], accent: 'orange' },
-  { pages: ['checkpoint', 'data'], accent: 'green' },
-]
+const VALID_PAGES: Page[] = ['status', 'weekly', 'dialogue', 'reality', 'history', 'rubric', 'checkpoint', 'provider', 'getting-started', 'patterns', 'validation', 'data']
+
+function getPageFromHash(): Page {
+  const hash = window.location.hash.replace('#', '')
+  if (VALID_PAGES.includes(hash as Page)) return hash as Page
+  return 'status'
+}
 
 export default function App() {
-  const [page, setPage] = useState<Page>('status')
-  const { t, i18n } = useTranslation()
+  const [page, setPage] = useState<Page>(getPageFromHash)
+  const { t } = useTranslation()
   const pageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (pageRef.current) fadeIn(pageRef.current)
+    window.location.hash = page
   }, [page])
 
-  const toggleLang = () => {
-    const next = i18n.language === 'en' ? 'zh' : 'en'
-    i18n.changeLanguage(next)
-    localStorage.setItem('alters_lab_language', next)
-  }
+  useEffect(() => {
+    const onHashChange = () => {
+      const p = getPageFromHash()
+      if (VALID_PAGES.includes(p)) setPage(p)
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
-  const navLabel: Record<Page, string> = {
-    'status': t('nav.status'),
-    'getting-started': t('nav.gettingStarted'),
-    'weekly': t('nav.weeklyReview'),
-    'dialogue': t('nav.dialogue'),
-    'reality': t('nav.realityScore'),
-    'history': t('nav.history'),
-    'rubric': t('nav.rubricDelta'),
-    'checkpoint': t('nav.checkpointPlan'),
-    'provider': t('nav.provider'),
-    'patterns': t('nav.patterns'),
-    'validation': t('nav.validation'),
-    'data': t('nav.data'),
-  }
+  const handleNavigate = (p: Page) => setPage(p)
 
   return (
     <ToastProvider>
-    <div className="min-h-screen" style={{ backgroundColor: '#0e100f', color: '#fffce1' }}>
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-lg focus:text-sm"
-        style={{ backgroundColor: '#242624', color: '#fffce1' }}
+        style={{ backgroundColor: '#1c1917', color: '#faf9f7' }}
       >
         {t('common.skipToContent')}
       </a>
-      <div className="max-w-[960px] mx-auto px-6 py-8">
-        <header className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>
-            {t('app.title')}
-          </h1>
-          <Button variant="ghost" onClick={toggleLang} aria-label={i18n.language === 'en' ? 'Switch to Chinese' : 'Switch to English'}>
-            {i18n.language === 'en' ? '中文' : 'EN'}
-          </Button>
-        </header>
-        <nav className="flex gap-1 mb-8 flex-wrap items-center" role="navigation" aria-label={t('app.title')}>
-          {navGroups.map((group, gi) => (
-            <div key={gi} className="flex gap-1">
-              {gi > 0 && (
-                <div className="w-px self-center mx-1" style={{ height: '1.25rem', backgroundColor: '#42433d' }} />
-              )}
-              {group.pages.map(p => (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  aria-current={page === p ? 'page' : undefined}
-                  className="px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d95ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0e100f]"
-                  style={{
-                    backgroundColor: page === p ? '#242624' : 'transparent',
-                    color: page === p ? '#fffce1' : '#7c7c6f',
-                    borderBottom: page === p ? '2px solid #9d95ff' : '2px solid transparent',
-                  }}
-                  onMouseEnter={e => { if (page !== p) e.currentTarget.style.color = '#c4c2b8' }}
-                  onMouseLeave={e => { if (page !== p) e.currentTarget.style.color = '#7c7c6f' }}
-                >
-                  {navLabel[p]}
-                </button>
-              ))}
-            </div>
-          ))}
-        </nav>
-        <main ref={pageRef} id="main-content" role="main">
-          {page === 'status' && <SystemStatus onNavigate={setPage} />}
-          {page === 'weekly' && <WeeklyReview />}
-          {page === 'dialogue' && <AlterDialogue />}
-          {page === 'reality' && <RealityScore onNavigate={(p) => setPage(p as Page)} />}
-          {page === 'history' && <CalibrationHistory />}
-          {page === 'rubric' && <RubricDelta />}
-          {page === 'checkpoint' && <CheckpointPlan />}
-          {page === 'provider' && <ProviderSettings />}
-          {page === 'getting-started' && <GettingStarted onNavigate={setPage} />}
-          {page === 'patterns' && <PatternReview />}
-          {page === 'validation' && <BehaviorValidation />}
-          {page === 'data' && <DataManagement />}
-        </main>
+
+      {/* Desktop: sidebar layout */}
+      <div className="hidden md:flex min-h-screen" style={{ backgroundColor: '#faf9f7' }}>
+        <Sidebar currentPage={page} onNavigate={handleNavigate} />
+        <div className="flex-1 ml-[220px]">
+          <div className="max-w-[1080px] mx-auto px-10 py-8">
+            <main ref={pageRef} id="main-content" role="main">
+              {page === 'status' && <SystemStatus onNavigate={handleNavigate} />}
+              {page === 'weekly' && <WeeklyReview />}
+              {page === 'dialogue' && <AlterDialogue />}
+              {page === 'reality' && <RealityScore onNavigate={(p) => handleNavigate(p as Page)} />}
+              {page === 'history' && <CalibrationHistory />}
+              {page === 'rubric' && <RubricDelta />}
+              {page === 'checkpoint' && <CheckpointPlan />}
+              {page === 'provider' && <ProviderSettings />}
+              {page === 'getting-started' && <GettingStarted onNavigate={handleNavigate} />}
+              {page === 'patterns' && <PatternReview />}
+              {page === 'validation' && <BehaviorValidation />}
+              {page === 'data' && <DataManagement />}
+            </main>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Mobile: bottom nav layout */}
+      <div className="md:hidden min-h-screen pb-16" style={{ backgroundColor: '#faf9f7' }}>
+        <div className="px-4 py-6">
+          <header className="flex justify-between items-center mb-6">
+            <h1 className="text-lg font-semibold tracking-tight" style={{ color: '#1c1917' }}>
+              {t('app.title')}
+            </h1>
+          </header>
+          <main id="main-content" role="main">
+            {page === 'status' && <SystemStatus onNavigate={handleNavigate} />}
+            {page === 'weekly' && <WeeklyReview />}
+            {page === 'dialogue' && <AlterDialogue />}
+            {page === 'reality' && <RealityScore onNavigate={(p) => handleNavigate(p as Page)} />}
+            {page === 'history' && <CalibrationHistory />}
+            {page === 'rubric' && <RubricDelta />}
+            {page === 'checkpoint' && <CheckpointPlan />}
+            {page === 'provider' && <ProviderSettings />}
+            {page === 'getting-started' && <GettingStarted onNavigate={handleNavigate} />}
+            {page === 'patterns' && <PatternReview />}
+            {page === 'validation' && <BehaviorValidation />}
+            {page === 'data' && <DataManagement />}
+          </main>
+        </div>
+        <MobileNav currentPage={page} onNavigate={handleNavigate} />
+      </div>
     </ToastProvider>
   )
 }

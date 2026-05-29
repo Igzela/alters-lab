@@ -1,33 +1,28 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
-const accentBorders: Record<string, string> = {
-  green: '#0ae448',
-  pink: '#f100cb',
-  orange: '#ff8709',
-  lilac: '#9d95ff',
-  blue: '#00bae2',
-}
-
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'raised'
-  accent?: keyof typeof accentBorders
+  accent?: 'amber' | 'green' | 'red' | 'blue'
   children: ReactNode
   className?: string
 }
 
-export function Card({ variant = 'default', accent, children, className = '', ...rest }: CardProps) {
-  const bg = variant === 'raised' ? '#242624' : '#1a1c1a'
-  const borderStyle = accent
-    ? `1px solid ${accentBorders[accent]}40`
-    : '1px solid #42433d'
+const accentBorders: Record<string, string> = {
+  amber: '#b45309',
+  green: '#16a34a',
+  red: '#dc2626',
+  blue: '#2563eb',
+}
 
+export function Card({ variant = 'default', accent, children, className = '', ...rest }: CardProps) {
   return (
     <div
       className={`rounded-xl p-4 mb-4 ${className}`}
       style={{
-        backgroundColor: bg,
-        border: borderStyle,
-        borderLeft: accent ? `3px solid ${accentBorders[accent]}` : borderStyle,
+        backgroundColor: variant === 'raised' ? '#f5f4f0' : '#ffffff',
+        border: accent ? `1px solid ${accentBorders[accent]}30` : '1px solid #e8e6e1',
+        borderLeft: accent ? `3px solid ${accentBorders[accent]}` : undefined,
+        boxShadow: variant === 'raised' ? '0 1px 3px rgba(28,25,23,0.06)' : 'none',
       }}
       {...rest}
     >

@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { fetchJson, postJson } from '../api'
+import { useBehaviorValidationReport, useEvaluateBehaviorValidation } from '../hooks/useApi'
 import { formatDate } from '../dateFormat'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -47,7 +46,7 @@ const OUTCOME_BADGE: Record<string, 'success' | 'warning' | 'error' | 'muted'> =
 
 function CheckItem({ label, checked, yesLabel, noLabel }: { label: string; checked: boolean; yesLabel: string; noLabel: string }) {
   return (
-    <div className="text-xs p-2 rounded-lg" style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}>
+    <div className="text-xs p-2 rounded-lg" style={{ backgroundColor: '#faf9f7', border: '1px solid #e8e6e1' }}>
       <Badge variant={checked ? 'success' : 'error'}>{checked ? yesLabel : noLabel}</Badge>
       {' '}{label}
     </div>
@@ -56,36 +55,16 @@ function CheckItem({ label, checked, yesLabel, noLabel }: { label: string; check
 
 export default function BehaviorValidation() {
   const { t, i18n } = useTranslation()
-  const [record, setRecord] = useState<BehaviorValidationRecord | null>(null)
-  const [noReport, setNoReport] = useState(false)
-  const [evaluating, setEvaluating] = useState(false)
-  const [loadingReport, setLoadingReport] = useState(true)
-  const [error, setError] = useState('')
-  const [status, setStatus] = useState('')
+  const reportQuery = useBehaviorValidationReport()
+  const evalMutation = useEvaluateBehaviorValidation()
 
-  const loadReport = useCallback(() => {
-    setLoadingReport(true)
-    setError('')
-    fetchJson('/behavior-validation/report')
-      .then(res => {
-        if (res.status === 'no_report' || !res.validation) {
-          setNoReport(true)
-        } else {
-          setRecord(res.validation)
-        }
-      })
-      .catch(() => setNoReport(true))
-      .finally(() => setLoadingReport(false))
-  }, [])
+  const data = reportQuery.data as Record<string, unknown> | undefined
+  const noReport = !reportQuery.isLoading && (!data || data.status === 'no_report' || !data.validation)
+  const record = data?.validation as BehaviorValidationRecord | undefined
 
-  useEffect(() => { loadReport() }, [loadReport])
-
-  const evaluate = async () => {
-    setEvaluating(true)
-    setError('')
-    setStatus('')
-    try {
-      const res = await postJson('/behavior-validation/evaluate', {
+  const evaluate = () => {
+    evalMutation.mutate(
+      {
         weekly_review_ids: [],
         calibration_record_ids: [],
         pattern_review_ids: [],
@@ -104,43 +83,41 @@ export default function BehaviorValidation() {
         },
         save: true,
         caller: 'api',
-      })
-      setRecord(res.validation)
-      setNoReport(false)
-      setStatus(`${t('validation.evalComplete')} ${res.validation.outcome}`)
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : t('validation.evalFailed'))
-    } finally {
-      setEvaluating(false)
-    }
+      },
+      {
+        onSuccess: () => {
+          reportQuery.refetch()
+        },
+      }
+    )
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('validation.title')}</h2>
-      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('validation.description')}</p>
+      <h2 className="text-xl font-bold tracking-tight">{t('validation.title')}</h2>
+      <p className="text-sm" style={{ color: '#78716c' }}>{t('validation.description')}</p>
 
       <Banner variant="warning">
         <strong>{t('validation.p6Status')}</strong>
-        <p className="text-xs mt-1" style={{ color: '#7c7c6f' }}>{t('validation.p6Remains')}</p>
+        <p className="text-xs mt-1" style={{ color: '#d97706' }}>{t('validation.p6Remains')}</p>
       </Banner>
 
       <div className="flex items-center gap-3 mb-4">
-        <Button variant="primary" accent="orange" onClick={evaluate} disabled={evaluating}>
-          {evaluating ? t('validation.evaluating') : t('validation.runEvaluation')}
+        <Button variant="primary" onClick={evaluate} disabled={evalMutation.isPending}>
+          {evalMutation.isPending ? t('validation.evaluating') : t('validation.runEvaluation')}
         </Button>
-        {status && <span className="text-sm" style={{ color: '#0ae448' }}>{status}</span>}
-        {error && <Banner variant="error">{error}</Banner>}
+        {evalMutation.data && <span className="text-sm" style={{ color: '#16a34a' }}>{t('validation.evalComplete')} {String((evalMutation.data as Record<string, unknown>)?.validation && ((evalMutation.data as Record<string, unknown>).validation as Record<string, unknown>).outcome || '')}</span>}
+        {evalMutation.error && <ErrorDisplay message={(evalMutation.error as Error).message} />}
       </div>
 
-      {loadingReport && <Skeleton lines={4} />}
+      {reportQuery.isLoading && <Skeleton lines={4} />}
 
-      {!loadingReport && noReport && !record && (
-        <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('validation.noReport')}</p>
+      {noReport && (
+        <p className="text-sm" style={{ color: '#a8a29e' }}>{t('validation.noReport')}</p>
       )}
 
       {record && (
-        <Card accent="orange">
+        <Card accent="amber">
           <h3 className="text-sm font-medium mb-3">{t('validation.validationReport')}</h3>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3">
@@ -149,15 +126,15 @@ export default function BehaviorValidation() {
                 {record.outcome.replace(/_/g, ' ')}
               </Badge>
             </div>
-            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.weeklyReviews')}</span></div>
-            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.calibrationRecords')}</span></div>
-            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.patternReviews')}</span></div>
+            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.weeklyReviews')}</span></div>
+            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.calibrationRecords')}</span></div>
+            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.patternReviews')}</span></div>
             {record.evidence_window_days != null && (
-              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-xs" style={{ color: '#7c7c6f' }}>{t('validation.evidenceWindow')}</span></div>
+              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.evidenceWindow')}</span></div>
             )}
           </div>
 
-          <div className="p-2.5 rounded-lg mb-3" style={{ backgroundColor: '#1a1c1a', border: '1px solid #242624' }}>
+          <div className="p-2.5 rounded-lg mb-3" style={{ backgroundColor: '#faf9f7', border: '1px solid #e8e6e1' }}>
             <p className="text-sm">{record.message}</p>
           </div>
 
@@ -178,14 +155,14 @@ export default function BehaviorValidation() {
             <CheckItem label={t('validation.sessionsNotSkipped')} checked={record.usage_integrity.sessions_not_skipped_too_often} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 text-xs" style={{ color: '#c4c2b8' }}>
+          <div className="grid grid-cols-3 gap-2.5 text-xs" style={{ color: '#78716c' }}>
             <div>{t('validation.integrityValid')} <strong>{record.usage_integrity_valid ? t('validation.yes') : t('validation.no')}</strong></div>
             <div>{t('validation.behaviorImproved')} <strong>{record.behavior_improved ? t('validation.yes') : t('validation.no')}</strong></div>
             <div>{t('validation.evidenceVerified')} <strong>{record.evidence_verified ? t('validation.yes') : t('validation.no')}</strong></div>
           </div>
 
           {record.created_at && (
-            <p className="text-xs mt-2" style={{ color: '#7c7c6f' }}>{t('validation.evaluated')} {formatDate(record.created_at, i18n.language)}</p>
+            <p className="text-xs mt-2" style={{ color: '#a8a29e' }}>{t('validation.evaluated')} {formatDate(record.created_at, i18n.language)}</p>
           )}
         </Card>
       )}

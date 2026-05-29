@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
 
 const variantStyles: Record<string, { bg: string; border: string; color: string }> = {
-  info: { bg: 'rgba(0, 186, 226, 0.08)', border: 'rgba(0, 186, 226, 0.2)', color: '#00bae2' },
-  warning: { bg: 'rgba(255, 135, 9, 0.08)', border: 'rgba(255, 135, 9, 0.2)', color: '#ff8709' },
-  error: { bg: 'rgba(255, 68, 68, 0.08)', border: 'rgba(255, 68, 68, 0.2)', color: '#ff4444' },
-  success: { bg: 'rgba(10, 228, 72, 0.08)', border: 'rgba(10, 228, 72, 0.2)', color: '#0ae448' },
+  info: { bg: '#eff6ff', border: '#bfdbfe', color: '#2563eb' },
+  warning: { bg: '#fffbeb', border: '#fde68a', color: '#d97706' },
+  error: { bg: '#fef2f2', border: '#fecaca', color: '#dc2626' },
+  success: { bg: '#f0fdf4', border: '#bbf7d0', color: '#16a34a' },
 }
 
 interface BannerProps {

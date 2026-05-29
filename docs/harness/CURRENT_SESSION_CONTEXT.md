@@ -1,6 +1,6 @@
 # Current Session Context
 
-Last updated: 2026-05-28
+Last updated: 2026-05-29
 
 ## Project State
 
@@ -51,6 +51,19 @@ Last updated: 2026-05-28
 - P14-M8: done (Alter labels i18n)
 - P14-FINAL-CLOSEOUT-E1: done (close frontend polish after M8 — GPT PASS)
 - P14 scope: COMPLETE (M1-M8 + R1 all done)
+
+## Frontend Redesign (2026-05-29)
+
+- Full visual redesign: dark lab theme → warm professional theme (Notion/Obsidian style)
+- Font: Outfit (display/body) + JetBrains Mono (data), self-hosted via @font-face
+- Color: warm off-white (#faf9f7) background, amber-700 (#b45309) single accent
+- Layout: sidebar navigation (220px dark sidebar) + content area, mobile bottom nav
+- Icons: Phosphor Icons (replacing hand-written SVGs)
+- Data layer: TanStack Query (replacing manual useState+useEffect)
+- Vite proxy: expanded to cover all 20+ API routes (was missing 11 routes)
+- Files changed: 30+ (all components, all pages, index.css, App.tsx, main.tsx, vite.config.ts)
+- New files: Sidebar.tsx, MobileNav.tsx, hooks/useApi.ts, public/fonts/*.woff2
+- Build: npm run build passes, 1269 backend tests passing
 
 ## Next Task
 

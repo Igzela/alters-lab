@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react'
 
 const variantStyles: Record<string, { bg: string; color: string }> = {
-  success: { bg: 'rgba(10, 228, 72, 0.15)', color: '#0ae448' },
-  warning: { bg: 'rgba(255, 135, 9, 0.15)', color: '#ff8709' },
-  error: { bg: 'rgba(255, 68, 68, 0.15)', color: '#ff4444' },
-  info: { bg: 'rgba(0, 186, 226, 0.15)', color: '#00bae2' },
-  muted: { bg: 'rgba(124, 124, 111, 0.15)', color: '#7c7c6f' },
+  success: { bg: '#f0fdf4', color: '#16a34a' },
+  warning: { bg: '#fffbeb', color: '#d97706' },
+  error: { bg: '#fef2f2', color: '#dc2626' },
+  info: { bg: '#eff6ff', color: '#2563eb' },
+  amber: { bg: '#fef3c7', color: '#b45309' },
+  muted: { bg: '#f5f4f0', color: '#78716c' },
 }
 
 interface BadgeProps {
@@ -18,7 +19,7 @@ export function Badge({ variant = 'muted', children, className = '' }: BadgeProp
   const s = variantStyles[variant] || variantStyles.muted
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-[9999px] ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full ${className}`}
       style={{ backgroundColor: s.bg, color: s.color }}
     >
       {children}

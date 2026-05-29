@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { postJson } from '../api'
+import { useAlterReply } from '../hooks/useApi'
 import { fadeIn } from '../animations'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -20,9 +20,8 @@ export default function AlterDialogue() {
   const [alterId, setAlterId] = useState('alter_A')
   const [message, setMessage] = useState('')
   const [reply, setReply] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
   const replyRef = useRef<HTMLDivElement>(null)
+  const mutation = useAlterReply()
 
   useEffect(() => {
     if (reply && replyRef.current) {
@@ -30,28 +29,23 @@ export default function AlterDialogue() {
     }
   }, [reply])
 
-  const send = async () => {
+  const send = () => {
     if (!message.trim()) return
-    setLoading(true)
-    setError('')
     setReply('')
-    try {
-      const res = await postJson(`/provider-dialogue/${alterId}/reply`, {
-        user_message: message,
-        save_session: false,
-      })
-      setReply(res.reply_text)
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : t('dialogue.unknownError'))
-    } finally {
-      setLoading(false)
-    }
+    mutation.mutate(
+      { alterId, message },
+      {
+        onSuccess: (res) => {
+          setReply((res as Record<string, unknown>).reply_text as string)
+        },
+      }
+    )
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>{t('dialogue.title')}</h2>
-      <p className="text-sm" style={{ color: '#7c7c6f' }}>{t('dialogue.description')}</p>
+      <h2 className="text-xl font-bold tracking-tight">{t('dialogue.title')}</h2>
+      <p className="text-sm" style={{ color: '#78716c' }}>{t('dialogue.description')}</p>
       <Select value={alterId} onChange={e => setAlterId(e.target.value)}>
         {ALTERS.map(a => <option key={a} value={a}>{t(ALTER_LABELS[a])}</option>)}
       </Select>
@@ -63,16 +57,16 @@ export default function AlterDialogue() {
           placeholder={t('dialogue.placeholder')}
           className="flex-1"
         />
-        <Button variant="primary" accent="blue" onClick={send} disabled={loading}>
-          {loading ? t('common.sending') : t('dialogue.send')}
+        <Button variant="primary" onClick={send} disabled={mutation.isPending}>
+          {mutation.isPending ? t('common.sending') : t('dialogue.send')}
         </Button>
       </div>
-      {error && <Banner variant="error">{error}</Banner>}
+      {mutation.error && <Banner variant="error">{(mutation.error as Error).message}</Banner>}
       {reply && (
         <div ref={replyRef}>
-          <Card accent="blue">
+          <Card accent="amber">
             <strong className="text-sm">{t('dialogue.reply')}</strong>
-            <p className="text-sm whitespace-pre-wrap mt-1" style={{ color: '#c4c2b8' }}>{reply}</p>
+            <p className="text-sm whitespace-pre-wrap mt-1" style={{ color: '#78716c' }}>{reply}</p>
           </Card>
         </div>
       )}
