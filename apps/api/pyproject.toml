@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "alters-lab-api"
 version = "0.1.0"
 description = "Alters Lab — personal future-branch simulation and calibration system"
-readme = "../../README.md"
 license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
