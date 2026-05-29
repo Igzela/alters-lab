@@ -179,8 +179,6 @@ export default function ProviderSettings() {
           <p>{t('provider.outputPersists')} <Badge variant={status.provider_output_persists_by_default ? 'success' : 'muted'}>{status.provider_output_persists_by_default ? t('provider.yes') : t('provider.no')}</Badge></p>
           <p>{t('provider.canWriteYaml')} <Badge variant={status.provider_output_can_write_active_yaml ? 'warning' : 'muted'}>{status.provider_output_can_write_active_yaml ? t('provider.yes') : t('provider.no')}</Badge></p>
           <p>{t('provider.canGenerateScore')} <Badge variant={status.provider_output_can_generate_reality_score ? 'info' : 'muted'}>{status.provider_output_can_generate_reality_score ? t('provider.yes') : t('provider.no')}</Badge></p>
-          <p>{t('provider.p6Validated')} <Badge variant={status.p6_behavior_validated ? 'success' : 'muted'}>{status.p6_behavior_validated ? t('provider.yes') : t('provider.no')}</Badge></p>
-          <p>{t('provider.p6Sealed')} <Badge variant={status.p6_sealed ? 'success' : 'muted'}>{status.p6_sealed ? t('provider.yes') : t('provider.no')}</Badge></p>
         </div>
       </Card>
 

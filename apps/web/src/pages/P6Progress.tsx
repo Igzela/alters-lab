@@ -44,7 +44,6 @@ export default function P6Progress() {
           </div>
         </>
       )}
-      <p className="text-xs mt-2" style={{ color: '#a8a29e' }}>{t('p6Progress.p6Validated')} | {t('p6Progress.p6Sealed')}</p>
     </Card>
   )
 }

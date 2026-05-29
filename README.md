@@ -1,14 +1,9 @@
-# Alters System Lab
+# Alters Lab
 
-A personal future-branch simulation and calibration system.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/Igzela/alters-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Igzela/alters-lab/actions/workflows/ci.yml)
 
-**New coding-agent sessions should start with [AGENTS.md](AGENTS.md), then [docs/harness/START_HERE_FOR_NEW_SESSION.md](docs/harness/START_HERE_FOR_NEW_SESSION.md).**
-
-Agents must keep the harness docs current after every commit-sized change so future Claude Code, Codex, or other coding-agent sessions can continue without reconstructing state from git log.
-
-## Overview
-
-Alters System helps you explore potential future paths by modelling branching life decisions, generating alter versions of yourself for each path, and calibrating which branches best align with your values and energy.
+A personal future-branch simulation and calibration system. Explore potential life paths by modelling branching decisions, generating alter versions of yourself for each path, and calibrating which branches best align with your values and energy.
 
 ## Quick Start
 
@@ -30,21 +25,17 @@ sudo dpkg -i dist/deb/alters-lab_0.1.0_amd64.deb
 ### 2. Launch
 
 ```bash
-# Start the app (opens browser automatically)
-alters-lab start
-
-# Or just open (starts server if not running)
-alters-lab open
+alters-lab start    # Start the server (opens browser automatically)
+alters-lab open     # Open in browser (starts server if not running)
 ```
 
 The app runs at `http://127.0.0.1:18790`.
 
 ### 3. Configure a Provider (Optional)
 
-Alters Lab works without any LLM provider (uses mock responses). To enable real LLM-powered dialogue and weekly reviews, configure an OpenAI-compatible provider:
+Alters Lab works out of the box with mock responses. To enable real LLM-powered dialogue and weekly reviews, configure an OpenAI-compatible provider through the in-app Provider Settings page, or via the API:
 
 ```bash
-# Set provider mode and endpoint
 curl -X POST http://127.0.0.1:18790/provider-config/config \
   -H "Content-Type: application/json" \
   -d '{
@@ -56,72 +47,21 @@ curl -X POST http://127.0.0.1:18790/provider-config/config \
     "key_name": "alters-lab/provider-api-key",
     "explicit_user_configuration": true
   }'
-
-# Store your API key
-curl -X POST http://127.0.0.1:18790/provider-config/secret \
-  -H "Content-Type: application/json" \
-  -d '{
-    "api_key": "your-api-key",
-    "storage": "keyring",
-    "confirmation": "store-secret"
-  }'
 ```
 
 See [Provider Setup](docs/user/PROVIDER_SETUP.md) for the full guide.
 
-## Provider Configuration
-
-Alters Lab supports three provider modes:
-
-| Mode | Description |
-|------|-------------|
-| `disabled` | No LLM calls. Default out of the box. |
-| `mock` | Simulated responses. For testing without an API key. |
-| `openai-compatible-http` | Real LLM calls to any OpenAI-compatible API. |
-
-Configure via API endpoints or environment variables:
-
-| Variable | Description |
-|----------|-------------|
-| `ALTERS_PROVIDER_MODE` | Provider mode |
-| `ALTERS_PROVIDER_BASE_URL` | API base URL (e.g. `https://api.openai.com/v1`) |
-| `ALTERS_PROVIDER_API_KEY` | API key |
-| `ALTERS_PROVIDER_MODEL` | Model name |
-
-Config file: `~/.config/alters-lab/config.yaml`
-
-See [Provider Configuration](docs/PROVIDER_CONFIGURATION.md) for details.
-
-## Core Loop
+## How It Works
 
 ```
 Snapshot → Branches → Alters → Dialogue → Calibration
 ```
 
-1. **Snapshot Intake** — Capture a current state: constraints, uncertainties, and what you refuse to give up
+1. **Snapshot** — Capture your current state: constraints, uncertainties, and what you refuse to give up
 2. **Branch Discovery** — Identify 3–4 structural, mutually incompatible future branches
 3. **Alter Generation** — For each branch, generate an Alter: a coherent version of you living that path
-4. **Dialogue / Value Alignment** — Converse with each Alter to evaluate fit, values, and tradeoffs
-5. **Calibration** — Score branches against a Rubric and refine over time
-
-## Project Status
-
-Current state: P0-P11 complete, P11 sealed as `PRODUCT_COMPLETE_BEFORE_VALIDATION`, and P6 still `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`.
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| P0 | Done | File-based workflow (YAML snapshots, branches, alters) |
-| P1 | Done | Data model and schema validation |
-| P2 | Done | Snapshot intake and branch discovery |
-| P3 | Done | Alter generation and draft review |
-| P4 | Done | Calibration loop MVP |
-| P5 | Done | Productization and provider gateway |
-| P6 | Code-complete only | Personal long-term use hardening; behavior validation not started |
-| P7 | Done | Local app distribution (.deb, CLI, desktop integration) |
-| P8 | Done | Provider-ready local app with safety gates and E2E validation |
-| P9 | Done | Release hygiene, install docs, lifecycle verification, doctor improvements |
-| P10 | Reentry gate awaiting human decision | P10-M5-R2 reopened validation start decision after P11/Pilot evidence; P6 validation did not start |
-| P11 | Sealed | Product completeness before validation, smoke PASS, pilot PASS |
+4. **Dialogue** — Converse with each Alter to evaluate fit, values, and tradeoffs
+5. **Calibration** — Score branches against a rubric and refine over time
 
 ## CLI Commands
 
@@ -134,6 +74,14 @@ Current state: P0-P11 complete, P11 sealed as `PRODUCT_COMPLETE_BEFORE_VALIDATIO
 | `alters-lab open` | Open the app in a browser |
 | `alters-lab backup` | Create a data backup |
 
+## Provider Modes
+
+| Mode | Description |
+|------|-------------|
+| `disabled` | No LLM calls. Default out of the box. |
+| `mock` | Simulated responses. For testing without an API key. |
+| `openai-compatible-http` | Real LLM calls to any OpenAI-compatible API. |
+
 ## Documentation
 
 - [First-Run Checklist](docs/user/FIRST_RUN_CHECKLIST.md) — What to do after installation
@@ -141,50 +89,34 @@ Current state: P0-P11 complete, P11 sealed as `PRODUCT_COMPLETE_BEFORE_VALIDATIO
 - [Provider Setup](docs/user/PROVIDER_SETUP.md) — How to configure LLM providers
 - [Provider Safety](docs/user/PROVIDER_SAFETY.md) — Secret handling, output safety, confirmation gating
 - [Troubleshooting](docs/user/TROUBLESHOOTING.md) — Common issues and how to fix them
-- [New Session Bootstrap](docs/harness/START_HERE_FOR_NEW_SESSION.md) — Agent handoff entry point
-- [Current Session Context](docs/harness/CURRENT_SESSION_CONTEXT.md) — Latest state and next decision
 - [Product Specification](docs/product-spec.md) — System design and concepts
-- [Alter Generation Workflow](docs/alter-generation-workflow.md) — How alters are generated
-- [Branch Discovery Workflow](docs/branch-discovery-workflow.md) — How branches are discovered
-- [Calibration System Workflow](docs/calibration-system-workflow.md) — How calibration works
+- [Architecture](docs/architecture.md) — Technical architecture overview
 
 ## Project Structure
 
 ```
-alters/
-  current/
-    snapshot.yaml          # Current state: constraints, uncertainties, anchors
-    branches.yaml          # Discovered branches with quality rules
-    reality_trace.yaml     # How reality diverges from branches over time
-    alters/                # Alter YAML files per branch
-  calibration/
-    rubric.yaml            # Evaluation dimensions (4-axis rubric)
-    state.json             # Cold-start calibration state
-    scores/                # Per-cycle score records
-  archive/                 # Completed cycle archives
+apps/
+  api/              Python backend (FastAPI)
+  web/              React frontend (Vite + Tailwind)
+docs/               Documentation
+  user/             User-facing guides
+alters/             Runtime data (YAML/JSON)
+  current/          Active snapshot, branches, and alters
+  calibration/      Rubric, scores, and calibration state
+  archive/          Completed cycle archives
 ```
 
-## Browser Automation (chrome-devtools MCP)
+## Tech Stack
 
-ChatGPT interaction uses the `chrome-devtools` MCP server (autoConnect mode).
-It connects to the running Chrome instance — no separate scripts or CLI tools needed.
+- **Backend:** Python 3.11+, FastAPI, Pydantic, PyYAML
+- **Frontend:** React 18, TypeScript, Vite, Tailwind CSS v4, TanStack Query
+- **Storage:** YAML + JSON files (no database)
+- **Packaging:** Debian (.deb), CLI entry point `alters-lab`
 
-**Available MCP tools:** `list_pages`, `select_page`, `navigate_page`, `evaluate_script`, `take_snapshot`, `take_screenshot`, `click`, `fill`.
+## Contributing
 
-**ChatGPT message pattern:**
-```js
-// Type message
-document.querySelector('.ProseMirror').focus()
-document.execCommand('insertText', false, 'your message here')
-
-// Click send
-const form = document.querySelector('.ProseMirror').closest('form')
-form.querySelectorAll('button').find(b => (b.getAttribute('aria-label')||'').includes('Send')).click()
-
-// Read reply
-document.body.innerText.substring(document.body.innerText.length - 2000)
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
-TBD
+[MIT](LICENSE)

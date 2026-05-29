@@ -5,7 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "alters-lab-api"
 version = "0.1.0"
-description = "Alters Lab API — personal future-branch simulation backend"
+description = "Alters Lab — personal future-branch simulation and calibration system"
+readme = "../../README.md"
+license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi",
@@ -23,6 +25,12 @@ dev = [
 
 [project.scripts]
 alters-lab = "alters_lab.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Igzela/alters-lab"
+Repository = "https://github.com/Igzela/alters-lab"
+Documentation = "https://github.com/Igzela/alters-lab/tree/main/docs"
+Issues = "https://github.com/Igzela/alters-lab/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

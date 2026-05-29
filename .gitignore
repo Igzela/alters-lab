@@ -1,16 +1,48 @@
+# Python
 .venv/
 __pycache__/
-docs/harness/phase3_write_audit.jsonl
-docs/harness/phase3_generation_draft_audit.jsonl
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.deb
+
+# Node
+apps/web/node_modules/
+apps/web/dist/
+
+# Environment / secrets
+.env
+.env.local
+secrets.yaml
+
+# Internal tooling
+.codex/
+.claude/
+.claude-*.md
+
+# Runtime data (user-specific)
+alters/current/
 alters/drafts/
+docs/gpt-inbox/
+docs/runs/
+
+# Archive checkpoints
 alters/archive/checkpoints/*
 !alters/archive/checkpoints/.gitkeep
+
+# Calibration templates
 alters/calibration/rubric_delta_suggestions/*
 !alters/calibration/rubric_delta_suggestions/.gitkeep
 !alters/calibration/rubric_delta_suggestions/_template.yaml
 alters/calibration/checkpoint_plans/*
 !alters/calibration/checkpoint_plans/.gitkeep
 !alters/calibration/checkpoint_plans/_template.yaml
+
+# Product runtime data
 alters/product/sessions/*
 !alters/product/sessions/.gitkeep
 !alters/product/sessions/_template.yaml
@@ -37,13 +69,3 @@ alters/product/exports/*
 !alters/product/exports/.gitkeep
 alters/product/behavior_validation/*
 !alters/product/behavior_validation/.gitkeep
-.codex/
-.claude-p3-*.md
-apps/web/node_modules/
-apps/web/dist/
-.env
-.env.local
-secrets.yaml
-build/deb/
-dist/deb/
-*.deb

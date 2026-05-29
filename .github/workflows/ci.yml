@@ -26,7 +26,6 @@ jobs:
 
       - name: Run tests
         run: PYTHONPATH=apps/api/src python -m pytest apps/api/tests/ -q
-        continue-on-error: true
 
   frontend:
     name: Frontend Build

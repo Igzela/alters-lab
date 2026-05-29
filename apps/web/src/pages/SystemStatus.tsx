@@ -50,19 +50,8 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
       </Card>
 
       <Card>
-        <h3 className="text-sm font-medium mb-2">{t('status.p6State')}</h3>
-        <div className="space-y-1 text-sm" style={{ color: '#78716c' }}>
-          <p>{t('status.runtime')} <Badge variant="info">CODE_COMPLETE</Badge></p>
-          <p>{t('status.behaviorValidation')} <Badge variant="warning">NOT_VALIDATED</Badge></p>
-          <p>{t('status.seal')} <Badge variant="muted">NOT_SEALED</Badge></p>
-        </div>
-      </Card>
-
-      <Card>
         <h3 className="text-sm font-medium mb-2">{t('status.productSurface')}</h3>
         <div className="space-y-1 text-sm" style={{ color: '#78716c' }}>
-          <p>{t('status.phase3')} <Badge variant="success">{String(product.data?.phase3_status)}</Badge></p>
-          <p>{t('status.phase4')} <Badge variant="success">{String(product.data?.phase4_status)}</Badge></p>
           <p>{t('status.storage')} <Badge variant="info">{String(product.data?.storage_backend)}</Badge></p>
           <p>{t('status.noSecretsExposed')} <Badge variant={product.data?.no_secrets_exposed ? 'success' : 'error'}>{product.data?.no_secrets_exposed ? t('common.yes') : t('common.no')}</Badge></p>
         </div>

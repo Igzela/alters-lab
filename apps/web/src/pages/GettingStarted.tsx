@@ -162,9 +162,6 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
       <Card>
         <h3 className="text-sm font-medium mb-2">{t('gettingStarted.boundaries')}</h3>
         <p className="text-sm leading-relaxed" style={{ color: '#78716c' }}>
-          <strong style={{ color: '#1c1917' }}>{t('gettingStarted.p6')}</strong> {t('gettingStarted.p6Desc')}<br />
-          <strong style={{ color: '#1c1917' }}>{t('gettingStarted.p7')}</strong> {t('gettingStarted.p7Desc')}<br />
-          <strong style={{ color: '#1c1917' }}>{t('gettingStarted.p8')}</strong> {t('gettingStarted.p8Desc')}<br />
           <strong style={{ color: '#1c1917' }}>{t('gettingStarted.providerOutput')}</strong> {t('gettingStarted.providerOutputDesc')}
         </p>
       </Card>

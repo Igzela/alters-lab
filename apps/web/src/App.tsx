@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fadeIn } from './animations'
 import { ToastProvider } from './components/Toast'
+import ErrorBoundary from './components/ErrorBoundary'
 import Sidebar from './components/Sidebar'
 import MobileNav from './components/MobileNav'
 import SystemStatus from './pages/SystemStatus'
@@ -49,6 +50,7 @@ export default function App() {
   const handleNavigate = (p: Page) => setPage(p)
 
   return (
+    <ErrorBoundary>
     <ToastProvider>
       <a
         href="#main-content"
@@ -107,5 +109,6 @@ export default function App() {
         <MobileNav currentPage={page} onNavigate={handleNavigate} />
       </div>
     </ToastProvider>
+    </ErrorBoundary>
   )
 }

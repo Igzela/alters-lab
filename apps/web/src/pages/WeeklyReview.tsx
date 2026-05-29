@@ -522,8 +522,6 @@ export default function WeeklyReview() {
             <p>{t('weeklyReview.reviewSessionId')} <Badge variant="amber">{session.session_id}</Badge></p>
             <p>{t('weeklyReview.scoreRecordId')} <Badge variant="warning">{score.score_id}</Badge></p>
             <p>{t('weeklyReview.alignmentScore')} <strong className="font-mono">{score.action_alignment_score}</strong></p>
-            <p>{t('weeklyReview.p6Validated')}</p>
-            <p>{t('weeklyReview.p6Sealed')}</p>
           </div>
           <p className="text-xs mt-2" style={{ color: '#a8a29e' }}>{t('weeklyReview.weekEvidenceNote')}</p>
           <Button variant="secondary" className="mt-3" onClick={reset}>{t('weeklyReview.resetFlow')}</Button>
