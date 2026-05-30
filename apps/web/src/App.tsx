@@ -16,7 +16,7 @@ function AppLayout() {
   const { currentPage, navigate } = useNavigation()
 
   return (
-    <>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       <KeyboardShortcuts onNavigate={navigate} />
       <a
         href="#main-content"
@@ -26,41 +26,42 @@ function AppLayout() {
         {t('common.skipToContent')}
       </a>
 
-      {/* Desktop: sidebar layout */}
-      <div className="hidden md:flex min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+      {/* Desktop sidebar — hidden on mobile */}
+      <div className="hidden md:block">
         <Sidebar currentPage={currentPage} onNavigate={navigate} />
-        <div className="flex-1 ml-[220px]">
-          <div className="max-w-[1080px] mx-auto px-10 py-8">
-            <main id="main-content" role="main">
-              <PageRouter />
-            </main>
-          </div>
-        </div>
       </div>
 
-      {/* Mobile: bottom nav layout */}
-      <div className="md:hidden min-h-screen pb-16" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <div className="px-4 py-6">
-          <header className="flex justify-between items-center mb-6">
-            <h1 className="text-lg font-semibold tracking-tight" style={{ color: 'var(--color-text)' }}>
-              {t('app.title')}
-            </h1>
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg transition-colors duration-150 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
-              style={{ color: 'var(--color-text-secondary)', backgroundColor: 'transparent' }}
-              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
-          </header>
+      {/* Mobile header — hidden on desktop */}
+      <div className="md:hidden px-4 pt-6">
+        <header className="flex justify-between items-center mb-6">
+          <h1 className="text-lg font-semibold tracking-tight" style={{ color: 'var(--color-text)' }}>
+            {t('app.title')}
+          </h1>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg transition-colors duration-150 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            style={{ color: 'var(--color-text-secondary)', backgroundColor: 'transparent' }}
+            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          >
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+        </header>
+      </div>
+
+      {/* Shared main content — rendered once, visible in both layouts */}
+      <div className="md:ml-[220px] pb-16 md:pb-0">
+        <div className="max-w-[1080px] mx-auto px-4 md:px-10 py-6 md:py-8">
           <main id="main-content" role="main">
             <PageRouter />
           </main>
         </div>
+      </div>
+
+      {/* Mobile bottom nav — hidden on desktop */}
+      <div className="md:hidden">
         <MobileNav currentPage={currentPage} onNavigate={navigate} />
       </div>
-    </>
+    </div>
   )
 }
 
