@@ -6,12 +6,12 @@ This repository is Alters Lab, a local personal future-path simulation and calib
 
 Every Codex, Claude Code, or other coding-agent session must start by reading:
 
-1. `CLAUDE.md` — project state, tech stack, doc maintenance rules
+1. `CLAUDE.md` — project state, tech stack, doc maintenance rules, **待办任务**
 2. `AGENTS.md` (this file) — collaboration protocol, hard boundaries, verification commands
 3. `docs/architecture.md` — how the system works
 4. `docs/data-model.md` — schema definitions
 
-If those files disagree with each other, `README.md`, or recent git history, repair the documentation before continuing feature work.
+**DO NOT read `docs/harness/`** — it contains stale milestone governance docs (P0-P14). They are historical records, not current state. Always trust CLAUDE.md over harness docs.
 
 ## Current State
 

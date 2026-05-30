@@ -40,10 +40,12 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 
 所有 Claude Code、Codex 或其他 coding agent 必须先读：
 
-1. `CLAUDE.md`（本文件）— 项目状态、技术栈、文档规范
+1. `CLAUDE.md`（本文件）— 项目状态、技术栈、文档规范、待办任务
 2. `AGENTS.md` — 协作模式、硬边界、验证命令
 3. `docs/architecture.md` — 技术架构（系统怎么工作的）
 4. `docs/data-model.md` — 数据模型（schema 定义）
+
+**⚠️ 禁止读取 `docs/harness/` 目录** — 这是历史里程碑文档（P0-P14 的治理记录），已过时，不能作为当前状态的依据。当前状态以 CLAUDE.md 为准。
 
 如果这些文件、README、最近 git log 互相冲突，先修文档，不要直接进入功能开发。
 
