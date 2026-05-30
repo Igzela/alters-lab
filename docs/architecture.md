@@ -25,9 +25,9 @@ alters-lab/
   apps/
     api/                  # FastAPI backend
       src/alters_lab/
-        api/              # 44 route modules
-        services/         # 47 service modules
-        schemas/          # 44 Pydantic schema modules
+        api/              # 45 route modules
+        services/         # 51 service modules
+        schemas/          # 45 Pydantic schema modules
         cli/              # CLI entry point (launcher.py)
         main.py           # App factory, middleware, router registration
         middleware.py      # Rate limiting
@@ -158,7 +158,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Service Layer
 
-50 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
+51 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
 
 - **Persistence**: `alters_persist`, `branches_persist`, `snapshot_persist`, `snapshot_sessions`, `snapshot_export`, `controlled_write`
 - **Data safety**: `data_safety` (backup planning, archive creation)
@@ -168,7 +168,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Schema Layer
 
-41 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router.
+45 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router.
 
 ### Structured Logging
 

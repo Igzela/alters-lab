@@ -1,3 +1,5 @@
+> **Note**: This is a historical design document. Phase references (Phase 0, P4) reflect the system's state at time of writing. For current status, see CLAUDE.md.
+
 # Alter Generation Workflow
 
 ## A. Purpose
