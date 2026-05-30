@@ -17,7 +17,7 @@ class ProviderSafetyFlags(BaseModel):
     provider_output_persists_by_default: Literal[False] = False
     provider_output_can_write_active_yaml: Literal[False] = False
     provider_output_can_generate_reality_score: Literal[False] = False
-    p6_behavior_validated: Literal[False] = False
+    behavior_validated: Literal[False] = False
     p6_sealed: Literal[False] = False
 
 

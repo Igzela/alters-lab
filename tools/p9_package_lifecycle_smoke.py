@@ -320,7 +320,7 @@ def _run_post_install_app_smoke(
             "runtime_layout_status": runtime_status,
             "provider_config_status": provider_status,
             "provider_mode": provider_status.get("provider_mode", "unknown"),
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
             "real_provider_call_made": False,
         }
@@ -358,7 +358,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert app_smoke["runtime_layout_status"]["status"] == "ok"
     assert app_smoke["provider_config_status"]["status"] == "ok"
     assert app_smoke["provider_mode"] == "disabled"
-    assert app_smoke["p6_behavior_validated"] is False
+    assert app_smoke["behavior_validated"] is False
     assert app_smoke["p6_sealed"] is False
     assert app_smoke["real_provider_call_made"] is False
 
@@ -395,7 +395,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert cp_rem["secrets_mode_preserved_after_remove"] is True
 
     # Safety assertions
-    assert safety["p6_behavior_validated"] is False
+    assert safety["behavior_validated"] is False
     assert safety["p6_sealed"] is False
     assert safety["no_provider_calls"] is True
     assert safety["host_mutation_detected"] is False
@@ -535,7 +535,7 @@ def run_lifecycle_smoke(
                 "record_paths": record_paths,
             },
             "safety": {
-                "p6_behavior_validated": False,
+                "behavior_validated": False,
                 "p6_sealed": False,
                 "no_provider_calls": True,
                 "host_mutation_detected": False,

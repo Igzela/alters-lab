@@ -106,7 +106,7 @@ export async function fetchWeeklyReviewAssistantStatus() {
   return fetchJson('/weekly-review-assistant/status') as Promise<{
     provider_mode: string
     configured: boolean
-    p6_behavior_validated: boolean
+    behavior_validated: boolean
     p6_sealed: boolean
   }>
 }

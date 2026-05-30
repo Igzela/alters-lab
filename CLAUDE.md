@@ -13,7 +13,7 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 ## 下一个 Session 待办
 
 技术端（按优先级）：
-1. Docker 支持 — Dockerfile + docker-compose.yml
+1. ✅ Docker 支持 — Dockerfile + docker-compose.yml + docker-entrypoint.sh + .dockerignore
 2. GettingStarted 加 load-sample 步骤 — 新用户不知道怎么加载 sample data
 3. ProviderSettings 去掉硬编码 GitHub URL — 改成相对链接或去掉
 4. P6 前缀清理 — p6Progress → progress, p6_behavior_validated → behavior_validated
@@ -27,7 +27,7 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
 - **前端**: React 18, TypeScript, Vite, Tailwind v4, TanStack Query, Phosphor Icons, Outfit + JetBrains Mono 字体
 - **存储**: YAML + JSON 文件（alters/ 目录），无数据库
-- **打包**: Debian (.deb)，CLI 入口 `alters-lab`
+- **打包**: Debian (.deb) + Docker，CLI 入口 `alters-lab`
 - **测试**: pytest + httpx
 - **部署**: 本地安装，运行在 127.0.0.1:18790
 - **中间件**: CORS, Rate Limiting (600 req/min), 结构化日志
@@ -130,7 +130,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 - 不连接 LLM provider
 - 测试用 tmp_path，不改真实文件
 - commit message 用英文，格式: `P{N}-M{N}: 简短描述`，修正用 `-R{N}` 后缀
-- 1269 backend tests passing
+- 1267 backend tests passing
 
 ## 测试命令
 ```bash

@@ -1,0 +1,61 @@
+record_id: weekly_note_20260519_sample01
+source_type: obsidian_weekly_note
+raw_note_preserved: true
+derived_from_raw_note: true
+source_path: null
+raw_note: '# Weekly Review - 2026-05-19
+
+
+  ## Session Type
+
+  personal
+
+
+  ## Observable Facts
+
+  - Completed ML course module on linear regression.
+
+  - Pushed a commit to the open-source monitoring tool on Saturday.
+
+  - Skipped Tuesday evening study session due to work overtime.
+
+  - Read one chapter of "Hands-On ML" over the weekend.
+
+  - Felt demotivated on Wednesday after comparing progress to a friend in a bootcamp.
+
+
+  ## Subjective State
+
+  A mix of small wins and lingering anxiety. Progress feels real but slow.
+
+
+  ## Primary Problem
+
+  Work overtime keeps eating into study time, and there is no clear boundary between work hours and learning hours.
+
+
+  ## Friction / Avoidance
+
+  I avoided the Kaggle dataset I picked because the preprocessing felt overwhelming.
+
+
+  ## Desired Correction
+
+  Set a firm rule: no work after 6pm on weekdays. Use that time for ML study only.
+
+  '
+session_type: personal
+observable_facts:
+  - Completed ML course module on linear regression.
+  - Pushed a commit to the open-source monitoring tool on Saturday.
+  - Skipped Tuesday evening study session due to work overtime.
+  - Read one chapter of "Hands-On ML" over the weekend.
+  - Felt demotivated on Wednesday after comparing progress to a friend in a bootcamp.
+subjective_state: A mix of small wins and lingering anxiety. Progress feels real but slow.
+primary_problem: Work overtime keeps eating into study time, and there is no clear boundary between work hours and learning hours.
+friction_or_avoidance_point: I avoided the Kaggle dataset I picked because the preprocessing felt overwhelming.
+desired_correction: "Set a firm rule: no work after 6pm on weekdays. Use that time for ML study only."
+extraction_warnings: []
+edit_history: []
+created_at: '2026-05-19T10:00:00.000000+00:00'
+updated_at: null

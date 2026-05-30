@@ -1,0 +1,61 @@
+record_id: weekly_note_20260526_sample01
+source_type: obsidian_weekly_note
+raw_note_preserved: true
+derived_from_raw_note: true
+source_path: null
+raw_note: '# Weekly Review - 2026-05-26
+
+
+  ## Session Type
+
+  project
+
+
+  ## Observable Facts
+
+  - Finished the data preprocessing pipeline for the Kaggle dataset.
+
+  - Attended two study sessions this week, both on schedule.
+
+  - Started working on the model training notebook.
+
+  - Had a good conversation with a mentor about career paths.
+
+  - Skipped the gym on Thursday due to fatigue.
+
+
+  ## Subjective State
+
+  More confident this week. The study routine is starting to stick.
+
+
+  ## Primary Problem
+
+  Still struggling with imposter syndrome when looking at other people's progress on Twitter.
+
+
+  ## Friction / Avoidance
+
+  I keep avoiding the model evaluation step because I am afraid the results will be bad.
+
+
+  ## Desired Correction
+
+  Accept that bad results are part of the learning process. Focus on completing the pipeline, not perfection.
+
+  '
+session_type: project
+observable_facts:
+  - Finished the data preprocessing pipeline for the Kaggle dataset.
+  - Attended two study sessions this week, both on schedule.
+  - Started working on the model training notebook.
+  - Had a good conversation with a mentor about career paths.
+  - Skipped the gym on Thursday due to fatigue.
+subjective_state: More confident this week. The study routine is starting to stick.
+primary_problem: Still struggling with imposter syndrome when looking at other people's progress on Twitter.
+friction_or_avoidance_point: I keep avoiding the model evaluation step because I am afraid the results will be bad.
+desired_correction: "Accept that bad results are part of the learning process. Focus on completing the pipeline, not perfection."
+extraction_warnings: []
+edit_history: []
+created_at: '2026-05-26T10:00:00.000000+00:00'
+updated_at: null

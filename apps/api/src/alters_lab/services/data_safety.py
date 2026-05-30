@@ -14,7 +14,7 @@ from typing import Any, Iterable
 from alters_lab.services.runtime_layout import RuntimeLayout
 
 SECRET_CONFIRMATION = "include-secrets-in-backup"
-P6_FLAGS = {"p6_behavior_validated": False, "p6_sealed": False}
+P6_FLAGS = {"behavior_validated": False, "p6_sealed": False}
 
 
 @dataclass(frozen=True)

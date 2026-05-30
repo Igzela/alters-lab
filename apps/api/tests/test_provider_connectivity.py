@@ -238,7 +238,7 @@ def test_p6_false_flags_remain_false(tmp_path: Path):
     req = ProviderConnectivityRequest()
     resp = run_provider_connectivity_check(req, layout)
 
-    assert resp.p6_behavior_validated is False
+    assert resp.behavior_validated is False
     assert resp.p6_sealed is False
 
 

@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
                     confirm_include_secrets=args.confirm_include_secrets,
                 )
         except DataSafetyError as exc:
-            result = {"status": "blocked", "reason": str(exc), "p6_behavior_validated": False, "p6_sealed": False}
+            result = {"status": "blocked", "reason": str(exc), "behavior_validated": False, "p6_sealed": False}
     elif args.command == "load-sample":
         result = _load_sample_data(layout, force=args.force)
     else:
@@ -112,12 +112,13 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _load_sample_data(layout: Any, force: bool = False) -> dict[str, Any]:
-    """Copy sample data from alters/sample/ into alters/current/."""
+    """Copy sample data from alters/sample/ into alters/current/ and product dirs."""
     import shutil
 
     root = layout.project_root if hasattr(layout, "project_root") else Path(layout.data_dir)
     sample_dir = root / "alters" / "sample"
     current_dir = root / "alters" / "current"
+    product_dir = root / "alters" / "product"
 
     if not sample_dir.exists():
         return {"status": "error", "reason": f"Sample data not found: {sample_dir}"}
@@ -152,6 +153,18 @@ def _load_sample_data(layout: Any, force: bool = False) -> dict[str, Any]:
     if rt_src.exists() and (not rt_dst.exists() or force):
         shutil.copy2(rt_src, rt_dst)
         copied.append("reality_trace.yaml")
+
+    # Copy sample weekly notes
+    weekly_notes_src = sample_dir / "weekly_notes"
+    weekly_notes_dst = product_dir / "weekly_notes"
+    if weekly_notes_src.exists():
+        weekly_notes_dst.mkdir(parents=True, exist_ok=True)
+        for f in weekly_notes_src.glob("*.yaml"):
+            dst = weekly_notes_dst / f.name
+            if dst.exists() and not force:
+                continue
+            shutil.copy2(f, dst)
+            copied.append(f"weekly_notes/{f.name}")
 
     return {
         "status": "ok",

@@ -194,5 +194,5 @@ def test_provider_config_test_openai_dry_run(monkeypatch, tmp_path: Path):
     data = response.json()
     assert data["status"] == "misconfigured"
     assert data["network_call_made"] is False
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False

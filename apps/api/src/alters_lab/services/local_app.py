@@ -87,7 +87,7 @@ def build_local_app_status(layout: RuntimeLayout | None = None) -> dict[str, Any
         "api_routes_available": True,
         "provider_mode": config_status["provider_mode"],
         "secrets_redacted": True,
-        "p6_behavior_validated": False,
+        "behavior_validated": False,
         "p6_sealed": False,
         "active_yaml_write_allowed": resolved_layout.active_yaml_write_allowed,
         "rubric_write_allowed": resolved_layout.rubric_write_allowed,

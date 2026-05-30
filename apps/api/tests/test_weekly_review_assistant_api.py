@@ -45,7 +45,7 @@ def test_status_route():
     assert resp.status_code == 200
     data = resp.json()
     assert "provider_mode" in data
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
     assert data["suggestion_persistence_supported"] is False
 

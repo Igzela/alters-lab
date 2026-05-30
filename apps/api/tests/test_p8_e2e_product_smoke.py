@@ -58,25 +58,25 @@ class TestSmokeScriptDefaults:
 class TestSmokeReportContract:
     def test_report_has_p6_false_flags(self):
         report = {
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
             "runtime_data": {"synthetic_smoke_only": True},
         }
-        assert report["p6_behavior_validated"] is False
+        assert report["behavior_validated"] is False
         assert report["p6_sealed"] is False
         assert report["runtime_data"]["synthetic_smoke_only"] is True
 
     def test_report_assertions_catch_p6_true(self):
         report = {
-            "p6_behavior_validated": True,
+            "behavior_validated": True,
             "p6_sealed": False,
             "runtime_data": {"synthetic_smoke_only": True},
             "routes": {},
             "provider_config": {"test": {"network_call_made": False, "provider_ready": True}},
-            "provider_adapter": {"preview": {"network_call_made": False, "active_yaml_modified": False, "p6_behavior_validated": True, "p6_sealed": False}},
+            "provider_adapter": {"preview": {"network_call_made": False, "active_yaml_modified": False, "behavior_validated": True, "p6_sealed": False}},
             "provider_connectivity": {"check": {"network_call_made": False}},
-            "provider_dialogue_preview": {"generate": {"output_label": "unverified_provider_preview", "output_persisted": False, "prompt_persisted": False, "response_content_persisted": False, "p6_behavior_validated": True, "p6_sealed": False}},
-            "weekly_review_assistant": {"suggest": {"suggestion_label": "unverified_provider_suggestion", "suggestion_persisted": False, "weekly_review_completed": False, "action_alignment_created": False, "reality_score_created": False, "p6_behavior_validated": True, "p6_sealed": False}},
+            "provider_dialogue_preview": {"generate": {"output_label": "unverified_provider_preview", "output_persisted": False, "prompt_persisted": False, "response_content_persisted": False, "behavior_validated": True, "p6_sealed": False}},
+            "weekly_review_assistant": {"suggest": {"suggestion_label": "unverified_provider_suggestion", "suggestion_persisted": False, "weekly_review_completed": False, "action_alignment_created": False, "reality_score_created": False, "behavior_validated": True, "p6_sealed": False}},
             "weekly_review_flow": {"note_status": "ok", "weekly_status": "ok", "score_status": "ok"},
             "backup": {"secrets_included": False},
         }
@@ -112,12 +112,12 @@ class TestProviderSafetyInSmoke:
         preview = {
             "network_call_made": False,
             "active_yaml_modified": False,
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
         }
         assert preview["network_call_made"] is False
         assert preview["active_yaml_modified"] is False
-        assert preview["p6_behavior_validated"] is False
+        assert preview["behavior_validated"] is False
         assert preview["p6_sealed"] is False
 
     def test_dialogue_preview_safety_flags(self):
@@ -126,7 +126,7 @@ class TestProviderSafetyInSmoke:
             "output_persisted": False,
             "prompt_persisted": False,
             "response_content_persisted": False,
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
         }
         assert generate["output_label"] == "unverified_provider_preview"
@@ -139,7 +139,7 @@ class TestProviderSafetyInSmoke:
             "weekly_review_completed": False,
             "action_alignment_created": False,
             "reality_score_created": False,
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
         }
         assert suggest["suggestion_label"] == "unverified_provider_suggestion"
@@ -168,7 +168,7 @@ class TestProviderSafetyInSmoke:
             "prompt_persisted": False,
             "response_content_persisted": False,
             "network_call_made": False,
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
         }
         redacted = smoke._redact_sensitive_fields(data)
         assert redacted["output_persisted"] is False
@@ -176,7 +176,7 @@ class TestProviderSafetyInSmoke:
         assert redacted["prompt_persisted"] is False
         assert redacted["response_content_persisted"] is False
         assert redacted["network_call_made"] is False
-        assert redacted["p6_behavior_validated"] is False
+        assert redacted["behavior_validated"] is False
 
     def test_redact_sensitive_fields_nested(self):
         data = {

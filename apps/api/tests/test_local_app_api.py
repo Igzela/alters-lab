@@ -41,7 +41,7 @@ def test_local_app_status_returns_safe_flags(tmp_path, monkeypatch):
     assert data["api_routes_available"] is True
     assert data["provider_mode"] == "disabled"
     assert data["secrets_redacted"] is True
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
     assert data["active_yaml_write_allowed"] is False
     assert data["rubric_write_allowed"] is False

@@ -51,7 +51,7 @@ def test_build_local_app_status_safe_defaults(tmp_path):
     assert status["api_routes_available"] is True
     assert status["provider_mode"] == "disabled"
     assert status["secrets_redacted"] is True
-    assert status["p6_behavior_validated"] is False
+    assert status["behavior_validated"] is False
     assert status["p6_sealed"] is False
     assert status["active_yaml_write_allowed"] is False
     assert status["rubric_write_allowed"] is False

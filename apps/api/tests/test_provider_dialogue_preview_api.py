@@ -141,5 +141,5 @@ def test_dialogue_preview_generate_no_yaml_writes(monkeypatch, tmp_path: Path):
     assert data["rubric_modified"] is False
     assert data["reality_score_created"] is False
     assert data["action_alignment_created"] is False
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False

@@ -86,7 +86,7 @@ def test_health_returns_safety_flags():
 
 def test_status_returns_p6_false_flags(tmp_path: Path):
     resp = build_weekly_review_assistant_status(_layout(tmp_path))
-    assert resp.p6_behavior_validated is False
+    assert resp.behavior_validated is False
     assert resp.p6_sealed is False
     assert resp.suggestion_persistence_supported is False
 
@@ -262,7 +262,7 @@ def test_no_active_yaml_rubric_writes(tmp_path: Path):
 def test_p6_flags_remain_false(tmp_path: Path):
     layout = _configured_layout(tmp_path)
     resp = run_weekly_review_assistant(_req(), layout)
-    assert resp.p6_behavior_validated is False
+    assert resp.behavior_validated is False
     assert resp.p6_sealed is False
 
 

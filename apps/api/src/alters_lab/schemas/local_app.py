@@ -26,7 +26,7 @@ class LocalAppStatusResponse(BaseModel):
     api_routes_available: bool
     provider_mode: str
     secrets_redacted: bool
-    p6_behavior_validated: bool
+    behavior_validated: bool
     p6_sealed: bool
     active_yaml_write_allowed: bool
     rubric_write_allowed: bool

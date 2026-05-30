@@ -302,7 +302,7 @@ def _scan_schema_safety(repo_root: Path) -> dict[str, Any]:
         }
 
     critical_fields = {
-        "p6_behavior_validated",
+        "behavior_validated",
         "p6_sealed",
         "active_yaml_modified",
         "rubric_modified",
@@ -369,11 +369,11 @@ def _scan_evidence_contract(repo_root: Path) -> dict[str, Any]:
         if compiled.search(content):
             issues.append(f"provider output pattern found: {pattern_name}")
 
-    # Check p6_behavior_validated
+    # Check behavior_validated
     try:
         data = json.loads(content)
-        if data.get("p6_behavior_validated") is not False:
-            issues.append("p6_behavior_validated is not False")
+        if data.get("behavior_validated") is not False:
+            issues.append("behavior_validated is not False")
         if data.get("p6_sealed") is not False:
             issues.append("p6_sealed is not False")
     except json.JSONDecodeError:
@@ -471,7 +471,7 @@ def scan_repo(repo_root: Path) -> dict[str, Any]:
         "status": "PASS" if all_pass else "FAIL",
         "sections": sections,
         "failed_sections": failed_sections,
-        "p6_behavior_validated": False,
+        "behavior_validated": False,
         "p6_sealed": False,
     }
 
@@ -480,7 +480,7 @@ def assert_audit_passes(report: dict[str, Any]) -> None:
     assert report["status"] == "PASS", (
         f"Audit failed sections: {report.get('failed_sections')}"
     )
-    assert report["p6_behavior_validated"] is False
+    assert report["behavior_validated"] is False
     assert report["p6_sealed"] is False
 
 

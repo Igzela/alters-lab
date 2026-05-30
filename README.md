@@ -9,13 +9,20 @@ A personal future-branch simulation and calibration system. Explore potential li
 
 ### 1. Install
 
-Download and install the Debian package:
+**Docker** (recommended):
+
+```bash
+docker compose up -d
+# Open http://localhost:18790
+```
+
+**Debian package**:
 
 ```bash
 sudo apt install ./alters-lab_0.1.0_amd64.deb
 ```
 
-Or build from source:
+**Build from source**:
 
 ```bash
 python tools/build_deb.py

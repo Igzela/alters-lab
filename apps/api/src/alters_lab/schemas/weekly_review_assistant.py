@@ -59,7 +59,7 @@ class WeeklyReviewAssistantResponse(BaseModel):
     reality_score_created: Literal[False] = False
     active_yaml_modified: Literal[False] = False
     rubric_modified: Literal[False] = False
-    p6_behavior_validated: Literal[False] = False
+    behavior_validated: Literal[False] = False
     p6_sealed: Literal[False] = False
     secrets_redacted: Literal[True] = True
     prompt_persisted: Literal[False] = False
@@ -115,6 +115,6 @@ class WeeklyReviewAssistantStatusResponse(BaseModel):
     provider_output_can_write_active_yaml: Literal[False] = False
     provider_output_can_generate_reality_score: Literal[False] = False
     provider_output_can_generate_action_alignment: Literal[False] = False
-    p6_behavior_validated: Literal[False] = False
+    behavior_validated: Literal[False] = False
     p6_sealed: Literal[False] = False
     secrets_redacted: Literal[True] = True

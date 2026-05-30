@@ -146,7 +146,7 @@ def build_status(layout: RuntimeLayout, host: str = DEFAULT_HOST, port: int = DE
         "log_file": str(paths.log_file),
         "frontend_available": app_status["frontend_available"],
         "provider_mode": app_status["provider_mode"],
-        "p6_behavior_validated": False,
+        "behavior_validated": False,
         "p6_sealed": False,
     }
 
@@ -215,7 +215,7 @@ def build_doctor_report(layout: RuntimeLayout, host: str = DEFAULT_HOST, port: i
     # Safety flags
     checks.append(_check("active_yaml_write_allowed", "PASS", "false"))
     checks.append(_check("rubric_write_allowed", "PASS", "false"))
-    checks.append(_check("p6_behavior_validated", "PASS", "false"))
+    checks.append(_check("behavior_validated", "PASS", "false"))
     checks.append(_check("p6_sealed", "PASS", "false"))
 
     overall = "PASS"

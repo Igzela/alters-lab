@@ -314,7 +314,7 @@ def run_smoke(
                 "home_product_dir": str(product_dir),
                 "record_paths": record_paths,
             },
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
             "live_provider_smoke_supported": False,
             "live_provider_smoke_executed": False,
@@ -410,7 +410,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     # Provider adapter
     assert report["provider_adapter"]["preview"]["network_call_made"] is False
     assert report["provider_adapter"]["preview"]["active_yaml_modified"] is False
-    assert report["provider_adapter"]["preview"]["p6_behavior_validated"] is False
+    assert report["provider_adapter"]["preview"]["behavior_validated"] is False
     assert report["provider_adapter"]["preview"]["p6_sealed"] is False
 
     # Provider connectivity
@@ -421,7 +421,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert report["provider_dialogue_preview"]["generate"]["output_persisted"] is False
     assert report["provider_dialogue_preview"]["generate"]["prompt_persisted"] is False
     assert report["provider_dialogue_preview"]["generate"]["response_content_persisted"] is False
-    assert report["provider_dialogue_preview"]["generate"]["p6_behavior_validated"] is False
+    assert report["provider_dialogue_preview"]["generate"]["behavior_validated"] is False
     assert report["provider_dialogue_preview"]["generate"]["p6_sealed"] is False
 
     # Weekly review assistant
@@ -430,7 +430,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert report["weekly_review_assistant"]["suggest"]["weekly_review_completed"] is False
     assert report["weekly_review_assistant"]["suggest"]["action_alignment_created"] is False
     assert report["weekly_review_assistant"]["suggest"]["reality_score_created"] is False
-    assert report["weekly_review_assistant"]["suggest"]["p6_behavior_validated"] is False
+    assert report["weekly_review_assistant"]["suggest"]["behavior_validated"] is False
     assert report["weekly_review_assistant"]["suggest"]["p6_sealed"] is False
 
     # Weekly review flow
@@ -448,7 +448,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert report["runtime_data"]["record_paths"].get("weekly_reviews")
 
     # P6 safety
-    assert report["p6_behavior_validated"] is False
+    assert report["behavior_validated"] is False
     assert report["p6_sealed"] is False
 
 

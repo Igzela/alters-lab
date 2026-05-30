@@ -227,7 +227,7 @@ def run_smoke(deb_path: Path, keep_temp: bool = False) -> dict[str, Any]:
             },
             "backup": _json_stdout(backup),
             "cleanup": {"server_stopped": stopped},
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
         }
         _assert_report_passes(report)
@@ -276,7 +276,7 @@ def _assert_report_passes(report: dict[str, Any]) -> None:
     assert report["runtime_data"]["record_paths"]["weekly_reviews"]
     assert report["runtime_data"]["record_paths"]["calibration_records"]
     assert report["backup"]["secrets_included"] is False
-    assert report["p6_behavior_validated"] is False
+    assert report["behavior_validated"] is False
     assert report["p6_sealed"] is False
 
 

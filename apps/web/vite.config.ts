@@ -28,4 +28,10 @@ export default defineConfig({
       '/phase5-closeout': 'http://localhost:8000',
     },
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    css: true,
+  },
 })

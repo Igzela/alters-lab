@@ -32,7 +32,7 @@ def test_cli_doctor_json(tmp_path, monkeypatch, capsys):
     data = json.loads(capsys.readouterr().out)
 
     assert data["status"] in ("PASS", "WARN")
-    assert data["launcher_status"]["p6_behavior_validated"] is False
+    assert data["launcher_status"]["behavior_validated"] is False
     assert data["launcher_status"]["p6_sealed"] is False
 
 
@@ -80,7 +80,7 @@ def test_cli_backup_dry_run_json_excludes_secrets(tmp_path, monkeypatch, capsys)
     assert data["dry_run"] is True
     assert data["secrets_included"] is False
     assert "secrets" in data["excluded_sections"]
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
 
 
@@ -92,7 +92,7 @@ def test_cli_backup_include_secrets_without_confirmation_blocks(tmp_path, monkey
 
     assert data["status"] == "blocked"
     assert "include_secrets requires confirmation" in data["reason"]
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
 
 
@@ -139,7 +139,7 @@ def test_cli_doctor_json_reports_p6_flags_false(tmp_path, monkeypatch, capsys):
     assert cli.main(["doctor", "--mode", "dev", "--json"]) == 0
     data = json.loads(capsys.readouterr().out)
 
-    assert data["launcher_status"]["p6_behavior_validated"] is False
+    assert data["launcher_status"]["behavior_validated"] is False
     assert data["launcher_status"]["p6_sealed"] is False
 
 

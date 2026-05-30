@@ -60,7 +60,7 @@ def test_adapter_status_exposes_safety_flags(monkeypatch, tmp_path: Path):
     assert data["provider_output_can_write_active_yaml"] is False
     assert data["provider_output_can_generate_reality_score"] is False
     assert data["provider_output_can_generate_action_alignment"] is False
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
 
 
@@ -152,7 +152,7 @@ def test_preview_no_active_yaml_rubric_writes(monkeypatch, tmp_path: Path):
     assert data["rubric_modified"] is False
     assert data["reality_score_created"] is False
     assert data["action_alignment_created"] is False
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
 
 

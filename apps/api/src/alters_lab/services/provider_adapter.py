@@ -30,7 +30,7 @@ ACTIVE_YAML_MODIFIED = False
 RUBRIC_MODIFIED = False
 REALITY_SCORE_CREATED = False
 ACTION_ALIGNMENT_CREATED = False
-P6_BEHAVIOR_VALIDATED = False
+BEHAVIOR_VALIDATED = False
 P6_SEALED = False
 REAL_NETWORK_CALLS_ENABLED = False
 
@@ -51,7 +51,7 @@ def build_provider_adapter_status(
         provider_output_can_write_active_yaml=False,
         provider_output_can_generate_reality_score=False,
         provider_output_can_generate_action_alignment=False,
-        p6_behavior_validated=P6_BEHAVIOR_VALIDATED,
+        behavior_validated=BEHAVIOR_VALIDATED,
         p6_sealed=P6_SEALED,
     )
 

@@ -77,7 +77,7 @@ def test_report_assertions_require_p6_to_remain_unsealed():
         "backup": {
             "secrets_included": False,
         },
-        "p6_behavior_validated": False,
+        "behavior_validated": False,
         "p6_sealed": False,
     }
 

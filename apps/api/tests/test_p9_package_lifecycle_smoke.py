@@ -59,7 +59,7 @@ def _make_valid_report() -> dict:
                 "runtime_layout_status": {"status": "ok"},
                 "provider_config_status": {"status": "ok", "provider_mode": "disabled"},
                 "provider_mode": "disabled",
-                "p6_behavior_validated": False,
+                "behavior_validated": False,
                 "p6_sealed": False,
                 "real_provider_call_made": False,
             },
@@ -105,7 +105,7 @@ def _make_valid_report() -> dict:
             },
         },
         "safety": {
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
             "no_provider_calls": True,
             "host_mutation_detected": False,
@@ -197,13 +197,13 @@ class TestRedaction:
 
     def test_redact_sensitive_preserves_safety_flags(self):
         data = {
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
             "no_provider_calls": True,
             "api_key": "secret",
         }
         redacted = smoke._redact_sensitive_fields(data)
-        assert redacted["p6_behavior_validated"] is False
+        assert redacted["behavior_validated"] is False
         assert redacted["p6_sealed"] is False
         assert redacted["no_provider_calls"] is True
         assert redacted["api_key"] == "[redacted-secret]"
@@ -254,7 +254,7 @@ class TestReportContract:
 
     def test_assert_fails_on_p6_true(self):
         report = _make_valid_report()
-        report["safety"]["p6_behavior_validated"] = True
+        report["safety"]["behavior_validated"] = True
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
@@ -272,7 +272,7 @@ class TestReportContract:
 
     def test_assert_fails_on_app_smoke_p6_true(self):
         report = _make_valid_report()
-        report["install"]["post_install_app_smoke"]["p6_behavior_validated"] = True
+        report["install"]["post_install_app_smoke"]["behavior_validated"] = True
         with pytest.raises(AssertionError):
             smoke._assert_report_passes(report)
 
@@ -333,13 +333,13 @@ class TestSafetyFlags:
 
     def test_safety_report_fields(self):
         safety = {
-            "p6_behavior_validated": False,
+            "behavior_validated": False,
             "p6_sealed": False,
             "no_provider_calls": True,
             "host_mutation_detected": False,
             "method_is_extract_only": False,
         }
-        assert safety["p6_behavior_validated"] is False
+        assert safety["behavior_validated"] is False
         assert safety["p6_sealed"] is False
         assert safety["no_provider_calls"] is True
         assert safety["host_mutation_detected"] is False

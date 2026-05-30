@@ -211,7 +211,7 @@ def test_live_check_not_implemented_without_network(tmp_path: Path):
 def test_p6_flags_remain_false(tmp_path: Path):
     status = get_provider_status(_layout(tmp_path))
 
-    assert status.p6_behavior_validated is False
+    assert status.behavior_validated is False
     assert status.p6_sealed is False
     assert status.provider_output_can_write_active_yaml is False
     assert status.provider_output_can_generate_reality_score is False

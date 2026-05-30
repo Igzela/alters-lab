@@ -164,7 +164,7 @@ def test_p6_false_flags_remain_false(tmp_path: Path):
     request = ProviderAdapterRequest(mode="mock", prompt="test")
     response = run_provider_adapter(request, _layout(tmp_path))
 
-    assert response.p6_behavior_validated is False
+    assert response.behavior_validated is False
     assert response.p6_sealed is False
 
 
@@ -182,7 +182,7 @@ def test_status_exposes_safety_flags(tmp_path: Path):
     assert status.provider_output_can_write_active_yaml is False
     assert status.provider_output_can_generate_reality_score is False
     assert status.provider_output_can_generate_action_alignment is False
-    assert status.p6_behavior_validated is False
+    assert status.behavior_validated is False
     assert status.p6_sealed is False
 
 
@@ -268,12 +268,12 @@ def test_response_rejects_action_alignment_created_true():
         )
 
 
-def test_response_rejects_p6_behavior_validated_true():
+def test_response_rejects_behavior_validated_true():
     with pytest.raises(Exception):
         ProviderAdapterResponse(
             status="ok", provider_ready=True, provider_mode="mock",
             dry_run=True, live_check=False, network_call_made=False,
-            p6_behavior_validated=True, message="test",
+            behavior_validated=True, message="test",
         )
 
 

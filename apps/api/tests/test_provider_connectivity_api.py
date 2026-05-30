@@ -53,7 +53,7 @@ def test_connectivity_status_exposes_safety_flags(monkeypatch, tmp_path: Path):
     assert data["dry_run_default"] is True
     assert data["live_network_requires_confirmation"] is True
     assert data["provider_output_persists_by_default"] is False
-    assert data["p6_behavior_validated"] is False
+    assert data["behavior_validated"] is False
     assert data["p6_sealed"] is False
 
 

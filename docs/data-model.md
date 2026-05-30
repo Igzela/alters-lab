@@ -147,6 +147,81 @@ Weekly review scoring: direction alignment, execution consistency, avoidance lev
 
 Complete weekly review session with review note, dialogue summary, primary correction, supporting actions.
 
+### WeeklyNoteExtractedRecord (`product/weekly_notes/`)
+
+Ingested and parsed weekly note from Obsidian. Stores the raw note and extracted structured fields.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `record_id` | str | Unique identifier |
+| `source_type` | Literal["obsidian_weekly_note"] | Always this value |
+| `raw_note_preserved` | Literal[True] | Raw note is preserved |
+| `derived_from_raw_note` | Literal[True] | Record is derived from raw note |
+| `source_path` | str \| null | Original file path |
+| `raw_note` | str | Original raw note text |
+| `session_type` | SessionType | One of: `personal`, `project`, `learning`, `relationship` |
+| `observable_facts` | list[str] | 5-7 extracted facts |
+| `subjective_state` | str | How the user feels |
+| `primary_problem` | str | Main issue identified |
+| `friction_or_avoidance_point` | str | What's being avoided |
+| `desired_correction` | str | What the user wants to change |
+| `extraction_warnings` | list[str] | Warnings from extraction |
+| `edit_history` | list[WeeklyNoteEditDiff] | History of edits |
+| `created_at` | str | Creation timestamp |
+| `updated_at` | str \| null | Last update timestamp |
+
+### ProviderConfig (`product/config/config.yaml`)
+
+Provider configuration for LLM integration. Controls mode, endpoint, model, and safety flags.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mode` | ProviderMode | `disabled`, `mock`, or `openai-compatible-http` |
+| `base_url` | str \| null | API endpoint URL |
+| `model` | str \| null | Model name |
+| `timeout_seconds` | int | Request timeout (1-600) |
+| `secret_storage` | SecretStorage | `keyring` or `secrets_yaml_fallback` |
+| `key_name` | str | Keyring key name |
+
+**ProviderSafetyFlags** (returned in status responses):
+| Field | Type | Description |
+|-------|------|-------------|
+| `provider_output_persists_by_default` | Literal[False] | Output persistence disabled |
+| `provider_output_can_write_active_yaml` | Literal[False] | Cannot modify active YAML |
+| `provider_output_can_generate_reality_score` | Literal[False] | Cannot generate scores |
+| `behavior_validated` | Literal[False] | Behavior not yet validated |
+| `p6_sealed` | Literal[False] | P6 not yet sealed |
+
+### PatternReviewRecord (`product/pattern_reviews/`)
+
+Four-week pattern review analyzing behavioral patterns across multiple weeks.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `review_id` | str | Unique identifier |
+| `status` | Literal["insufficient_data", "no_pattern", "pattern_triggered"] | Review outcome |
+| `weeks_evaluated` | int | Number of weeks analyzed |
+| `triggered_patterns` | list[TriggeredPattern] | Patterns that were triggered |
+| `created_at` | str | Creation timestamp |
+| `active_yaml_modified` | bool | Whether active YAML was modified |
+| `provider_called` | bool | Whether provider was called |
+
+**TriggeredPattern:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `pattern` | PatternName | Pattern identifier |
+| `occurrences` | int | Number of occurrences |
+| `confidence` | float | Confidence score (0-1) |
+| `strategy_constraint` | str | Constraint for this pattern |
+
+**PatternName** values:
+- `repeated_noisy_progress`
+- `repeated_avoidance_disguised_as_work`
+- `repeated_sleep_breakdown`
+- `repeated_over_scope`
+- `repeated_action_mismatch`
+- `repeated_primary_correction_failure`
+
 ## Key Invariants
 
 - **extra="forbid"**: Most Pydantic models reject unknown fields. YAML files on disk may have extra fields, but API validation is strict.

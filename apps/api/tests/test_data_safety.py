@@ -50,7 +50,7 @@ def test_manifest_redacts_secret_path(tmp_path: Path):
 
     assert manifest["paths"]["secrets_path"]["redacted"] is True
     assert manifest["secrets_redacted"] is True
-    assert manifest["p6_behavior_validated"] is False
+    assert manifest["behavior_validated"] is False
     assert manifest["p6_sealed"] is False
 
 
@@ -118,7 +118,7 @@ def test_backup_archive_excludes_secrets_by_default(tmp_path: Path):
     assert "data/product/weekly_reviews/review.yaml" in names
     assert "config/config.yaml" in names
     assert "config/secrets.yaml" not in names
-    assert result["p6_behavior_validated"] is False
+    assert result["behavior_validated"] is False
     assert result["p6_sealed"] is False
 
 

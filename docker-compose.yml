@@ -1,0 +1,14 @@
+services:
+  alters-lab:
+    build: .
+    ports:
+      - "18790:18790"
+    volumes:
+      - alters-data:/data
+    environment:
+      - ALTERS_LAB_MODE=packaged
+      - ALTERS_LAB_APP_ROOT=/opt/alters-lab
+    restart: unless-stopped
+
+volumes:
+  alters-data:

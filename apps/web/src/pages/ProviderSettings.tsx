@@ -162,7 +162,6 @@ export default function ProviderSettings() {
           <li>{t('provider.liveMode')}</li>
           <li>{t('provider.outputAdvisory')}</li>
           <li>{t('provider.keyNeverDisplayed')}</li>
-          <li>See <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SETUP.md" className="underline" style={{ color: '#2563eb' }}>{t('provider.providerSetup')}</a> and <a href="https://github.com/Igzela/alters-lab/blob/main/docs/user/PROVIDER_SAFETY.md" className="underline" style={{ color: '#2563eb' }}>{t('provider.providerSafety')}</a> for details</li>
         </ul>
       </Banner>
 

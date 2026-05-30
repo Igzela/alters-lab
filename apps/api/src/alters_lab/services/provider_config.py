@@ -38,7 +38,7 @@ SAFETY_FLAGS = {
     "provider_output_persists_by_default": False,
     "provider_output_can_write_active_yaml": False,
     "provider_output_can_generate_reality_score": False,
-    "p6_behavior_validated": False,
+    "behavior_validated": False,
     "p6_sealed": False,
 }
 

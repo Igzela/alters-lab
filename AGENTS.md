@@ -18,8 +18,9 @@ Every Codex, Claude Code, or other coding-agent session must start by reading:
 - P0-P14 are complete. Project is open-source (MIT LICENSE).
 - P6 remains `CODE_COMPLETE / NOT_VALIDATED / NOT_SEALED`.
 - Product is usable as a local personal tool. Sample data ships at `alters/sample/` (load via `alters-lab load-sample`).
+- Docker support: `docker compose up -d` starts the app at http://localhost:18790.
 - Technical hardening done: structured logging, CORS middleware, rate limiting (600 req/min), dependency pinning.
-- 1269 backend tests passing, frontend build clean.
+- 1267 backend tests passing, frontend build clean.
 
 ## Hard Boundaries
 

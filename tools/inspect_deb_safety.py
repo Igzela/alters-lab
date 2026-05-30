@@ -53,7 +53,7 @@ def inspect_deb(deb_path: Path, repo_root: Path | None = None) -> dict:
         "required_paths": present,
         "forbidden_matches": forbidden,
         "maintainer_script_findings": script_findings,
-        "p6_behavior_validated": False,
+        "behavior_validated": False,
         "p6_sealed": False,
     }
 

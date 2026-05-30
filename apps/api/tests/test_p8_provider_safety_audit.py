@@ -184,7 +184,7 @@ class TestEvidenceContractSection:
         harness = tmp_path / "docs" / "harness"
         harness.mkdir(parents=True)
         (harness / "P8_M5_E2E_PRODUCT_VALIDATION_EVIDENCE.json").write_text(
-            '{"p6_behavior_validated": false, "p6_sealed": false, "msg": "mock adapter preview"}\n'
+            '{"behavior_validated": false, "p6_sealed": false, "msg": "mock adapter preview"}\n'
         )
         report = audit.scan_repo(tmp_path)
         ec = _get_section(report, "evidence_contract")
@@ -194,7 +194,7 @@ class TestEvidenceContractSection:
         harness = tmp_path / "docs" / "harness"
         harness.mkdir(parents=True)
         (harness / "P8_M5_E2E_PRODUCT_VALIDATION_EVIDENCE.json").write_text(
-            '{"p6_behavior_validated": true, "p6_sealed": false}\n'
+            '{"behavior_validated": true, "p6_sealed": false}\n'
         )
         report = audit.scan_repo(tmp_path)
         ec = _get_section(report, "evidence_contract")
@@ -217,16 +217,16 @@ class TestMutationBoundarySection:
 
 class TestAuditAssertion:
     def test_assert_passes_on_clean(self):
-        report = {"status": "PASS", "p6_behavior_validated": False, "p6_sealed": False}
+        report = {"status": "PASS", "behavior_validated": False, "p6_sealed": False}
         audit.assert_audit_passes(report)
 
     def test_assert_fails_on_status_fail(self):
-        report = {"status": "FAIL", "failed_sections": ["grep_scan"], "p6_behavior_validated": False, "p6_sealed": False}
+        report = {"status": "FAIL", "failed_sections": ["grep_scan"], "behavior_validated": False, "p6_sealed": False}
         with pytest.raises(AssertionError):
             audit.assert_audit_passes(report)
 
     def test_assert_fails_on_p6_true(self):
-        report = {"status": "PASS", "p6_behavior_validated": True, "p6_sealed": False}
+        report = {"status": "PASS", "behavior_validated": True, "p6_sealed": False}
         with pytest.raises(AssertionError):
             audit.assert_audit_passes(report)
 

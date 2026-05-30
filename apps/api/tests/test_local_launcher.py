@@ -30,7 +30,7 @@ def test_status_not_running_without_pid_file(tmp_path):
 
     assert status["running"] is False
     assert status["status"] == "not_running"
-    assert status["p6_behavior_validated"] is False
+    assert status["behavior_validated"] is False
     assert status["p6_sealed"] is False
 
 
@@ -65,7 +65,7 @@ def test_doctor_missing_frontend_is_warn(tmp_path, monkeypatch):
     assert report["status"] == "WARN"
     frontend = [check for check in report["checks"] if check["name"] == "frontend_dist"][0]
     assert frontend["status"] == "WARN"
-    assert report["launcher_status"]["p6_behavior_validated"] is False
+    assert report["launcher_status"]["behavior_validated"] is False
     assert report["launcher_status"]["p6_sealed"] is False
 
 
@@ -205,7 +205,7 @@ def test_doctor_checks_safety_flags(tmp_path, monkeypatch):
 
     report = build_doctor_report(layout)
 
-    for name in ("active_yaml_write_allowed", "rubric_write_allowed", "p6_behavior_validated", "p6_sealed"):
+    for name in ("active_yaml_write_allowed", "rubric_write_allowed", "behavior_validated", "p6_sealed"):
         check = _find_check(report, name)
         assert check["status"] == "PASS"
         assert check["message"] == "false"
