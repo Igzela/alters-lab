@@ -8,6 +8,20 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 - P6 状态：CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED
 - 下一步：收集 fresh post-P14 证据（4 weekly reviews + 4 calibration records + 1 pattern review，跨越 21+ 天）
 - 项目已开源（MIT LICENSE），有 sample data 和 load-sample 命令
+- P6 证据收集需要时间积累（21+ 天），不是纯编码任务
+
+## 下一个 Session 待办
+
+技术端（按优先级）：
+1. Docker 支持 — Dockerfile + docker-compose.yml
+2. GettingStarted 加 load-sample 步骤 — 新用户不知道怎么加载 sample data
+3. ProviderSettings 去掉硬编码 GitHub URL — 改成相对链接或去掉
+4. P6 前缀清理 — p6Progress → progress, p6_behavior_validated → behavior_validated
+5. data-model.md 补全 — 43 个 schema 文件只写了 7 个，至少补 WeeklyNote、ProviderConfig、PatternReview
+6. 前端测试 — vitest + 覆盖 useApi hooks、ErrorBoundary、核心页面组件
+
+产品端：
+7. sample weekly note 数据 — 用户加载 sample data 后 Weekly Review 页面是空的
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
