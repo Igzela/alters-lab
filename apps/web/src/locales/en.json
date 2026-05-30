@@ -25,6 +25,7 @@
     "calibration": "Calibration",
     "analysis": "Analysis",
     "system": "System",
+    "dashboard": "Dashboard",
     "status": "Status",
     "gettingStarted": "Getting Started",
     "weeklyReview": "Weekly Review",
@@ -408,5 +409,27 @@
   },
   "loading": {
     "retry": "Retry"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "weeklyReviews": "Weekly Reviews",
+    "alignmentScores": "Alignment Scores",
+    "patternsDetected": "Patterns Detected",
+    "scoreTrend": "Alignment Score Trend",
+    "weeklyActivity": "Weekly Activity",
+    "recentPatterns": "Recent Pattern Triggers",
+    "noData": "No data yet. Complete a weekly review to see your dashboard.",
+    "noScores": "No alignment scores yet.",
+    "noPatterns": "No pattern reviews yet.",
+    "sessionsThisWeek": "sessions this week",
+    "avgScore": "Avg Score",
+    "trend": "Trend"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "navigation": "Navigation",
+    "pressGThen": "Press G then:",
+    "showHelp": "Show this help",
+    "other": "Other"
   }
 }

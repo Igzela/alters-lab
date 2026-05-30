@@ -86,7 +86,7 @@ export default function DataManagement() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('data.title')}</h2>
-      <p className="text-sm" style={{ color: '#78716c' }}>{t('data.description')}</p>
+      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('data.description')}</p>
 
       {error && <ErrorDisplay message={(error as Error).message} onRetry={() => manifestQuery.refetch()} />}
       {status && <Banner variant="success">{status}</Banner>}
@@ -107,7 +107,7 @@ export default function DataManagement() {
               <Card key={area}>
                 <div className="flex justify-between items-center mb-1.5">
                   <strong className="text-sm">{area}</strong>
-                  <span className="text-sm font-mono" style={{ color: '#78716c' }}>{manifest.record_counts[area] ?? 0}</span>
+                  <span className="text-sm font-mono" style={{ color: 'var(--color-text-secondary)' }}>{manifest.record_counts[area] ?? 0}</span>
                 </div>
                 <Button variant="ghost" onClick={() => exportArea(area)} disabled={exportMutation.isPending}>
                   {exportMutation.isPending ? t('data.exporting') : t('data.export')}
@@ -117,10 +117,10 @@ export default function DataManagement() {
           </div>
 
           <Card>
-            <div className="text-xs space-y-1" style={{ color: '#a8a29e' }}>
-              <div>{t('data.longTermSave')} <strong style={{ color: '#78716c' }}>{manifest.default_long_term_save ? t('provider.yes') : t('provider.no')}</strong></div>
-              <div>{t('data.exportSupported')} <strong style={{ color: '#78716c' }}>{manifest.export_supported ? t('provider.yes') : t('provider.no')}</strong></div>
-              <div>{t('data.archiveSupported')} <strong style={{ color: '#78716c' }}>{manifest.archive_supported ? t('provider.yes') : t('provider.no')}</strong></div>
+            <div className="text-xs space-y-1" style={{ color: 'var(--color-text-muted)' }}>
+              <div>{t('data.longTermSave')} <strong style={{ color: 'var(--color-text-secondary)' }}>{manifest.default_long_term_save ? t('provider.yes') : t('provider.no')}</strong></div>
+              <div>{t('data.exportSupported')} <strong style={{ color: 'var(--color-text-secondary)' }}>{manifest.export_supported ? t('provider.yes') : t('provider.no')}</strong></div>
+              <div>{t('data.archiveSupported')} <strong style={{ color: 'var(--color-text-secondary)' }}>{manifest.archive_supported ? t('provider.yes') : t('provider.no')}</strong></div>
             </div>
           </Card>
 
@@ -139,7 +139,7 @@ export default function DataManagement() {
         </div>
         {showDeletePanel && (
           <div>
-            <p className="text-xs mb-3" style={{ color: '#a8a29e' }}>
+            <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
               {t('data.deleteWarning')}
             </p>
             <div className="grid grid-cols-2 gap-2 mb-2">

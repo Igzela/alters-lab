@@ -79,9 +79,35 @@
   --radius-input: 8px;
 }
 
+/* Dark mode overrides */
+.dark {
+  --color-bg: #1a1a1a;
+  --color-surface: #242424;
+  --color-surface-raised: #2a2a2a;
+  --color-border: #3a3a3a;
+  --color-border-subtle: #2e2e2e;
+
+  --color-text: #e8e6e1;
+  --color-text-secondary: #a8a29e;
+  --color-text-muted: #78716c;
+
+  --color-accent: #d97706;
+  --color-accent-hover: #b45309;
+  --color-accent-light: #422006;
+
+  --color-error: #ef4444;
+  --color-error-light: #450a0a;
+  --color-warning: #f59e0b;
+  --color-warning-light: #451a03;
+  --color-success: #22c55e;
+  --color-success-light: #052e16;
+  --color-info: #3b82f6;
+  --color-info-light: #172554;
+}
+
 html {
-  background-color: #faf9f7;
-  color: #1c1917;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 body {
@@ -114,7 +140,7 @@ body {
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #f0eee9 25%, #e8e6e1 50%, #f0eee9 75%);
+  background: linear-gradient(90deg, var(--color-border-subtle) 25%, var(--color-border) 50%, var(--color-border-subtle) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -153,7 +179,7 @@ input[type="range"] {
   appearance: none;
   height: 6px;
   border-radius: 3px;
-  background: #e8e6e1;
+  background: var(--color-border);
   outline: none;
 }
 
@@ -163,9 +189,9 @@ input[type="range"]::-webkit-slider-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #b45309;
+  background: var(--color-accent);
   cursor: pointer;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--color-surface);
   box-shadow: 0 1px 3px rgba(28, 25, 23, 0.15);
 }
 
@@ -173,14 +199,14 @@ input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #b45309;
+  background: var(--color-accent);
   cursor: pointer;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--color-surface);
   box-shadow: 0 1px 3px rgba(28, 25, 23, 0.15);
 }
 
 input[type="range"]:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 2px #b45309, 0 0 0 4px #fef3c7;
+  box-shadow: 0 0 0 2px var(--color-accent), 0 0 0 4px var(--color-accent-light);
 }
 
 /* Dark color scheme for native selects (not needed in light mode, but keep for sidebar) */

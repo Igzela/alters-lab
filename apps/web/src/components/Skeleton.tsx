@@ -29,14 +29,14 @@ export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
     <div
       className={`p-4 rounded-xl skeleton-shimmer ${className}`}
-      style={{ backgroundColor: '#ffffff', border: '1px solid #e8e6e1' }}
+      style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
       role="status"
       aria-label={t('common.loading')}
     >
       <div className="space-y-2">
-        <div style={{ height: '14px', width: '40%', backgroundColor: '#e8e6e1', borderRadius: '6px' }} />
-        <div style={{ height: '12px', width: '80%', backgroundColor: '#e8e6e1', borderRadius: '6px' }} />
-        <div style={{ height: '12px', width: '60%', backgroundColor: '#e8e6e1', borderRadius: '6px' }} />
+        <div style={{ height: '14px', width: '40%', backgroundColor: 'var(--color-border)', borderRadius: '6px' }} />
+        <div style={{ height: '12px', width: '80%', backgroundColor: 'var(--color-border)', borderRadius: '6px' }} />
+        <div style={{ height: '12px', width: '60%', backgroundColor: 'var(--color-border)', borderRadius: '6px' }} />
       </div>
       <span className="sr-only">{t('common.loading')}</span>
     </div>

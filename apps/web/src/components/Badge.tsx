@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react'
 
 const variantStyles: Record<string, { bg: string; color: string }> = {
-  success: { bg: '#f0fdf4', color: '#16a34a' },
-  warning: { bg: '#fffbeb', color: '#d97706' },
-  error: { bg: '#fef2f2', color: '#dc2626' },
-  info: { bg: '#eff6ff', color: '#2563eb' },
-  amber: { bg: '#fef3c7', color: '#b45309' },
-  muted: { bg: '#f5f4f0', color: '#78716c' },
+  success: { bg: 'var(--color-success-light)', color: 'var(--color-success)' },
+  warning: { bg: 'var(--color-warning-light)', color: 'var(--color-warning)' },
+  error: { bg: 'var(--color-error-light)', color: 'var(--color-error)' },
+  info: { bg: 'var(--color-info-light)', color: 'var(--color-info)' },
+  amber: { bg: 'var(--color-accent-light)', color: 'var(--color-accent)' },
+  muted: { bg: 'var(--color-surface-raised)', color: 'var(--color-text-secondary)' },
 }
 
 interface BadgeProps {

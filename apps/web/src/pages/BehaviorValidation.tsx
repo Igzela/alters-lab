@@ -46,7 +46,7 @@ const OUTCOME_BADGE: Record<string, 'success' | 'warning' | 'error' | 'muted'> =
 
 function CheckItem({ label, checked, yesLabel, noLabel }: { label: string; checked: boolean; yesLabel: string; noLabel: string }) {
   return (
-    <div className="text-xs p-2 rounded-lg" style={{ backgroundColor: '#faf9f7', border: '1px solid #e8e6e1' }}>
+    <div className="text-xs p-2 rounded-lg" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
       <Badge variant={checked ? 'success' : 'error'}>{checked ? yesLabel : noLabel}</Badge>
       {' '}{label}
     </div>
@@ -95,25 +95,25 @@ export default function BehaviorValidation() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('validation.title')}</h2>
-      <p className="text-sm" style={{ color: '#78716c' }}>{t('validation.description')}</p>
+      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('validation.description')}</p>
 
       <Banner variant="warning">
         <strong>{t('validation.p6Status')}</strong>
-        <p className="text-xs mt-1" style={{ color: '#d97706' }}>{t('validation.p6Remains')}</p>
+        <p className="text-xs mt-1" style={{ color: 'var(--color-warning)' }}>{t('validation.p6Remains')}</p>
       </Banner>
 
       <div className="flex items-center gap-3 mb-4">
         <Button variant="primary" onClick={evaluate} disabled={evalMutation.isPending}>
           {evalMutation.isPending ? t('validation.evaluating') : t('validation.runEvaluation')}
         </Button>
-        {evalMutation.data && <span className="text-sm" style={{ color: '#16a34a' }}>{t('validation.evalComplete')} {String((evalMutation.data as Record<string, unknown>)?.validation && ((evalMutation.data as Record<string, unknown>).validation as Record<string, unknown>).outcome || '')}</span>}
+        {evalMutation.data && <span className="text-sm" style={{ color: 'var(--color-success)' }}>{t('validation.evalComplete')} {String((evalMutation.data as Record<string, unknown>)?.validation && ((evalMutation.data as Record<string, unknown>).validation as Record<string, unknown>).outcome || '')}</span>}
         {evalMutation.error && <ErrorDisplay message={(evalMutation.error as Error).message} />}
       </div>
 
       {reportQuery.isLoading && <Skeleton lines={4} />}
 
       {noReport && (
-        <p className="text-sm" style={{ color: '#a8a29e' }}>{t('validation.noReport')}</p>
+        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('validation.noReport')}</p>
       )}
 
       {record && (
@@ -126,15 +126,15 @@ export default function BehaviorValidation() {
                 {record.outcome.replace(/_/g, ' ')}
               </Badge>
             </div>
-            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.weeklyReviews')}</span></div>
-            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.calibrationRecords')}</span></div>
-            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.patternReviews')}</span></div>
+            <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('validation.weeklyReviews')}</span></div>
+            <div className="text-sm"><strong>{record.calibration_record_count}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('validation.calibrationRecords')}</span></div>
+            <div className="text-sm"><strong>{record.pattern_review_count}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('validation.patternReviews')}</span></div>
             {record.evidence_window_days != null && (
-              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('validation.evidenceWindow')}</span></div>
+              <div className="text-sm"><strong>{record.evidence_window_days}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('validation.evidenceWindow')}</span></div>
             )}
           </div>
 
-          <div className="p-2.5 rounded-lg mb-3" style={{ backgroundColor: '#faf9f7', border: '1px solid #e8e6e1' }}>
+          <div className="p-2.5 rounded-lg mb-3" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
             <p className="text-sm">{record.message}</p>
           </div>
 
@@ -155,14 +155,14 @@ export default function BehaviorValidation() {
             <CheckItem label={t('validation.sessionsNotSkipped')} checked={record.usage_integrity.sessions_not_skipped_too_often} yesLabel={t('validation.yes')} noLabel={t('validation.no')} />
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 text-xs" style={{ color: '#78716c' }}>
+          <div className="grid grid-cols-3 gap-2.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
             <div>{t('validation.integrityValid')} <strong>{record.usage_integrity_valid ? t('validation.yes') : t('validation.no')}</strong></div>
             <div>{t('validation.behaviorImproved')} <strong>{record.behavior_improved ? t('validation.yes') : t('validation.no')}</strong></div>
             <div>{t('validation.evidenceVerified')} <strong>{record.evidence_verified ? t('validation.yes') : t('validation.no')}</strong></div>
           </div>
 
           {record.created_at && (
-            <p className="text-xs mt-2" style={{ color: '#a8a29e' }}>{t('validation.evaluated')} {formatDate(record.created_at, i18n.language)}</p>
+            <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>{t('validation.evaluated')} {formatDate(record.created_at, i18n.language)}</p>
           )}
         </Card>
       )}

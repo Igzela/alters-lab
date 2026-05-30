@@ -4,8 +4,7 @@ import { expandIn, pulseSuccess } from '../animations'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { ProgressBar } from '../components/ProgressBar'
-
-type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
+import type { Page } from '../types'
 
 const STORAGE_KEY = 'alters_lab_onboarding_steps'
 
@@ -94,7 +93,7 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
       <h2 className="text-xl font-bold tracking-tight">{t('gettingStarted.title')}</h2>
 
       <Card>
-        <p className="text-sm mb-2" style={{ color: '#78716c' }}>
+        <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
           {t('gettingStarted.progress')} {doneCount}/{steps.length}
         </p>
         <ProgressBar value={doneCount} max={steps.length} accent="amber" />
@@ -105,12 +104,12 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
           key={step.id}
           className="rounded-xl overflow-hidden transition-all duration-200"
           style={{
-            backgroundColor: completed.has(step.id) ? '#f0fdf4' : '#ffffff',
+            backgroundColor: completed.has(step.id) ? 'var(--color-success-light)' : 'var(--color-surface)',
             border: completed.has(step.id)
               ? '1px solid #bbf7d0'
               : expanded === step.id
-                ? '1px solid #e8e6e1'
-                : '1px solid #e8e6e1',
+                ? '1px solid var(--color-border)'
+                : '1px solid var(--color-border)',
           }}
         >
           <button
@@ -123,18 +122,18 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
             <span
               className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
               style={{
-                backgroundColor: completed.has(step.id) ? '#16a34a' : '#f5f4f0',
-                color: completed.has(step.id) ? '#ffffff' : '#78716c',
+                backgroundColor: completed.has(step.id) ? 'var(--color-success)' : 'var(--color-surface-raised)',
+                color: completed.has(step.id) ? 'var(--color-surface)' : 'var(--color-text-secondary)',
               }}
             >
               {completed.has(step.id) ? '✓' : step.id}
             </span>
-            <span className="text-sm font-medium flex-1" style={{ color: completed.has(step.id) ? '#16a34a' : '#1c1917' }}>
+            <span className="text-sm font-medium flex-1" style={{ color: completed.has(step.id) ? 'var(--color-success)' : 'var(--color-text)' }}>
               {step.title}
             </span>
             <svg
               className="w-4 h-4 transition-transform duration-200 flex-shrink-0"
-              style={{ color: '#a8a29e', transform: expanded === step.id ? 'rotate(180deg)' : 'rotate(0deg)' }}
+              style={{ color: 'var(--color-text-muted)', transform: expanded === step.id ? 'rotate(180deg)' : 'rotate(0deg)' }}
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -144,7 +143,7 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
 
           {expanded === step.id && (
             <div ref={el => { if (el) stepRefs.current.set(step.id, el) }} id={`step-content-${step.id}`} role="region" className="px-4 pb-4 pt-1 space-y-3">
-              <p className="text-sm leading-relaxed" style={{ color: '#78716c' }}>{step.desc}</p>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{step.desc}</p>
               <div className="flex gap-2">
                 {step.navigate && (
                   <Button variant="secondary" onClick={() => onNavigate(step.navigate!)}>
@@ -168,8 +167,8 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
 
       <Card>
         <h3 className="text-sm font-medium mb-2">{t('gettingStarted.boundaries')}</h3>
-        <p className="text-sm leading-relaxed" style={{ color: '#78716c' }}>
-          <strong style={{ color: '#1c1917' }}>{t('gettingStarted.providerOutput')}</strong> {t('gettingStarted.providerOutputDesc')}
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          <strong style={{ color: 'var(--color-text)' }}>{t('gettingStarted.providerOutput')}</strong> {t('gettingStarted.providerOutputDesc')}
         </p>
       </Card>
     </div>

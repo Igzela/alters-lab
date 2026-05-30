@@ -45,7 +45,7 @@ export default function AlterDialogue() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('dialogue.title')}</h2>
-      <p className="text-sm" style={{ color: '#78716c' }}>{t('dialogue.description')}</p>
+      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('dialogue.description')}</p>
       <Select value={alterId} onChange={e => setAlterId(e.target.value)}>
         {ALTERS.map(a => <option key={a} value={a}>{t(ALTER_LABELS[a])}</option>)}
       </Select>
@@ -66,7 +66,7 @@ export default function AlterDialogue() {
         <div ref={replyRef}>
           <Card accent="amber">
             <strong className="text-sm">{t('dialogue.reply')}</strong>
-            <p className="text-sm whitespace-pre-wrap mt-1" style={{ color: '#78716c' }}>{reply}</p>
+            <p className="text-sm whitespace-pre-wrap mt-1" style={{ color: 'var(--color-text-secondary)' }}>{reply}</p>
           </Card>
         </div>
       )}

@@ -260,14 +260,14 @@ export default function WeeklyReview() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('weeklyReview.title')}</h2>
-      <p className="text-sm" style={{ color: '#78716c' }}>{t('weeklyReview.description')}</p>
+      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('weeklyReview.description')}</p>
       <P6Progress />
 
       <div className="mb-4">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs" style={{ color: '#a8a29e' }}>{step}/6</span>
-          <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: '#e8e6e1' }}>
-            <div className="h-1 rounded-full transition-all duration-300" style={{ backgroundColor: '#b45309', width: `${(step / 6) * 100}%` }} />
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{step}/6</span>
+          <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: 'var(--color-border)' }}>
+            <div className="h-1 rounded-full transition-all duration-300" style={{ backgroundColor: 'var(--color-accent)', width: `${(step / 6) * 100}%` }} />
           </div>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -276,8 +276,8 @@ export default function WeeklyReview() {
             key={n}
             className="px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-none cursor-pointer"
             style={{
-              backgroundColor: step === n ? '#1c1917' : 'transparent',
-              color: step === n ? '#faf9f7' : '#a8a29e',
+              backgroundColor: step === n ? 'var(--color-text)' : 'transparent',
+              color: step === n ? 'var(--color-bg)' : 'var(--color-text-muted)',
             }}
             type="button"
             onClick={() => setStep(n as Step)}
@@ -309,14 +309,14 @@ export default function WeeklyReview() {
               {loading === 'ingesting' ? t('weeklyReview.ingesting') : t('weeklyReview.ingestNote')}
             </Button>
           </div>
-          {noteRecord && <p className="text-sm mt-2" style={{ color: '#a8a29e' }}>{t('weeklyReview.savedRecordId')} {noteRecord.record_id}</p>}
+          {noteRecord && <p className="text-sm mt-2" style={{ color: 'var(--color-text-muted)' }}>{t('weeklyReview.savedRecordId')} {noteRecord.record_id}</p>}
         </Card>
       )}
 
       {step === 2 && noteRecord && editRecord && (
         <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step2Title')}</h3>
-          <p className="text-sm mb-2" style={{ color: '#78716c' }}>{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? t('common.yes') : t('common.no')}</p>
+          <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>{t('weeklyReview.rawNotePreserved')} {noteRecord.raw_note_preserved ? t('common.yes') : t('common.no')}</p>
           <Field label="session_type">
             {editEnabled ? (
               <Select value={editRecord.session_type} onChange={e => setEditRecord({ ...editRecord, session_type: e.target.value as WeeklyNoteRecord['session_type'] })}>
@@ -326,7 +326,7 @@ export default function WeeklyReview() {
                 <option value="relationship">{t('weeklyReview.typeRelationship')}</option>
               </Select>
             ) : (
-              <span className="text-sm" style={{ color: '#78716c' }}>{noteRecord.session_type}</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{noteRecord.session_type}</span>
             )}
           </Field>
           <Field label="observable_facts">
@@ -337,20 +337,20 @@ export default function WeeklyReview() {
                 rows={4}
               />
             ) : (
-              <ul className="text-sm" style={{ color: '#78716c' }}>{noteRecord.observable_facts.map((fact, i) => <li key={i}>{fact}</li>)}</ul>
+              <ul className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{noteRecord.observable_facts.map((fact, i) => <li key={i}>{fact}</li>)}</ul>
             )}
           </Field>
           <Field label="subjective_state">
-            {editEnabled ? <Input value={editRecord.subjective_state} onChange={e => setEditRecord({ ...editRecord, subjective_state: e.target.value })} /> : <span className="text-sm" style={{ color: '#78716c' }}>{noteRecord.subjective_state}</span>}
+            {editEnabled ? <Input value={editRecord.subjective_state} onChange={e => setEditRecord({ ...editRecord, subjective_state: e.target.value })} /> : <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{noteRecord.subjective_state}</span>}
           </Field>
           <Field label="primary_problem">
-            {editEnabled ? <Input value={editRecord.primary_problem} onChange={e => setEditRecord({ ...editRecord, primary_problem: e.target.value })} /> : <span className="text-sm" style={{ color: '#78716c' }}>{noteRecord.primary_problem}</span>}
+            {editEnabled ? <Input value={editRecord.primary_problem} onChange={e => setEditRecord({ ...editRecord, primary_problem: e.target.value })} /> : <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{noteRecord.primary_problem}</span>}
           </Field>
           <Field label="friction_or_avoidance_point">
-            {editEnabled ? <Input value={editRecord.friction_or_avoidance_point} onChange={e => setEditRecord({ ...editRecord, friction_or_avoidance_point: e.target.value })} /> : <span className="text-sm" style={{ color: '#78716c' }}>{noteRecord.friction_or_avoidance_point}</span>}
+            {editEnabled ? <Input value={editRecord.friction_or_avoidance_point} onChange={e => setEditRecord({ ...editRecord, friction_or_avoidance_point: e.target.value })} /> : <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{noteRecord.friction_or_avoidance_point}</span>}
           </Field>
           <Field label="desired_correction / primary correction">
-            {editEnabled ? <Input value={editRecord.desired_correction} onChange={e => setEditRecord({ ...editRecord, desired_correction: e.target.value })} /> : <span className="text-sm" style={{ color: '#78716c' }}>{noteRecord.desired_correction}</span>}
+            {editEnabled ? <Input value={editRecord.desired_correction} onChange={e => setEditRecord({ ...editRecord, desired_correction: e.target.value })} /> : <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{noteRecord.desired_correction}</span>}
           </Field>
           {editEnabled && (
             <Field label="correction_note">
@@ -381,7 +381,7 @@ export default function WeeklyReview() {
           <Button variant="primary" onClick={startReview} disabled={!!loading}>
             {loading === 'starting review' ? t('weeklyReview.starting') : t('weeklyReview.startReview')}
           </Button>
-          {session && <p className="text-sm mt-2" style={{ color: '#a8a29e' }}>{t('weeklyReview.sessionId')} {session.session_id}</p>}
+          {session && <p className="text-sm mt-2" style={{ color: 'var(--color-text-muted)' }}>{t('weeklyReview.sessionId')} {session.session_id}</p>}
         </Card>
       )}
 
@@ -406,7 +406,7 @@ export default function WeeklyReview() {
 
           <Card variant="raised">
             <h4 className="text-sm font-medium mb-1.5">{t('weeklyReview.assistantSuggestion')}</h4>
-            <p className="text-xs mb-2" style={{ color: '#a8a29e' }}>{t('weeklyReview.providerAdvisory')}</p>
+            <p className="text-xs mb-2" style={{ color: 'var(--color-text-muted)' }}>{t('weeklyReview.providerAdvisory')}</p>
             <Field label={t('weeklyReview.requestedHelp')}>
               <Select value={assistantHelp} onChange={e => setAssistantHelp(e.target.value)}>
                 <option value="general_review_suggestion">{t('weeklyReview.generalSuggestion')}</option>
@@ -426,7 +426,7 @@ export default function WeeklyReview() {
               </Button>
             </div>
             {assistantStatus && (
-              <p className="text-xs" style={{ color: '#a8a29e' }}>{t('weeklyReview.providerMode')} {assistantStatus.provider_mode} | {t('provider.configured')} <Badge variant={assistantStatus.configured ? 'success' : 'muted'}>{assistantStatus.configured ? 'yes' : 'no'}</Badge></p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('weeklyReview.providerMode')} {assistantStatus.provider_mode} | {t('provider.configured')} <Badge variant={assistantStatus.configured ? 'success' : 'muted'}>{assistantStatus.configured ? 'yes' : 'no'}</Badge></p>
             )}
             {assistantStatus?.configured && assistantStatus.provider_mode === 'openai-compatible-http' && (
               <div className="mt-2">
@@ -440,9 +440,9 @@ export default function WeeklyReview() {
             )}
             {assistantError && <Banner variant="error" className="mt-2">{assistantError}</Banner>}
             {assistantSuggestion && (
-              <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: '#fef3c7', color: '#1c1917' }}>
-                <p className="text-xs font-semibold mb-1.5" style={{ color: '#78716c' }}>{t('weeklyReview.unverifiedSuggestion')}</p>
-                <pre className="whitespace-pre-wrap text-sm m-0" style={{ color: '#1c1917' }}>{assistantSuggestion}</pre>
+              <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--color-accent-light)', color: 'var(--color-text)' }}>
+                <p className="text-xs font-semibold mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>{t('weeklyReview.unverifiedSuggestion')}</p>
+                <pre className="whitespace-pre-wrap text-sm m-0" style={{ color: 'var(--color-text)' }}>{assistantSuggestion}</pre>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <Button variant="secondary" onClick={() => setReviewNote(assistantSuggestion)}>
                     {t('weeklyReview.copyToReviewNote')}
@@ -464,7 +464,7 @@ export default function WeeklyReview() {
             </Button>
           </div>
           {session.status === 'completed' && (
-            <div className="mt-2 text-sm" style={{ color: '#78716c' }}>
+            <div className="mt-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
               <p>{t('weeklyReview.statusCompleted')}</p>
               <p>{t('weeklyReview.nextCorrection')} {session.next_week_primary_correction}</p>
               <p>{t('weeklyReview.supportingActions')} {session.supporting_actions.join(', ') || t('weeklyReview.none')}</p>
@@ -492,7 +492,7 @@ export default function WeeklyReview() {
             <Select value={verdictLabel} onChange={e => setVerdictLabel(e.target.value as VerdictLabel)}>
               {verdicts.map(v => <option key={v} value={v}>{v.replace(/_/g, ' ')}</option>)}
             </Select>
-            <span className="text-sm mt-0.5" style={{ color: '#a8a29e' }}>{VERDICT_DESCRIPTIONS[verdictLabel]}</span>
+            <span className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{VERDICT_DESCRIPTIONS[verdictLabel]}</span>
           </Field>
           <Field label={t('weeklyReview.verdictSentence')}>
             <Input value={verdictSentence} onChange={e => setVerdictSentence(e.target.value)} />
@@ -505,10 +505,10 @@ export default function WeeklyReview() {
             {loading === 'saving score' ? t('weeklyReview.saving') : t('weeklyReview.saveAlignment')}
           </Button>
           {score && (
-            <div className="mt-2 text-sm" style={{ color: '#78716c' }}>
+            <div className="mt-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
               <p>{t('weeklyReview.scoreId')} <Badge variant="info">{score.score_id}</Badge></p>
               <p>{t('weeklyReview.alignmentScore')} <strong className="font-mono">{score.action_alignment_score}</strong></p>
-              {scorePath && <p>{t('weeklyReview.savedPath')} <span style={{ color: '#a8a29e' }}>{scorePath}</span></p>}
+              {scorePath && <p>{t('weeklyReview.savedPath')} <span style={{ color: 'var(--color-text-muted)' }}>{scorePath}</span></p>}
             </div>
           )}
         </Card>
@@ -517,13 +517,13 @@ export default function WeeklyReview() {
       {step === 6 && noteRecord && session && score && (
         <Card>
           <h3 className="text-sm font-medium mb-2">{t('weeklyReview.step6Title')}</h3>
-          <div className="text-sm space-y-1" style={{ color: '#78716c' }}>
+          <div className="text-sm space-y-1" style={{ color: 'var(--color-text-secondary)' }}>
             <p>{t('weeklyReview.noteRecordId')} <Badge variant="info">{noteRecord.record_id}</Badge></p>
             <p>{t('weeklyReview.reviewSessionId')} <Badge variant="amber">{session.session_id}</Badge></p>
             <p>{t('weeklyReview.scoreRecordId')} <Badge variant="warning">{score.score_id}</Badge></p>
             <p>{t('weeklyReview.alignmentScore')} <strong className="font-mono">{score.action_alignment_score}</strong></p>
           </div>
-          <p className="text-xs mt-2" style={{ color: '#a8a29e' }}>{t('weeklyReview.weekEvidenceNote')}</p>
+          <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>{t('weeklyReview.weekEvidenceNote')}</p>
           <Button variant="secondary" className="mt-3" onClick={reset}>{t('weeklyReview.resetFlow')}</Button>
         </Card>
       )}
@@ -534,7 +534,7 @@ export default function WeeklyReview() {
 function Slider({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
     <label className="grid gap-1.5 mb-3">
-      <span className="text-sm" style={{ color: '#78716c' }}>{label}</span>
+      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{label}</span>
       <div className="flex items-center gap-2.5">
         <input className="flex-1" type="range" min={0} max={1} step={0.05} value={value} onChange={e => onChange(Number(e.target.value))} />
         <Input className="max-w-[120px] font-mono" type="number" min={0} max={1} step={0.05} value={value} onChange={e => onChange(Number(e.target.value))} />

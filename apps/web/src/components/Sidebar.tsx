@@ -12,9 +12,12 @@ import {
   Database,
   Sparkle,
   ShieldCheck,
+  Sun,
+  Moon,
+  ChartBarIcon,
 } from '@phosphor-icons/react'
-
-type Page = 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
+import type { Page } from '../types'
+import { useTheme } from './ThemeContext'
 
 interface NavItem {
   page: Page
@@ -31,6 +34,7 @@ const navGroups: NavGroup[] = [
   {
     labelKey: 'nav.overview',
     items: [
+      { page: 'dashboard', icon: <ChartBarIcon size={18} />, labelKey: 'nav.dashboard' },
       { page: 'status', icon: <House size={18} />, labelKey: 'nav.status' },
       { page: 'getting-started', icon: <Compass size={18} />, labelKey: 'nav.gettingStarted' },
     ],
@@ -74,6 +78,7 @@ interface SidebarProps {
 
 export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
   const { t, i18n } = useTranslation()
+  const { theme, toggleTheme } = useTheme()
 
   const toggleLang = () => {
     const next = i18n.language === 'en' ? 'zh' : 'en'
@@ -121,17 +126,29 @@ export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
       </nav>
 
       <div className="px-3 py-4 border-t" style={{ borderColor: '#292524' }}>
-        <button
-          onClick={toggleLang}
-          className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-sm transition-colors duration-150 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b45309]"
-          style={{ color: '#78716c', backgroundColor: 'transparent' }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' }}
-          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#78716c' }}
-          aria-label={i18n.language === 'en' ? 'Switch to Chinese' : 'Switch to English'}
-        >
-          <span className="text-xs">{i18n.language === 'en' ? 'EN' : 'ZH'}</span>
-          <span className="text-xs">{i18n.language === 'en' ? '中文' : 'English'}</span>
-        </button>
+        <div className="flex gap-1">
+          <button
+            onClick={toggleTheme}
+            className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors duration-150 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b45309]"
+            style={{ color: '#78716c', backgroundColor: 'transparent' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#78716c' }}
+            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          >
+            {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
+            <span className="text-xs">{theme === 'light' ? 'Dark' : 'Light'}</span>
+          </button>
+          <button
+            onClick={toggleLang}
+            className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors duration-150 border-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b45309]"
+            style={{ color: '#78716c', backgroundColor: 'transparent' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#78716c' }}
+            aria-label={i18n.language === 'en' ? 'Switch to Chinese' : 'Switch to English'}
+          >
+            <span className="text-xs">{i18n.language === 'en' ? 'EN' : 'ZH'}</span>
+          </button>
+        </div>
       </div>
     </aside>
   )

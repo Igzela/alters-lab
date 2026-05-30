@@ -25,6 +25,7 @@
     "calibration": "校准",
     "analysis": "分析",
     "system": "系统",
+    "dashboard": "仪表盘",
     "status": "状态",
     "gettingStarted": "快速开始",
     "weeklyReview": "周回顾",
@@ -408,5 +409,27 @@
   },
   "loading": {
     "retry": "重试"
+  },
+  "dashboard": {
+    "title": "仪表盘",
+    "weeklyReviews": "周回顾",
+    "alignmentScores": "对齐评分",
+    "patternsDetected": "检测到的模式",
+    "scoreTrend": "对齐评分趋势",
+    "weeklyActivity": "每周活动",
+    "recentPatterns": "最近的模式触发",
+    "noData": "暂无数据。完成一次周回顾即可查看仪表盘。",
+    "noScores": "暂无对齐评分。",
+    "noPatterns": "暂无模式审查。",
+    "sessionsThisWeek": "本周会话",
+    "avgScore": "平均分",
+    "trend": "趋势"
+  },
+  "shortcuts": {
+    "title": "键盘快捷键",
+    "navigation": "导航",
+    "pressGThen": "按 G 然后：",
+    "showHelp": "显示此帮助",
+    "other": "其他"
   }
 }

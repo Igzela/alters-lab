@@ -83,7 +83,7 @@ export default function PatternReview() {
   return (
     <div ref={cardsRef} className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('patterns.title')}</h2>
-      <p className="text-sm" style={{ color: '#78716c' }}>{t('patterns.description')}</p>
+      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('patterns.description')}</p>
 
       <Banner variant="warning">{t('patterns.boundaryCopy')}</Banner>
 
@@ -91,14 +91,14 @@ export default function PatternReview() {
         <Button variant="primary" onClick={buildReview} disabled={buildMutation.isPending}>
           {buildMutation.isPending ? t('patterns.building') : t('patterns.buildNew')}
         </Button>
-        {status && <span className="text-sm" style={{ color: '#16a34a' }}>{status}</span>}
-        {error && <span className="text-sm" style={{ color: '#dc2626' }}>{(error as Error).message}</span>}
+        {status && <span className="text-sm" style={{ color: 'var(--color-success)' }}>{status}</span>}
+        {error && <span className="text-sm" style={{ color: 'var(--color-error)' }}>{(error as Error).message}</span>}
       </div>
 
       {reviewsQuery.isLoading && <Skeleton lines={4} />}
 
       {!reviewsQuery.isLoading && reviews.length === 0 && !error && (
-        <p className="text-sm" style={{ color: '#a8a29e' }}>{t('patterns.noReviews')}</p>
+        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('patterns.noReviews')}</p>
       )}
 
       {reviews.map(r => (
@@ -108,15 +108,15 @@ export default function PatternReview() {
           onClick={() => setSelectedId(selectedId === r.review_id ? null : r.review_id)}
           className="p-3 rounded-xl cursor-pointer transition-all duration-200"
           style={{
-            backgroundColor: selectedId === r.review_id ? '#f5f4f0' : '#ffffff',
-            border: selectedId === r.review_id ? '2px solid #b45309' : '1px solid #e8e6e1',
+            backgroundColor: selectedId === r.review_id ? 'var(--color-surface-raised)' : 'var(--color-surface)',
+            border: selectedId === r.review_id ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
           }}
         >
           <div className="flex justify-between items-center">
             <strong className="text-sm">{r.review_id}</strong>
             <Badge variant={STATUS_BADGE[r.status] || 'muted'}>{r.status.replace(/_/g, ' ')}</Badge>
           </div>
-          <div className="text-xs mt-1" style={{ color: '#a8a29e' }}>
+          <div className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
             {t('patterns.weeksEvaluated')} {r.weeks_evaluated} | {t('patterns.patternsTriggered')} {r.triggered_patterns.length}
             {r.created_at && <span className="ml-2">{formatDate(r.created_at, i18n.language)}</span>}
           </div>
@@ -129,8 +129,8 @@ export default function PatternReview() {
         <Card accent="amber">
           <h3 className="text-sm font-medium mb-2">{t('patterns.reviewDetail')} {selected.review_id}</h3>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3 text-sm">
-            <div><strong>{selected.weeks_evaluated}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('patterns.weeksEvaluated')}</span></div>
-            <div><strong>{selected.triggered_patterns.length}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('patterns.patternsTriggered')}</span></div>
+            <div><strong>{selected.weeks_evaluated}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('patterns.weeksEvaluated')}</span></div>
+            <div><strong>{selected.triggered_patterns.length}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('patterns.patternsTriggered')}</span></div>
             <div>
               <Badge variant={STATUS_BADGE[selected.status] || 'muted'}>{selected.status.replace(/_/g, ' ')}</Badge>
             </div>
@@ -140,19 +140,19 @@ export default function PatternReview() {
             <div>
               <h4 className="text-sm font-medium mb-2">{t('patterns.triggeredPatterns')}</h4>
               {selected.triggered_patterns.map((tp, i) => (
-                <div key={i} className="p-2 mb-1.5 rounded-lg text-sm" style={{ backgroundColor: '#faf9f7', border: '1px solid #e8e6e1' }}>
+                <div key={i} className="p-2 mb-1.5 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
                   <strong>{PATTERN_LABELS[tp.pattern] || tp.pattern}</strong>
-                  <div className="text-xs mt-1" style={{ color: '#a8a29e' }}>
+                  <div className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
                     {t('patterns.occurrences')} {tp.occurrences} | {t('patterns.confidence')} {(tp.confidence * 100).toFixed(0)}%
                   </div>
-                  <div className="text-xs mt-0.5" style={{ color: '#a8a29e' }}>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
                     {t('patterns.strategy')} {tp.strategy_constraint}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm" style={{ color: '#a8a29e' }}>{t('patterns.noPatterns')}</p>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('patterns.noPatterns')}</p>
           )}
         </Card>
       )}

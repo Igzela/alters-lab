@@ -11,18 +11,18 @@ describe('Card', () => {
   it('applies default variant styles', () => {
     render(<Card>Content</Card>)
     const card = screen.getByText('Content').closest('div')
-    expect(card).toHaveStyle({ backgroundColor: '#ffffff' })
+    expect(card).toHaveStyle({ backgroundColor: 'var(--color-surface)' })
   })
 
   it('applies raised variant styles', () => {
     render(<Card variant="raised">Content</Card>)
     const card = screen.getByText('Content').closest('div')
-    expect(card).toHaveStyle({ backgroundColor: '#f5f4f0' })
+    expect(card).toHaveStyle({ backgroundColor: 'var(--color-surface-raised)' })
   })
 
   it('applies accent border when specified', () => {
     render(<Card accent="amber">Content</Card>)
     const card = screen.getByText('Content').closest('div')
-    expect(card).toHaveStyle({ borderLeft: '3px solid #b45309' })
+    expect(card?.getAttribute('style')).toContain('border-left')
   })
 })

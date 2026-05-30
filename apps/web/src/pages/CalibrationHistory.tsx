@@ -93,8 +93,8 @@ export default function CalibrationHistory() {
 
       <Card accent="amber">
         <h4 className="text-sm font-medium mb-1">{t('history.whatShows')}</h4>
-        <p className="text-sm" style={{ color: '#78716c' }}>{t('history.scoreExplanation')}</p>
-        <p className="text-xs mt-1" style={{ color: '#a8a29e' }}>
+        <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('history.scoreExplanation')}</p>
+        <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
           <strong>{t('history.weeklyReviews')}</strong> are sessions where you reflect on your week.
           <strong> {t('history.actionAlignment')}</strong> measure how well your actions matched your intentions.
           <strong> Calibration records</strong> are the raw score data.
@@ -102,67 +102,67 @@ export default function CalibrationHistory() {
       </Card>
 
       <h3 className="text-base font-medium">{t('history.weeklyReviews')} ({weeklyReviewsList.length})</h3>
-      {weeklyReviewsList.length === 0 && <p className="text-sm" style={{ color: '#a8a29e' }}>{t('history.noReviews')}</p>}
+      {weeklyReviewsList.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noReviews')}</p>}
       {weeklyReviewsList.map(session => (
         <Card key={session.session_id} data-stagger>
           <strong className="text-sm">{session.session_id}</strong> — <Badge variant="info">{session.status}</Badge><br />
-          <span className="text-xs" style={{ color: '#a8a29e' }}>
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
             {t('history.note')} {session.weekly_note_record_id}
           </span><br />
-          {session.created_at && <span className="text-xs" style={{ color: '#a8a29e' }}>{t('history.created')} {formatDate(session.created_at, i18n.language)}</span>}<br />
-          <span className="text-xs" style={{ color: '#a8a29e' }}>Next correction: {session.next_week_primary_correction || t('history.pending')}</span>
+          {session.created_at && <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('history.created')} {formatDate(session.created_at, i18n.language)}</span>}<br />
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Next correction: {session.next_week_primary_correction || t('history.pending')}</span>
         </Card>
       ))}
 
       <h3 className="text-base font-medium">{t('history.actionAlignment')} ({actionScores.length}) <Badge variant={trendBadge[trend]}>{trendArrowText(trend)}</Badge></h3>
-      {actionScores.length === 0 && <p className="text-sm" style={{ color: '#a8a29e' }}>{t('history.noScores')}</p>}
+      {actionScores.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noScores')}</p>}
       {sortedScores.map(score => (
         <div
           key={score.score_id}
           data-stagger
           className="p-3 rounded-xl cursor-pointer transition-all duration-200"
           style={{
-            backgroundColor: selectedScore?.score_id === score.score_id ? '#f5f4f0' : '#ffffff',
-            border: selectedScore?.score_id === score.score_id ? '1px solid #b45309' : '1px solid #e8e6e1',
+            backgroundColor: selectedScore?.score_id === score.score_id ? 'var(--color-surface-raised)' : 'var(--color-surface)',
+            border: selectedScore?.score_id === score.score_id ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
           }}
           onClick={() => setSelectedScore(selectedScore?.score_id === score.score_id ? null : score)}
         >
           <strong className="text-sm">{score.score_id}</strong> — <span className="font-mono">{formatScore(score.action_alignment_score)}</span><br />
-          <span className="text-xs" style={{ color: '#a8a29e' }}>
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
             {t('history.verdict')} {score.verdict_label.replace(/_/g, ' ')}
           </span><br />
-          {score.created_at && <span className="text-xs" style={{ color: '#a8a29e' }}>{formatDate(score.created_at, i18n.language)}</span>}
+          {score.created_at && <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{formatDate(score.created_at, i18n.language)}</span>}
 
           {selectedScore?.score_id === score.score_id && (
-            <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: '#faf9f7', border: '1px solid #e8e6e1' }}>
+            <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
               <h4 className="text-sm font-medium mb-2">{t('history.scoreDetail')}</h4>
               <p className="text-sm"><strong>{t('history.score')}</strong> {formatScore(score.action_alignment_score)} (0.0 = no alignment, 1.0 = full alignment)</p>
               <p className="text-sm"><strong>{t('history.verdict')}</strong> {verdictDescriptions[score.verdict_label] || score.verdict_label}</p>
               <p className="text-sm"><strong>{t('history.yourWords')}</strong> {score.verdict_sentence || t('history.none')}</p>
               <p className="text-sm mt-1"><strong>{t('history.dimensions')}</strong></p>
-              <ul className="list-disc list-inside text-sm ml-2" style={{ color: '#78716c' }}>
+              <ul className="list-disc list-inside text-sm ml-2" style={{ color: 'var(--color-text-secondary)' }}>
                 <li>{t('history.directionAlignment')} {formatScore(score.scores.direction_alignment)}</li>
                 <li>{t('history.executionConsistency')} {formatScore(score.scores.execution_consistency)}</li>
                 <li>{t('history.avoidanceLevel')} {formatScore(score.scores.avoidance_level)}</li>
               </ul>
               <p className="text-sm mt-1"><strong>{t('history.evidence')}</strong></p>
-              <ul className="list-disc list-inside text-sm ml-2" style={{ color: '#78716c' }}>
+              <ul className="list-disc list-inside text-sm ml-2" style={{ color: 'var(--color-text-secondary)' }}>
                 <li>{t('history.action')} {score.evidence.one_action_evidence || t('history.none')}</li>
                 <li>{t('history.avoidance')} {score.evidence.one_avoidance_or_friction_evidence || t('history.none')}</li>
                 <li>{t('history.nextCorrection')} {score.evidence.one_next_correction || t('history.none')}</li>
               </ul>
-              <p className="text-xs mt-2" style={{ color: '#a8a29e' }}>{t('history.session')} {score.session_id}</p>
+              <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>{t('history.session')} {score.session_id}</p>
             </div>
           )}
         </div>
       ))}
 
       <h3 className="text-base font-medium">{t('history.scores')} ({String(data?.count ?? 0)})</h3>
-      {records.length === 0 && <p className="text-sm" style={{ color: '#a8a29e' }}>{t('history.noRecords')}</p>}
+      {records.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noRecords')}</p>}
       {records.map(r => (
         <Card key={String(r.id)}>
           <strong className="text-sm">{String(r.id)}</strong> — {String(r.alter_id)}<br />
-          <span className="text-xs font-mono" style={{ color: '#78716c' }}>Actual: {JSON.stringify(r.actual_scores)}</span>
+          <span className="text-xs font-mono" style={{ color: 'var(--color-text-secondary)' }}>Actual: {JSON.stringify(r.actual_scores)}</span>
         </Card>
       ))}
       {drift.length > 0 && (

@@ -29,9 +29,9 @@ export default function P6Progress() {
       {!isLoading && !error && (
         <>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 text-sm">
-            <div><strong>{weeklyNotesCount}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('progress.weeklyNotesIngested')}</span></div>
-            <div><strong>{weeklyReviewsCount}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('progress.weeklyReviewsCompleted')}</span></div>
-            <div><strong>{alignmentScoresCount}</strong><br /><span className="text-xs" style={{ color: '#a8a29e' }}>{t('progress.alignmentScoresRecorded')}</span></div>
+            <div><strong>{weeklyNotesCount}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('progress.weeklyNotesIngested')}</span></div>
+            <div><strong>{weeklyReviewsCount}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('progress.weeklyReviewsCompleted')}</span></div>
+            <div><strong>{alignmentScoresCount}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('progress.alignmentScoresRecorded')}</span></div>
           </div>
 
           <div className="mt-3">
@@ -39,7 +39,7 @@ export default function P6Progress() {
             <ProgressBar value={scoresComplete} max={4} label={`${t('progress.alignmentScores')} ${scoresComplete}/4`} accent="amber" />
           </div>
 
-          <div className="mt-2 text-xs" style={{ color: '#a8a29e' }}>
+          <div className="mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
             <strong>{t('progress.nextStep')}</strong> {t('progress.nextStepDesc')}
           </div>
         </>

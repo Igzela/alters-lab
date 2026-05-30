@@ -8,6 +8,7 @@ import { Select } from '../components/Input'
 import { Banner } from '../components/Banner'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
+import type { Page } from '../types'
 
 const ALTERS = [
   { alter: 'alter_A', branch: 'branch_A' },
@@ -18,7 +19,7 @@ const ALTERS = [
 
 const DIMS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
 
-export default function RealityScore({ onNavigate }: { onNavigate?: (page: string) => void }) {
+export default function RealityScore({ onNavigate }: { onNavigate?: (page: Page) => void }) {
   const { t } = useTranslation()
   const [pair, setPair] = useState(0)
   const [scores, setScores] = useState<Record<string, number>>({
@@ -61,7 +62,7 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('realityScore.title')}</h2>
-      <p className="text-sm" style={{ color: '#78716c' }}>{t('realityScore.description')}</p>
+      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('realityScore.description')}</p>
 
       <Banner variant="warning">{t('realityScore.manualNote')}</Banner>
 
@@ -81,13 +82,13 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
       {recentScores.length > 0 && (
         <Card accent="amber">
           <h4 className="text-sm font-medium mb-2">{t('realityScore.recentScores')}</h4>
-          <p className="text-xs mb-2" style={{ color: '#a8a29e' }}>
+          <p className="text-xs mb-2" style={{ color: 'var(--color-text-muted)' }}>
             {t('realityScore.recentScoresDesc')}
           </p>
           {recentScores.map(s => (
             <div key={s.score_id} className="py-1 text-sm">
               <strong>{s.action_alignment_score.toFixed(2)}</strong> — {s.verdict_label.replace(/_/g, ' ')}
-              {s.created_at && <span className="text-xs ml-2" style={{ color: '#a8a29e' }}>{s.created_at}</span>}
+              {s.created_at && <span className="text-xs ml-2" style={{ color: 'var(--color-text-muted)' }}>{s.created_at}</span>}
             </div>
           ))}
         </Card>
@@ -98,10 +99,10 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: strin
       </Select>
       {DIMS.map(d => (
         <div key={d} className="flex items-center gap-3 text-sm">
-          <label className="w-40" style={{ color: '#78716c' }}>{d}</label>
+          <label className="w-40" style={{ color: 'var(--color-text-secondary)' }}>{d}</label>
           <input type="range" min={1} max={5} value={scores[d]}
             onChange={e => setScores({ ...scores, [d]: Number(e.target.value) })} className="flex-1" />
-          <span className="w-6 text-center font-mono" style={{ color: '#1c1917' }}>{scores[d]}</span>
+          <span className="w-6 text-center font-mono" style={{ color: 'var(--color-text)' }}>{scores[d]}</span>
         </div>
       ))}
       <TextArea

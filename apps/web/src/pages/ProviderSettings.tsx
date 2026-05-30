@@ -167,7 +167,7 @@ export default function ProviderSettings() {
 
       <Card>
         <h3 className="text-sm font-medium mb-2">{t('provider.status')}</h3>
-        <div className="text-sm space-y-1" style={{ color: '#78716c' }}>
+        <div className="text-sm space-y-1" style={{ color: 'var(--color-text-secondary)' }}>
           <p>{t('provider.mode')} <Badge variant="info">{String(status.provider_mode)}</Badge></p>
           <p>{t('provider.configured')} <Badge variant={status.configured ? 'success' : 'muted'}>{status.configured ? t('provider.yes') : t('provider.no')}</Badge></p>
           <p>{t('provider.baseUrl')} <Badge variant={status.base_url_configured ? 'success' : 'warning'}>{status.base_url_configured ? t('provider.configuredLabel') : t('provider.missing')}</Badge></p>
@@ -234,9 +234,9 @@ export default function ProviderSettings() {
         >
           {testMutation.isPending ? t('provider.testing') : t('provider.testConfig')}
         </Button>
-        {hasUnsavedChanges && <p className="text-sm mt-1" style={{ color: '#a8a29e' }}>{t('provider.saveBeforeTest')}</p>}
+        {hasUnsavedChanges && <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{t('provider.saveBeforeTest')}</p>}
         {testResult && (
-          <div className="mt-3 text-sm space-y-1" style={{ color: '#78716c' }}>
+          <div className="mt-3 text-sm space-y-1" style={{ color: 'var(--color-text-secondary)' }}>
             <p>Status: <Badge variant={testResult.provider_ready ? 'success' : 'error'}>{testResult.status}</Badge></p>
             <p>{t('provider.ready')} <Badge variant={testResult.provider_ready ? 'success' : 'muted'}>{testResult.provider_ready ? t('provider.yes') : t('provider.no')}</Badge></p>
             <p>{t('provider.networkCall')} <Badge variant={testResult.network_call_made ? 'info' : 'muted'}>{testResult.network_call_made ? t('provider.yes') : t('provider.no')}</Badge></p>

@@ -16,10 +16,10 @@ export function Button({ variant = 'primary', children, className = '', style: s
   }
 
   const variantStyles: Record<string, React.CSSProperties> = {
-    primary: { backgroundColor: '#b45309', color: '#ffffff', '--tw-ring-color': '#b45309' } as React.CSSProperties,
-    secondary: { color: '#1c1917', borderColor: '#e8e6e1', '--tw-ring-color': '#d6d3d1' } as React.CSSProperties,
-    ghost: { color: '#78716c', '--tw-ring-color': '#d6d3d1' } as React.CSSProperties,
-    danger: { backgroundColor: '#dc2626', color: '#ffffff', '--tw-ring-color': '#dc2626' } as React.CSSProperties,
+    primary: { backgroundColor: 'var(--color-accent)', color: '#ffffff', '--tw-ring-color': 'var(--color-accent)' } as React.CSSProperties,
+    secondary: { color: 'var(--color-text)', borderColor: 'var(--color-border)', '--tw-ring-color': 'var(--color-border)' } as React.CSSProperties,
+    ghost: { color: 'var(--color-text-secondary)', '--tw-ring-color': 'var(--color-border)' } as React.CSSProperties,
+    danger: { backgroundColor: 'var(--color-error)', color: '#ffffff', '--tw-ring-color': 'var(--color-error)' } as React.CSSProperties,
   }
 
   return (

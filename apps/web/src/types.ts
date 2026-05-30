@@ -57,3 +57,7 @@ export type ActionAlignmentScore = {
   verdict_sentence: string
   created_at: string
 }
+
+export type Page = 'dashboard' | 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data'
+
+export const VALID_PAGES: Page[] = ['dashboard', 'status', 'weekly', 'dialogue', 'reality', 'history', 'rubric', 'checkpoint', 'provider', 'getting-started', 'patterns', 'validation', 'data']

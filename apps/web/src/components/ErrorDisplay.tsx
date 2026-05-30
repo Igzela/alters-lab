@@ -19,12 +19,12 @@ export default function ErrorDisplay({ message, onRetry }: ErrorDisplayProps) {
   }, [message])
 
   return (
-    <div ref={ref} className="p-3 rounded-lg text-sm flex items-start gap-2" style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}>
+    <div ref={ref} className="p-3 rounded-lg text-sm flex items-start gap-2" style={{ backgroundColor: 'var(--color-error-light)', border: '1px solid color-mix(in srgb, var(--color-error) 25%, var(--color-error-light))', color: 'var(--color-error)' }}>
       <span className="flex-1">{message}</span>
       {onRetry && (
         <button
           className="text-xs underline shrink-0 cursor-pointer border-none bg-transparent transition-colors"
-          style={{ color: '#dc2626' }}
+          style={{ color: 'var(--color-error)' }}
           onClick={onRetry}
         >
           {t('loading.retry')}
