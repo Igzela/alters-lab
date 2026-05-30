@@ -1,6 +1,6 @@
 # Contributing to Alters Lab
 
-Thanks for your interest in contributing! This document explains how to get started.
+Thank you for your interest in contributing! This document explains how to get started.
 
 ## Development Setup
 
@@ -8,60 +8,101 @@ Thanks for your interest in contributing! This document explains how to get star
 
 - Python 3.11+
 - Node.js 18+
-- npm
+- Git
 
-### Backend
+### Backend Setup
 
 ```bash
-cd apps/api
+# Clone the repo
+git clone https://github.com/Igzela/alters-lab.git
+cd alters-lab
+
+# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+source .venv/bin/activate  # Linux/Mac
+# or: .venv\Scripts\activate  # Windows
+
+# Install dependencies
+pip install -e "apps/api[dev]"
 ```
 
-### Frontend
+### Frontend Setup
 
 ```bash
 cd apps/web
 npm install
-npm run dev
 ```
-
-The dev server proxies API requests to `http://localhost:8000`.
 
 ### Running Tests
 
 ```bash
-# Backend
-PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
+# Backend tests (1291 tests)
+PYTHONPATH=apps/api/src pytest apps/api/tests/ -q
 
-# Frontend build check
-cd apps/web && npm run build
+# Frontend tests (12 tests)
+cd apps/web && npm run test
 ```
 
-## Project Structure
+### Running the App
 
+```bash
+# Start the server
+alters-lab start
+
+# Or run backend and frontend separately
+PYTHONPATH=apps/api/src uvicorn alters_lab.main:app --reload --port 8000
+cd apps/web && npm run dev
 ```
-apps/
-  api/          Python backend (FastAPI)
-  web/          React frontend (Vite + Tailwind)
-docs/           Documentation
-alters/         Runtime data (YAML/JSON)
-```
 
-## Guidelines
+## Code Style
 
-- Keep changes focused — one feature or fix per PR
-- Write tests for new backend endpoints
-- Follow existing code style (no linter enforced, but stay consistent)
-- Update docs if your change affects user-facing behavior
+### Python
 
-## Reporting Issues
+- Follow PEP 8
+- Use type hints
+- Pydantic models with `extra="forbid"` for API schemas
+- Services are stateless functions, not classes
+- Tests use `tmp_path` fixture, never modify real files
 
-Open a GitHub issue with:
-- What you expected to happen
-- What actually happened
-- Steps to reproduce (if applicable)
+### TypeScript/React
+
+- Functional components with hooks
+- TanStack Query for data fetching
+- Tailwind CSS for styling
+- i18n for all user-facing text
+
+## Architecture
+
+- **Schemas** (`apps/api/src/alters_lab/schemas/`) — Pydantic models, no business logic
+- **Services** (`apps/api/src/alters_lab/services/`) — Business logic, stateless functions
+- **API** (`apps/api/src/alters_lab/api/`) — FastAPI routers, thin wrappers
+- **Pages** (`apps/web/src/pages/`) — React page components
+- **Components** (`apps/web/src/components/`) — Shared UI components
+- **Hooks** (`apps/web/src/hooks/`) — TanStack Query hooks
+
+## Safety Rules
+
+These are hard boundaries — do not violate:
+
+1. **No active YAML modification** — Never write to `alters/current/` from code
+2. **No probability forecasting** — Trend analysis is descriptive, not predictive
+3. **User-driven scoring** — Reality scores require explicit user submission
+4. **Advisory only** — Dynamic weights and pattern adjustments never auto-apply
+5. **No database** — All storage is YAML/JSON files on disk
+
+## Pull Request Guidelines
+
+1. Keep PRs focused — one feature or fix per PR
+2. Include tests for new functionality
+3. Update documentation if needed
+4. Ensure all tests pass before submitting
+5. Write clear commit messages explaining *why*, not just *what*
+
+## Issues
+
+- Use GitHub Issues for bug reports and feature requests
+- Check existing issues before creating new ones
+- Label issues appropriately (bug, enhancement, documentation, good-first-issue)
 
 ## License
 

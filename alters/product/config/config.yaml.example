@@ -1,0 +1,23 @@
+version: 1
+mode: dev
+server:
+  host: 127.0.0.1
+  port: 18790
+  open_browser_on_start: true
+paths:
+  data_dir: /path/to/alters-lab
+  state_dir: /path/to/alters-lab/alters/product/state
+provider:
+  mode: disabled  # Options: disabled, mock, openai-compatible-http
+  openai_compatible_http:
+    base_url: https://api.openai.com/v1
+    model: gpt-4o
+    timeout_seconds: 60
+  secrets:
+    storage: keyring  # Options: keyring, secrets_yaml_fallback
+    key_name: alters-lab/provider-api-key
+safety:
+  active_yaml_write_allowed: false
+  rubric_write_allowed: false
+  provider_output_persists_by_default: false
+  provider_output_can_write_active_yaml: false

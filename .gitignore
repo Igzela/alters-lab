@@ -19,16 +19,29 @@ apps/web/dist/
 .env.local
 secrets.yaml
 
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
 # Internal tooling
 .codex/
 .claude/
 .claude-*.md
 
-# Runtime data (user-specific)
+# Runtime data (user-specific — NEVER commit)
 alters/current/
 alters/drafts/
 docs/gpt-inbox/
 docs/runs/
+
+# Product config (contains personal paths and API keys)
+alters/product/config/config.yaml
 
 # Archive checkpoints
 alters/archive/checkpoints/*
