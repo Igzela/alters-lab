@@ -33,6 +33,9 @@ secrets.yaml
 .codex/
 .claude/
 .claude-*.md
+CLAUDE.md
+AGENTS.md
+chatgret_relay.py
 
 # Runtime data (user-specific — NEVER commit)
 alters/current/
