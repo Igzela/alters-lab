@@ -32,8 +32,25 @@ jobs:
           cp alters/sample/reality_trace.yaml alters/current/
           cp alters/sample/alters/*.yaml alters/current/alters/
           # Create minimal test data for files that were removed for privacy
-          echo "type: value_alignment" > alters/current/value_alignment/alignment_2026-05-19.yaml
-          echo "type: dialogue" > alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml
+          python3 -c "
+          import yaml
+          # value_alignment
+          va = {'value_alignment': {'provisional_commitment': {'selected_branch': 'branch_D', 'selected_alter': 'alter_D'}, 'status': 'human_confirmed_static_artifact'}}
+          with open('alters/current/value_alignment/alignment_2026-05-19.yaml', 'w') as f:
+              yaml.dump(va, f, default_flow_style=False)
+          # dialogue
+          dl = {'dialogue': {'status': 'human_confirmed_static_artifact', 'alter_id': 'alter_D'}}
+          with open('alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml', 'w') as f:
+              yaml.dump(dl, f, default_flow_style=False)
+          # add personality_drift to alter files
+          import glob
+          for path in glob.glob('alters/current/alters/alter_*.yaml'):
+              with open(path) as f:
+                  data = yaml.safe_load(f) or {}
+              data['personality_drift'] = {'detected': False}
+              with open(path, 'w') as f:
+                  yaml.dump(data, f, default_flow_style=False)
+          "
 
       - name: Run tests
         run: PYTHONPATH=apps/api/src python -m pytest apps/api/tests/ -q
