@@ -31,6 +31,9 @@ jobs:
           cp alters/sample/branches.yaml alters/current/
           cp alters/sample/reality_trace.yaml alters/current/
           cp alters/sample/alters/*.yaml alters/current/alters/
+          # Create minimal test data for files that were removed for privacy
+          echo "type: value_alignment" > alters/current/value_alignment/alignment_2026-05-19.yaml
+          echo "type: dialogue" > alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml
 
       - name: Run tests
         run: PYTHONPATH=apps/api/src python -m pytest apps/api/tests/ -q
