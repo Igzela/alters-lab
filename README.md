@@ -171,7 +171,8 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration
 | i18n | English + Chinese |
 | Storage | YAML + JSON files (no database) |
 | Packaging | Debian `.deb`, Docker |
-| Tests | pytest (1291 backend), vitest (12 frontend) |
+| Routing | React Router v6 |
+| Tests | pytest (1291 backend), vitest (23 frontend) |
 
 ## CLI Commands
 
