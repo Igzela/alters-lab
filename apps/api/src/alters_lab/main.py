@@ -47,6 +47,9 @@ from alters_lab.api.provider_connectivity import router as provider_connectivity
 from alters_lab.api.provider_config import router as provider_config_router
 from alters_lab.api.provider_dialogue_preview import router as provider_dialogue_preview_router
 from alters_lab.api.weekly_review_assistant import router as weekly_review_assistant_router
+from alters_lab.api.trend_analysis import router as trend_analysis_router
+from alters_lab.api.dynamic_weight import router as dynamic_weight_router
+from alters_lab.api.pattern_adjustment import router as pattern_adjustment_router
 from alters_lab.services.local_app import configure_frontend_static
 
 logger = logging.getLogger("alters_lab")
@@ -123,4 +126,7 @@ app.include_router(provider_connectivity_router)
 app.include_router(provider_config_router)
 app.include_router(provider_dialogue_preview_router)
 app.include_router(weekly_review_assistant_router)
+app.include_router(trend_analysis_router)
+app.include_router(dynamic_weight_router)
+app.include_router(pattern_adjustment_router)
 configure_frontend_static(app)

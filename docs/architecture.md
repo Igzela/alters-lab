@@ -25,9 +25,9 @@ alters-lab/
   apps/
     api/                  # FastAPI backend
       src/alters_lab/
-        api/              # 41 route modules
+        api/              # 44 route modules
         services/         # 47 service modules
-        schemas/          # 41 Pydantic schema modules
+        schemas/          # 44 Pydantic schema modules
         cli/              # CLI entry point (launcher.py)
         main.py           # App factory, middleware, router registration
         middleware.py      # Rate limiting
@@ -68,7 +68,7 @@ alters-lab/
 
 `GET /health` returns `{"status": "ok", "service": "alters-lab-api"}`. Used by CLI doctor checks and CI.
 
-### API Routers (41 modules)
+### API Routers (44 modules)
 
 All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAPI `APIRouter`. Routers are registered in `main.py` via `app.include_router()`.
 
@@ -145,6 +145,9 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 | `behavior_validation` | `/behavior-validation` | Validate system behavior against spec |
 | `pattern_review` | `/pattern-review` | Review patterns across calibration data |
 | `product_surface` | `/product` | Product surface / export endpoints |
+| `trend_analysis` | `/trend-analysis` | Linear extrapolation and confidence intervals from historical scores |
+| `dynamic_weight` | `/dynamic-weight` | Advisory rubric dimension weights based on current state |
+| `pattern_adjustment` | `/pattern-adjustment` | Forecast adjustment based on detected behavioral patterns |
 
 #### Runtime and Infrastructure
 
@@ -155,7 +158,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Service Layer
 
-47 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
+50 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
 
 - **Persistence**: `alters_persist`, `branches_persist`, `snapshot_persist`, `snapshot_sessions`, `snapshot_export`, `controlled_write`
 - **Data safety**: `data_safety` (backup planning, archive creation)

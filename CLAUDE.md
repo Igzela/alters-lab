@@ -25,10 +25,10 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 10. ✅ Keyboard Shortcuts — G+key 导航，? 帮助
 
 算法端（下一个 session）：
-11. 趋势外推算法 — 用历史评分预测未来 4 周
-12. 置信区间 — 基于数据量和一致性
-13. 动态权重 — 根据当前状态调整 rubric 维度权重
-14. 模式修正 — 检测到的模式影响预测
+11. ✅ 趋势外推算法 — 用历史评分预测未来 4 周
+12. ✅ 置信区间 — 基于数据量和一致性
+13. ✅ 动态权重 — 根据当前状态调整 rubric 维度权重
+14. ✅ 模式修正 — 检测到的模式影响预测
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
@@ -137,7 +137,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 - 不连接 LLM provider
 - 测试用 tmp_path，不改真实文件
 - commit message 用英文，格式: `P{N}-M{N}: 简短描述`，修正用 `-R{N}` 后缀
-- 1267 backend tests passing
+- 1291 backend tests passing
 - 12 frontend tests passing (vitest)
 
 ## 测试命令

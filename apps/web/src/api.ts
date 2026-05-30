@@ -133,3 +133,72 @@ export async function suggestWeeklyReviewAssistant(body: {
     message: string
   }>
 }
+
+// --- Trend Analysis ---
+export async function analyzeTrend(body: { lookback_weeks?: number; forecast_weeks?: number }) {
+  return postJson('/trend-analysis/analyze', body) as Promise<{
+    status: string
+    overall_direction: string
+    dimensions: Array<{
+      dimension: string
+      direction: string
+      slope: number
+      r_squared: number
+      confidence_level: string
+      data_points: number
+    }>
+    forecast: Array<{
+      week_offset: number
+      predicted_score: number
+      lower_bound: number
+      upper_bound: number
+    }>
+    confidence_interval: {
+      level: string
+      data_count: number
+      consistency_score: number
+      description: string
+    }
+    generated_at: string
+  }>
+}
+
+// --- Dynamic Weight ---
+export async function computeDynamicWeights(body: { lookback_weeks?: number }) {
+  return postJson('/dynamic-weight/compute', body) as Promise<{
+    status: string
+    weights: Array<{
+      dimension: string
+      weight: number
+      rationale: string
+    }>
+    overall_alignment: number
+    recommendation: string
+    generated_at: string
+  }>
+}
+
+// --- Pattern Adjustment ---
+export async function adjustForecast(body: { lookback_weeks?: number; forecast_weeks?: number }) {
+  return postJson('/pattern-adjustment/adjust', body) as Promise<{
+    status: string
+    has_patterns: boolean
+    original_forecast: Array<{
+      week_offset: number
+      predicted_score: number
+      lower_bound: number
+      upper_bound: number
+    }>
+    adjusted_forecast: Array<{
+      week_offset: number
+      original_score: number
+      adjusted_score: number
+      adjustment_delta: number
+      adjustment_reason: string
+      lower_bound: number
+      upper_bound: number
+    }>
+    adjustments_applied: string[]
+    generated_at: string
+  }>
+}

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCalibrationHistory, useWeeklyReviews, useActionAlignmentScores } from '../hooks/useApi'
+import { useCalibrationHistory, useWeeklyReviews, useActionAlignmentScores, useTrendAnalysis, useDynamicWeights, usePatternAdjustment } from '../hooks/useApi'
 import { staggerFadeIn } from '../animations'
 import { formatDate } from '../dateFormat'
 import type { ActionAlignmentScore, VerdictLabel } from '../types'
@@ -43,6 +43,9 @@ export default function CalibrationHistory() {
   const history = useCalibrationHistory()
   const reviews = useWeeklyReviews()
   const scores = useActionAlignmentScores()
+  const trend = useTrendAnalysis()
+  const weights = useDynamicWeights()
+  const patternAdj = usePatternAdjustment()
 
   const error = history.error || reviews.error || scores.error
   const isLoading = history.isLoading || reviews.isLoading || scores.isLoading
@@ -50,6 +53,9 @@ export default function CalibrationHistory() {
   const actionScores = scores.data?.scores || []
   const weeklyReviewsList = reviews.data?.sessions || []
   const data = history.data as Record<string, unknown> | undefined
+  const trendData = trend.data
+  const weightsData = weights.data
+  const patternData = patternAdj.data
 
   useEffect(() => {
     if (!isLoading && cardsRef.current) {
@@ -70,21 +76,20 @@ export default function CalibrationHistory() {
   const records = (data?.records as Record<string, unknown>[]) || []
   const drift = (data?.drift_evidence as Record<string, unknown>[]) || []
   const sortedScores = [...actionScores].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-  const trend = getTrend(actionScores)
   const verdictDescriptions = getVerdictDescriptions(t)
 
-  const trendArrowText = (tr: typeof trend) => {
-    if (tr === 'up') return `↑ ${t('history.improving')}`
-    if (tr === 'down') return `↓ ${t('history.declining')}`
-    if (tr === 'stable') return `→ ${t('history.stable')}`
-    return t('history.firstScore')
-  }
-
-  const trendBadge: Record<typeof trend, 'success' | 'error' | 'info' | 'muted'> = {
-    up: 'success',
-    down: 'error',
+  const trendDirection = trendData?.overall_direction || 'insufficient_data'
+  const trendBadge: Record<string, 'success' | 'error' | 'info' | 'muted'> = {
+    improving: 'success',
+    declining: 'error',
     stable: 'info',
-    first: 'muted',
+    insufficient_data: 'muted',
+  }
+  const trendArrowText = (dir: string) => {
+    if (dir === 'improving') return `↑ ${t('history.improving')}`
+    if (dir === 'declining') return `↓ ${t('history.declining')}`
+    if (dir === 'stable') return `→ ${t('history.stable')}`
+    return t('history.firstScore')
   }
 
   return (
@@ -114,7 +119,7 @@ export default function CalibrationHistory() {
         </Card>
       ))}
 
-      <h3 className="text-base font-medium">{t('history.actionAlignment')} ({actionScores.length}) <Badge variant={trendBadge[trend]}>{trendArrowText(trend)}</Badge></h3>
+      <h3 className="text-base font-medium">{t('history.actionAlignment')} ({actionScores.length}) <Badge variant={trendBadge[trendDirection]}>{trendArrowText(trendDirection)}</Badge></h3>
       {actionScores.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noScores')}</p>}
       {sortedScores.map(score => (
         <div
@@ -156,6 +161,85 @@ export default function CalibrationHistory() {
           )}
         </div>
       ))}
+
+      {/* Trend Analysis */}
+      {trendData && trendData.overall_direction !== 'insufficient_data' && (
+        <Card accent="amber">
+          <h4 className="text-sm font-medium mb-2">Trend Analysis</h4>
+          <p className="text-sm">
+            <strong>Direction:</strong> {trendArrowText(trendData.overall_direction)}
+            <span className="ml-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              ({trendData.confidence_interval.level} confidence, {trendData.confidence_interval.data_count} data points)
+            </span>
+          </p>
+          <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+            {trendData.confidence_interval.description}
+          </p>
+          {trendData.forecast.length > 0 && (
+            <div className="mt-2">
+              <p className="text-xs font-medium mb-1">4-Week Forecast:</p>
+              <div className="flex gap-2 flex-wrap">
+                {trendData.forecast.map(fp => (
+                  <div key={fp.week_offset} className="text-xs p-1.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
+                    W{fp.week_offset}: {fp.predicted_score.toFixed(2)} [{fp.lower_bound.toFixed(2)}-{fp.upper_bound.toFixed(2)}]
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {trendData.dimensions.length > 0 && (
+            <div className="mt-2">
+              <p className="text-xs font-medium mb-1">Dimension Trends:</p>
+              <div className="flex gap-2 flex-wrap">
+                {trendData.dimensions.map(d => (
+                  <span key={d.dimension} className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
+                    {d.dimension.replace(/_/g, ' ')}: {d.direction}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Dynamic Weights */}
+      {weightsData && weightsData.weights.length > 0 && (
+        <Card>
+          <h4 className="text-sm font-medium mb-2">Dynamic Rubric Weights</h4>
+          <p className="text-xs mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+            Advisory weights based on alignment score: {weightsData.overall_alignment.toFixed(2)}
+          </p>
+          <div className="grid grid-cols-2 gap-1.5">
+            {weightsData.weights.map(w => (
+              <div key={w.dimension} className="text-xs p-1.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
+                <strong>{w.dimension.replace(/_/g, ' ')}</strong>: {w.weight.toFixed(2)}x<br />
+                <span style={{ color: 'var(--color-text-muted)' }}>{w.rationale}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
+            Recommendation: {weightsData.recommendation}
+          </p>
+        </Card>
+      )}
+
+      {/* Pattern-Adjusted Forecast */}
+      {patternData && patternData.has_patterns && (
+        <Card accent="red">
+          <h4 className="text-sm font-medium mb-2">Pattern-Adjusted Forecast</h4>
+          <p className="text-xs mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+            Adjustments applied: {patternData.adjustments_applied.map(a => a.replace(/_/g, ' ')).join(', ')}
+          </p>
+          <div className="flex gap-2 flex-wrap">
+            {patternData.adjusted_forecast.map(fp => (
+              <div key={fp.week_offset} className="text-xs p-1.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
+                <strong>W{fp.week_offset}:</strong> {fp.adjusted_score.toFixed(2)} (was {fp.original_score.toFixed(2)})<br />
+                <span style={{ color: 'var(--color-text-muted)' }}>{fp.adjustment_reason}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       <h3 className="text-base font-medium">{t('history.scores')} ({String(data?.count ?? 0)})</h3>
       {records.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noRecords')}</p>}

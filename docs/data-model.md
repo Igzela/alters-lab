@@ -222,6 +222,80 @@ Four-week pattern review analyzing behavioral patterns across multiple weeks.
 - `repeated_action_mismatch`
 - `repeated_primary_correction_failure`
 
+## Trend Analysis Schemas
+
+### TrendAnalysisResult
+
+Output of trend analysis — linear extrapolation from historical action alignment scores.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | str | Always "ok" |
+| `overall_direction` | Literal["improving", "declining", "stable", "insufficient_data"] | Overall trend direction |
+| `dimensions` | list[TrendDimensionResult] | Per-dimension trend analysis |
+| `forecast` | list[ForecastPoint] | Predicted scores for future weeks |
+| `confidence_interval` | ConfidenceInterval | Confidence level and description |
+| `generated_at` | str | Generation timestamp |
+
+**ForecastPoint:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `week_offset` | int | Weeks into future (1-12) |
+| `predicted_score` | float | Predicted alignment score (0-1) |
+| `lower_bound` | float | Lower confidence bound (0-1) |
+| `upper_bound` | float | Upper confidence bound (0-1) |
+
+**ConfidenceInterval:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `level` | Literal["low", "medium", "high"] | Confidence level |
+| `data_count` | int | Number of data points used |
+| `consistency_score` | float | Data consistency (0-1) |
+| `description` | str | Human-readable confidence description |
+
+### DynamicWeightResult
+
+Advisory rubric dimension weights based on current behavioral state.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | str | Always "ok" |
+| `weights` | list[DimensionWeight] | Per-dimension weight recommendations |
+| `overall_alignment` | float | Average alignment score (0-1) |
+| `recommendation` | str | Human-readable recommendation |
+| `generated_at` | str | Generation timestamp |
+
+**DimensionWeight:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `dimension` | str | Rubric dimension name |
+| `weight` | float | Advisory weight (0.5-2.0) |
+| `rationale` | str | Why this weight was chosen |
+
+### PatternAdjustmentResult
+
+Forecast adjusted based on detected behavioral patterns.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | str | Always "ok" |
+| `has_patterns` | bool | Whether any patterns were detected |
+| `original_forecast` | list[ForecastPoint] | Unadjusted forecast |
+| `adjusted_forecast` | list[AdjustedForecastPoint] | Pattern-adjusted forecast |
+| `adjustments_applied` | list[str] | Pattern names that were applied |
+| `generated_at` | str | Generation timestamp |
+
+**AdjustedForecastPoint:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `week_offset` | int | Weeks into future (1-12) |
+| `original_score` | float | Original predicted score (0-1) |
+| `adjusted_score` | float | Pattern-adjusted score (0-1) |
+| `adjustment_delta` | float | Change from original (negative = dampening) |
+| `adjustment_reason` | str | Why this adjustment was made |
+| `lower_bound` | float | Lower confidence bound (0-1) |
+| `upper_bound` | float | Upper confidence bound (0-1) |
+
 ## Key Invariants
 
 - **extra="forbid"**: Most Pydantic models reject unknown fields. YAML files on disk may have extra fields, but API validation is strict.

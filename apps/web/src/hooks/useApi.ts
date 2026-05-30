@@ -13,6 +13,9 @@ import {
   listActionAlignmentScores,
   fetchWeeklyReviewAssistantStatus,
   suggestWeeklyReviewAssistant,
+  analyzeTrend,
+  computeDynamicWeights,
+  adjustForecast,
 } from '../api'
 import type { WeeklyNoteRecord, WeeklyReviewSession } from '../types'
 
@@ -282,5 +285,29 @@ export function useDeleteData() {
   return useMutation({
     mutationFn: (body: unknown) => postJson('/p6-data-retention/delete', body),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['data-manifest'] }),
+  })
+}
+
+// --- Trend Analysis ---
+export function useTrendAnalysis(lookbackWeeks = 8, forecastWeeks = 4) {
+  return useQuery({
+    queryKey: ['trend-analysis', lookbackWeeks, forecastWeeks],
+    queryFn: () => analyzeTrend({ lookback_weeks: lookbackWeeks, forecast_weeks: forecastWeeks }),
+  })
+}
+
+// --- Dynamic Weights ---
+export function useDynamicWeights(lookbackWeeks = 8) {
+  return useQuery({
+    queryKey: ['dynamic-weights', lookbackWeeks],
+    queryFn: () => computeDynamicWeights({ lookback_weeks: lookbackWeeks }),
+  })
+}
+
+// --- Pattern Adjustment ---
+export function usePatternAdjustment(lookbackWeeks = 8, forecastWeeks = 4) {
+  return useQuery({
+    queryKey: ['pattern-adjustment', lookbackWeeks, forecastWeeks],
+    queryFn: () => adjustForecast({ lookback_weeks: lookbackWeeks, forecast_weeks: forecastWeeks }),
   })
 }
