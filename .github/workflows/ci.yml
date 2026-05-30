@@ -33,17 +33,16 @@ jobs:
           cp alters/sample/alters/*.yaml alters/current/alters/
           # Create minimal test data for files that were removed for privacy
           python3 -c "
-          import yaml
+          import yaml, glob
           # value_alignment
-          va = {'value_alignment': {'provisional_commitment': {'selected_branch': 'branch_D', 'selected_alter': 'alter_D'}, 'status': 'human_confirmed_static_artifact'}}
+          va = {'value_alignment_report': {'status': 'human_confirmed', 'final_interpretation': {'primary_candidate': 'branch_D'}, 'provisional_commitment': {'selected_branch': 'branch_D', 'selected_alter': 'alter_D'}}}
           with open('alters/current/value_alignment/alignment_2026-05-19.yaml', 'w') as f:
               yaml.dump(va, f, default_flow_style=False)
           # dialogue
-          dl = {'dialogue': {'status': 'human_confirmed_static_artifact', 'alter_id': 'alter_D'}}
+          dl = {'dialogue': {'status': 'human_confirmed_static_artifact', 'session': {'alter_ref': 'alters/current/alters/alter_D.yaml'}, 'context_policy': {'provider_used': None, 'runtime_used': False}}}
           with open('alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml', 'w') as f:
               yaml.dump(dl, f, default_flow_style=False)
           # add personality_drift to alter files
-          import glob
           for path in glob.glob('alters/current/alters/alter_*.yaml'):
               with open(path) as f:
                   data = yaml.safe_load(f) or {}
