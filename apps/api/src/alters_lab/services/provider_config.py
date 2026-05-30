@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import yaml
+from alters_lab.services import io
 
 from alters_lab.schemas.provider_config import (
     ProviderConfigResponse,
@@ -115,14 +115,14 @@ class SecretStore:
         if not create and not self.layout.secrets_path.exists():
             return {"version": 1}
         path = ensure_secrets_fallback_file(self.layout)
-        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        data = io.read_yaml(path) or {}
         if not isinstance(data, dict):
             raise ProviderConfigError("secrets fallback file is not a mapping")
         return data
 
     def _write_fallback_data(self, data: dict[str, Any]) -> Path:
         path = ensure_secrets_fallback_file(self.layout)
-        path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+        io.write_yaml(path, data)
         path.chmod(0o600)
         return path
 

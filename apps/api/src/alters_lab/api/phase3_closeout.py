@@ -11,11 +11,11 @@ from alters_lab.schemas.phase3_closeout import (
     Phase3CloseoutResponse,
     Phase3CloseoutEvidenceResponse,
 )
+from alters_lab.services import io
 from alters_lab.services.phase3_closeout import (
     build_phase3_closeout_report,
     get_repo_root,
     phase3_closeout_boundary_confirmations,
-    safe_read_json,
 )
 
 router = APIRouter(prefix="/phase3-closeout", tags=["phase3-closeout"])
@@ -54,7 +54,7 @@ def get_evidence():
     if not evidence_path.exists():
         raise HTTPException(status_code=404, detail="Closeout evidence not found — run /report first")
 
-    evidence = safe_read_json(evidence_path)
+    evidence = io.read_json(evidence_path)
     return Phase3CloseoutEvidenceResponse(
         status="evidence_found",
         evidence=evidence,

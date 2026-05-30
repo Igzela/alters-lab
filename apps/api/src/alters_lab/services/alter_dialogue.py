@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
+from alters_lab.services import io
 
 from alters_lab.schemas.alter_dialogue import (
     AlterDialogueBoundaryConfirmations,
@@ -82,8 +82,7 @@ def load_active_alter(alter_id: str, repo_root: Path | None = None) -> dict:
     alter_path = root / "alters" / "current" / "alters" / f"{alter_id}.yaml"
     if not alter_path.exists():
         raise FileNotFoundError(f"Active alter not found: {alter_path}")
-    with open(alter_path, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+    data = io.read_yaml(alter_path)
     if not isinstance(data, dict):
         raise ValueError(f"Invalid alter YAML: {alter_path}")
     return data
@@ -203,8 +202,7 @@ def list_active_alters(repo_root: Path | None = None) -> list[dict]:
         alter_path = alters_dir / f"{alter_id}.yaml"
         if not alter_path.exists():
             continue
-        with open(alter_path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
+        data = io.read_yaml(alter_path)
         if not isinstance(data, dict):
             continue
         voice = data.get("voice", {})

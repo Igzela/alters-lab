@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import importlib
 import json
-import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -13,6 +12,15 @@ from alters_lab.schemas.phase4_closeout import (
     Phase4CloseoutCheck,
     Phase4CloseoutReport,
     Phase4CloseoutSummary,
+)
+from alters_lab.services import io
+from alters_lab.services.closeout_base import (
+    check as _base_check,
+    check_no_raw_audit_logs,
+    check_no_raw_runtime_artifacts,
+    compute_summary,
+    get_repo_root,
+    git_diff_clean,
 )
 
 REQUIRED_ROUTES = [
@@ -62,37 +70,15 @@ P4_SERVICE_FILES = [
 ]
 
 
-def get_repo_root() -> Path:
-    return Path(__file__).resolve().parents[5]
-
-
 def phase4_closeout_boundary_confirmations() -> dict:
     return Phase4CloseoutBoundaryConfirmations().model_dump()
 
 
-def safe_read_json(path: Path) -> dict:
-    with path.open(encoding="utf-8") as f:
-        data = json.load(f)
-    return data if isinstance(data, dict) else {}
-
-
-def _run_git(root: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
-        capture_output=True,
-        text=True,
-        cwd=str(root),
-        timeout=10,
-    )
-
-
 def _check(name: str, ok: bool, success: str, failure: str, evidence_ref: str | None = None) -> Phase4CloseoutCheck:
+    r = _base_check(name, ok, success, failure, evidence_ref=evidence_ref)
     return Phase4CloseoutCheck(
-        name=name,
-        status="PASS" if ok else "FAIL",
-        severity="info" if ok else "blocking",
-        message=success if ok else failure,
-        evidence_ref=evidence_ref,
+        name=r.name, status=r.status, severity=r.severity,
+        message=r.message, evidence_ref=r.evidence_ref,
     )
 
 
@@ -223,45 +209,31 @@ def check_no_frontend_database_code(repo_root: Path) -> Phase4CloseoutCheck:
 
 
 def check_no_git_diff(repo_root: Path, rel: str, name: str) -> Phase4CloseoutCheck:
-    result = _run_git(repo_root, ["diff", "--quiet", "--", rel])
-    return _check(
-        name,
-        result.returncode == 0,
-        f"No git diff for {rel}",
-        f"Git diff exists for {rel}",
-        rel,
-    )
+    clean, msg = git_diff_clean(repo_root, rel)
+    return _check(name, clean, f"No git diff for {rel}", msg, evidence_ref=rel)
 
 
 def check_no_raw_audit_logs_committed(repo_root: Path) -> Phase4CloseoutCheck:
-    result = _run_git(repo_root, ["ls-files", "docs/harness"])
-    tracked = result.stdout.strip().splitlines() if result.returncode == 0 else []
-    audits = [path for path in tracked if "audit" in path.lower() and path.endswith(".jsonl")]
-    return _check(
-        "no_raw_audit_logs_committed",
-        not audits,
-        "No tracked raw audit JSONL files in docs/harness",
-        f"Tracked raw audit JSONL files found: {audits}",
+    r = check_no_raw_audit_logs(repo_root)
+    return Phase4CloseoutCheck(
+        name=r.name, status=r.status, severity=r.severity,
+        message=r.message, evidence_ref=r.evidence_ref,
     )
 
 
 def check_no_runtime_records_committed(repo_root: Path) -> Phase4CloseoutCheck:
-    runtime_dirs = [
-        "alters/archive/checkpoints",
-        "alters/calibration/rubric_delta_suggestions",
-        "alters/calibration/checkpoint_plans",
-    ]
-    result = _run_git(repo_root, ["ls-files", *runtime_dirs])
-    tracked = result.stdout.strip().splitlines() if result.returncode == 0 else []
-    invalid = [
-        path for path in tracked
-        if not (path.endswith(".gitkeep") or path.endswith("_template.yaml"))
-    ]
-    return _check(
-        "no_runtime_records_committed",
-        not invalid,
-        "No raw runtime archive/suggestion/checkpoint records are tracked",
-        f"Tracked raw runtime records found: {invalid}",
+    r = check_no_raw_runtime_artifacts(
+        repo_root,
+        [
+            "alters/archive/checkpoints",
+            "alters/calibration/rubric_delta_suggestions",
+            "alters/calibration/checkpoint_plans",
+        ],
+        check_name="no_runtime_records_committed",
+    )
+    return Phase4CloseoutCheck(
+        name=r.name, status=r.status, severity=r.severity,
+        message=r.message, evidence_ref=r.evidence_ref,
     )
 
 
@@ -317,34 +289,26 @@ def build_phase4_closeout_report(
         check_governance_docs_updated(root),
     ]
 
-    passed = sum(1 for c in checks if c.status == "PASS")
-    warnings = sum(1 for c in checks if c.status == "WARN")
-    failed = sum(1 for c in checks if c.status == "FAIL")
-    blocking = [c for c in checks if c.status == "FAIL" and c.severity == "blocking"]
+    summary = compute_summary(checks)
+    sealed = summary.sealed_baseline_candidate
+    next_status = "P5-000 blocked pending GPT/human review" if sealed else "blocked"
 
-    if blocking:
-        status = "BLOCKED"
-    elif warnings > 0:
-        status = "PASS_WITH_NOTES"
-    else:
-        status = "PASS"
-
-    sealed = status in ("PASS", "PASS_WITH_NOTES")
-    summary = Phase4CloseoutSummary(
-        status=status,
-        total_checks=len(checks),
-        passed_checks=passed,
-        warning_checks=warnings,
-        failed_checks=failed,
+    phase_summary = Phase4CloseoutSummary(
+        status=summary.status,
+        total_checks=summary.total_checks,
+        passed_checks=summary.passed,
+        warning_checks=summary.warnings,
+        failed_checks=summary.failed,
         sealed_baseline_candidate=sealed,
-        next_phase_status="P5-000 blocked pending GPT/human review" if sealed else "blocked",
+        next_phase_status=next_status,
     )
+
     return Phase4CloseoutReport(
-        status=status,
+        status=summary.status,
         baseline_commit=baseline_commit,
         test_count=test_count,
         checks=checks,
-        summary=summary,
+        summary=phase_summary,
         boundary_confirmations=Phase4CloseoutBoundaryConfirmations(),
         created_at=datetime.now(timezone.utc).isoformat(),
     )

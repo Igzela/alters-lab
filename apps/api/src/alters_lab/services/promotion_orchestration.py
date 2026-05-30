@@ -5,8 +5,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.promotion_orchestration import (
     PromotionEvidenceRequirement,
     PromotionOrchestrationBoundaryConfirmations,
@@ -33,8 +31,8 @@ def load_promotion_package(draft_workspace: Path, draft_id: str) -> dict:
     pkg_path = draft_workspace / draft_id / "promotion_package.yaml"
     if not pkg_path.exists():
         raise FileNotFoundError(f"Promotion package not found: {pkg_path}")
-    with open(pkg_path, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+    from alters_lab.services import io
+    data = io.read_yaml(pkg_path)
     if not isinstance(data, dict):
         raise ValueError("Invalid promotion package format")
     return data
@@ -243,8 +241,8 @@ def save_orchestration_plan(
     draft_dir.mkdir(parents=True, exist_ok=True)
     plan_path = draft_dir / "promotion_orchestration_plan.yaml"
 
-    content = yaml.dump(plan.model_dump(), default_flow_style=False, allow_unicode=True)
-    plan_path.write_text(content, encoding="utf-8")
+    from alters_lab.services import io
+    io.write_model_yaml(plan_path, plan)
 
     return {
         "status": "plan_saved",

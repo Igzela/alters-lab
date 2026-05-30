@@ -2,10 +2,39 @@ import type { ActionAlignmentScore, VerdictLabel, WeeklyNoteRecord, WeeklyReview
 
 const API_BASE = ''
 
+export class ApiError extends Error {
+  constructor(
+    public status: number,
+    public errorCode: string,
+    message: string,
+    public requestId?: string,
+  ) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
+
+async function handleResponse(res: Response) {
+  if (!res.ok) {
+    let errorCode = 'UNKNOWN_ERROR'
+    let message = `Request failed (${res.status})`
+    let requestId: string | undefined
+    try {
+      const body = await res.json()
+      errorCode = body.error || errorCode
+      message = body.message || message
+      requestId = body.request_id
+    } catch {
+      // non-JSON error response
+    }
+    throw new ApiError(res.status, errorCode, message, requestId)
+  }
+  return res.json()
+}
+
 export async function fetchJson(path: string) {
   const res = await fetch(`${API_BASE}${path}`)
-  if (!res.ok) throw new Error(`Request failed (${res.status})`)
-  return res.json()
+  return handleResponse(res)
 }
 
 export async function postJson(path: string, body: unknown) {
@@ -14,8 +43,7 @@ export async function postJson(path: string, body: unknown) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!res.ok) throw new Error(`Request failed (${res.status})`)
-  return res.json()
+  return handleResponse(res)
 }
 
 export async function deleteJson(path: string, body: unknown) {
@@ -24,8 +52,7 @@ export async function deleteJson(path: string, body: unknown) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!res.ok) throw new Error(`Request failed (${res.status})`)
-  return res.json()
+  return handleResponse(res)
 }
 
 export async function ingestWeeklyNote(raw_note: string) {

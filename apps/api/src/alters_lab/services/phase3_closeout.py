@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-import json
 from datetime import datetime, timezone
 from pathlib import Path
-
-import yaml
 
 from alters_lab.schemas.phase3_closeout import (
     Phase3CloseoutBoundaryConfirmations,
@@ -14,30 +11,18 @@ from alters_lab.schemas.phase3_closeout import (
     Phase3CloseoutReport,
     Phase3CloseoutSummary,
 )
+from alters_lab.services import io
+from alters_lab.services.closeout_base import (
+    check as _base_check,
+    compute_summary,
+    get_repo_root,
+    git_ls_files,
+    write_closeout_artifacts,
+)
 
 
 def phase3_closeout_boundary_confirmations() -> dict:
     return Phase3CloseoutBoundaryConfirmations().model_dump()
-
-
-def get_repo_root() -> Path:
-    return Path(__file__).resolve().parents[5]
-
-
-def safe_read_yaml(path: Path) -> dict:
-    with open(path, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-    if not isinstance(data, dict):
-        return {}
-    return data
-
-
-def safe_read_json(path: Path) -> dict:
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
-    if not isinstance(data, dict):
-        return {}
-    return data
 
 
 def check_active_yaml_chain() -> Phase3CloseoutCheck:
@@ -54,11 +39,9 @@ def check_active_yaml_chain() -> Phase3CloseoutCheck:
             severity="blocking",
             message=f"Active YAML chain validation error: {e}",
         )
+    r = _base_check("active_yaml_chain", ok, "Active YAML chain valid", "Active YAML chain invalid")
     return Phase3CloseoutCheck(
-        name="active_yaml_chain",
-        status="PASS" if ok else "FAIL",
-        severity="blocking" if not ok else "info",
-        message="Active YAML chain valid" if ok else "Active YAML chain invalid",
+        name=r.name, status=r.status, severity=r.severity, message=r.message,
     )
 
 
@@ -96,7 +79,7 @@ def check_p3_m7_semantic_noop_evidence(repo_root: Path) -> Phase3CloseoutCheck:
             severity="blocking",
             message="P3-M7 evidence file not found",
         )
-    evidence = safe_read_json(evidence_path)
+    evidence = io.read_json(evidence_path)
     errors: list[str] = []
     if evidence.get("verdict") != "PASS":
         errors.append(f"verdict={evidence.get('verdict')}, expected PASS")
@@ -271,8 +254,6 @@ def check_no_runtime_artifacts_committed(repo_root: Path) -> Phase3CloseoutCheck
 
 
 def check_no_raw_audit_logs_committed(repo_root: Path) -> Phase3CloseoutCheck:
-    import subprocess
-
     harness_dir = repo_root / "docs" / "harness"
     if not harness_dir.exists():
         return Phase3CloseoutCheck(
@@ -282,20 +263,8 @@ def check_no_raw_audit_logs_committed(repo_root: Path) -> Phase3CloseoutCheck:
             message="No harness directory found",
         )
 
-    # Check whether any audit jsonl files are tracked by git
-    try:
-        result = subprocess.run(
-            ["git", "ls-files", "docs/harness"],
-            capture_output=True,
-            text=True,
-            cwd=str(repo_root),
-            timeout=10,
-        )
-        tracked_files = result.stdout.strip().splitlines() if result.returncode == 0 else []
-        tracked_audits = [f for f in tracked_files if "audit" in f.lower() and f.endswith(".jsonl")]
-    except Exception:
-        # git unavailable — fall back to filesystem check
-        tracked_audits = []
+    tracked = git_ls_files(repo_root, "docs/harness")
+    tracked_audits = [f for f in tracked if "audit" in f.lower() and f.endswith(".jsonl")]
 
     if tracked_audits:
         return Phase3CloseoutCheck(
@@ -305,7 +274,6 @@ def check_no_raw_audit_logs_committed(repo_root: Path) -> Phase3CloseoutCheck:
             message=f"Tracked raw audit logs found: {tracked_audits}",
         )
 
-    # Check for local (untracked) audit files
     local_audits = list(harness_dir.glob("*audit*.jsonl"))
     if local_audits:
         return Phase3CloseoutCheck(
@@ -378,36 +346,26 @@ def build_phase3_closeout_report(
         check_phase3_governance_status(root),
     ]
 
-    passed = sum(1 for c in checks if c.status == "PASS")
-    warnings = sum(1 for c in checks if c.status == "WARN")
-    failed = sum(1 for c in checks if c.status == "FAIL")
-    blocking = [c for c in checks if c.status == "FAIL" and c.severity == "blocking"]
+    summary = compute_summary(checks)
+    sealed = summary.sealed_baseline_candidate
+    next_status = "pending_human_gpt_review" if sealed else "blocked"
 
-    if blocking:
-        status = "BLOCKED"
-    elif warnings > 0:
-        status = "PASS_WITH_NOTES"
-    else:
-        status = "PASS"
-
-    sealed = status in ("PASS", "PASS_WITH_NOTES")
-
-    summary = Phase3CloseoutSummary(
-        status=status,
-        total_checks=len(checks),
-        passed_checks=passed,
-        warning_checks=warnings,
-        failed_checks=failed,
+    phase_summary = Phase3CloseoutSummary(
+        status=summary.status,
+        total_checks=summary.total_checks,
+        passed_checks=summary.passed,
+        warning_checks=summary.warnings,
+        failed_checks=summary.failed,
         sealed_baseline_candidate=sealed,
-        next_phase_status="pending_human_gpt_review" if sealed else "blocked",
+        next_phase_status=next_status,
     )
 
     return Phase3CloseoutReport(
-        status=status,
+        status=summary.status,
         baseline_commit=baseline_commit,
         test_count=test_count,
         checks=checks,
-        summary=summary,
+        summary=phase_summary,
         boundary_confirmations=Phase3CloseoutBoundaryConfirmations(),
         created_at=datetime.now(timezone.utc).isoformat(),
     )
@@ -418,50 +376,17 @@ def write_phase3_closeout_artifacts(
     repo_root: Path | None = None,
 ) -> dict:
     root = repo_root or get_repo_root()
-    harness_dir = root / "docs" / "harness"
-    harness_dir.mkdir(parents=True, exist_ok=True)
-
-    # Markdown report
-    md_lines = [
-        "# Phase 3 Controlled Mutation Closeout Report",
-        "",
-        f"**Baseline commit**: `{report.baseline_commit}`",
-        f"**Test count**: {report.test_count or 'unknown'}",
-        f"**Status**: {report.status}",
-        f"**Sealed baseline candidate**: {report.summary.sealed_baseline_candidate}",
-        "",
-        "## Checks",
-        "",
-        "| Check | Status | Severity | Message |",
-        "|-------|--------|----------|---------|",
-    ]
-    for c in report.checks:
-        md_lines.append(f"| {c.name} | {c.status} | {c.severity} | {c.message} |")
-    md_lines.extend([
-        "",
-        "## Boundary Confirmations",
-        "",
-    ])
-    for k, v in report.boundary_confirmations.model_dump().items():
-        md_lines.append(f"- **{k}**: {v}")
-    md_lines.extend([
-        "",
-        f"## Verdict: {report.status}",
-        "",
-        f"Next phase status: {report.summary.next_phase_status}",
-        "",
-    ])
-    report_md = harness_dir / "PHASE3_CLOSEOUT_REPORT.md"
-    report_md.write_text("\n".join(md_lines), encoding="utf-8")
-
-    # JSON evidence
-    evidence = report.model_dump()
-    evidence_path = harness_dir / "PHASE3_CLOSEOUT_EVIDENCE.json"
-    with open(evidence_path, "w", encoding="utf-8") as f:
-        json.dump(evidence, f, indent=2, ensure_ascii=False)
-
-    return {
-        "status": "artifacts_written",
-        "report_path": str(report_md),
-        "evidence_path": str(evidence_path),
-    }
+    next_status = report.summary.next_phase_status
+    return write_closeout_artifacts(
+        phase_label="PHASE3",
+        title="Phase 3 Controlled Mutation Closeout Report",
+        report_status=report.status,
+        baseline_commit=report.baseline_commit,
+        test_count=report.test_count,
+        sealed=report.summary.sealed_baseline_candidate,
+        checks=report.checks,
+        summary=compute_summary(report.checks),
+        boundary_confirmations=report.boundary_confirmations.model_dump(),
+        footer=f"Next phase status: {next_status}",
+        repo_root=root,
+    )

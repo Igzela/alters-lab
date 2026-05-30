@@ -5,9 +5,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.branches import BranchDiscoveryPayload
+from alters_lab.services import io
 from alters_lab.services.controlled_write import (
     append_jsonl_audit,
     create_backup_if_exists,
@@ -23,7 +22,7 @@ def branches_to_yaml(payload: BranchDiscoveryPayload) -> str:
         "branch_discovery": payload.branch_discovery.model_dump(mode="json"),
         "branches": [b.model_dump(mode="json") for b in payload.branches],
     }
-    return yaml.safe_dump(d, sort_keys=False, allow_unicode=True)
+    return io.dump_yaml_str(d)
 
 
 def validate_branches_governance(payload: BranchDiscoveryPayload) -> dict:
@@ -114,14 +113,12 @@ def write_branches_raw_with_audit(
     token_hash = hash_approval_token(approval_token)
     pre_write_hash = sha256_file(target)
 
-    yaml_content = yaml.safe_dump(payload, sort_keys=False, allow_unicode=True)
-
     backup_path = None
     if create_backup and backup_dir:
         backup_path = create_backup_if_exists(target, Path(backup_dir), "branches")
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(yaml_content, encoding="utf-8")
+    io.write_yaml(target, payload)
 
     post_write_hash = sha256_file(target)
 
@@ -172,14 +169,17 @@ def write_branches_with_audit(
     token_hash = hash_approval_token(approval_token)
     pre_write_hash = sha256_file(target)
 
-    yaml_content = branches_to_yaml(payload)
+    d = {
+        "branch_discovery": payload.branch_discovery.model_dump(mode="json"),
+        "branches": [b.model_dump(mode="json") for b in payload.branches],
+    }
 
     backup_path = None
     if create_backup and backup_dir:
         backup_path = create_backup_if_exists(target, Path(backup_dir), "branches")
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(yaml_content, encoding="utf-8")
+    io.write_yaml(target, d)
 
     post_write_hash = sha256_file(target)
 

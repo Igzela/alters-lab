@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
+from alters_lab.services import io
 
 from alters_lab.loaders.active_yaml import active_yaml_paths
 from alters_lab.services.calibration_loop import list_reality_score_records, calculate_drift_values, CalibrationScoreValues
@@ -119,8 +119,7 @@ def save_workflow_run_summary(
         },
     }
 
-    content = yaml.safe_dump(run_data, sort_keys=False, allow_unicode=True)
-    run_path.write_text(content, encoding="utf-8")
+    io.write_yaml(run_path, run_data)
 
     return WorkflowRunSummaryResponse(
         status="saved",

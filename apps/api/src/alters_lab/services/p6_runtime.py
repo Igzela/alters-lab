@@ -13,8 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import yaml
-
+from alters_lab.services import io
 from alters_lab.services.runtime_layout import RuntimeLayout, resolve_runtime_layout
 
 
@@ -92,8 +91,7 @@ def write_record(
     mode: str | None = None,
 ) -> Path:
     path = record_path(area, record_id, repo_root, layout, mode)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    io.write_yaml(path, data)
     return path
 
 
@@ -107,7 +105,7 @@ def read_record(
     path = record_path(area, record_id, repo_root, layout, mode)
     if not path.exists():
         raise FileNotFoundError(f"P6 record not found: {record_id}")
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    data = io.read_yaml(path)
     if not isinstance(data, dict):
         raise ValueError(f"P6 record is not a mapping: {record_id}")
     return data
@@ -126,7 +124,7 @@ def list_records(
     for path in sorted(directory.glob("*.yaml")):
         if path.name.startswith("_template"):
             continue
-        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        data = io.read_yaml(path)
         if isinstance(data, dict):
             records.append(data)
     return records

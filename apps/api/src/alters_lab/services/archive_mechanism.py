@@ -11,7 +11,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
+from alters_lab.services import io
 
 from alters_lab.schemas.archive_mechanism import (
     ArchiveBoundaryConfirmations,
@@ -157,10 +157,7 @@ def create_archive(
         boundary_confirmations=ArchiveBoundaryConfirmations(),
     )
     manifest_path = archive_dir / "manifest.yaml"
-    manifest_path.write_text(
-        yaml.safe_dump(manifest.model_dump(), sort_keys=False, allow_unicode=True),
-        encoding="utf-8",
-    )
+    io.write_yaml(manifest_path, manifest.model_dump())
     return manifest, archive_dir
 
 
@@ -175,7 +172,7 @@ def list_archives(repo_root: Path | None = None) -> list[dict]:
         manifest_path = archive_dir / "manifest.yaml"
         if not manifest_path.exists():
             continue
-        raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        raw = io.read_yaml(manifest_path)
         if not isinstance(raw, dict):
             continue
         archives.append({

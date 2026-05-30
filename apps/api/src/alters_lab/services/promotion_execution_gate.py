@@ -5,8 +5,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.promotion_execution_gate import (
     DryRunCheckResult,
     ExecutionPacket,
@@ -40,10 +38,9 @@ def load_gate_inputs(draft_workspace: Path, draft_id: str) -> dict:
     if not plan_path.exists():
         raise FileNotFoundError(f"Orchestration plan not found: {plan_path}")
 
-    with open(pkg_path, encoding="utf-8") as f:
-        package = yaml.safe_load(f)
-    with open(plan_path, encoding="utf-8") as f:
-        plan = yaml.safe_load(f)
+    from alters_lab.services import io
+    package = io.read_yaml(pkg_path)
+    plan = io.read_yaml(plan_path)
 
     if not isinstance(package, dict):
         raise ValueError("Invalid promotion package format")
@@ -390,18 +387,13 @@ def save_gate_report(
     draft_dir.mkdir(parents=True, exist_ok=True)
 
     report_path = draft_dir / "promotion_execution_gate_report.yaml"
-    content = yaml.dump(report.model_dump(), default_flow_style=False, allow_unicode=True)
-    report_path.write_text(content, encoding="utf-8")
+    from alters_lab.services import io
+    io.write_model_yaml(report_path, report)
 
     packet_path = None
     if report.execution_packet:
         packet_path_obj = draft_dir / "promotion_execution_packet.yaml"
-        packet_content = yaml.dump(
-            report.execution_packet.model_dump(),
-            default_flow_style=False,
-            allow_unicode=True,
-        )
-        packet_path_obj.write_text(packet_content, encoding="utf-8")
+        io.write_model_yaml(packet_path_obj, report.execution_packet)
         packet_path = str(packet_path_obj)
 
     return {

@@ -225,9 +225,8 @@ def save_generation_draft_package(
     draft_dir.mkdir(parents=True, exist_ok=True)
     draft_path = draft_dir / "draft_package.yaml"
 
-    import yaml
-    content = yaml.dump(draft_package.model_dump(), default_flow_style=False, allow_unicode=True)
-    draft_path.write_text(content, encoding="utf-8")
+    from alters_lab.services import io
+    io.write_model_yaml(draft_path, draft_package)
 
     audit_record = {
         "operation": "generation_draft_save",

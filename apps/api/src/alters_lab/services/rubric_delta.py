@@ -10,8 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
+from alters_lab.services import io
 from alters_lab.schemas.calibration_loop import RealityScoreRecord
 from alters_lab.schemas.rubric_delta import (
     RubricDeltaBoundaryConfirmations,
@@ -147,10 +146,7 @@ def save_rubric_delta_suggestion(
     directory = suggestion_directory(repo_root)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{suggestion.id}.yaml"
-    path.write_text(
-        yaml.safe_dump(suggestion.model_dump(), sort_keys=False, allow_unicode=True),
-        encoding="utf-8",
-    )
+    io.write_yaml(path, suggestion.model_dump(), sort_keys=False, allow_unicode=True)
     return path
 
 
@@ -176,7 +172,7 @@ def list_rubric_delta_suggestions(repo_root: Path | None = None) -> list[dict]:
     for path in sorted(directory.glob("rubric_delta_*.yaml")):
         if path.name == "_template.yaml":
             continue
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw = io.read_yaml(path)
         if not isinstance(raw, dict):
             continue
         suggestions.append({

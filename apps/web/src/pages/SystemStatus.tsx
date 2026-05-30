@@ -5,10 +5,11 @@ import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
 import { SkeletonCard } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
-import type { Page } from '../types'
+import { useNavigation } from '../components/NavigationContext'
 
-export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page) => void }) {
+export default function SystemStatus() {
   const { t } = useTranslation()
+  const { navigate } = useNavigation()
   const product = useProductStatus()
   const localApp = useLocalAppStatus()
   const runtime = useRuntimeStatus()
@@ -33,7 +34,7 @@ export default function SystemStatus({ onNavigate }: { onNavigate?: (page: Page)
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight">{t('status.title')}</h2>
-      <Button variant="primary" onClick={() => onNavigate?.('weekly')}>
+      <Button variant="primary" onClick={() => navigate('weekly')}>
         {t('status.startWeeklyReview')}
       </Button>
 

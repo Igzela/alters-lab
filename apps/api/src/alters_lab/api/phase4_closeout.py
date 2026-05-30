@@ -8,11 +8,11 @@ from alters_lab.schemas.phase4_closeout import (
     Phase4CloseoutEvidenceResponse,
     Phase4CloseoutResponse,
 )
+from alters_lab.services import io
 from alters_lab.services.phase4_closeout import (
     build_phase4_closeout_report,
     get_repo_root,
     phase4_closeout_boundary_confirmations,
-    safe_read_json,
 )
 
 router = APIRouter(prefix="/phase4-closeout", tags=["phase4-closeout"])
@@ -40,6 +40,6 @@ def get_evidence():
         raise HTTPException(status_code=404, detail="Phase 4 closeout evidence not found")
     return Phase4CloseoutEvidenceResponse(
         status="evidence_found",
-        evidence=safe_read_json(evidence_path),
+        evidence=io.read_json(evidence_path),
         boundary_confirmations=phase4_closeout_boundary_confirmations(),
     )

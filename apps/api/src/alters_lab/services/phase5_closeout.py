@@ -7,7 +7,6 @@ Read-only report and evidence endpoints.
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 from pathlib import Path
 
@@ -16,26 +15,27 @@ from alters_lab.schemas.phase5_closeout import (
     CloseoutSummary,
     Phase5CloseoutReportResponse,
 )
+from alters_lab.services.closeout_base import (
+    check_no_active_yaml_diff as _shared_no_active_yaml_diff,
+    check_no_rubric_diff as _shared_no_rubric_diff,
+    check_no_raw_runtime_artifacts,
+    check_provider_default_safe as _shared_provider_default_safe,
+    compute_summary,
+    get_repo_root,
+)
 
 
 def _get_repo_root() -> Path:
-    return Path(__file__).resolve().parents[5]
+    return get_repo_root()
 
 
 def _check_provider_gateway_default_safe() -> CloseoutCheck:
-    mode = os.environ.get("ALTERS_PROVIDER_MODE", "mock")
-    if mode in ("mock", "disabled"):
-        return CloseoutCheck(
-            name="provider_gateway_default_safe",
-            status="PASS",
-            severity="critical",
-            message=f"Provider mode defaults to '{mode}'.",
-        )
+    base = _shared_provider_default_safe()
     return CloseoutCheck(
         name="provider_gateway_default_safe",
-        status="FAIL",
+        status=base.status,
         severity="critical",
-        message=f"Provider mode is '{mode}', not mock/disabled.",
+        message=base.message,
     )
 
 
@@ -70,49 +70,23 @@ def _check_no_secrets_committed() -> CloseoutCheck:
 
 def _check_no_active_yaml_diff() -> CloseoutCheck:
     root = _get_repo_root()
-    try:
-        result = subprocess.run(
-            ["git", "diff", "--", "alters/current"],
-            cwd=str(root), capture_output=True, text=True, timeout=10,
-        )
-        if result.stdout.strip():
-            return CloseoutCheck(
-                name="no_active_yaml diff",
-                status="FAIL",
-                severity="critical",
-                message="Active YAML has uncommitted changes.",
-            )
-    except Exception:
-        pass
+    base = _shared_no_active_yaml_diff(root)
     return CloseoutCheck(
         name="no_active_yaml_diff",
-        status="PASS",
+        status=base.status,
         severity="critical",
-        message="No active YAML diff detected.",
+        message=base.message,
     )
 
 
 def _check_no_rubric_diff() -> CloseoutCheck:
     root = _get_repo_root()
-    try:
-        result = subprocess.run(
-            ["git", "diff", "--", "alters/calibration/rubric.yaml"],
-            cwd=str(root), capture_output=True, text=True, timeout=10,
-        )
-        if result.stdout.strip():
-            return CloseoutCheck(
-                name="no_rubric_diff",
-                status="FAIL",
-                severity="critical",
-                message="Rubric YAML has uncommitted changes.",
-            )
-    except Exception:
-        pass
+    base = _shared_no_rubric_diff(root)
     return CloseoutCheck(
         name="no_rubric_diff",
-        status="PASS",
+        status=base.status,
         severity="critical",
-        message="No rubric diff detected.",
+        message=base.message,
     )
 
 
@@ -224,29 +198,15 @@ def _check_p5_docs_complete() -> CloseoutCheck:
 
 
 def _check_no_raw_runtime_artifacts() -> CloseoutCheck:
-    root = _get_repo_root()
-    try:
-        result = subprocess.run(
-            ["git", "ls-files", "alters/product/sessions", "alters/product/provider_runs", "alters/product/workflow_runs"],
-            cwd=str(root), capture_output=True, text=True, timeout=10,
-        )
-        lines = [l for l in result.stdout.strip().split("\n") if l.strip()]
-        allowed = [l for l in lines if ".gitkeep" in l or "_template" in l]
-        raw = [l for l in lines if l not in allowed]
-        if raw:
-            return CloseoutCheck(
-                name="no_raw_runtime_artifacts",
-                status="FAIL",
-                severity="critical",
-                message=f"Raw runtime artifacts tracked: {raw}",
-            )
-    except Exception:
-        pass
+    base = check_no_raw_runtime_artifacts(
+        _get_repo_root(),
+        ["alters/product/sessions", "alters/product/provider_runs", "alters/product/workflow_runs"],
+    )
     return CloseoutCheck(
         name="no_raw_runtime_artifacts",
-        status="PASS",
+        status=base.status,
         severity="critical",
-        message="No raw runtime artifacts committed.",
+        message=base.message,
     )
 
 
@@ -263,25 +223,18 @@ def build_phase5_closeout_report() -> Phase5CloseoutReportResponse:
         _check_no_raw_runtime_artifacts(),
     ]
 
-    passed = sum(1 for c in checks if c.status == "PASS")
-    failed = sum(1 for c in checks if c.status == "FAIL")
-    notes = sum(1 for c in checks if c.status == "NOTE")
-    total = len(checks)
-
-    overall = "PASS" if failed == 0 else "FAIL"
-    if notes > 0 and failed == 0:
-        overall = "PASS_WITH_NOTES"
-
+    summary_base = compute_summary(checks)
+    status = summary_base.status.replace("BLOCKED", "FAIL")
     summary = CloseoutSummary(
-        overall_status=overall,
-        total_checks=total,
-        passed=passed,
-        failed=failed,
-        notes=notes,
+        overall_status=status,
+        total_checks=summary_base.total_checks,
+        passed=summary_base.passed,
+        failed=summary_base.failed,
+        notes=summary_base.warnings,
     )
 
     return Phase5CloseoutReportResponse(
-        status=overall,
+        status=status,
         summary=summary,
         checks=checks,
     )

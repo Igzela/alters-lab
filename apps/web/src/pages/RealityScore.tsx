@@ -8,7 +8,7 @@ import { Select } from '../components/Input'
 import { Banner } from '../components/Banner'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorDisplay from '../components/ErrorDisplay'
-import type { Page } from '../types'
+import { useNavigation } from '../components/NavigationContext'
 
 const ALTERS = [
   { alter: 'alter_A', branch: 'branch_A' },
@@ -19,8 +19,9 @@ const ALTERS = [
 
 const DIMS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
 
-export default function RealityScore({ onNavigate }: { onNavigate?: (page: Page) => void }) {
+export default function RealityScore() {
   const { t } = useTranslation()
+  const { navigate } = useNavigation()
   const [pair, setPair] = useState(0)
   const [scores, setScores] = useState<Record<string, number>>({
     execution_discipline: 3,
@@ -67,16 +68,12 @@ export default function RealityScore({ onNavigate }: { onNavigate?: (page: Page)
       <Banner variant="warning">{t('realityScore.manualNote')}</Banner>
 
       <div className="flex gap-2">
-        {onNavigate && (
-          <Button variant="secondary" onClick={() => onNavigate('weekly')}>
-            {t('realityScore.goToWeeklyReview')}
-          </Button>
-        )}
-        {onNavigate && (
-          <Button variant="ghost" onClick={() => onNavigate('history')}>
-            {t('realityScore.viewHistory')}
-          </Button>
-        )}
+        <Button variant="secondary" onClick={() => navigate('weekly')}>
+          {t('realityScore.goToWeeklyReview')}
+        </Button>
+        <Button variant="ghost" onClick={() => navigate('history')}>
+          {t('realityScore.viewHistory')}
+        </Button>
       </div>
 
       {recentScores.length > 0 && (

@@ -5,9 +5,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.alters import AlterBatchPersistRequest, AlterPayload
+from alters_lab.services import io
 from alters_lab.services.controlled_write import (
     append_jsonl_audit,
     create_backup_if_exists,
@@ -22,7 +21,7 @@ VALID_ALTER_IDS = {"alter_A", "alter_B", "alter_C", "alter_D"}
 
 def alter_to_yaml(alter: AlterPayload) -> str:
     d = alter.model_dump(mode="json")
-    return yaml.safe_dump(d, sort_keys=False, allow_unicode=True)
+    return io.dump_yaml_str(d)
 
 
 def validate_alter_governance(alter: AlterPayload) -> dict:
@@ -110,14 +109,12 @@ def write_alter_with_audit(
     token_hash = hash_approval_token(approval_token)
     pre_write_hash = sha256_file(target)
 
-    yaml_content = alter_to_yaml(alter)
-
     backup_path = None
     if create_backup and backup_dir:
         backup_path = create_backup_if_exists(target, Path(backup_dir), alter.id)
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(yaml_content, encoding="utf-8")
+    io.write_yaml(target, alter.model_dump(mode="json"))
 
     post_write_hash = sha256_file(target)
 
@@ -212,15 +209,13 @@ def write_alter_raw_batch_with_audit(
         target = get_alter_target_path(alter_id, base_dir)
         pre_write_hashes[alter_id] = sha256_file(target)
 
-        yaml_content = yaml.safe_dump(alter, sort_keys=False, allow_unicode=True)
-
         if create_backup and backup_dir:
             bp = create_backup_if_exists(target, Path(backup_dir), alter_id)
             if bp:
                 backup_paths.append(bp)
 
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(yaml_content, encoding="utf-8")
+        io.write_yaml(target, alter)
 
         post_write_hashes[alter_id] = sha256_file(target)
         written_paths.append(str(target))
@@ -278,15 +273,13 @@ def write_alter_batch_with_audit(
         target = get_alter_target_path(alter.id, base_dir)
         pre_write_hashes[alter.id] = sha256_file(target)
 
-        yaml_content = alter_to_yaml(alter)
-
         if create_backup and backup_dir:
             bp = create_backup_if_exists(target, Path(backup_dir), alter.id)
             if bp:
                 backup_paths.append(bp)
 
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(yaml_content, encoding="utf-8")
+        io.write_yaml(target, alter.model_dump(mode="json"))
 
         post_write_hashes[alter.id] = sha256_file(target)
         written_paths.append(str(target))

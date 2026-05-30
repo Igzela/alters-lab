@@ -10,8 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
+from alters_lab.services import io
 from alters_lab.schemas.calibration_loop import (
     CalibrationInputRefs,
     CalibrationLoopBoundaryConfirmations,
@@ -91,7 +90,7 @@ def record_to_yaml_dict(record: RealityScoreRecord) -> dict:
 
 
 def load_reality_score_record(path: Path) -> RealityScoreRecord:
-    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    raw = io.read_yaml(path)
     if not isinstance(raw, dict):
         raise ValueError(f"Invalid reality score record: {path}")
     raw.pop("quality_rules", None)
@@ -119,8 +118,7 @@ def submit_reality_score(
             return "already_exists", existing, path
         raise ValueError(f"Reality score already exists with different content: {record.id}")
 
-    content = yaml.safe_dump(record_to_yaml_dict(record), sort_keys=False, allow_unicode=True)
-    path.write_text(content, encoding="utf-8")
+    io.write_yaml(path, record_to_yaml_dict(record), sort_keys=False, allow_unicode=True)
     return "recorded", record, path
 
 

@@ -10,8 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
+from alters_lab.services import io
 from alters_lab.schemas.checkpoint_regeneration import (
     CheckpointBoundaryConfirmations,
     CheckpointPlanRequest,
@@ -121,10 +120,7 @@ def save_checkpoint_regeneration_plan(
     directory = checkpoint_plan_directory(repo_root)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{plan.id}.yaml"
-    path.write_text(
-        yaml.safe_dump(plan.model_dump(), sort_keys=False, allow_unicode=True),
-        encoding="utf-8",
-    )
+    io.write_yaml(path, plan.model_dump(), sort_keys=False, allow_unicode=True)
     return path
 
 
@@ -150,7 +146,7 @@ def list_checkpoint_regeneration_plans(repo_root: Path | None = None) -> list[di
     for path in sorted(directory.glob("checkpoint_plan_*.yaml")):
         if path.name == "_template.yaml":
             continue
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw = io.read_yaml(path)
         if not isinstance(raw, dict):
             continue
         plans.append({

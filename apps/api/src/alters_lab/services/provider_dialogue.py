@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
+from alters_lab.services import io
 
 from alters_lab.loaders.active_yaml import load_yaml_file
 from alters_lab.schemas.provider_dialogue import (
@@ -157,6 +157,5 @@ def _save_session(
         },
     }
 
-    content = yaml.safe_dump(session_data, sort_keys=False, allow_unicode=True)
-    session_path.write_text(content, encoding="utf-8")
+    io.write_yaml(session_path, session_data)
     return str(session_path)

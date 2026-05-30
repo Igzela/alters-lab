@@ -4,6 +4,7 @@ import { expandIn, pulseSuccess } from '../animations'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { ProgressBar } from '../components/ProgressBar'
+import { useNavigation } from '../components/NavigationContext'
 import type { Page } from '../types'
 
 const STORAGE_KEY = 'alters_lab_onboarding_steps'
@@ -20,8 +21,9 @@ function saveCompleted(steps: Set<number>) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...steps]))
 }
 
-export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page) => void }) {
+export default function GettingStarted() {
   const { t } = useTranslation()
+  const { navigate } = useNavigation()
   const [completed, setCompleted] = useState<Set<number>>(loadCompleted)
   const [expanded, setExpanded] = useState<number | null>(1)
   const stepRefs = useRef<Map<number, HTMLDivElement>>(new Map())
@@ -146,7 +148,7 @@ export default function GettingStarted({ onNavigate }: { onNavigate: (page: Page
               <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{step.desc}</p>
               <div className="flex gap-2">
                 {step.navigate && (
-                  <Button variant="secondary" onClick={() => onNavigate(step.navigate!)}>
+                  <Button variant="secondary" onClick={() => navigate(step.navigate!)}>
                     {step.action}
                   </Button>
                 )}

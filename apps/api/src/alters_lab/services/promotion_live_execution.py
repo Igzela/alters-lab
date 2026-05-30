@@ -5,8 +5,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.promotion_live_execution import (
     LiveExecutionStepResult,
     PromotionLiveExecutionBoundaryConfirmations,
@@ -52,8 +50,8 @@ def load_live_execution_inputs(draft_workspace: Path, draft_id: str) -> dict:
         path = draft_dir / filename
         if not path.exists():
             raise FileNotFoundError(f"Required file not found: {path}")
-        with open(path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
+        from alters_lab.services import io
+        data = io.read_yaml(path)
         if not isinstance(data, dict):
             raise ValueError(f"Invalid format: {filename}")
         result[key] = data
@@ -470,8 +468,8 @@ def save_live_execution_report(
     draft_dir.mkdir(parents=True, exist_ok=True)
     report_path = draft_dir / "promotion_live_execution_report.yaml"
 
-    content = yaml.dump(report.model_dump(), default_flow_style=False, allow_unicode=True)
-    report_path.write_text(content, encoding="utf-8")
+    from alters_lab.services import io
+    io.write_model_yaml(report_path, report)
 
     return {
         "status": "report_saved",

@@ -2,25 +2,15 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
 from alters_lab.schemas.snapshot import Snapshot
+from alters_lab.services import io
+from alters_lab.services.controlled_write import sha256_file, sha256_text
 from alters_lab.services.snapshot_export import snapshot_to_yaml
-
-
-def sha256_text(text: str) -> str:
-    return hashlib.sha256(text.encode("utf-8")).hexdigest()
-
-
-def sha256_file(path: Path) -> str | None:
-    p = Path(path)
-    if not p.exists():
-        return None
-    return sha256_text(p.read_text(encoding="utf-8"))
 
 
 def hash_approval_token(approval_token: str) -> str:
@@ -120,7 +110,7 @@ def write_snapshot_with_audit(
         backup_path = str(backup_file)
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(payload["yaml_content"], encoding="utf-8")
+    io.write_text(target, payload["yaml_content"])
 
     post_write_hash = sha256_file(target)
 

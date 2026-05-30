@@ -5,8 +5,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.draft_review import (
     DraftReviewBoundaryConfirmations,
     DraftReviewDecision,
@@ -28,8 +26,8 @@ def load_draft_package(draft_workspace: Path, draft_id: str) -> dict:
     draft_path = draft_workspace / draft_id / "draft_package.yaml"
     if not draft_path.exists():
         raise FileNotFoundError(f"Draft package not found: {draft_path}")
-    with open(draft_path, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+    from alters_lab.services import io
+    data = io.read_yaml(draft_path)
     if not isinstance(data, dict):
         raise ValueError(f"Invalid draft package format")
     return data
@@ -264,8 +262,8 @@ def save_review_decision(
     draft_dir.mkdir(parents=True, exist_ok=True)
     review_path = draft_dir / "review_decision.yaml"
 
-    content = yaml.dump(review_decision.model_dump(), default_flow_style=False, allow_unicode=True)
-    review_path.write_text(content, encoding="utf-8")
+    from alters_lab.services import io
+    io.write_model_yaml(review_path, review_decision)
 
     return {
         "status": "review_saved",
@@ -288,8 +286,8 @@ def save_promotion_package(
     draft_dir.mkdir(parents=True, exist_ok=True)
     promo_path = draft_dir / "promotion_package.yaml"
 
-    content = yaml.dump(promotion_package.model_dump(), default_flow_style=False, allow_unicode=True)
-    promo_path.write_text(content, encoding="utf-8")
+    from alters_lab.services import io
+    io.write_model_yaml(promo_path, promotion_package)
 
     return {
         "status": "promotion_package_saved",

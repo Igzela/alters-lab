@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
-
 from alters_lab.schemas.snapshot import IntakePhase, Snapshot
+from alters_lab.services import io
 
 
 def snapshot_to_canonical_dict(snapshot: Snapshot) -> dict:
@@ -53,7 +52,7 @@ def snapshot_to_yaml(snapshot: Snapshot) -> str:
     Output includes top-level 'snapshot:'. Preserves Unicode and key order.
     """
     d = snapshot_to_canonical_dict(snapshot)
-    return yaml.safe_dump(d, sort_keys=False, allow_unicode=True)
+    return io.dump_yaml_str(d)
 
 
 def write_snapshot_yaml(snapshot: Snapshot, target_path: Path, overwrite: bool = False) -> Path:
@@ -71,6 +70,5 @@ def write_snapshot_yaml(snapshot: Snapshot, target_path: Path, overwrite: bool =
         raise FileExistsError(f"{target_path} already exists and overwrite=False")
 
     yaml_str = snapshot_to_yaml(snapshot)
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-    target_path.write_text(yaml_str, encoding="utf-8")
+    io.write_text(target_path, yaml_str)
     return target_path

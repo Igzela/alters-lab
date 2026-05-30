@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-import yaml
+from alters_lab.services import io
 
 
 RuntimeMode = Literal["dev", "packaged"]
@@ -106,6 +106,11 @@ def resolve_runtime_layout(
     )
 
 
+def get_layout() -> RuntimeLayout:
+    """FastAPI dependency: returns the cached startup layout."""
+    return resolve_runtime_layout()
+
+
 def default_config(layout: RuntimeLayout | None = None, mode: str | None = None) -> dict[str, Any]:
     resolved_layout = layout or resolve_runtime_layout(mode=mode)
     return {
@@ -150,7 +155,7 @@ def ensure_user_config(layout: RuntimeLayout) -> Path:
 
 def load_user_config(layout: RuntimeLayout) -> dict[str, Any]:
     ensure_user_config(layout)
-    data = yaml.safe_load(layout.config_path.read_text(encoding="utf-8")) or {}
+    data = io.read_yaml(layout.config_path) or {}
     if not isinstance(data, dict):
         raise ValueError(f"Runtime config is not a mapping: {layout.config_path}")
     return data
@@ -159,22 +164,21 @@ def load_user_config(layout: RuntimeLayout) -> dict[str, Any]:
 def load_user_config_if_exists(layout: RuntimeLayout) -> dict[str, Any] | None:
     if not layout.config_path.exists():
         return None
-    data = yaml.safe_load(layout.config_path.read_text(encoding="utf-8")) or {}
+    data = io.read_yaml(layout.config_path) or {}
     if not isinstance(data, dict):
         raise ValueError(f"Runtime config is not a mapping: {layout.config_path}")
     return data
 
 
 def write_user_config(layout: RuntimeLayout, config: dict[str, Any]) -> Path:
-    layout.config_dir.mkdir(parents=True, exist_ok=True)
-    layout.config_path.write_text(yaml.safe_dump(config, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    io.write_yaml(layout.config_path, config)
     return layout.config_path
 
 
 def ensure_secrets_fallback_file(layout: RuntimeLayout) -> Path:
     layout.config_dir.mkdir(parents=True, exist_ok=True)
     if not layout.secrets_path.exists():
-        layout.secrets_path.write_text(yaml.safe_dump({"version": 1}, sort_keys=False), encoding="utf-8")
+        io.write_yaml(layout.secrets_path, {"version": 1})
         layout.secrets_path.chmod(0o600)
     else:
         layout.secrets_path.chmod(0o600)

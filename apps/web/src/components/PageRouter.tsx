@@ -1,0 +1,36 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
+import SystemStatus from '../pages/SystemStatus'
+import AlterDialogue from '../pages/AlterDialogue'
+import RealityScore from '../pages/RealityScore'
+import CalibrationHistory from '../pages/CalibrationHistory'
+import RubricDelta from '../pages/RubricDelta'
+import CheckpointPlan from '../pages/CheckpointPlan'
+import ProviderSettings from '../pages/ProviderSettings'
+import WeeklyReview from '../pages/WeeklyReview'
+import GettingStarted from '../pages/GettingStarted'
+import PatternReview from '../pages/PatternReview'
+import BehaviorValidation from '../pages/BehaviorValidation'
+import DataManagement from '../pages/DataManagement'
+import Dashboard from '../pages/Dashboard'
+
+export default function PageRouter() {
+  return (
+    <Routes>
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/status" element={<SystemStatus />} />
+      <Route path="/weekly" element={<WeeklyReview />} />
+      <Route path="/dialogue" element={<AlterDialogue />} />
+      <Route path="/reality" element={<RealityScore />} />
+      <Route path="/history" element={<CalibrationHistory />} />
+      <Route path="/rubric" element={<RubricDelta />} />
+      <Route path="/checkpoint" element={<CheckpointPlan />} />
+      <Route path="/provider" element={<ProviderSettings />} />
+      <Route path="/getting-started" element={<GettingStarted />} />
+      <Route path="/patterns" element={<PatternReview />} />
+      <Route path="/validation" element={<BehaviorValidation />} />
+      <Route path="/data" element={<DataManagement />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
+}

@@ -53,11 +53,11 @@ SCAN_EXTENSIONS = {
 # --- Expected routes (P8 provider routes) ---
 
 EXPECTED_ROUTES: list[str] = [
-    "provider_adapter_router",
-    "provider_connectivity_router",
-    "provider_config_router",
-    "provider_dialogue_preview_router",
-    "weekly_review_assistant_router",
+    "provider_adapter",
+    "provider_connectivity",
+    "provider_config",
+    "provider_dialogue_preview",
+    "weekly_review_assistant",
 ]
 
 # --- Expected LIVE_CONFIRMATION constants ---
