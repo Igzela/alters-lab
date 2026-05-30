@@ -77,9 +77,21 @@ docker compose up -d
 ```bash
 git clone https://github.com/Igzela/alters-lab.git
 cd alters-lab
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e "apps/api[dev]"
 cd apps/web && npm install && cd ../..
 alters-lab start
+```
+
+> **Linux/macOS users**: If `pip install` fails with "externally-managed-environment", you must use a virtualenv (shown above). On Windows, `pip install` works directly.
+
+**Development mode** (hot-reload frontend):
+
+```bash
+source .venv/bin/activate
+PYTHONPATH=apps/api/src uvicorn alters_lab.main:app --port 18790 &
+cd apps/web && npm run dev
+# Frontend: http://localhost:5173  Backend: http://localhost:18790
 ```
 
 ### 2. Load Sample Data
