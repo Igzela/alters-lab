@@ -4,14 +4,10 @@
 Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具。
 
 ## 当前阶段
-- P0-P14 全部完成（P14: Frontend polish — component standardization, date i18n, styled inputs, progress bar, JSON display, skip-to-content, alter labels i18n, toast notifications）
-- P11 已封印：PRODUCT_COMPLETE_BEFORE_VALIDATION
-- P12 已完成：P12-M7 决策 — 从零重启 P6 验证
-- P13 已完成：GPT PASS_WITH_GOVERNANCE_CLOSEOUT，P13 scope COMPLETE
-- P14 已完成：GPT PASS（FINAL-CLOSEOUT-E1），P14 scope COMPLETE（M1-M8 + R1）
+- P0-P14 全部完成
 - P6 状态：CODE_COMPLETE_VALIDATION_RESTARTED / NOT_VALIDATED / NOT_SEALED
-- Week 1 证据已归档为历史（pre-P12），不计入 P6 closeout
 - 下一步：收集 fresh post-P14 证据（4 weekly reviews + 4 calibration records + 1 pattern review，跨越 21+ 天）
+- 项目已开源（MIT LICENSE），有 sample data 和 load-sample 命令
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
@@ -20,6 +16,7 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 - **打包**: Debian (.deb)，CLI 入口 `alters-lab`
 - **测试**: pytest + httpx
 - **部署**: 本地安装，运行在 127.0.0.1:18790
+- **中间件**: CORS, Rate Limiting (600 req/min), 结构化日志
 
 ## 核心数据流
 Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration → Archive
@@ -29,13 +26,49 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 
 所有 Claude Code、Codex 或其他 coding agent 必须先读：
 
-1. `AGENTS.md`
-2. `docs/harness/START_HERE_FOR_NEW_SESSION.md`
-3. `docs/harness/CURRENT_SESSION_CONTEXT.md`
-4. `docs/harness/PROJECT_BOARD.md`
-5. `docs/harness/TASK_QUEUE.md`
+1. `CLAUDE.md`（本文件）— 项目状态、技术栈、文档规范
+2. `AGENTS.md` — 协作模式、硬边界、验证命令
+3. `docs/architecture.md` — 技术架构（系统怎么工作的）
+4. `docs/data-model.md` — 数据模型（schema 定义）
 
 如果这些文件、README、最近 git log 互相冲突，先修文档，不要直接进入功能开发。
+
+## 文档维护规范
+
+### 文档层级（按优先级）
+
+| 文件 | 定位 | 谁该读 | 什么时候更新 |
+|------|------|--------|-------------|
+| `README.md` | 公开入口，用户第一印象 | 用户、贡献者 | 用户可见功能变化（新页面、新 CLI 命令、安装方式） |
+| `CLAUDE.md` | Agent 指令，项目状态 | 所有 coding agent | 状态变化、新功能、测试数变化、技术栈变化 |
+| `AGENTS.md` | 协作协议，硬边界 | 所有 coding agent | 协作方式变化、边界变化、验证命令变化 |
+| `docs/architecture.md` | 技术架构（系统怎么工作的） | 开发者、agent | 新模块、中间件、API 路由、部署方式变化 |
+| `docs/data-model.md` | 数据模型（schema 定义） | 开发者、agent | Pydantic schema 变化、新实体、字段增删 |
+| `docs/product-spec.md` | 产品规格（产品做什么） | 开发者、agent | 新功能、能力变化、用户工作流变化 |
+| `docs/user/` | 用户指南 | 用户 | 用户工作流变化 |
+| `docs/harness/` | 里程碑证据、治理 | GPT、Charlie | 里程碑完成时（GPT/Charlie 主导） |
+
+### 更新规则
+
+**每次 commit 前，检查：**
+1. 这次改动是否影响了用户可见功能？→ 更新 `README.md`
+2. 这次改动是否改变了系统状态、测试数、技术栈？→ 更新 `CLAUDE.md`
+3. 这次改动是否改变了协作方式或硬边界？→ 更新 `AGENTS.md`
+4. 这次改动是否新增/修改了模块、中间件、API 路由？→ 更新 `docs/architecture.md`
+5. 这次改动是否新增/修改了 Pydantic schema？→ 更新 `docs/data-model.md`
+6. 这次改动是否新增/修改了产品功能？→ 更新 `docs/product-spec.md`
+
+**不需要全改，只改受影响的。** 如果不需要更新文档，在 completion report 中说明原因。
+
+### 冲突解决
+
+如果文档之间冲突：
+- 代码 > `docs/data-model.md` > `docs/architecture.md` > `CLAUDE.md` > `README.md` > `docs/harness/`
+- 以代码为准，修文档
+
+### 测试数维护
+
+`CLAUDE.md` 中的测试数必须与实际一致。每次 commit 前运行测试确认。
 
 ## 协作模式
 
@@ -82,23 +115,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 - 不连接 LLM provider
 - 测试用 tmp_path，不改真实文件
 - commit message 用英文，格式: `P{N}-M{N}: 简短描述`，修正用 `-R{N}` 后缀
-- 1270 backend tests passing
-
-## 文档维护规则
-
-每次 commit 前，如果状态、测试数、命令、边界、页面、路由、证据或下一步发生变化，必须同步更新：
-
-- `docs/harness/START_HERE_FOR_NEW_SESSION.md`
-- `docs/harness/CURRENT_SESSION_CONTEXT.md`
-- `docs/harness/PROJECT_BOARD.md`
-- `docs/harness/TASK_QUEUE.md`
-- `docs/harness/RUN_LOG.md`
-- `docs/harness/EVIDENCE_INDEX.md`
-- `README.md`
-- `CLAUDE.md`
-- `AGENTS.md`
-
-如果不需要更新文档，在 completion report 中说明原因。新 session 必须能只靠文档接手。
+- 1269 backend tests passing
 
 ## 测试命令
 ```bash
@@ -106,9 +123,10 @@ PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 ```
 
 ## 项目文档
-- docs/ — 工作流和架构文档（architecture.md, data-model.md, product-spec.md 等）
-- docs/harness/ — 里程碑证据和关闭报告
-- 当前任务方向见最近 git log
+- docs/ — 架构、数据模型、产品规格、用户指南
+- docs/harness/ — 里程碑证据和关闭报告（GPT/Charlie 主导维护）
+- docs/user/ — 用户指南（安装、配置、故障排除）
+- alters/sample/ — 新用户示例数据
 
 ## 前端页面
 - SystemStatus (status), GettingStarted, WeeklyReview, AlterDialogue

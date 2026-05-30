@@ -73,6 +73,17 @@ Snapshot → Branches → Alters → Dialogue → Calibration
 | `alters-lab doctor` | Run health checks |
 | `alters-lab open` | Open the app in a browser |
 | `alters-lab backup` | Create a data backup |
+| `alters-lab load-sample` | Load sample data for new users |
+
+## Sample Data
+
+Alters Lab ships with sample data so you can explore immediately after installation:
+
+```bash
+alters-lab load-sample
+```
+
+This loads a career-change scenario with 4 branches, 4 alters, and a snapshot into `alters/current/`. The app will use this data for dialogue, calibration, and weekly reviews. Edit the files in `alters/current/` to reflect your own situation.
 
 ## Provider Modes
 
@@ -102,6 +113,7 @@ docs/               Documentation
   user/             User-facing guides
 alters/             Runtime data (YAML/JSON)
   current/          Active snapshot, branches, and alters
+  sample/           Sample data for new users (load via `alters-lab load-sample`)
   calibration/      Rubric, scores, and calibration state
   archive/          Completed cycle archives
 ```

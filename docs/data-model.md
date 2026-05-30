@@ -1,108 +1,159 @@
 # Data Model
 
-## Entities
+All data is stored as YAML/JSON files under `alters/`. No database. Pydantic schemas in `apps/api/src/alters_lab/schemas/` enforce structure and invariants.
 
-### Snapshot
+## Directory Structure
 
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Identifier |
-| heaviest_constraint | text | The biggest constraint currently shaping decisions |
-| most_unclear | text | The most uncertain direction or question |
-| unwilling_to_give_up | list[str] | Things you will not sacrifice regardless of branch |
-| captured_at | datetime | When the snapshot was taken |
-| cycle | int | Which calibration cycle this belongs to |
+```
+alters/
+  current/                    # Active working data (user-specific, gitignored)
+    snapshot.yaml             # Current life state
+    branches.yaml             # Discovered branches
+    reality_trace.yaml        # Reality vs. prediction tracking
+    alters/                   # alter_A.yaml through alter_D.yaml
+    dialogue/                 # Dialogue session records
+    value_alignment/          # Value alignment reports
+  sample/                     # Sample data for new users (checked in)
+    snapshot.yaml, branches.yaml, alters/, reality_trace.yaml
+  calibration/                # Evaluation framework
+    rubric.yaml               # 4-axis evaluation rubric
+    state.json                # Calibration cycle state
+    scores/                   # Per-cycle score records
+    rubric_delta_suggestions/ # Rubric evolution suggestions
+    checkpoint_plans/         # Checkpoint regeneration plans
+  product/                    # Runtime product data
+    config/                   # config.yaml, secrets.yaml
+    weekly_notes/             # Ingested weekly notes
+    weekly_reviews/           # Weekly review sessions
+    calibration_records/      # Action alignment scores
+    pattern_reviews/          # Behavioral pattern analysis
+    behavior_validation/      # Validation reports
+    sessions/                 # Provider dialogue sessions
+    provider_runs/            # Provider call logs
+    exports/                  # Data exports
+  archive/                    # Completed cycle archives
+```
 
-### Branch
+## Core Entities
 
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Identifier |
-| snapshot_id | string | FK to Snapshot |
-| name | string | Branch label |
-| description | text | What this path looks like |
-| structural_difference | text | How this differs from other branches in kind, not degree |
-| tradeoffs | list[str] | What you gain and lose on this path |
-| created_at | datetime | Creation timestamp |
+### Snapshot (`snapshot.yaml`)
 
-### Alter
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Identifier |
-| branch_id | string | FK to Branch |
-| name | string | Alter's name or label |
-| values | list[str] | Core values on this branch |
-| narrative | text | Coherent life story for this path |
-| tradeoffs | list[str] | What this Alter has accepted or sacrificed |
-| created_at | datetime | Creation timestamp |
-
-### RealityTrace
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Identifier |
-| branch_id | string | FK to Branch |
-| observed_at | datetime | When this observation was recorded |
-| divergence | text | How reality differs from predicted branch |
-| delta_magnitude | float | How far reality has drifted (0-1) |
-| notes | text | Additional context |
-
-### RealityScore
+Top-level key: `snapshot:`. Contains the user's current life state.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | string | Identifier |
-| cycle | int | Calibration cycle |
-| branch_id | string | FK to Branch |
-| scores | JSON | Per-dimension scores |
-| total_score | float | Weighted total |
-| scored_at | datetime | When scored |
+| `date` | string \| null | Snapshot date |
+| `version` | int | Schema version (>= 1) |
+| `anchors` | SnapshotAnchors | Three core anchors |
+| `context` | SnapshotContext | Commitments, deadlines, energy |
+| `intake_status` | SnapshotIntakeStatus | Phase and completion tracking |
+| `evidence_policy` | EvidencePolicy | Source mode and confidence |
+| `notes` | list[str] | Freeform notes |
 
-### Rubric
+**SnapshotAnchors:**
+| Field | Type |
+|-------|------|
+| `heaviest_constraint` | str |
+| `most_unclear` | str |
+| `unwilling_to_give_up` | str |
+
+**SnapshotContext:**
+| Field | Type |
+|-------|------|
+| `current_commitments` | list[str] |
+| `external_deadlines` | list[str] |
+| `energy_state` | str |
+
+**SnapshotIntakeStatus:**
+| Field | Type |
+|-------|------|
+| `phase` | Enum: `not_started`, `asking_heaviest_constraint`, `asking_most_unclear`, `asking_unwilling_to_give_up`, `ready_for_snapshot_confirmation`, `completed` |
+| `completed_anchors` | list[AnchorName] |
+| `pending_anchor` | AnchorName \| null |
+
+### Branch (`branches.yaml`)
+
+Top-level key: `branch_discovery:` + `branches:`.
+
+**BranchDiscoveryStatus:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | str | `"not_started"` or `"completed"` |
+| `source_snapshot_ref` | str | Path to source snapshot |
+| `requires_snapshot_phase` | str | Required snapshot phase |
+| `confirmed_by` | str | Who confirmed |
+| `confirmation_note` | str | Confirmation note |
+
+**Branch:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | str | `branch_A` through `branch_D` |
+| `label` | str | Human-readable label |
+| `core_choice` | str | The fundamental choice this branch represents |
+| `structural_commitment` | str | What must be committed |
+| `key_tension_resolved` | str | Which tension this branch resolves |
+| `incompatible_with` | list[str] | Other branch IDs this is incompatible with |
+| `preserves` | list[str] | What this branch preserves |
+| `sacrifices` | list[str] | What this branch sacrifices |
+| `validation_signal_30d` | list[str] | Signals to watch in 30 days |
+| `invalid_if` | list[str] | Conditions that invalidate this branch |
+
+### Alter (`alters/alter_A.yaml` through `alter_D.yaml`)
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | string | Identifier |
-| version | int | Version number |
-| dimensions | list[RubricDimension] | Evaluation dimensions |
-| auto_modify | bool | Whether rubric can self-modify (always false) |
-| created_at | datetime | Creation timestamp |
+| `id` | str | `alter_A` through `alter_D` (enforced) |
+| `branch_ref` | str | Must match: `alter_A` → `branch_A` |
+| `label` | str | Alter's name |
+| `source_refs` | AlterSourceRefs | References to source files |
+| `quality_status` | AlterQualityStatus | Confirmation and active status |
+| `voice` | AlterVoice | Personality and stance |
 
-### RubricDimension
+**AlterSourceRefs** (all paths enforced by validator):
+| Field | Required Value |
+|-------|---------------|
+| `snapshot_ref` | `"alters/current/snapshot.yaml"` |
+| `branches_ref` | `"alters/current/branches.yaml"` |
+| `rubric_ref` | `"alters/calibration/rubric.yaml"` |
 
-| Field | Type | Description |
-|-------|------|-------------|
-| name | string | Dimension identifier |
-| description | text | What this dimension measures |
-| weight | float | Relative weight (0-1) |
-| scale | string | Scoring scale description |
+**AlterQualityStatus:**
+| Field | Type |
+|-------|------|
+| `human_confirmed` | bool (must be `true`) |
+| `active` | bool (must be `true`) |
+| `notes` | list[str] |
 
-### Archive
+**AlterVoice:**
+| Field | Type |
+|-------|------|
+| `core_stance` | str (must be non-empty) |
+| `typical_concern` | str |
+| `decision_style` | str |
+| `self_warning` | str |
 
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Identifier |
-| cycle | int | Completed cycle number |
-| snapshot_snapshot | Snapshot | Archived snapshot |
-| branches | list[Branch] | Archived branches |
-| scores | list[RealityScore] | Archived scores |
-| reality_traces | list[RealityTrace] | Archived traces |
-| archived_at | datetime | When archived |
+### Rubric (`calibration/rubric.yaml`)
 
-## Relationships
+4-axis evaluation framework. `auto_modify` is always `false`.
 
-- Snapshot 1:N Branch
-- Branch 1:N Alter
-- Branch 1:N RealityTrace
-- Branch 1:N RealityScore
-- Snapshot 1:1 Archive (per cycle)
+### RealityTrace (`current/reality_trace.yaml`)
 
-## Invariants
+Tracks how reality diverges from branch predictions over time.
 
-- Branches must be structurally and mutually incompatible (not gradations)
-- Alter must reference a valid branch_ref
-- Time horizon for branches is fixed at 1.5-2 years
-- Dialogue must inject full alter.yaml content
-- Rubric auto_modify is always false
-- Any unknown_error requires human review
+### ActionAlignmentScore (`product/calibration_records/`)
+
+Weekly review scoring: direction alignment, execution consistency, avoidance level, verdict label.
+
+### WeeklyReviewSession (`product/weekly_reviews/`)
+
+Complete weekly review session with review note, dialogue summary, primary correction, supporting actions.
+
+## Key Invariants
+
+- **extra="forbid"**: Most Pydantic models reject unknown fields. YAML files on disk may have extra fields, but API validation is strict.
+- **Alter IDs**: Must be exactly `alter_A`, `alter_B`, `alter_C`, `alter_D`.
+- **Branch refs**: `alter_A` must reference `branch_A`, etc.
+- **Source refs**: Must point to exact paths (`alters/current/snapshot.yaml`, etc.).
+- **Completion validation**: Completed snapshots require all three anchors filled and `pending_anchor: null`. Completed branch discovery requires exactly 4 branches.
+- **Mutual incompatibility**: Each branch must have non-empty `incompatible_with` listing the other 3 branch IDs.
+- **Rubric immutability**: `auto_modify` is always `false`. Rubric changes require explicit human approval.
+- **Approval tokens**: Write operations require an `approval_token` — a domain-specific safety gate, not HTTP auth.
