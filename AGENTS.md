@@ -11,7 +11,7 @@ Every Codex, Claude Code, or other coding-agent session must start by reading:
 3. `docs/architecture.md` — how the system works
 4. `docs/data-model.md` — schema definitions
 
-**DO NOT read `docs/harness/`** — it contains stale milestone governance docs (P0-P14). They are historical records, not current state. Always trust CLAUDE.md over harness docs.
+**DO NOT read `docs/harness/`** — it has been deleted. Historical milestone docs no longer exist.
 
 ## Current State
 
@@ -44,4 +44,4 @@ Run the relevant subset for documentation-only changes; run the full set before 
 Before every commit-sized change, check which docs are affected (see `CLAUDE.md` § 文档维护规范). Update only what changed — don't rubber-stamp all files.
 
 Priority order for conflict resolution:
-- Code > `docs/data-model.md` > `docs/architecture.md` > `CLAUDE.md` > `README.md` > `docs/harness/`
+- Code > `docs/data-model.md` > `docs/architecture.md` > `CLAUDE.md` > `README.md`

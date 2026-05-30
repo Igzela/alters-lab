@@ -45,7 +45,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 3. `docs/architecture.md` — 技术架构（系统怎么工作的）
 4. `docs/data-model.md` — 数据模型（schema 定义）
 
-**⚠️ 禁止读取 `docs/harness/` 目录** — 这是历史里程碑文档（P0-P14 的治理记录），已过时，不能作为当前状态的依据。当前状态以 CLAUDE.md 为准。
+**⚠️ `docs/harness/` 已删除** — 历史里程碑文档（P0-P14 治理记录）已清理。当前状态以 CLAUDE.md 为准。
 
 如果这些文件、README、最近 git log 互相冲突，先修文档，不要直接进入功能开发。
 
@@ -62,7 +62,6 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 | `docs/data-model.md` | 数据模型（schema 定义） | 开发者、agent | Pydantic schema 变化、新实体、字段增删 |
 | `docs/product-spec.md` | 产品规格（产品做什么） | 开发者、agent | 新功能、能力变化、用户工作流变化 |
 | `docs/user/` | 用户指南 | 用户 | 用户工作流变化 |
-| `docs/harness/` | 里程碑证据、治理 | GPT、Charlie | 里程碑完成时（GPT/Charlie 主导） |
 
 ### 更新规则
 
@@ -79,7 +78,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 ### 冲突解决
 
 如果文档之间冲突：
-- 代码 > `docs/data-model.md` > `docs/architecture.md` > `CLAUDE.md` > `README.md` > `docs/harness/`
+- 代码 > `docs/data-model.md` > `docs/architecture.md` > `CLAUDE.md` > `README.md`
 - 以代码为准，修文档
 
 ### 测试数维护
@@ -139,10 +138,14 @@ PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 ```
 
 ## 项目文档
-- docs/ — 架构、数据模型、产品规格、用户指南
-- docs/harness/ — 里程碑证据和关闭报告（GPT/Charlie 主导维护）
-- docs/user/ — 用户指南（安装、配置、故障排除）
-- alters/sample/ — 新用户示例数据
+- `docs/architecture.md` — 技术架构（真相源）
+- `docs/data-model.md` — 数据模型（真相源）
+- `docs/product-spec.md` — 产品规格（真相源）
+- `docs/USER_GUIDE.md` — 用户指南
+- `docs/PROVIDER_CONFIGURATION.md` — Provider 配置
+- `docs/user/` — 安装、配置、故障排除
+- `docs/*-workflow.md` — 概念性工作流参考
+- `alters/sample/` — 新用户示例数据
 
 ## 前端页面
 - SystemStatus (status), GettingStarted, WeeklyReview, AlterDialogue

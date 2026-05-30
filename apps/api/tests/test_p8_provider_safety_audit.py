@@ -177,7 +177,8 @@ class TestEvidenceContractSection:
     def test_passes_on_real_repo(self):
         report = audit.scan_repo(Path("."))
         ec = _get_section(report, "evidence_contract")
-        assert ec["status"] == "PASS"
+        # Harness docs removed; SKIP is acceptable
+        assert ec["status"] in ("PASS", "SKIP")
 
     def test_fails_on_provider_output(self, tmp_path):
         harness = tmp_path / "docs" / "harness"
