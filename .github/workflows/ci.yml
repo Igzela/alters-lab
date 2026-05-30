@@ -31,9 +31,27 @@ jobs:
           cp alters/sample/branches.yaml alters/current/
           cp alters/sample/reality_trace.yaml alters/current/
           cp alters/sample/alters/*.yaml alters/current/alters/
-          # Create minimal test data for files that were removed for privacy
+          # Patch sample data to match validation expectations
           python3 -c "
           import yaml, glob
+          # Patch alter files: add generated_at, time_horizon, personality_drift
+          for path in glob.glob('alters/current/alters/alter_*.yaml'):
+              with open(path) as f:
+                  data = yaml.safe_load(f) or {}
+              data['generated_at'] = '2026-05-19'
+              data['time_horizon'] = '1.5-2年后'
+              data['personality_drift'] = {'detected': False}
+              with open(path, 'w') as f:
+                  yaml.dump(data, f, default_flow_style=False)
+          # Patch reality_trace: day_14_gate completed
+          with open('alters/current/reality_trace.yaml') as f:
+              data = yaml.safe_load(f) or {}
+          rt = data.get('reality_trace', {})
+          cp = rt.get('current_probe', {})
+          if 'day_14_gate' in cp:
+              cp['day_14_gate']['status'] = 'completed'
+          with open('alters/current/reality_trace.yaml', 'w') as f:
+              yaml.dump(data, f, default_flow_style=False)
           # value_alignment
           va = {'value_alignment_report': {'status': 'human_confirmed', 'final_interpretation': {'primary_candidate': 'branch_D'}, 'provisional_commitment': {'selected_branch': 'branch_D', 'selected_alter': 'alter_D'}}}
           with open('alters/current/value_alignment/alignment_2026-05-19.yaml', 'w') as f:
@@ -42,13 +60,6 @@ jobs:
           dl = {'dialogue': {'status': 'human_confirmed_static_artifact', 'session': {'alter_ref': 'alters/current/alters/alter_D.yaml'}, 'context_policy': {'provider_used': None, 'runtime_used': False}}}
           with open('alters/current/dialogue/dialogue_alter_D_2026-05-19.yaml', 'w') as f:
               yaml.dump(dl, f, default_flow_style=False)
-          # add personality_drift to alter files
-          for path in glob.glob('alters/current/alters/alter_*.yaml'):
-              with open(path) as f:
-                  data = yaml.safe_load(f) or {}
-              data['personality_drift'] = {'detected': False}
-              with open(path, 'w') as f:
-                  yaml.dump(data, f, default_flow_style=False)
           "
 
       - name: Run tests
