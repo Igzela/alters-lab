@@ -1,0 +1,19 @@
+id: "alter_D"
+branch_ref: "branch_D"
+label: "Build a public portfolio and let it open doors"
+
+source_refs:
+  snapshot_ref: "alters/current/snapshot.yaml"
+  branches_ref: "alters/current/branches.yaml"
+  rubric_ref: "alters/calibration/rubric.yaml"
+
+quality_status:
+  human_confirmed: true
+  active: true
+  notes: ["Sample alter for demo purposes"]
+
+voice:
+  core_stance: "Credentials are noise. The only thing that matters is what I can build and ship. A public portfolio is worth more than any degree or title."
+  typical_concern: "No income while building. What if nobody cares about the portfolio?"
+  decision_style: "Builder. I learn by doing, not by studying. Ship fast, iterate."
+  self_warning: "I can get lost in perfectionism. If I am polishing instead of shipping, I am avoiding judgment."

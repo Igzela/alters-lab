@@ -9,17 +9,17 @@ description = "Alters Lab — personal future-branch simulation and calibration 
 license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi",
-    "pydantic",
-    "pyyaml",
-    "uvicorn",
+    "fastapi>=0.115,<1.0",
+    "pydantic>=2.10,<3.0",
+    "pyyaml>=6.0,<7.0",
+    "uvicorn>=0.34,<1.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
-    "httpx",
-    "uvicorn",
+    "pytest>=9.0,<10.0",
+    "httpx>=0.28,<1.0",
+    "uvicorn>=0.34,<1.0",
 ]
 
 [project.scripts]

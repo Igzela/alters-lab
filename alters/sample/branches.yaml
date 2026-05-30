@@ -1,0 +1,134 @@
+branch_discovery:
+  status: "completed"
+  source_snapshot_ref: "alters/sample/snapshot.yaml"
+  requires_snapshot_phase: "completed"
+  confirmed_by: "human_owner"
+  confirmation_note: "SAMPLE-CYCLE-001 branches confirmed by human owner after Branch Discovery review."
+
+branches:
+  - id: "branch_A"
+    label: "Upskill-in-place and internal transfer"
+    core_choice: "Spend the next 4-6 months intensifying study while employed, then pursue an internal transfer or adjacent-role promotion into the data engineering team."
+    structural_commitment: >
+      Build a rigid daily study routine before or after work, focus on a narrow
+      skill stack (Python, SQL, Airflow/dbt), and identify one internal sponsor
+      or mentor on the data team. Accept that progress will be slow and visible
+      only to those paying close attention. Avoid any moves that jeopardise
+      current employment or housing stability.
+    key_tension_resolved: "Trade speed for safety by keeping everything stable while slowly accumulating evidence."
+    incompatible_with: ["branch_B", "branch_C", "branch_D"]
+    preserves:
+      - "Current income and benefits"
+      - "Geographic stability for partner's career"
+      - "Low financial risk"
+      - "Existing professional network"
+    sacrifices:
+      - "Speed of career transition"
+      - "Exposure to a wider tech job market"
+      - "Fresh-start psychological reset"
+      - "Ability to specialise purely in data engineering from day one"
+    validation_signal_30d:
+      - "Completed at least 20 study sessions in 30 days without fail"
+      - "Had at least one meaningful conversation with someone on the data team"
+      - "Built or improved one data-related project with demonstrable progress"
+      - "Energy level remains sustainable without burnout"
+    invalid_if:
+      - "Study sessions drop below 10 in any 30-day window"
+      - "No contact or interest from the data team after outreach"
+      - "The internal path requires credentials the person cannot realistically obtain in time"
+      - "Current role demands increase and absorb available study time"
+
+  - id: "branch_B"
+    label: "Relocate to a tech hub for a fresh start"
+    core_choice: "Move to a city with concentrated tech hiring (Austin, Denver, or similar) within the next 3 months, take a junior data role or contract position, and rebuild from there."
+    structural_commitment: >
+      Begin lease-break research and partner career-conversation immediately.
+      Apply aggressively to out-of-city roles, accept a pay cut if necessary,
+      and treat the move as a one-year experiment. Prioritise roles that will
+      build real data engineering experience even if the title is junior.
+    key_tension_resolved: "Accept short-term disruption and financial cost to access a larger opportunity surface."
+    incompatible_with: ["branch_A", "branch_C", "branch_D"]
+    preserves:
+      - "Access to a concentrated tech job market"
+      - "Fresh-start momentum and identity reset"
+      - "Ability to specialise from day one"
+      - "Broader networking opportunities"
+    sacrifices:
+      - "Current income and benefits"
+      - "Geographic stability and partner's career continuity"
+      - "Relationship continuity under stress"
+      - "Financial cushion during transition"
+    validation_signal_30d:
+      - "Partner conversation completed and relationship status clarified"
+      - "Lease-break scenario researched with real numbers"
+      - "At least 15 applications submitted to out-of-city roles"
+      - "Relocation budget drafted with worst-case assumptions"
+    invalid_if:
+      - "Partner is unwilling and the relationship cannot absorb the strain"
+      - "Financial runway is shorter than 3 months of expenses in the new city"
+      - "No interviews or callbacks from target-market applications"
+      - "The move is motivated by escape rather than opportunity"
+
+  - id: "branch_C"
+    label: "Time-boxed dual-track with evidence-based pivot"
+    core_choice: "Set a strict 45-60 day window to run two parallel tracks — upskilling at work and applying externally — then make a data-driven decision based on what actually happened."
+    structural_commitment: >
+      Split each week into fixed blocks: weekday mornings for study, two
+      evenings for external applications, weekends for project work. Evaluate
+      weekly on a single scorecard. At the end of the time box, choose one
+      path (A, B, or D) based on evidence, not anxiety. No switching before
+      the deadline.
+    key_tension_resolved: "Use short-term structured experimentation to generate real evidence instead of deciding from fear."
+    incompatible_with: ["branch_A", "branch_B", "branch_D"]
+    preserves:
+      - "Both internal and external optionality"
+      - "Psychological buffer against wrong bets"
+      - "Ability to calibrate with real feedback data"
+      - "Lower regret than any single all-in move"
+    sacrifices:
+      - "Depth on any single path"
+      - "Short-term efficiency"
+      - "Simple, clean identity narrative"
+      - "Low management overhead"
+    validation_signal_30d:
+      - "Same weekly plan executed for 4 consecutive weeks"
+      - "Both study progress and application progress are trackable"
+      - "TODO lists consolidated into one system"
+      - "Weekly review happens on schedule, not daily panic-switching"
+    invalid_if:
+      - "Dual-track becomes unstructured multi-tracking"
+      - "Daily task selection is driven by anxiety, not the plan"
+      - "No measurable progress on either track after 30 days"
+      - "The time-box deadline passes and no decision is made"
+
+  - id: "branch_D"
+    label: "Build a public portfolio and let it open doors"
+    core_choice: "Deprioritise both the internal-transfer path and the relocation path. Focus on shipping 2-3 polished, publicly visible data engineering projects that demonstrate capability directly."
+    structural_commitment: >
+      Dedicate 2-3 months to building a focused portfolio: one end-to-end data
+      pipeline project with real data, one contribution to a known open-source
+      data tool, and one blog post or technical write-up explaining design
+      decisions. Let the portfolio be the primary signal in applications and
+      networking conversations.
+    key_tension_resolved: "Replace credentials and location with demonstrated capability as the primary career signal."
+    incompatible_with: ["branch_A", "branch_B", "branch_C"]
+    preserves:
+      - "Complete control over what gets built"
+      - "Technical exploration freedom"
+      - "No geographic or employer dependency"
+      - "Long-term differentiation through visible work"
+    sacrifices:
+      - "Speed of landing a paid data role"
+      - "Structured mentorship and team feedback"
+      - "Short-term financial stability"
+      - "Traditional hiring-channel advantages"
+    validation_signal_30d:
+      - "One portfolio project deployed and accessible via public URL"
+      - "At least 5 meaningful commits or pull requests to an open-source project"
+      - "One technical blog post or README that non-engineers can understand"
+      - "At least 3 conversations with people in data engineering sparked by the work"
+    invalid_if:
+      - "No deployable or viewable artifact after 30 days"
+      - "Projects keep changing scope and nothing ships"
+      - "The work stays private and never reaches an audience"
+      - "Anxiety about lack of income forces a panicked return to multi-tracking"

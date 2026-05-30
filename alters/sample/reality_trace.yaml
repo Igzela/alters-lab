@@ -1,0 +1,41 @@
+reality_trace:
+  status: "active"
+  cycle: "SAMPLE-CYCLE-001"
+  current_probe:
+    selected_branch: "branch_D"
+    selected_alter: "alter_D"
+    mode: "30-day controlled probe"
+    main_project: "Public data engineering portfolio"
+    real_use_case: "Career transition from operations to data engineering through demonstrated capability"
+    started_at: "2026-05-29"
+    day_14_gate:
+      status: "pending"
+      check: "At least one portfolio project has a working minimum viable version deployed or accessible."
+
+    day_30_gate:
+      status: "pending"
+      check: "Full cycle is walkable: snapshot, branches, alters, dialogue, value alignment, and first calibration template."
+
+  events: []
+
+  weekly_evidence: []
+
+  calibration_readiness:
+    ready_for_reality_score: false
+    reason: >
+      Reality trace is initialised but no weekly evidence has been recorded yet.
+      Calibration requires lived reality evidence over time, not just initial setup completion.
+    earliest_candidate: "after first weekly evidence checkpoint or two-week review"
+    prohibited_now:
+      - "do not create score_*.yaml"
+      - "do not compute drift"
+      - "do not modify rubric"
+      - "do not unlock calibration"
+
+  quality_status:
+    human_confirmed: true
+    active: true
+    notes:
+      - "SAMPLE-CYCLE-001 reality trace initialised with sample data."
+      - "This file records evidence only."
+      - "No Calibration, Archive, or Rubric evolution has been performed."

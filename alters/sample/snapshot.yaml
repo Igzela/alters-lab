@@ -1,0 +1,73 @@
+snapshot:
+  date: "2026-05-29"
+  version: 1
+
+  anchors:
+    heaviest_constraint: >
+      Financial pressure and geographic constraint are the two heaviest factors.
+      Currently working a stable but unfulfilling operations role in a mid-sized city,
+      with rent, student loan payments, and a partner's career anchoring the household
+      to the current location. The window for a career pivot into data engineering
+      feels like it is closing with each passing quarter, but the cost of attempting
+      it without a safety net is genuinely high.
+
+    most_unclear: >
+      Whether to commit fully to upskilling for a data engineering role (requiring
+      4-6 months of intensive study while still employed), accept a lower-paying
+      junior position to break into the field, or attempt a geographic move to a
+      tech hub where opportunities are more plentiful but costs are higher. The
+      unclear point is not just which option is best, but whether the underlying
+      assumption — that a career change into tech is realistic given current
+      constraints — is even valid without testing it against real feedback.
+
+    unwilling_to_give_up: >
+      The ability to do meaningful creative work on the side. Regardless of which
+      path is chosen — stay and upskill, relocate, or pivot gradually — the
+      person does not want to lose the weekend side projects and open-source
+      contributions that keep engineering skills alive and growing. If a path
+      would completely eliminate the possibility of building things independently,
+      there is strong resistance.
+
+  context:
+    current_commitments:
+      - "Full-time operations role at a logistics company"
+      - "Partner's career is based in the current city"
+      - "Monthly student loan payments ($800/mo)"
+      - "Evening Python/SQL self-study (inconsistent schedule)"
+      - "One completed data pipeline project (personal, not deployed)"
+      - "Contributor to an open-source ETL tool on GitHub"
+
+    external_deadlines:
+      - "Annual performance review in Q3 2026"
+      - "Student loan refinancing window closing August 2026"
+      - "Lease renewal decision due September 2026"
+
+    energy_state: >
+      Typical pattern: weekday mornings before work are nominally reserved for
+      study but often skipped due to fatigue. Evenings are inconsistent —
+      some weeks there is focused progress on SQL exercises, other weeks the
+      laptop stays closed. Weekends alternate between batch study sessions and
+      guilt-driven procrastination. There is a persistent sense that the
+      current trajectory is not adding up to a transition, but no clear
+      inflection point has been identified.
+
+  intake_status:
+    phase: "completed"
+    completed_anchors:
+      - "heaviest_constraint"
+      - "most_unclear"
+      - "unwilling_to_give_up"
+    pending_anchor: null
+
+  evidence_policy:
+    source_mode: "self_report_only_phase0"
+    confidence: "medium"
+    unresolved_assumptions:
+      - "Whether a structured 4-6 month upskilling sprint while employed is feasible given actual energy constraints, not just theoretical availability."
+      - "Whether relocating for a tech hub role is realistic given partner's career dependency and lease obligations."
+      - "Whether the current side project and open-source work can be credibly positioned as data engineering experience, or whether they are too业余 to count."
+
+  notes:
+    - "Phase 0 snapshot drafted from user self-report."
+    - "Snapshot confirmed by human owner during SAMPLE-CYCLE-001."
+    - "Branch Discovery must not start automatically from this write."

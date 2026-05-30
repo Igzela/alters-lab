@@ -1,5 +1,11 @@
-from fastapi import FastAPI
+import logging
+from contextlib import asynccontextmanager
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from alters_lab.logging_config import setup_logging
+from alters_lab.middleware import RateLimitMiddleware
 from alters_lab.api.alters import router as alters_router
 from alters_lab.api.archive_mechanism import router as archive_mechanism_router
 from alters_lab.api.branches import router as branches_router
@@ -43,7 +49,32 @@ from alters_lab.api.provider_dialogue_preview import router as provider_dialogue
 from alters_lab.api.weekly_review_assistant import router as weekly_review_assistant_router
 from alters_lab.services.local_app import configure_frontend_static
 
-app = FastAPI(title="Alters Lab API")
+logger = logging.getLogger("alters_lab")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    setup_logging()
+    logger.info("Alters Lab API starting")
+    yield
+    logger.info("Alters Lab API shutting down")
+
+
+app = FastAPI(
+    title="Alters Lab API",
+    description="Personal future-branch simulation and calibration system",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.add_middleware(RateLimitMiddleware, max_requests=600, window_seconds=60)
 
 
 @app.get("/health")

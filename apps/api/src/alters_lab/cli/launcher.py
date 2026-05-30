@@ -49,6 +49,11 @@ def build_parser() -> argparse.ArgumentParser:
     backup.add_argument("--confirm-include-secrets", default=None)
     backup.add_argument("--dry-run", action="store_true")
     backup.add_argument("--json", action="store_true")
+
+    load_sample = subcommands.add_parser("load-sample", help="Load sample data for new users")
+    load_sample.add_argument("--mode", choices=["dev", "packaged"], default=None)
+    load_sample.add_argument("--force", action="store_true", help="Overwrite existing data")
+    load_sample.add_argument("--json", action="store_true")
     return parser
 
 
@@ -97,11 +102,63 @@ def main(argv: list[str] | None = None) -> int:
                 )
         except DataSafetyError as exc:
             result = {"status": "blocked", "reason": str(exc), "p6_behavior_validated": False, "p6_sealed": False}
+    elif args.command == "load-sample":
+        result = _load_sample_data(layout, force=args.force)
     else:
         parser.error(f"Unknown command: {args.command}")
 
     _print_result(result, json_output=args.json)
     return 0
+
+
+def _load_sample_data(layout: Any, force: bool = False) -> dict[str, Any]:
+    """Copy sample data from alters/sample/ into alters/current/."""
+    import shutil
+
+    root = layout.project_root if hasattr(layout, "project_root") else Path(layout.data_dir)
+    sample_dir = root / "alters" / "sample"
+    current_dir = root / "alters" / "current"
+
+    if not sample_dir.exists():
+        return {"status": "error", "reason": f"Sample data not found: {sample_dir}"}
+
+    copied: list[str] = []
+
+    # Copy snapshot and branches
+    for name in ("snapshot.yaml", "branches.yaml"):
+        src = sample_dir / name
+        dst = current_dir / name
+        if dst.exists() and not force:
+            continue
+        if src.exists():
+            shutil.copy2(src, dst)
+            copied.append(name)
+
+    # Copy alter files
+    alters_src = sample_dir / "alters"
+    alters_dst = current_dir / "alters"
+    if alters_src.exists():
+        alters_dst.mkdir(parents=True, exist_ok=True)
+        for f in alters_src.glob("*.yaml"):
+            dst = alters_dst / f.name
+            if dst.exists() and not force:
+                continue
+            shutil.copy2(f, dst)
+            copied.append(f"alters/{f.name}")
+
+    # Copy reality trace
+    rt_src = sample_dir / "reality_trace.yaml"
+    rt_dst = current_dir / "reality_trace.yaml"
+    if rt_src.exists() and (not rt_dst.exists() or force):
+        shutil.copy2(rt_src, rt_dst)
+        copied.append("reality_trace.yaml")
+
+    return {
+        "status": "ok",
+        "files_copied": copied,
+        "target": str(current_dir),
+        "note": "Restart the app to see sample data." if copied else "All files already exist. Use --force to overwrite.",
+    }
 
 
 def _print_result(result: dict[str, Any], json_output: bool) -> None:

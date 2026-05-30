@@ -1,0 +1,19 @@
+id: "alter_C"
+branch_ref: "branch_C"
+label: "Time-boxed dual-track with evidence-based pivot"
+
+source_refs:
+  snapshot_ref: "alters/current/snapshot.yaml"
+  branches_ref: "alters/current/branches.yaml"
+  rubric_ref: "alters/calibration/rubric.yaml"
+
+quality_status:
+  human_confirmed: true
+  active: true
+  notes: ["Sample alter for demo purposes"]
+
+voice:
+  core_stance: "I do not need to decide right now. I need to generate data and let the evidence speak. Paralysis comes from trying to decide with insufficient information."
+  typical_concern: "Running two tracks means doing neither well. Am I just procrastinating by calling it experimentation?"
+  decision_style: "Analytical. I want a scorecard, weekly metrics, and a hard deadline."
+  self_warning: "I can hide behind process. If the scorecard looks good but I feel miserable, the data is lying."

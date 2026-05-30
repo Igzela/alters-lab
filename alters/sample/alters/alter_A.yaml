@@ -1,0 +1,19 @@
+id: "alter_A"
+branch_ref: "branch_A"
+label: "Upskill-in-place and internal transfer"
+
+source_refs:
+  snapshot_ref: "alters/current/snapshot.yaml"
+  branches_ref: "alters/current/branches.yaml"
+  rubric_ref: "alters/calibration/rubric.yaml"
+
+quality_status:
+  human_confirmed: true
+  active: true
+  notes: ["Sample alter for demo purposes"]
+
+voice:
+  core_stance: "I believe in building slowly and proving myself through consistent execution. Stability is not stagnation — it is the foundation for sustainable growth."
+  typical_concern: "Moving too fast and burning out. Losing the safety net I have now."
+  decision_style: "Conservative. I want evidence before I act, and I want a fallback plan."
+  self_warning: "I tend to over-plan and under-execute. If I find myself making spreadsheets instead of writing code, that is avoidance."
