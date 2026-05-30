@@ -14,18 +14,25 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 
 技术端（按优先级）：
 1. ✅ Docker 支持 — Dockerfile + docker-compose.yml + docker-entrypoint.sh + .dockerignore
-2. GettingStarted 加 load-sample 步骤 — 新用户不知道怎么加载 sample data
-3. ProviderSettings 去掉硬编码 GitHub URL — 改成相对链接或去掉
-4. P6 前缀清理 — p6Progress → progress, p6_behavior_validated → behavior_validated
-5. data-model.md 补全 — 43 个 schema 文件只写了 7 个，至少补 WeeklyNote、ProviderConfig、PatternReview
-6. 前端测试 — vitest + 覆盖 useApi hooks、ErrorBoundary、核心页面组件
+2. ✅ GettingStarted 加 load-sample 步骤
+3. ✅ ProviderSettings 去掉硬编码 GitHub URL
+4. ✅ P6 前缀清理 — p6Progress → progress, p6_behavior_validated → behavior_validated
+5. ✅ data-model.md 补全 — WeeklyNote, ProviderConfig, PatternReview
+6. ✅ 前端测试 — vitest + 12 tests (ErrorBoundary, Button, Card)
+7. ✅ sample weekly note 数据 — 2 个示例周笔记
+8. ✅ Dashboard 仪表盘 — recharts 图表（评分趋势、每周活动、模式触发）
+9. ✅ Dark Mode — ThemeContext + CSS 变量迁移 + 切换按钮
+10. ✅ Keyboard Shortcuts — G+key 导航，? 帮助
 
-产品端：
-7. sample weekly note 数据 — 用户加载 sample data 后 Weekly Review 页面是空的
+算法端（下一个 session）：
+11. 趋势外推算法 — 用历史评分预测未来 4 周
+12. 置信区间 — 基于数据量和一致性
+13. 动态权重 — 根据当前状态调整 rubric 维度权重
+14. 模式修正 — 检测到的模式影响预测
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML
-- **前端**: React 18, TypeScript, Vite, Tailwind v4, TanStack Query, Phosphor Icons, Outfit + JetBrains Mono 字体
+- **前端**: React 18, TypeScript, Vite, Tailwind v4, TanStack Query, Phosphor Icons, recharts, Outfit + JetBrains Mono 字体
 - **存储**: YAML + JSON 文件（alters/ 目录），无数据库
 - **打包**: Debian (.deb) + Docker，CLI 入口 `alters-lab`
 - **测试**: pytest + httpx
@@ -131,10 +138,15 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration 
 - 测试用 tmp_path，不改真实文件
 - commit message 用英文，格式: `P{N}-M{N}: 简短描述`，修正用 `-R{N}` 后缀
 - 1267 backend tests passing
+- 12 frontend tests passing (vitest)
 
 ## 测试命令
 ```bash
+# 后端
 PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
+
+# 前端
+cd apps/web && npm run test
 ```
 
 ## 项目文档
@@ -148,9 +160,12 @@ PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 - `alters/sample/` — 新用户示例数据
 
 ## 前端页面
-- SystemStatus (status), GettingStarted, WeeklyReview, AlterDialogue
+- Dashboard (默认首页), SystemStatus, GettingStarted, WeeklyReview, AlterDialogue
 - RealityScore, CalibrationHistory, RubricDelta, CheckpointPlan
 - ProviderSettings, PatternReview, BehaviorValidation, DataManagement
 - 所有页面通过 App.tsx 路由，侧边栏导航（桌面端 220px 固定侧边栏 + 移动端底部 tab bar）
 - 数据层：TanStack Query hooks（src/hooks/useApi.ts），替代手动 useState+useEffect
+- 图表：recharts（Dashboard 页面的评分趋势、每周活动）
+- 深色模式：ThemeContext + CSS 变量，侧边栏/移动端切换按钮
+- 键盘快捷键：G+key 导航，? 显示帮助
 - 设计风格：温暖专业（Notion/Obsidian 风格），Outfit 字体，amber-700 强调色
