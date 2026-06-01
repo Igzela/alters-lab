@@ -22,9 +22,13 @@ class DomainPrediction(BaseModel):
         "subjective_wellbeing",
     ]
     predicted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"]
-    source: Literal["route_a", "route_b", "behavior_metric", "overall_fallback", "unknown"] = "unknown"
+    source: Literal["route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "unknown"] = "unknown"
     confidence: Literal["low", "medium", "high"] = "low"
     explanation: str = ""
+    route_a_direction: Literal["improving", "declining", "stable", "insufficient_data", "unknown"] = "unknown"
+    route_b_prior_direction: Literal["favorable", "unfavorable", "mixed", "unknown"] = "unknown"
+    evidence_strength: Literal["weak", "moderate", "strong"] = "weak"
+    transfer_risk: Literal["low", "medium", "high"] = "high"
 
 
 class ForecastSummarySnapshot(BaseModel):

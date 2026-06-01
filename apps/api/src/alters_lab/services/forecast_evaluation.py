@@ -117,16 +117,24 @@ def _get_domain_predictions(snapshot: ForecastSnapshotRecord) -> dict[str, Domai
 def _resolve_predicted_direction(
     domain: str,
     domain_preds: dict[str, DomainPrediction],
-) -> tuple[str, str, str, str]:
+) -> tuple[str, str, str, str, str, str, str]:
     """Resolve predicted direction for a domain.
 
-    Returns (direction, source, confidence, explanation).
+    Returns (direction, source, confidence, explanation, route_a_direction, route_b_prior_direction, transfer_risk).
     """
     if domain in domain_preds:
         dp = domain_preds[domain]
-        return dp.predicted_direction, dp.source, dp.confidence, dp.explanation
+        return (
+            dp.predicted_direction,
+            dp.source,
+            dp.confidence,
+            dp.explanation,
+            dp.route_a_direction,
+            dp.route_b_prior_direction,
+            dp.transfer_risk,
+        )
 
-    return "unknown", "unknown", "low", f"No domain prediction available for {domain}."
+    return "unknown", "unknown", "low", f"No domain prediction available for {domain}.", "unknown", "unknown", "high"
 
 
 def _aggregate_evidence_by_domain(
@@ -256,6 +264,9 @@ def _build_domain_result(
     pred_explanation: str,
     evidence_list: list[ExternalEvidenceRecord],
     targets: dict[str, BranchOutcomeTargetRecord] | None = None,
+    route_a_direction: str = "unknown",
+    route_b_prior_direction: str = "unknown",
+    transfer_risk: str = "high",
 ) -> DomainResult:
     """Build a single domain evaluation result."""
     if not evidence_list:
@@ -269,6 +280,9 @@ def _build_domain_result(
             match_result="unknown",
             evidence_strength="weak",
             explanation=f"No external evidence available for {domain}.",
+            route_a_direction=route_a_direction,
+            route_b_prior_direction=route_b_prior_direction,
+            transfer_risk=transfer_risk,
         )
 
     observed = _aggregate_observed_direction(evidence_list, targets)
@@ -287,6 +301,9 @@ def _build_domain_result(
         match_result=match,
         evidence_strength=strength,
         explanation=explanation,
+        route_a_direction=route_a_direction,
+        route_b_prior_direction=route_b_prior_direction,
+        transfer_risk=transfer_risk,
     )
 
 
@@ -355,9 +372,10 @@ def evaluate_forecast(
 
     # Evaluate domains that have evidence
     for domain, ev_list in by_domain.items():
-        direction, source, confidence, explanation = _resolve_predicted_direction(domain, domain_preds)
+        direction, source, confidence, explanation, ra_dir, rb_dir, t_risk = _resolve_predicted_direction(domain, domain_preds)
         result = _build_domain_result(
             domain, direction, source, confidence, explanation, ev_list, targets_map,
+            route_a_direction=ra_dir, route_b_prior_direction=rb_dir, transfer_risk=t_risk,
         )
         domain_results.append(result)
         seen_domains.add(domain)
@@ -375,6 +393,9 @@ def evaluate_forecast(
                 match_result="unknown",
                 evidence_strength="weak",
                 explanation=f"No external evidence available for {domain}.",
+                route_a_direction=dp.route_a_direction,
+                route_b_prior_direction=dp.route_b_prior_direction,
+                transfer_risk=dp.transfer_risk,
             ))
             seen_domains.add(domain)
 

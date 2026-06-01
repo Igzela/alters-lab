@@ -500,3 +500,82 @@ def test_scorecard_counts_unknown_separately(tmp_path: Path):
     from alters_lab.services.calibration_scorecard import build_scorecard
     scorecard = build_scorecard(repo_root=tmp_path)
     assert scorecard.unknown_count >= 1
+
+
+# --- Domain-level field propagation tests ---
+
+def test_domain_result_propagates_route_fields(tmp_path: Path):
+    """DomainResult carries route_a_direction, route_b_prior_direction, transfer_risk from snapshot."""
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="test",
+            route_a_direction="improving",
+            route_b_prior_direction="favorable",
+            evidence_strength="moderate",
+            transfer_risk="low",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, trajectory="stable", domain_predictions=domain_preds)
+    evidence = _make_evidence(tmp_path, "positive", domain="career_education")
+    result = evaluate_forecast(snapshot.snapshot_id, [evidence.evidence_id], repo_root=tmp_path)
+    career = next(r for r in result.domain_results if r.domain == "career_education")
+    assert career.route_a_direction == "improving"
+    assert career.route_b_prior_direction == "favorable"
+    assert career.transfer_risk == "low"
+
+
+def test_overall_fallback_used_when_no_domain_predictions(tmp_path: Path):
+    """When snapshot has no domain_predictions, evaluation uses unknown (not overall fallback)."""
+    snapshot = _make_snapshot(tmp_path, trajectory="improving", domain_predictions=[])
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    # With no domain predictions and no evidence, result is unknown
+    assert result.overall_result == "unknown"
+    assert all(r.predicted_direction == "unknown" for r in result.domain_results)
+    assert all(r.predicted_direction_source == "unknown" for r in result.domain_results)
+
+
+def test_domain_predictions_different_directions_evaluated_independently(tmp_path: Path):
+    """Career improving + health declining evaluated against their own evidence."""
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="career up",
+            route_a_direction="improving",
+            route_b_prior_direction="favorable",
+            transfer_risk="low",
+        ),
+        DomainPrediction(
+            domain="health",
+            predicted_direction="declining",
+            source="route_b",
+            confidence="low",
+            explanation="health down",
+            route_a_direction="unknown",
+            route_b_prior_direction="unfavorable",
+            transfer_risk="high",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, trajectory="mixed", domain_predictions=domain_preds)
+    e_career = _make_evidence(tmp_path, "positive", domain="career_education")
+    e_health = _make_evidence(tmp_path, "negative", domain="health")
+
+    result = evaluate_forecast(
+        snapshot.snapshot_id,
+        [e_career.evidence_id, e_health.evidence_id],
+        repo_root=tmp_path,
+    )
+
+    career = next(r for r in result.domain_results if r.domain == "career_education")
+    health = next(r for r in result.domain_results if r.domain == "health")
+
+    assert career.match_result == "hit"
+    assert health.match_result == "hit"
+    assert career.predicted_direction_source == "route_a"
+    assert health.predicted_direction_source == "route_b"

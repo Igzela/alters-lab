@@ -41,7 +41,8 @@
     "prediction": "预测",
     "predictorProfile": "预测器档案",
     "outcomeTargets": "结果目标",
-    "branchForecast": "分支预测"
+    "branchForecast": "分支预测",
+    "forecastCalibration": "预测校准"
   },
   "status": {
     "title": "系统状态",
@@ -514,5 +515,51 @@
     "missed": "未达成",
     "limitations": "局限性",
     "nextEvidence": "下一步需收集的证据"
+  },
+  "forecastCalibration": {
+    "title": "预测校准",
+    "description": "描述",
+    "tabs": {
+      "snapshots": "预测快照",
+      "evidence": "外部证据",
+      "evaluations": "预测评估",
+      "scorecard": "校准记分卡"
+    },
+    "noSnapshots": "暂无预测快照。请从分支预测中创建。",
+    "horizon": "预测周期",
+    "direction": "方向",
+    "confidence": "置信度",
+    "domainPredictions": "领域预测",
+    "limitations": "局限性",
+    "addEvidence": "添加外部证据",
+    "domain": "领域",
+    "evidenceType": "证据类型",
+    "strength": "强度",
+    "polarity": "极性",
+    "branchId": "分支 ID",
+    "submitEvidence": "提交证据",
+    "noEvidence": "暂无外部证据记录。",
+    "runEvaluation": "运行评估",
+    "snapshot": "快照",
+    "selectSnapshot": "选择快照...",
+    "selectEvidence": "选择证据",
+    "evaluate": "评估",
+    "noEvaluations": "暂无评估记录。",
+    "daysUntilDue": "距到期天数",
+    "domainResults": "领域结果",
+    "predictiveSignals": "预测信号",
+    "misleadingSignals": "误导信号",
+    "overallResults": "总体结果",
+    "total": "总计",
+    "hits": "命中",
+    "misses": "未中",
+    "partial": "部分命中",
+    "unknown": "未知",
+    "sampleSizeWarning": "仅有 {{count}} 次评估。小样本下命中率不稳定。",
+    "calibrationConfidence": "校准置信度",
+    "confidenceNote": "置信度需要至少 5 次评估才能达到中等，15 次达到高。",
+    "byDomain": "按领域",
+    "hitRate": "命中率",
+    "signalQuality": "信号质量"
   }
 }

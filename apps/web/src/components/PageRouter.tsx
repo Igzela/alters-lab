@@ -15,6 +15,7 @@ import Dashboard from '../pages/Dashboard'
 import PredictorProfile from '../pages/PredictorProfile'
 import OutcomeTargets from '../pages/OutcomeTargets'
 import BranchForecast from '../pages/BranchForecast'
+import ForecastCalibration from '../pages/ForecastCalibration'
 
 export default function PageRouter() {
   return (
@@ -36,6 +37,7 @@ export default function PageRouter() {
       <Route path="/predictor-profile" element={<PredictorProfile />} />
       <Route path="/outcome-targets" element={<OutcomeTargets />} />
       <Route path="/branch-forecast" element={<BranchForecast />} />
+      <Route path="/forecast-calibration" element={<ForecastCalibration />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

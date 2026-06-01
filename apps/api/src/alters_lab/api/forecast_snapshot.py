@@ -20,71 +20,45 @@ router = APIRouter(prefix="/forecast-snapshots", tags=["forecast-snapshots"])
 
 
 def _extract_domain_predictions(body: BranchForecastResult) -> list[DomainPrediction]:
-    """Extract per-domain predictions from forecast payload.
+    """Extract per-domain predictions from forecast result.
 
-    Source order:
-    1. Domain anchors from base-rate anchor data in forecast_payload (route_a_direction)
-    2. Route B prior_direction from domain anchors
-    3. Overall trajectory as fallback (marked as overall_fallback)
+    If BranchForecastResult contains domain_predictions (from the anchor service),
+    map each to a DomainPrediction directly. Only fall back to overall_fallback
+    when no domain-level data exists.
     """
-    predictions: list[DomainPrediction] = []
-
-    # Try to extract domain anchors from the forecast payload
-    payload = body.model_dump()
-    domain_anchors = []
-
-    # The forecast payload may contain anchor data nested under various keys
-    # Check if route_b_population_prior has domain-level data
-    route_b = payload.get("route_b_population_prior", {})
-
-    # Build domain predictions from overall trajectory as baseline
-    overall_direction = body.forecast_summary.trajectory_direction
-    overall_confidence = body.forecast_summary.confidence
-
-    # Check if we have per-domain data in the calibration divergence or outcome targets
-    # For now, extract from domain_anchors if present in the payload
-    # The anchor service stores domain_anchors, but they're collapsed in the forecast result
-    # We reconstruct from available data
-
-    # Get domains from outcome targets if available
-    target_domains: list[str] = []
-    for target in payload.get("_outcome_target_details", []):
-        d = target.get("domain")
-        if d and d not in target_domains:
-            target_domains.append(d)
-
-    # If no domains from targets, use standard domains
-    if not target_domains:
-        target_domains = [
-            "career_education",
-            "financial",
-            "health",
-            "relationship",
-            "subjective_wellbeing",
+    if body.domain_predictions:
+        return [
+            DomainPrediction(
+                domain=dp.domain,
+                predicted_direction=dp.predicted_direction,
+                source=dp.predicted_direction_source,
+                confidence=dp.confidence,
+                explanation=dp.explanation,
+                route_a_direction=dp.route_a_direction,
+                route_b_prior_direction=dp.route_b_prior_direction,
+                evidence_strength=dp.evidence_strength,
+                transfer_risk=dp.transfer_risk,
+            )
+            for dp in body.domain_predictions
         ]
 
-    # For each domain, create a prediction
-    # If route_a has per-domain info, use it; otherwise mark as overall_fallback
-    route_a = body.route_a_personal_evidence
-
-    for domain in target_domains:
-        # Check if domain-specific data exists in route_a_summary
-        route_a_dict = route_a.model_dump()
-
-        # Look for domain-specific direction in behavior_trends_summary
-        # The summary is a string like "2 improving, 1 declining, 1 stable across 4 metrics"
-        # We can't extract per-domain from this string
-
-        # Default: use overall trajectory as fallback, clearly marked
-        predictions.append(DomainPrediction(
+    # Fallback: no domain-level data, use overall trajectory for all domains
+    overall_direction = body.forecast_summary.trajectory_direction
+    overall_confidence = body.forecast_summary.confidence
+    _ALL_DOMAINS = [
+        "career_education", "financial", "health",
+        "relationship", "subjective_wellbeing",
+    ]
+    return [
+        DomainPrediction(
             domain=domain,
             predicted_direction=overall_direction,
             source="overall_fallback",
             confidence=overall_confidence,
             explanation=f"Using overall trajectory direction as fallback. No domain-specific prediction available for {domain}.",
-        ))
-
-    return predictions
+        )
+        for domain in _ALL_DOMAINS
+    ]
 
 
 @router.get("/health")

@@ -20,4 +20,8 @@ export const queryKeys = {
   predictorProfiles: ['predictor-profiles'] as const,
   predictorProfile: (profileId: string | null) => ['predictor-profile', profileId] as const,
   outcomeTargets: ['outcome-targets'] as const,
+  forecastSnapshots: ['forecast-snapshots'] as const,
+  externalEvidence: ['external-evidence'] as const,
+  forecastEvaluations: ['forecast-evaluations'] as const,
+  forecastScorecard: ['forecast-scorecard'] as const,
 } as const

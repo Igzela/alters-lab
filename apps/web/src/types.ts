@@ -58,6 +58,6 @@ export type ActionAlignmentScore = {
   created_at: string
 }
 
-export type Page = 'dashboard' | 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data' | 'predictor-profile' | 'outcome-targets' | 'branch-forecast'
+export type Page = 'dashboard' | 'status' | 'weekly' | 'dialogue' | 'reality' | 'history' | 'rubric' | 'checkpoint' | 'provider' | 'getting-started' | 'patterns' | 'validation' | 'data' | 'predictor-profile' | 'outcome-targets' | 'branch-forecast' | 'forecast-calibration'
 
-export const VALID_PAGES: Page[] = ['dashboard', 'status', 'weekly', 'dialogue', 'reality', 'history', 'rubric', 'checkpoint', 'provider', 'getting-started', 'patterns', 'validation', 'data', 'predictor-profile', 'outcome-targets', 'branch-forecast']
+export const VALID_PAGES: Page[] = ['dashboard', 'status', 'weekly', 'dialogue', 'reality', 'history', 'rubric', 'checkpoint', 'provider', 'getting-started', 'patterns', 'validation', 'data', 'predictor-profile', 'outcome-targets', 'branch-forecast', 'forecast-calibration']

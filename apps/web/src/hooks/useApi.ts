@@ -14,6 +14,7 @@ export { useBehaviorValidationReport, useEvaluateBehaviorValidation } from './us
 export { useDataManifest, useExportData, useDeleteData } from './useDataHooks'
 export { useFetchJson, useSuggestRubricDelta, useGenerateCheckpointPlan } from './useMiscHooks'
 export { usePredictorProfiles, usePredictorProfile, useCreatePredictorProfile, useOutcomeTargets, useCreateOutcomeTarget, useEvaluateOutcomeTarget, useBranchForecast, useCalibrationDivergence } from './usePredictionHooks'
+export { useForecastSnapshots, useForecastSnapshot, useCreateForecastSnapshot, useExternalEvidence, useCreateExternalEvidence, useForecastEvaluations, useCreateForecastEvaluation, useForecastScorecard } from './useForecastHooks'
 
 // Re-export query key factory for convenience
 export { queryKeys } from './useQueryKeys'

@@ -16,6 +16,7 @@ from alters_lab.schemas.branch_forecast import (
     BranchForecastRequest,
     BranchForecastResult,
     CalibrationDivergenceSummary,
+    DomainForecastPrediction,
     ForecastSummary,
     OutcomeTargetSummary,
     RouteAPersonalEvidence,
@@ -123,6 +124,13 @@ def analyze_branch_forecast(
         explanation=route_b_explanation,
     )
 
+    # Domain-level predictions from anchor data
+    domain_predictions = _build_domain_predictions(
+        anchor.domain_anchors if anchor.route_b_available else [],
+        route_a_available,
+        overall_direction=trajectory if route_a_available else "unknown",
+    )
+
     # Calibration divergence
     div_req = CalibrationDivergenceRequest(
         branch_id=request.branch_id,
@@ -184,6 +192,7 @@ def analyze_branch_forecast(
         route_b_population_prior=route_b,
         calibration_divergence=div_summary,
         outcome_targets=outcome_summary,
+        domain_predictions=domain_predictions,
         limitations=limitations,
         next_evidence_to_collect=next_evidence,
     )
@@ -242,6 +251,85 @@ def _compute_trajectory(
         credibility = confidence
 
     return direction, confidence, credibility
+
+
+_ALL_DOMAINS = [
+    "career_education",
+    "financial",
+    "health",
+    "relationship",
+    "subjective_wellbeing",
+]
+
+
+def _build_domain_predictions(
+    domain_anchors: list,
+    route_a_available: bool,
+    overall_direction: str,
+) -> list[DomainForecastPrediction]:
+    """Build per-domain predictions from anchor data.
+
+    Source priority:
+    1. route_a_direction from domain anchor (if available and not insufficient_data)
+    2. route_b_prior_direction from domain anchor (if not unknown)
+    3. overall_fallback using overall trajectory
+    """
+    predictions: list[DomainForecastPrediction] = []
+
+    # Index anchors by domain for lookup
+    anchor_by_domain: dict[str, object] = {}
+    for anchor in domain_anchors:
+        anchor_by_domain[anchor.domain] = anchor
+
+    for domain in _ALL_DOMAINS:
+        anchor = anchor_by_domain.get(domain)
+
+        if anchor is not None:
+            route_a_dir = anchor.route_a_direction
+            route_b_dir = anchor.route_b_prior_direction
+            ev_strength = anchor.evidence_strength
+            t_risk = anchor.transfer_risk
+            anchor_explanation = anchor.explanation
+        else:
+            route_a_dir = "unknown"
+            route_b_dir = "unknown"
+            ev_strength = "weak"
+            t_risk = "high"
+            anchor_explanation = ""
+
+        # Resolve predicted direction with source priority
+        if route_a_available and route_a_dir not in ("insufficient_data", "unknown"):
+            predicted = route_a_dir
+            source = "route_a"
+            explanation = f"Route A direction: {route_a_dir}. {anchor_explanation}"
+        elif route_b_dir != "unknown":
+            # Map route_b prior directions to predicted directions
+            _r2d = {"favorable": "improving", "unfavorable": "declining", "mixed": "mixed"}
+            predicted = _r2d.get(route_b_dir, "unknown")
+            source = "route_b"
+            explanation = f"Route B prior: {route_b_dir}. {anchor_explanation}"
+        else:
+            predicted = overall_direction if overall_direction != "unknown" else "unknown"
+            source = "overall_fallback" if predicted != "unknown" else "unknown"
+            explanation = (
+                f"Using overall trajectory direction as fallback for {domain}."
+                if predicted != "unknown"
+                else f"No domain-specific data available for {domain}."
+            )
+
+        predictions.append(DomainForecastPrediction(
+            domain=domain,  # type: ignore[arg-type]
+            route_a_direction=route_a_dir,  # type: ignore[arg-type]
+            route_b_prior_direction=route_b_dir,  # type: ignore[arg-type]
+            predicted_direction=predicted,  # type: ignore[arg-type]
+            predicted_direction_source=source,  # type: ignore[arg-type]
+            confidence="low",  # will be refined by evaluation
+            evidence_strength=ev_strength,  # type: ignore[arg-type]
+            transfer_risk=t_risk,  # type: ignore[arg-type]
+            explanation=explanation,
+        ))
+
+    return predictions
 
 
 def _build_explanation(

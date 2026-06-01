@@ -41,7 +41,8 @@
     "prediction": "Prediction",
     "predictorProfile": "Predictor Profile",
     "outcomeTargets": "Outcome Targets",
-    "branchForecast": "Branch Forecast"
+    "branchForecast": "Branch Forecast",
+    "forecastCalibration": "Forecast Calibration"
   },
   "status": {
     "title": "System Status",
@@ -514,5 +515,51 @@
     "missed": "missed",
     "limitations": "Limitations",
     "nextEvidence": "Next Evidence to Collect"
+  },
+  "forecastCalibration": {
+    "title": "Forecast Calibration",
+    "description": "Description",
+    "tabs": {
+      "snapshots": "Forecast Snapshots",
+      "evidence": "External Evidence",
+      "evaluations": "Forecast Evaluations",
+      "scorecard": "Forecast Scorecard"
+    },
+    "noSnapshots": "No forecast snapshots yet. Create one from a branch forecast.",
+    "horizon": "Horizon",
+    "direction": "Direction",
+    "confidence": "Confidence",
+    "domainPredictions": "Domain Predictions",
+    "limitations": "Limitations",
+    "addEvidence": "Add External Evidence",
+    "domain": "Domain",
+    "evidenceType": "Evidence Type",
+    "strength": "Strength",
+    "polarity": "Polarity",
+    "branchId": "Branch ID",
+    "submitEvidence": "Submit Evidence",
+    "noEvidence": "No external evidence recorded yet.",
+    "runEvaluation": "Run Evaluation",
+    "snapshot": "Snapshot",
+    "selectSnapshot": "Select a snapshot...",
+    "selectEvidence": "Select Evidence",
+    "evaluate": "Evaluate",
+    "noEvaluations": "No evaluations yet.",
+    "daysUntilDue": "Days until due",
+    "domainResults": "Domain Results",
+    "predictiveSignals": "Predictive Signals",
+    "misleadingSignals": "Misleading Signals",
+    "overallResults": "Overall Results",
+    "total": "total",
+    "hits": "hits",
+    "misses": "misses",
+    "partial": "partial",
+    "unknown": "unknown",
+    "sampleSizeWarning": "Only {{count}} evaluation(s). Hit rate is not stable with small sample sizes.",
+    "calibrationConfidence": "Calibration Confidence",
+    "confidenceNote": "Confidence requires at least 5 evaluations to reach medium, 15 for high.",
+    "byDomain": "By Domain",
+    "hitRate": "Hit Rate",
+    "signalQuality": "Signal Quality"
   }
 }

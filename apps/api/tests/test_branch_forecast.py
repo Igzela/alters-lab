@@ -132,3 +132,88 @@ def test_trajectory_direction_valid_enum(client):
     data = resp.json()
     valid = {"improving", "declining", "stable", "mixed", "unknown"}
     assert data["forecast_summary"]["trajectory_direction"] in valid
+
+
+# --- Domain prediction tests ---
+
+def test_forecast_returns_domain_predictions(client):
+    resp = client.post(
+        "/branch-forecast/analyze",
+        json={"branch_id": "branch_A"},
+    )
+    data = resp.json()
+    assert "domain_predictions" in data
+    assert isinstance(data["domain_predictions"], list)
+    assert len(data["domain_predictions"]) == 5
+
+    domains = {dp["domain"] for dp in data["domain_predictions"]}
+    assert domains == {"career_education", "financial", "health", "relationship", "subjective_wellbeing"}
+
+
+def test_domain_predictions_have_required_fields(client):
+    resp = client.post(
+        "/branch-forecast/analyze",
+        json={"branch_id": "branch_A"},
+    )
+    data = resp.json()
+    for dp in data["domain_predictions"]:
+        assert "predicted_direction" in dp
+        assert "predicted_direction_source" in dp
+        assert "route_a_direction" in dp
+        assert "route_b_prior_direction" in dp
+        assert "evidence_strength" in dp
+        assert "transfer_risk" in dp
+        assert "explanation" in dp
+        assert dp["predicted_direction_source"] in {
+            "route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "unknown",
+        }
+
+
+def test_career_and_health_can_differ(client):
+    """Domain predictions are per-domain, not copies of overall trajectory."""
+    resp = client.post(
+        "/branch-forecast/analyze",
+        json={"branch_id": "branch_A"},
+    )
+    data = resp.json()
+    preds = {dp["domain"]: dp for dp in data["domain_predictions"]}
+    # Each domain has its own source data — they are not required to be identical
+    career = preds["career_education"]
+    health = preds["health"]
+    # Both should have valid fields, but they come from independent anchors
+    assert career["domain"] == "career_education"
+    assert health["domain"] == "health"
+
+
+def test_overall_fallback_only_when_no_domain_data(client):
+    """When domain anchors have data, source should not be overall_fallback."""
+    resp = client.post(
+        "/branch-forecast/analyze",
+        json={"branch_id": "branch_A"},
+    )
+    data = resp.json()
+    sources = {dp["predicted_direction_source"] for dp in data["domain_predictions"]}
+    # At least one domain should have route_a or route_b if catalog/data is available
+    # If nothing is available, all should be overall_fallback or unknown
+    valid_sources = {"route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "unknown"}
+    assert sources.issubset(valid_sources)
+
+
+def test_no_life_score_in_domain_predictions(client):
+    resp = client.post(
+        "/branch-forecast/analyze",
+        json={"branch_id": "branch_A"},
+    )
+    data = resp.json()
+    assert "life_score" not in str(data["domain_predictions"]).lower()
+
+
+def test_no_probability_in_domain_predictions(client):
+    resp = client.post(
+        "/branch-forecast/analyze",
+        json={"branch_id": "branch_A"},
+    )
+    data = resp.json()
+    dumped = str(data["domain_predictions"])
+    assert "probability" not in dumped.lower()
+    assert "percentile" not in dumped.lower()

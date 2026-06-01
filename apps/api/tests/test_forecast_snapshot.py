@@ -193,3 +193,76 @@ def test_snapshot_no_rubric_write(tmp_path: Path):
     path = save_snapshot(record, repo_root=tmp_path)
     relative = str(path.relative_to(tmp_path))
     assert "rubric" not in relative.lower()
+
+
+# --- Domain prediction preservation tests ---
+
+def test_snapshot_preserves_domain_predictions(tmp_path: Path):
+    from alters_lab.schemas.forecast_snapshot import DomainPrediction
+    preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="career improving",
+            route_a_direction="improving",
+            route_b_prior_direction="favorable",
+            evidence_strength="moderate",
+            transfer_risk="low",
+        ),
+        DomainPrediction(
+            domain="health",
+            predicted_direction="declining",
+            source="route_b",
+            confidence="low",
+            explanation="health declining",
+            route_a_direction="unknown",
+            route_b_prior_direction="unfavorable",
+            evidence_strength="weak",
+            transfer_risk="high",
+        ),
+    ]
+    record = ForecastSnapshotRecord(**_valid_snapshot(domain_predictions=preds))
+    save_snapshot(record, repo_root=tmp_path)
+    loaded = load_snapshot(record.snapshot_id, repo_root=tmp_path)
+    assert len(loaded.domain_predictions) == 2
+    career = next(dp for dp in loaded.domain_predictions if dp.domain == "career_education")
+    assert career.predicted_direction == "improving"
+    assert career.source == "route_a"
+    assert career.route_a_direction == "improving"
+    assert career.route_b_prior_direction == "favorable"
+    assert career.evidence_strength == "moderate"
+    assert career.transfer_risk == "low"
+
+
+def test_domain_predictions_from_forecast_api(client):
+    payload = _forecast_result_payload()
+    payload["domain_predictions"] = [
+        {
+            "domain": "career_education",
+            "route_a_direction": "improving",
+            "route_b_prior_direction": "favorable",
+            "predicted_direction": "improving",
+            "predicted_direction_source": "route_a",
+            "confidence": "medium",
+            "evidence_strength": "moderate",
+            "transfer_risk": "low",
+            "explanation": "test",
+        },
+    ]
+    resp = client.post("/forecast-snapshots/create-from-forecast", json=payload)
+    assert resp.status_code == 200
+    snapshot = resp.json()["snapshot"]
+    assert len(snapshot["domain_predictions"]) == 1
+    assert snapshot["domain_predictions"][0]["domain"] == "career_education"
+    assert snapshot["domain_predictions"][0]["source"] == "route_a"
+    assert snapshot["domain_predictions"][0]["route_a_direction"] == "improving"
+
+
+def test_snapshot_no_life_score_in_domain_predictions():
+    from alters_lab.schemas.forecast_snapshot import DomainPrediction
+    preds = [DomainPrediction(domain="health", predicted_direction="stable")]
+    record = ForecastSnapshotRecord(**_valid_snapshot(domain_predictions=preds))
+    dumped = record.model_dump(mode="json")
+    assert "life_score" not in str(dumped).lower()

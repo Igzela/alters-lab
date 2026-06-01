@@ -61,6 +61,28 @@ class OutcomeTargetSummary(BaseModel):
     missed_targets: int
 
 
+class DomainForecastPrediction(BaseModel):
+    """Per-domain forecast prediction with evidence source tracking."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    domain: Literal[
+        "career_education",
+        "financial",
+        "health",
+        "relationship",
+        "subjective_wellbeing",
+    ]
+    route_a_direction: Literal["improving", "declining", "stable", "insufficient_data", "unknown"] = "unknown"
+    route_b_prior_direction: Literal["favorable", "unfavorable", "mixed", "unknown"] = "unknown"
+    predicted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"] = "unknown"
+    predicted_direction_source: Literal["route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "unknown"] = "unknown"
+    confidence: Literal["low", "medium", "high"] = "low"
+    evidence_strength: Literal["weak", "moderate", "strong"] = "weak"
+    transfer_risk: Literal["low", "medium", "high"] = "high"
+    explanation: str = ""
+
+
 class BranchForecastResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -72,5 +94,6 @@ class BranchForecastResult(BaseModel):
     route_b_population_prior: RouteBPopulationPrior
     calibration_divergence: CalibrationDivergenceSummary
     outcome_targets: OutcomeTargetSummary
+    domain_predictions: list[DomainForecastPrediction] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
     next_evidence_to_collect: list[str] = Field(default_factory=list)
