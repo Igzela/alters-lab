@@ -1,43 +1,45 @@
 # Next Decision Point
 
-## Current Status (Phase 11 — Complete)
+## Current Status (Phase 12 — Dual-Source Public Baseline Pilot)
 
-Phase 11 adds the Population Baseline Lab scaffold and public-prior integration contract. No production ML model has been added. The main forecast system remains literature-prior only for Route B.
+Phase 12 builds the first auditable public baseline pilot using MIDUS + NLSY97. No production ML model has been trained. No datasets have been downloaded yet. The lab remains inside `labs/population_baseline/` with no production integration.
+
+## What Phase 12 Built
+
+- **Source selection**: MIDUS and NLSY97 included; FFCWS and PSID deferred
+- **17 candidate outcomes** across 5 domains (career_education, financial, health, relationship, subjective_wellbeing)
+- **15 feature mappings** from MIDUS/NLSY97 variables to internal predictor_profile and behavior_metric fields
+- **Data access plan** for NLSY Investigator and ICPSR (no downloads yet)
+- **Baseline artifact design**: baseline_table (descriptive) + model_card_candidate (placeholder)
+- **Lab-only schemas**: PopulationBaselineSourceSelection, BaselineOutcomeCandidate, BaselineFeatureCandidate, BaselineTableArtifact
+- **Tests**: 25 tests enforcing source selection, outcome, feature, and artifact invariants
 
 ## What Exists Now
 
-- **Schema**: `PopulationBaselineModelCard`, `PopulationPriorArtifact`, `PublicDatasetSource`, `PublicOutcomeDefinition`, `PublicFeatureMapping` in `apps/api/src/alters_lab/schemas/population_baseline.py`
-- **Contract**: `PublicPriorIntegrationContract` in `apps/api/src/alters_lab/schemas/public_prior_contract.py`
-- **Lab scaffold**: `labs/population_baseline/` with example configs, model card template, data source docs
+- **Schemas**: `apps/api/src/alters_lab/schemas/population_baseline.py` (Phase 11) + `population_baseline_pilot.py` (Phase 12)
+- **Contract**: `apps/api/src/alters_lab/schemas/public_prior_contract.py`
+- **Lab configs**: `labs/population_baseline/config/source_selection_v0_1.yaml`, `outcome_definitions_p12.yaml`, `feature_mapping_p12.yaml`, `baseline_artifact_schema_p12.yaml`
+- **Lab docs**: `labs/population_baseline/P12_SOURCE_SELECTION.md`, `P12_OUTCOME_DEFINITIONS.md`, `P12_FEATURE_MAPPING.md`, `P12_DATA_ACCESS_PLAN.md`, `P12_BASELINE_ARTIFACT_DESIGN.md`
 - **Validation standard**: `docs/VALIDATION_STANDARD.md` defines 6 gates
-- **Positioning**: `docs/PRODUCT_POSITIONING.md` defines the public-prior + personal-calibration identity
 
-## Next Decision: Population Baseline Lab Activation
+## Current Next Decision After Phase 12
 
-The next meaningful decision is whether to activate the Population Baseline Lab by:
+1. **Download/prepare MIDUS and NLSY97 extracts manually** — follow the data access plan in `labs/population_baseline/P12_DATA_ACCESS_PLAN.md`
+2. **Inspect actual variable metadata** — confirm candidate variable labels against real codebooks
+3. **Promote candidate variable labels to confirmed variable mappings** — update `feature_mapping_p12.yaml` with actual variable names
+4. **Build first baseline_table artifacts** — compute descriptive statistics for preferred outcomes
+5. **Only after baseline table validation** — consider lightweight interpretable models (logistic regression, elastic net)
 
-1. **Downloading a real dataset** (e.g., NLSY79 public use data)
-2. **Defining real outcome measures** using the example outcome definitions as a starting point
-3. **Building a baseline table or simple model** for one domain (e.g., career_education)
-4. **Creating a model card** with actual calibration metrics
-5. **Submitting the model card for validation gate review**
+## What Must NOT Happen Yet
 
-### Decision Criteria
-
-- Is there a dataset available with a clear outcome definition?
-- Can the feature mapping be validated against the existing predictor profile schema?
-- Is the transfer risk manageable (i.e., can we cap confidence appropriately)?
-- Does the model produce useful directional priors without false precision?
-
-### Alternative: Literature-Only Route B
-
-If dataset activation is too heavy, the alternative is to keep Route B literature-prior only and focus on:
-- Expanding the literature prior catalog
-- Improving the personal calibration pipeline
-- Collecting more user evidence for Route A
+- No production ML model integration
+- No route_b approval granted
+- No exact personal probabilities emitted
+- No raw data committed to the repository
+- No modification to active YAML or rubric
 
 ## Blocked On
 
-- User decision on whether to pursue dataset activation
-- Availability of a suitable public dataset
-- Time to build and validate a real model
+- Manual data download (NLS Investigator + ICPSR accounts)
+- Variable metadata inspection against real codebooks
+- Baseline table computation and review

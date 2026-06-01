@@ -97,3 +97,11 @@ alters/product/external_evidence/*
 !alters/product/external_evidence/.gitkeep
 alters/product/forecast_evaluations/*
 !alters/product/forecast_evaluations/.gitkeep
+
+# Population Baseline Lab — raw data and artifacts (NEVER commit)
+labs/population_baseline/data/raw/*
+labs/population_baseline/data/processed/*
+labs/population_baseline/artifacts/*
+!labs/population_baseline/data/raw/.gitkeep
+!labs/population_baseline/data/processed/.gitkeep
+!labs/population_baseline/artifacts/.gitkeep

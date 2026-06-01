@@ -1,0 +1,109 @@
+# Phase 12E — Baseline Artifact Schema Definitions
+# Defines the structure for baseline_table and model_card_candidate artifacts.
+
+artifact_types:
+  baseline_table:
+    description: >
+      Descriptive population statistics before any ML model is trained.
+      Provides base rates, means, and confidence intervals for each outcome by subgroup.
+    fields:
+      - name: artifact_id
+        type: string
+        required: true
+        description: "Unique identifier (e.g., bt_nlsy97_employment_stability_2010)"
+      - name: dataset_source_id
+        type: string
+        required: true
+        description: "Source dataset (nlsy97 or midus)"
+      - name: outcome_id
+        type: string
+        required: true
+        description: "Outcome being measured"
+      - name: subgroup_definition
+        type: string
+        required: true
+        description: "How the subgroup is defined"
+      - name: n
+        type: integer
+        required: true
+        description: "Sample size for this subgroup"
+      - name: observed_rate_or_mean
+        type: float
+        required: true
+        description: "Observed rate (binary) or mean (continuous)"
+      - name: confidence_interval
+        type: string
+        required: true
+        description: "95% CI as string (e.g., '0.52-0.58')"
+      - name: missingness_rate
+        type: float
+        required: true
+        description: "Fraction of eligible cases with missing outcome data"
+      - name: transfer_risk
+        type: literal[low, medium, high]
+        required: true
+        description: "Population mismatch risk"
+      - name: limitations
+        type: list[string]
+        required: false
+        default: []
+        description: "Known limitations for this specific artifact"
+    constraints:
+      - "No exact personal probabilities"
+      - "No life_score"
+      - "No model_card or route_b approval"
+      - "Purely descriptive statistics"
+
+  model_card_candidate:
+    description: >
+      Placeholder model card for future ML models.
+      No model is trained in Phase 12. Structure defines what must be filled
+      before any model enters the forecast path.
+    fields:
+      - name: model_id
+        type: string
+        required: true
+        description: "Unique identifier"
+      - name: dataset_source_ids
+        type: list[string]
+        required: true
+        description: "Source datasets used"
+      - name: outcome_id
+        type: string
+        required: true
+        description: "Outcome being predicted"
+      - name: feature_mapping_ids
+        type: list[string]
+        required: true
+        description: "Feature mappings used"
+      - name: model_family
+        type: literal[logistic_regression, elastic_net, ordinal_regression, survival_model, baseline_table, literature_prior_only]
+        required: true
+        description: "Model family"
+      - name: training_status
+        type: literal[not_trained, trained, validated, rejected]
+        required: true
+        default: not_trained
+        description: "Training status (always not_trained in Phase 12)"
+      - name: approved_for_route_b
+        type: bool
+        required: true
+        default: false
+        description: "Whether model is approved for production (always false in Phase 12)"
+      - name: required_validation_before_approval
+        type: list[string]
+        required: true
+        description: "Gates that must pass before approval"
+      - name: calibration_metrics
+        type: object
+        required: true
+        description: "Calibration metrics (all null in Phase 12)"
+      - name: limitations
+        type: list[string]
+        required: false
+        default: []
+        description: "Known limitations"
+    constraints:
+      - "training_status must be not_trained in Phase 12"
+      - "approved_for_route_b must be false in Phase 12"
+      - "calibration_metrics fields must all be null in Phase 12"

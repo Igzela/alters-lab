@@ -1,0 +1,269 @@
+# Phase 12C — Feature Mapping
+# Maps public dataset variables/constructs to internal Alters Lab predictors.
+# Variable names are CANDIDATE labels, not confirmed extractions.
+
+features:
+  # ============================================================
+  # Big Five Personality Traits → predictor_profile.trait_baseline
+  # ============================================================
+  - feature_id: conscientiousness
+    construct_id: big5_conscientiousness
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SCON"          # MIDUS Big Five Conscientiousness (26-item or 5-item)
+      - "B1PACON"         # MIDUS Big Five Conscientiousness (alternate form)
+    maps_to_predictor_profile_fields:
+      - trait_baseline.conscientiousness
+    maps_to_behavior_metric_ids:
+      - planned_commitment_follow_through_rate
+      - career_education_deep_work_minutes
+      - abandoned_committed_blocks
+    expected_direction: positive
+    transformation_notes: >
+      Z-score normalize within MIDUS sample. If using 5-item short form,
+      note lower reliability. Consider subscale-level analysis.
+    missingness_notes: "MIDUS-only. Not available in NLSY97."
+    transfer_risk: high
+    first_pass_status: preferred
+
+  - feature_id: neuroticism_negative_emotionality
+    construct_id: big5_neuroticism
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SNEU"          # MIDUS Big Five Neuroticism
+      - "B1PANEGAFF"      # MIDUS Negative Affect
+    maps_to_predictor_profile_fields:
+      - trait_baseline.neuroticism_negative_emotionality
+    maps_to_behavior_metric_ids:
+      - avoidable_health_risk_events
+    expected_direction: negative  # higher neuroticism → worse outcomes
+    transformation_notes: >
+      Z-score normalize. Consider combining with negative affect scale
+      for broader construct coverage.
+    missingness_notes: "MIDUS-only. NLSY97 has no direct Big Five measure."
+    transfer_risk: high
+    first_pass_status: preferred
+
+  - feature_id: extraversion
+    construct_id: big5_extraversion
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SEXT"          # MIDUS Big Five Extraversion
+    maps_to_predictor_profile_fields:
+      - trait_baseline.extraversion
+    maps_to_behavior_metric_ids:
+      - meaningful_social_contact_count
+    expected_direction: positive
+    transformation_notes: "Z-score normalize within MIDUS sample."
+    missingness_notes: "MIDUS-only."
+    transfer_risk: high
+    first_pass_status: candidate
+
+  - feature_id: agreeableness
+    construct_id: big5_agreeableness
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SAGR"          # MIDUS Big Five Agreeableness
+    maps_to_predictor_profile_fields:
+      - trait_baseline.agreeableness
+    maps_to_behavior_metric_ids: []
+    expected_direction: positive
+    transformation_notes: "Z-score normalize within MIDUS sample."
+    missingness_notes: "MIDUS-only."
+    transfer_risk: high
+    first_pass_status: candidate
+
+  - feature_id: openness
+    construct_id: big5_openness
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SOPN"          # MIDUS Big Five Openness
+    maps_to_predictor_profile_fields:
+      - trait_baseline.openness
+    maps_to_behavior_metric_ids: []
+    expected_direction: positive
+    transformation_notes: "Z-score normalize within MIDUS sample."
+    missingness_notes: "MIDUS-only."
+    transfer_risk: high
+    first_pass_status: candidate
+
+  # ============================================================
+  # Perceived Control / Mastery
+  # ============================================================
+  - feature_id: perceived_mastery
+    construct_id: perceived_control_mastery
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SCMAS"         # MIDUS Pearlin Mastery Scale
+    maps_to_predictor_profile_fields:
+      - trait_baseline.mastery  # if exists, or general wellbeing proxy
+    maps_to_behavior_metric_ids:
+      - key_milestone_progress
+    expected_direction: positive
+    transformation_notes: >
+      Z-score normalize. High overlap with conscientiousness —
+      consider residualized scores if using both.
+    missingness_notes: "MIDUS-only. NLSY97 has locus of control measure (different construct)."
+    transfer_risk: medium
+    first_pass_status: preferred
+
+  # ============================================================
+  # Education / Employment Status → predictor_profile.current_context
+  # ============================================================
+  - feature_id: education_status
+    construct_id: educational_attainment
+    dataset_source_id: nlsy97
+    source_variable_candidates:
+      - "CV_HGC"          # NLSY97 Highest Grade Completed
+      - "CVC_HIGHEST_DEGREE"  # NLSY97 Highest Degree Ever Attained
+    maps_to_predictor_profile_fields:
+      - current_context.education_status
+    maps_to_behavior_metric_ids:
+      - key_milestone_progress
+    expected_direction: positive
+    transformation_notes: >
+      Map to ordinal scale: <HS, HS/GED, Associate's, Bachelor's, Master's+.
+      Use degree rather than grade where available.
+    missingness_notes: "Low missingness in NLSY97. Self-reported."
+    transfer_risk: medium
+    first_pass_status: preferred
+
+  - feature_id: employment_status
+    construct_id: employment_status
+    dataset_source_id: nlsy97
+    source_variable_candidates:
+      - "CV_WKSTAT"       # NLSY97 Employment Status (most recent round)
+      - "EMP_STATUS"      # NLSY97 Employment status category
+    maps_to_predictor_profile_fields:
+      - current_context.employment_status
+    maps_to_behavior_metric_ids:
+      - career_education_deep_work_minutes
+    expected_direction: positive  # employed > unemployed
+    transformation_notes: >
+      Categorize: employed FT, employed PT, unemployed, out of labor force.
+      Binary variant: employed (FT+PT) vs not employed.
+    missingness_notes: "Low missingness. Some ambiguity in PT/FT classification."
+    transfer_risk: medium
+    first_pass_status: preferred
+
+  # ============================================================
+  # Financial Stability → predictor_profile.current_context
+  # ============================================================
+  - feature_id: financial_stability
+    construct_id: income_financial_distress
+    dataset_source_id: nlsy97
+    source_variable_candidates:
+      - "CV_INCOME_GROSS"  # NLSY97 Total gross income
+      - "YINC"             # NLSY97 Income from employment
+      - "Q13-4"            # NLSY97 Financial difficulty items (varies by round)
+    maps_to_predictor_profile_fields:
+      - current_context.financial_stability
+    maps_to_behavior_metric_ids:
+      - financial_planfulness
+    expected_direction: positive
+    transformation_notes: >
+      Log-transform income. Combine with financial distress indicators
+      if available. Z-score normalize within age cohort.
+    missingness_notes: "Medium missingness. Top-coded. Non-response increases in later rounds."
+    transfer_risk: high
+    first_pass_status: candidate
+
+  # ============================================================
+  # Relationship Status → predictor_profile.current_context
+  # ============================================================
+  - feature_id: relationship_status
+    construct_id: marital_partner_status
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SMSTAT"        # MIDUS Marital Status
+      - "B1SKINSP"        # MIDUS Closest relationship support
+    maps_to_predictor_profile_fields:
+      - current_context.relationship_status
+    maps_to_behavior_metric_ids:
+      - meaningful_social_contact_count
+    expected_direction: positive  # partnered > single (on average, with caveats)
+    transformation_notes: >
+      Categorize: married/partnered, separated/divorced, widowed, never married.
+      Binary variant: partnered vs not partnered.
+    missingness_notes: "Low missingness in MIDUS."
+    transfer_risk: medium
+    first_pass_status: candidate
+
+  # ============================================================
+  # Health Constraints → predictor_profile.current_context
+  # ============================================================
+  - feature_id: health_constraints
+    construct_id: self_rated_health
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SA1"           # MIDUS Self-Rated Health
+      - "B1SCONDP"        # MIDUS Chronic conditions count
+    maps_to_predictor_profile_fields:
+      - current_context.health_constraints
+    maps_to_behavior_metric_ids:
+      - sleep_regular_nights
+      - moderate_vigorous_activity_minutes
+      - avoidable_health_risk_events
+    expected_direction: negative  # more constraints → worse outcomes
+    transformation_notes: >
+      Invert self-rated health (5=excellent, 1=poor) so higher = fewer constraints.
+      Combine with chronic condition count (log-transformed).
+    missingness_notes: "Low missingness. Self-rated health available in both MIDUS and NLSY97."
+    transfer_risk: medium
+    first_pass_status: preferred
+
+  # ============================================================
+  # Social Support / Strain
+  # ============================================================
+  - feature_id: social_support
+    construct_id: social_integration_support
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SCALL"         # MIDUS Social support (availability)
+      - "B1SCSAT"         # MIDUS Social support satisfaction
+    maps_to_predictor_profile_fields:
+      - current_context.social_support  # conceptual mapping
+    maps_to_behavior_metric_ids:
+      - meaningful_social_contact_count
+    expected_direction: positive
+    transformation_notes: "Average of support availability and satisfaction scales."
+    missingness_notes: "MIDUS-only. Not available in NLSY97."
+    transfer_risk: high
+    first_pass_status: preferred
+
+  # ============================================================
+  # Health Behaviors (cross-source)
+  # ============================================================
+  - feature_id: sleep_regularity
+    construct_id: sleep_behavior
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SA52A"         # MIDUS Sleep quality items
+      - "B1SA52B"         # MIDUS Sleep duration items
+    maps_to_predictor_profile_fields: []
+    maps_to_behavior_metric_ids:
+      - sleep_regular_nights
+    expected_direction: positive
+    transformation_notes: >
+      Compute regularity from sleep schedule variation if available.
+      Otherwise use sleep quality as proxy.
+    missingness_notes: "MIDUS daily diary has richer sleep data than main survey."
+    transfer_risk: medium
+    first_pass_status: candidate
+
+  - feature_id: physical_activity
+    construct_id: health_behavior_activity
+    dataset_source_id: midus
+    source_variable_candidates:
+      - "B1SA40A"         # MIDUS Vigorous activity frequency
+      - "B1SA40B"         # MIDUS Moderate activity frequency
+    maps_to_predictor_profile_fields: []
+    maps_to_behavior_metric_ids:
+      - moderate_vigorous_activity_minutes
+    expected_direction: positive
+    transformation_notes: >
+      Convert frequency categories to estimated weekly minutes.
+      Combine moderate + vigorous with intensity weighting.
+    missingness_notes: "Self-reported. May overestimate actual activity."
+    transfer_risk: low
+    first_pass_status: candidate

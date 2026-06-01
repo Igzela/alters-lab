@@ -1,0 +1,136 @@
+# Phase 12A — Source Selection v0.1
+# Public dataset source selection for dual-source baseline pilot (MIDUS + NLSY97).
+
+sources:
+  - source_id: nlsy97
+    label: "National Longitudinal Survey of Youth 1997"
+    source_type: longitudinal_dataset
+    access_url: "https://www.nlsinfo.org/investigator/"
+    access_notes: >
+      NLS Investigator is the public data extraction tool.
+      Registration required (free). Data is free for research use.
+      NLSY97 public-use files are distributed via NLS Investigator, not direct download.
+    population_description: >
+      8,984 youth aged 12-17 in 1997, US nationally representative.
+      Oversamples Black and Hispanic respondents. Followed annually through 2019+.
+    primary_domains:
+      - career_education
+      - financial
+    expected_strengths:
+      - "Longitudinal youth-to-adulthood trajectory (ages 12 to ~40)"
+      - "Annual employment, income, education data across 20+ rounds"
+      - "Cognitive and non-cognitive assessments at baseline"
+      - "Good fit for education/career/financial outcome prediction"
+      - "Well-documented variable names and codebooks"
+    transfer_risk: high
+    known_limitations:
+      - "US-only cohort, limited generalizability to other populations"
+      - "Self-reported income and employment (some administrative linkage)"
+      - "Cohort-specific: born 1980-1984, different life stage than current young adults"
+      - "Non-trivial missingness in later rounds (attrition)"
+      - "Top-coding on income variables"
+    first_pass_decision: include
+    rationale: >
+      Best available longitudinal youth dataset for career/education/financial
+      outcomes. The annual tracking and large sample size enable robust baseline
+      tables for employment stability, degree completion, and income trajectories.
+      High transfer risk is expected and manageable via confidence caps.
+
+  - source_id: midus
+    label: "Midlife in the United States (MIDUS)"
+    source_type: longitudinal_dataset
+    access_url: "https://www.icpsr.umich.edu/web/ICPSR/studies/04652"
+    access_notes: >
+      Available via ICPSR (Inter-university Consortium for Political and Social Research).
+      Registration required. Free for research use under ICPSR terms.
+      MIDUS Refresher and Biomarker sub-studies are separate ICPSR deposits.
+    population_description: >
+      ~7,000 adults aged 25-74 at baseline (1995-1996).
+      Nationally representative US sample with twin and city oversamples.
+      Follow-up waves in 2004-2006 (MIDUS II) and 2013-2014+ (MIDUS III/Refresher).
+    primary_domains:
+      - health
+      - relationship
+      - subjective_wellbeing
+    expected_strengths:
+      - "Strong psychosocial coverage: Big Five personality, mastery, social support"
+      - "Validated well-being scales: life satisfaction, psychological well-being"
+      - "Health outcomes: self-rated health, chronic conditions, functional limitations"
+      - "Relationship quality and social strain measures"
+      - "Daily diary and experience sampling sub-studies"
+      - "Biomarker sub-study for physiological health measures"
+    transfer_risk: high
+    known_limitations:
+      - "Baseline age 25-74: not directly comparable to younger Alters Lab users"
+      - "Cohort-specific: mid-1990s baseline, different economic/cultural context"
+      - "Some scales differ from NLSY97 measures (cross-dataset harmonization needed)"
+      - "Smaller sample than NLSY97 for subgroup analyses"
+      - "US-only, limited racial/ethnic diversity compared to NLSY97 oversampling"
+    first_pass_decision: include
+    rationale: >
+      Best available dataset for health, relationship, and subjective well-being
+      domains. The psychosocial predictor coverage (personality, mastery, social
+      support) directly maps to Alters Lab's predictor_profile fields. Complements
+      NLSY97's career/financial strength. High transfer risk is expected.
+
+  - source_id: ffcws
+    label: "Future of Families and Child Wellbeing Study (FFCWS)"
+    source_type: longitudinal_dataset
+    access_url: "https://ffcws.princeton.edu/"
+    access_notes: >
+      Public use data available via Princeton Office of Population Research.
+      Registration required. Free for research use.
+    population_description: >
+      ~5,000 children born 1998-2000 in 20 US cities.
+      Oversamples non-marital births. Followed from birth to age ~23.
+    primary_domains:
+      - relationship
+      - career_education
+      - financial
+    expected_strengths:
+      - "Birth-to-adulthood trajectory"
+      - "Rich family structure and parental relationship data"
+      - "Child developmental outcomes"
+    transfer_risk: high
+    known_limitations:
+      - "Urban-only sample, not nationally representative"
+      - "Oversampled non-marital births: skewed family structure distribution"
+      - "High transfer risk: population mismatch with general adult users"
+      - "Career/financial outcomes only available at young adult follow-ups"
+    first_pass_decision: defer
+    rationale: >
+      Useful as a future candidate for family structure and early-life predictors,
+      but the urban-only, non-marital-oversampled design creates high transfer risk
+      that is difficult to quantify without dedicated harmonization work. Defer
+      until MIDUS and NLSY97 baselines are validated.
+
+  - source_id: psid
+    label: "Panel Study of Income Dynamics (PSID)"
+    source_type: panel_dataset
+    access_url: "https://psidonline.isr.umich.edu/"
+    access_notes: >
+      Public use data available via PSID Online. Registration required.
+      Free for research use. Some restricted-use variables require special application.
+    population_description: >
+      18,000+ individuals tracked since 1968, intergenerational.
+      US nationally representative with poverty oversample.
+    primary_domains:
+      - financial
+      - career_education
+      - health
+      - relationship
+    expected_strengths:
+      - "Longest-running household panel survey (50+ years)"
+      - "Intergenerational linkages: parent-child wealth/income trajectories"
+      - "Detailed wealth and asset data (unique among major surveys)"
+      - "Family structure transitions over decades"
+    transfer_risk: high
+    known_limitations:
+      - "Complex survey design requires careful weighting"
+      - "Some variables only in restricted-use files"
+      - "Older cohort foundation (1968 origins) limits direct youth comparisons"
+    first_pass_decision: defer
+    rationale: >
+      Valuable for wealth/family/economic panel validation in later phases.
+      Defer to avoid scope creep in the initial pilot. PSID can serve as a
+      validation source after MIDUS+NLSY97 baselines are established.
