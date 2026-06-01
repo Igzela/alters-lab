@@ -20,6 +20,9 @@ class DomainResult(BaseModel):
         "subjective_wellbeing",
     ]
     predicted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"]
+    predicted_direction_source: Literal["route_a", "route_b", "behavior_metric", "overall_fallback", "unknown"] = "unknown"
+    predicted_direction_confidence: Literal["low", "medium", "high"] = "low"
+    predicted_direction_explanation: str = ""
     observed_direction: Literal["improved", "declined", "stable", "mixed", "unknown"]
     match_result: Literal["hit", "miss", "partial", "unknown"]
     evidence_strength: Literal["weak", "moderate", "strong"] = "weak"
@@ -35,6 +38,9 @@ class ForecastEvaluationRecord(BaseModel):
     branch_id: str
     evaluated_at: str
     evaluation_horizon_elapsed: bool = False
+    evaluation_type: Literal["provisional", "final"] = "provisional"
+    horizon_due_at: str | None = None
+    days_until_due: int | None = None
     evidence_ids: list[str] = Field(default_factory=list)
     domain_results: list[DomainResult] = Field(default_factory=list)
     overall_result: Literal["hit", "miss", "partial", "unknown"] = "unknown"

@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import pytest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from alters_lab.schemas.forecast_evaluation import ForecastEvaluationRecord, DomainResult
-from alters_lab.schemas.forecast_snapshot import ForecastSnapshotRecord, ForecastSummarySnapshot
+from alters_lab.schemas.forecast_snapshot import (
+    ForecastSnapshotRecord,
+    ForecastSummarySnapshot,
+    DomainPrediction,
+)
 from alters_lab.schemas.external_evidence import ExternalEvidenceRecord
 from alters_lab.services.forecast_snapshot import save_snapshot, load_snapshot
 from alters_lab.services.external_evidence import save_evidence
@@ -18,14 +23,23 @@ from alters_lab.services.forecast_evaluation import (
     load_evaluation,
     list_evaluations,
     _evaluate_direction,
-    _aggregate_polarity,
+    _aggregate_observed_direction,
+    _infer_direction_from_numeric,
+    _compute_horizon,
 )
 
 
-def _make_snapshot(tmp_path: Path, trajectory: str = "improving", snapshot_id: str | None = None) -> ForecastSnapshotRecord:
+def _make_snapshot(
+    tmp_path: Path,
+    trajectory: str = "improving",
+    snapshot_id: str | None = None,
+    domain_predictions: list[DomainPrediction] | None = None,
+    created_at: str | None = None,
+    horizon_months: int = 3,
+) -> ForecastSnapshotRecord:
     kwargs = dict(
         branch_id="branch_A",
-        horizon_months=3,
+        horizon_months=horizon_months,
         forecast_payload={},
         forecast_summary=ForecastSummarySnapshot(
             trajectory_direction=trajectory,
@@ -40,12 +54,23 @@ def _make_snapshot(tmp_path: Path, trajectory: str = "improving", snapshot_id: s
     )
     if snapshot_id:
         kwargs["snapshot_id"] = snapshot_id
+    if domain_predictions is not None:
+        kwargs["domain_predictions"] = domain_predictions
+    if created_at:
+        kwargs["created_at"] = created_at
     snapshot = ForecastSnapshotRecord(**kwargs)
     save_snapshot(snapshot, repo_root=tmp_path)
     return snapshot
 
 
-def _make_evidence(tmp_path: Path, polarity: str = "positive", domain: str = "career_education", strength: str = "strong") -> ExternalEvidenceRecord:
+def _make_evidence(
+    tmp_path: Path,
+    polarity: str = "positive",
+    domain: str = "career_education",
+    strength: str = "strong",
+    numeric_value: float | None = None,
+    target_id: str | None = None,
+) -> ExternalEvidenceRecord:
     evidence = ExternalEvidenceRecord(
         branch_id="branch_A",
         domain=domain,
@@ -53,6 +78,8 @@ def _make_evidence(tmp_path: Path, polarity: str = "positive", domain: str = "ca
         description=f"Test evidence: {polarity}",
         objective_strength=strength,
         polarity=polarity,
+        numeric_value=numeric_value,
+        target_id=target_id,
     )
     save_evidence(evidence, repo_root=tmp_path)
     return evidence
@@ -88,7 +115,7 @@ def test_aggregate_polarity_positive():
         domain="career_education", evidence_type="other",
         description="test", objective_strength="weak", polarity="positive",
     )]
-    assert _aggregate_polarity(e) == "improved"
+    assert _aggregate_observed_direction(e) == "improved"
 
 
 def test_aggregate_polarity_negative():
@@ -96,7 +123,7 @@ def test_aggregate_polarity_negative():
         domain="career_education", evidence_type="other",
         description="test", objective_strength="weak", polarity="negative",
     )]
-    assert _aggregate_polarity(e) == "declined"
+    assert _aggregate_observed_direction(e) == "declined"
 
 
 def test_aggregate_polarity_mixed():
@@ -110,17 +137,118 @@ def test_aggregate_polarity_mixed():
             description="test", objective_strength="weak", polarity="negative",
         ),
     ]
-    assert _aggregate_polarity(e) == "mixed"
+    assert _aggregate_observed_direction(e) == "mixed"
 
 
 def test_aggregate_polarity_empty():
-    assert _aggregate_polarity([]) == "unknown"
+    assert _aggregate_observed_direction([]) == "unknown"
+
+
+# --- Numeric direction inference tests ---
+
+def test_numeric_progress_toward_target():
+    result = _infer_direction_from_numeric(85.0, "50.0", "100.0")
+    assert result == "improved"
+
+
+def test_numeric_movement_away_from_target():
+    result = _infer_direction_from_numeric(30.0, "50.0", "100.0")
+    assert result == "declined"
+
+
+def test_numeric_lower_is_better():
+    result = _infer_direction_from_numeric(5.0, "20.0", "0.0")
+    assert result == "improved"
+
+
+def test_numeric_missing_baseline():
+    result = _infer_direction_from_numeric(85.0, None, "100.0")
+    assert result is None
+
+
+def test_numeric_missing_target():
+    result = _infer_direction_from_numeric(85.0, "50.0", None)
+    assert result is None
 
 
 # --- Evaluation service tests ---
 
+def test_domain_predictions_used_instead_of_trajectory(tmp_path: Path):
+    """Career prediction can differ from health prediction."""
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="career improving",
+        ),
+        DomainPrediction(
+            domain="health",
+            predicted_direction="declining",
+            source="route_a",
+            confidence="low",
+            explanation="health declining",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, trajectory="stable", domain_predictions=domain_preds)
+    e_career = _make_evidence(tmp_path, "positive", domain="career_education")
+    e_health = _make_evidence(tmp_path, "negative", domain="health")
+
+    result = evaluate_forecast(
+        snapshot.snapshot_id, [e_career.evidence_id, e_health.evidence_id], repo_root=tmp_path,
+    )
+
+    career_result = next(r for r in result.domain_results if r.domain == "career_education")
+    health_result = next(r for r in result.domain_results if r.domain == "health")
+
+    assert career_result.predicted_direction == "improving"
+    assert career_result.predicted_direction_source == "route_a"
+    assert career_result.match_result == "hit"
+
+    assert health_result.predicted_direction == "declining"
+    assert health_result.predicted_direction_source == "route_a"
+    assert health_result.match_result == "hit"
+
+
+def test_unknown_domain_stays_unknown(tmp_path: Path):
+    """Unknown domain direction stays unknown, not copied from overall."""
+    snapshot = _make_snapshot(tmp_path, trajectory="improving", domain_predictions=[])
+    # No domain predictions, no evidence -> predicted_direction should be unknown
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    assert result.domain_results[0].predicted_direction == "unknown"
+    assert result.domain_results[0].predicted_direction_source == "unknown"
+
+
+def test_overall_fallback_marked(tmp_path: DomainPrediction):
+    """Overall fallback is clearly marked."""
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="overall_fallback",
+            confidence="medium",
+            explanation="Using overall trajectory direction as fallback.",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, trajectory="improving", domain_predictions=domain_preds)
+    evidence = _make_evidence(tmp_path, "positive", domain="career_education")
+    result = evaluate_forecast(snapshot.snapshot_id, [evidence.evidence_id], repo_root=tmp_path)
+    career = next(r for r in result.domain_results if r.domain == "career_education")
+    assert career.predicted_direction_source == "overall_fallback"
+
+
 def test_hit_when_predicted_and_observed_align(tmp_path: Path):
-    snapshot = _make_snapshot(tmp_path, "improving")
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="test",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, "improving", domain_predictions=domain_preds)
     evidence = _make_evidence(tmp_path, "positive")
     result = evaluate_forecast(snapshot.snapshot_id, [evidence.evidence_id], repo_root=tmp_path)
     assert result.overall_result == "hit"
@@ -128,7 +256,16 @@ def test_hit_when_predicted_and_observed_align(tmp_path: Path):
 
 
 def test_miss_when_predicted_and_observed_conflict(tmp_path: Path):
-    snapshot = _make_snapshot(tmp_path, "improving")
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="test",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, "improving", domain_predictions=domain_preds)
     evidence = _make_evidence(tmp_path, "negative")
     result = evaluate_forecast(snapshot.snapshot_id, [evidence.evidence_id], repo_root=tmp_path)
     assert result.overall_result == "miss"
@@ -136,7 +273,16 @@ def test_miss_when_predicted_and_observed_conflict(tmp_path: Path):
 
 
 def test_partial_when_mixed(tmp_path: Path):
-    snapshot = _make_snapshot(tmp_path, "improving")
+    domain_preds = [
+        DomainPrediction(
+            domain="career_education",
+            predicted_direction="improving",
+            source="route_a",
+            confidence="medium",
+            explanation="test",
+        ),
+    ]
+    snapshot = _make_snapshot(tmp_path, "improving", domain_predictions=domain_preds)
     e1 = _make_evidence(tmp_path, "positive")
     e2 = _make_evidence(tmp_path, "negative")
     result = evaluate_forecast(snapshot.snapshot_id, [e1.evidence_id, e2.evidence_id], repo_root=tmp_path)
@@ -185,6 +331,53 @@ def test_list_evaluations(tmp_path: Path):
     assert len(evaluations) == 1
 
 
+# --- Horizon elapsed tests ---
+
+def test_evaluation_before_horizon_is_provisional(tmp_path: Path):
+    now = datetime.now(timezone.utc)
+    created_at = now.isoformat()
+    snapshot = _make_snapshot(tmp_path, created_at=created_at, horizon_months=6)
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    assert result.evaluation_type == "provisional"
+    assert result.evaluation_horizon_elapsed is False
+    assert result.days_until_due is not None
+    assert result.days_until_due > 0
+
+
+def test_evaluation_after_horizon_is_final(tmp_path: Path):
+    old = datetime.now(timezone.utc) - timedelta(days=365)
+    created_at = old.isoformat()
+    snapshot = _make_snapshot(tmp_path, created_at=created_at, horizon_months=3)
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    assert result.evaluation_type == "final"
+    assert result.evaluation_horizon_elapsed is True
+    assert result.days_until_due == 0
+
+
+def test_force_final_before_horizon(tmp_path: Path):
+    now = datetime.now(timezone.utc)
+    created_at = now.isoformat()
+    snapshot = _make_snapshot(tmp_path, created_at=created_at, horizon_months=12)
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path, force_final=True)
+    assert result.evaluation_type == "final"
+    assert result.evaluation_horizon_elapsed is True
+
+
+def test_provisional_label_in_notes(tmp_path: Path):
+    now = datetime.now(timezone.utc)
+    snapshot = _make_snapshot(tmp_path, created_at=now.isoformat(), horizon_months=6)
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    assert any("provisional" in note.lower() for note in result.calibration_notes)
+
+
+def test_horizon_due_at_computed(tmp_path: Path):
+    now = datetime.now(timezone.utc)
+    snapshot = _make_snapshot(tmp_path, created_at=now.isoformat(), horizon_months=3)
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    assert result.horizon_due_at is not None
+    assert result.days_until_due is not None
+
+
 # --- API tests ---
 
 @pytest.fixture
@@ -204,8 +397,16 @@ def _create_snapshot_via_api(client) -> str:
             credibility="medium",
             explanation="test",
         ),
+        domain_predictions=[
+            DomainPrediction(
+                domain="career_education",
+                predicted_direction="improving",
+                source="overall_fallback",
+                confidence="medium",
+                explanation="test",
+            ),
+        ],
     )
-    # Use service directly since API needs BranchForecastResult
     from alters_lab.services.forecast_snapshot import save_snapshot
     save_snapshot(snapshot)
     return snapshot.snapshot_id
@@ -286,6 +487,16 @@ def test_no_probability_emitted(tmp_path: Path):
     evidence = _make_evidence(tmp_path)
     result = evaluate_forecast(snapshot.snapshot_id, [evidence.evidence_id], repo_root=tmp_path)
     dumped = result.model_dump(mode="json")
-    # Should not contain probability-like fields
     assert "probability" not in dumped
     assert "percentile" not in dumped
+
+
+def test_scorecard_counts_unknown_separately(tmp_path: Path):
+    """Unknown domain predictions are counted separately in scorecard."""
+    snapshot = _make_snapshot(tmp_path, trajectory="improving", domain_predictions=[])
+    result = evaluate_forecast(snapshot.snapshot_id, [], repo_root=tmp_path)
+    assert result.overall_result == "unknown"
+    save_evaluation(result, repo_root=tmp_path)
+    from alters_lab.services.calibration_scorecard import build_scorecard
+    scorecard = build_scorecard(repo_root=tmp_path)
+    assert scorecard.unknown_count >= 1

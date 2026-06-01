@@ -9,6 +9,24 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from alters_lab.services.p6_runtime import generate_record_id, utc_now
 
 
+class DomainPrediction(BaseModel):
+    """Per-domain predicted direction extracted from forecast data."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    domain: Literal[
+        "career_education",
+        "financial",
+        "health",
+        "relationship",
+        "subjective_wellbeing",
+    ]
+    predicted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"]
+    source: Literal["route_a", "route_b", "behavior_metric", "overall_fallback", "unknown"] = "unknown"
+    confidence: Literal["low", "medium", "high"] = "low"
+    explanation: str = ""
+
+
 class ForecastSummarySnapshot(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -28,6 +46,7 @@ class ForecastSnapshotRecord(BaseModel):
     horizon_months: int = Field(ge=1, le=24)
     forecast_payload: dict[str, Any] = Field(default_factory=dict)
     forecast_summary: ForecastSummarySnapshot
+    domain_predictions: list[DomainPrediction] = Field(default_factory=list)
     route_a_summary: dict[str, Any] = Field(default_factory=dict)
     route_b_summary: dict[str, Any] = Field(default_factory=dict)
     calibration_divergence_summary: dict[str, Any] = Field(default_factory=dict)

@@ -18,6 +18,7 @@ router = APIRouter(prefix="/forecast-evaluations", tags=["forecast-evaluations"]
 class EvaluateRequest(BaseModel):
     snapshot_id: str
     evidence_ids: list[str] = []
+    force_final: bool = False
 
 
 @router.get("/health")
@@ -36,6 +37,7 @@ def run_evaluation(body: EvaluateRequest):
         evaluation = evaluate_forecast(
             snapshot_id=body.snapshot_id,
             evidence_ids=body.evidence_ids,
+            force_final=body.force_final,
         )
         path = save_evaluation(evaluation)
         return {
