@@ -15,6 +15,9 @@ import {
   Sun,
   Moon,
   ChartBarIcon,
+  TrendUp,
+  Target,
+  Binoculars,
 } from '@phosphor-icons/react'
 import type { Page } from '../types'
 import { useTheme } from './ThemeContext'
@@ -60,6 +63,14 @@ const navGroups: NavGroup[] = [
     items: [
       { page: 'patterns', icon: <MagnifyingGlass size={18} />, labelKey: 'nav.patterns' },
       { page: 'validation', icon: <ShieldCheck size={18} />, labelKey: 'nav.validation' },
+    ],
+  },
+  {
+    labelKey: 'nav.prediction',
+    items: [
+      { page: 'predictor-profile', icon: <TrendUp size={18} />, labelKey: 'nav.predictorProfile' },
+      { page: 'outcome-targets', icon: <Target size={18} />, labelKey: 'nav.outcomeTargets' },
+      { page: 'branch-forecast', icon: <Binoculars size={18} />, labelKey: 'nav.branchForecast' },
     ],
   },
   {

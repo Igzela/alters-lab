@@ -12,6 +12,9 @@ import PatternReview from '../pages/PatternReview'
 import BehaviorValidation from '../pages/BehaviorValidation'
 import DataManagement from '../pages/DataManagement'
 import Dashboard from '../pages/Dashboard'
+import PredictorProfile from '../pages/PredictorProfile'
+import OutcomeTargets from '../pages/OutcomeTargets'
+import BranchForecast from '../pages/BranchForecast'
 
 export default function PageRouter() {
   return (
@@ -30,6 +33,9 @@ export default function PageRouter() {
       <Route path="/patterns" element={<PatternReview />} />
       <Route path="/validation" element={<BehaviorValidation />} />
       <Route path="/data" element={<DataManagement />} />
+      <Route path="/predictor-profile" element={<PredictorProfile />} />
+      <Route path="/outcome-targets" element={<OutcomeTargets />} />
+      <Route path="/branch-forecast" element={<BranchForecast />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

@@ -17,4 +17,7 @@ export const queryKeys = {
   trendAnalysis: (lookbackWeeks: number, forecastWeeks: number) => ['trend-analysis', lookbackWeeks, forecastWeeks] as const,
   dynamicWeights: (lookbackWeeks: number) => ['dynamic-weights', lookbackWeeks] as const,
   patternAdjustment: (lookbackWeeks: number, forecastWeeks: number) => ['pattern-adjustment', lookbackWeeks, forecastWeeks] as const,
+  predictorProfiles: ['predictor-profiles'] as const,
+  predictorProfile: (profileId: string | null) => ['predictor-profile', profileId] as const,
+  outcomeTargets: ['outcome-targets'] as const,
 } as const

@@ -66,6 +66,10 @@ _ROUTER_MODULES = [
     "branch_base_rate_anchor",
     "calibration_divergence",
     "branch_forecast",
+    "forecast_snapshot",
+    "external_evidence",
+    "forecast_evaluation",
+    "calibration_scorecard",
 ]
 
 logger = logging.getLogger("alters_lab")

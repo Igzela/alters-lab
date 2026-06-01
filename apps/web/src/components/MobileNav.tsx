@@ -28,7 +28,7 @@ export default function MobileNav({ currentPage, onNavigate }: MobileNavProps) {
     if (page === 'dashboard') return currentPage === 'dashboard' || currentPage === 'status' || currentPage === 'getting-started'
     if (page === 'weekly') return ['weekly', 'history', 'reality', 'rubric'].includes(currentPage)
     if (page === 'dialogue') return currentPage === 'dialogue'
-    if (page === 'patterns') return ['patterns', 'validation'].includes(currentPage)
+    if (page === 'patterns') return ['patterns', 'validation', 'predictor-profile', 'outcome-targets', 'branch-forecast'].includes(currentPage)
     if (page === 'provider') return ['provider', 'checkpoint', 'data'].includes(currentPage)
     return false
   }

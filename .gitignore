@@ -91,3 +91,9 @@ alters/product/branch_outcome_targets/*
 !alters/product/branch_outcome_targets/.gitkeep
 alters/product/predictor_profiles/*
 !alters/product/predictor_profiles/.gitkeep
+alters/product/forecast_snapshots/*
+!alters/product/forecast_snapshots/.gitkeep
+alters/product/external_evidence/*
+!alters/product/external_evidence/.gitkeep
+alters/product/forecast_evaluations/*
+!alters/product/forecast_evaluations/.gitkeep

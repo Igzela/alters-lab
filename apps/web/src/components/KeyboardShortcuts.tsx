@@ -13,6 +13,8 @@ const SHORTCUTS: Record<string, Page> = {
   a: 'dialogue',
   v: 'validation',
   t: 'provider',
+  f: 'branch-forecast',
+  o: 'outcome-targets',
 }
 
 interface KeyboardShortcutsProps {

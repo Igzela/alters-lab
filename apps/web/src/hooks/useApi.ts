@@ -13,6 +13,7 @@ export { usePatternReviews, useBuildPatternReview, usePatternReviewDetail } from
 export { useBehaviorValidationReport, useEvaluateBehaviorValidation } from './useBehaviorValidationHooks'
 export { useDataManifest, useExportData, useDeleteData } from './useDataHooks'
 export { useFetchJson, useSuggestRubricDelta, useGenerateCheckpointPlan } from './useMiscHooks'
+export { usePredictorProfiles, usePredictorProfile, useCreatePredictorProfile, useOutcomeTargets, useCreateOutcomeTarget, useEvaluateOutcomeTarget, useBranchForecast, useCalibrationDivergence } from './usePredictionHooks'
 
 // Re-export query key factory for convenience
 export { queryKeys } from './useQueryKeys'

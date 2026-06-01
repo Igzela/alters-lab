@@ -18,6 +18,8 @@ const shortcuts = [
   { key: 'A', label: 'nav.dialogue' },
   { key: 'V', label: 'nav.validation' },
   { key: 'T', label: 'nav.provider' },
+  { key: 'F', label: 'nav.branchForecast' },
+  { key: 'O', label: 'nav.outcomeTargets' },
 ]
 
 export default function ShortcutHelp({ onClose }: ShortcutHelpProps) {

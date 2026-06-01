@@ -31,6 +31,9 @@ P6_RUNTIME_AREAS = {
     "branch_milestones": "alters/product/branch_milestones",
     "predictor_profiles": "alters/product/predictor_profiles",
     "branch_outcome_targets": "alters/product/branch_outcome_targets",
+    "forecast_snapshots": "alters/product/forecast_snapshots",
+    "external_evidence": "alters/product/external_evidence",
+    "forecast_evaluations": "alters/product/forecast_evaluations",
 }
 
 _SAFE_ID = re.compile(r"^[A-Za-z0-9_.-]+$")
