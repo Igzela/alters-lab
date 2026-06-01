@@ -28,6 +28,12 @@ alters/
     calibration_records/      # Action alignment scores
     pattern_reviews/          # Behavioral pattern analysis
     behavior_validation/      # Validation reports
+    behavior_metrics/         # Weekly behavioral indicators
+      catalog/                # Metric definitions (behavior_metric_set_v0_2.yaml)
+      raw_events/             # Raw event data (future)
+      weekly_records/         # Weekly behavior metric records
+      summaries/              # Aggregated summaries (future)
+    branch_milestones/        # Branch milestone records
     sessions/                 # Provider dialogue sessions
     provider_runs/            # Provider call logs
     exports/                  # Data exports
@@ -221,6 +227,80 @@ Four-week pattern review analyzing behavioral patterns across multiple weeks.
 - `repeated_over_scope`
 - `repeated_action_mismatch`
 - `repeated_primary_correction_failure`
+
+## Behavior Metrics Schemas
+
+### WeeklyBehaviorMetricsRecord (`product/behavior_metrics/weekly_records/`)
+
+Weekly aggregate of observable behavioral indicators. User-entered data; no LLM boundary audit fields.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `record_id` | str | Unique identifier |
+| `week_start` | date | Week start date (Monday) |
+| `week_end` | date | Week end date (Sunday) |
+| `branch_id` | str \| None | Associated branch |
+| `milestone_id` | str \| None | Associated milestone (required if key_milestone_progress_pct > 0) |
+| `milestone_observable_evidence` | str \| None | Evidence of milestone progress |
+| `career_education_deep_work_minutes` | int (≥0) | Deep work minutes |
+| `planned_commitment_follow_through_rate` | float (0–1) | Commitment completion ratio |
+| `expense_logged_days` | int (0–7) | Days expenses were logged |
+| `regular_sleep_nights` | int (0–7) | Nights with regular sleep |
+| `moderate_vigorous_activity_minutes` | int (≥0) | Physical activity minutes |
+| `avoidable_health_risk_events` | int (≥0) | Health risk events (lower is better) |
+| `meaningful_social_contact_count` | int (≥0) | Meaningful social interactions |
+| `abandoned_committed_blocks` | int (≥0) | Abandoned time blocks (lower is better) |
+| `key_milestone_progress_pct` | float (0–1) | Milestone progress ratio |
+| `missing_metrics` | dict[str, MissingReason] | Metrics explicitly not tracked |
+| `source_quality` | SourceQuality | Data source quality |
+| `notes` | str | Free-text notes |
+
+**MissingReason** values: `not_tracked`, `not_applicable`, `device_failure`, `user_skipped`, `unknown`
+**SourceQuality** values: `manual`, `mixed`, `device_assisted`
+
+**Metric ID → Field mapping** (`METRIC_ID_TO_FIELD`):
+| Metric ID | Record Field |
+|-----------|-------------|
+| `career_education_deep_work_minutes` | `career_education_deep_work_minutes` |
+| `planned_commitment_follow_through_rate` | `planned_commitment_follow_through_rate` |
+| `financial_planfulness` | `expense_logged_days` |
+| `sleep_regular_nights` | `regular_sleep_nights` |
+| `moderate_vigorous_activity_minutes` | `moderate_vigorous_activity_minutes` |
+| `avoidable_health_risk_events` | `avoidable_health_risk_events` |
+| `meaningful_social_contact_count` | `meaningful_social_contact_count` |
+| `abandoned_committed_blocks` | `abandoned_committed_blocks` |
+| `key_milestone_progress` | `key_milestone_progress_pct` |
+
+### BranchMilestoneRecord (`product/branch_milestones/`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `milestone_id` | str | Unique identifier |
+| `branch_id` | str | Parent branch |
+| `title` | str | Milestone title |
+| `description` | str | Description |
+| `target_completion_date` | date | Target date |
+| `observable_done_definition` | str | Observable completion criteria |
+| `status` | Literal["planned", "active", "completed", "abandoned"] | Status |
+| `created_at` | str | Creation timestamp |
+
+### BehaviorMetricTrendResult
+
+Within-person trend analysis for a single metric. Route A only; Route B fields are placeholders.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `metric_id` | str | Metric identifier |
+| `direction` | Literal["improving", "declining", "stable", "insufficient_data"] | Trend direction |
+| `slope` | float | Linear slope |
+| `confidence_level` | Literal["low", "medium", "high"] | Confidence based on data points |
+| `data_points` | int | Valid data points used |
+| `current_value` | float \| int \| None | Most recent value |
+| `rolling_4w_median` | float \| None | 4-week rolling median |
+| `population_percentile` | float \| None | Route B placeholder (always None) |
+| `deviation_from_baseline` | float \| None | Route B placeholder (always None) |
+| `route_a_available` | bool | Always True |
+| `route_b_available` | bool | Always False |
 
 ## Trend Analysis Schemas
 

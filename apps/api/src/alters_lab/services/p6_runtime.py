@@ -27,6 +27,8 @@ P6_RUNTIME_AREAS = {
     "pattern_reviews": "alters/product/pattern_reviews",
     "exports": "alters/product/exports",
     "behavior_validation": "alters/product/behavior_validation",
+    "behavior_metrics": "alters/product/behavior_metrics/weekly_records",
+    "branch_milestones": "alters/product/branch_milestones",
 }
 
 _SAFE_ID = re.compile(r"^[A-Za-z0-9_.-]+$")

@@ -25,9 +25,9 @@ alters-lab/
   apps/
     api/                  # FastAPI backend
       src/alters_lab/
-        api/              # 45 route modules
-        services/         # 51 service modules
-        schemas/          # 45 Pydantic schema modules
+        api/              # 47 route modules
+        services/         # 54 service modules
+        schemas/          # 49 Pydantic schema modules
         cli/              # CLI entry point (launcher.py)
         main.py           # App factory, middleware, router registration
         middleware.py      # Rate limiting
@@ -148,6 +148,8 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 | `trend_analysis` | `/trend-analysis` | Linear extrapolation and confidence intervals from historical scores |
 | `dynamic_weight` | `/dynamic-weight` | Advisory rubric dimension weights based on current state |
 | `pattern_adjustment` | `/pattern-adjustment` | Forecast adjustment based on detected behavioral patterns |
+| `behavior_metrics` | `/behavior-metrics` | Weekly behavioral indicators, catalog, milestone validation |
+| `behavior_metric_trend` | `/behavior-metric-trend` | Within-person behavior metric trend analysis (Route A) |
 
 #### Runtime and Infrastructure
 
@@ -158,7 +160,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Service Layer
 
-51 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
+54 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
 
 - **Persistence**: `alters_persist`, `branches_persist`, `snapshot_persist`, `snapshot_sessions`, `snapshot_export`, `controlled_write`
 - **Data safety**: `data_safety` (backup planning, archive creation)
@@ -168,7 +170,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Schema Layer
 
-45 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router.
+49 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router.
 
 ### Structured Logging
 

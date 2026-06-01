@@ -1,0 +1,69 @@
+behavior_metric_set:
+  id: behavior_metric_set_v0_2
+  version: "0.2"
+  created_at: "2026-06-01T00:00:00Z"
+  description: "Observable behavioral indicators for weekly tracking"
+
+  metrics:
+    - id: career_education_deep_work_minutes
+      domain: career_education
+      label: "Deep Work Minutes"
+      unit: minutes
+      aggregation: sum
+      description: "Total minutes of focused deep work on career or education goals"
+
+    - id: planned_commitment_follow_through_rate
+      domain: career_education
+      label: "Commitment Follow-Through Rate"
+      unit: ratio
+      aggregation: mean
+      description: "Proportion of planned commitments actually completed"
+
+    - id: financial_planfulness
+      domain: financial
+      label: "Expense Logged Days"
+      unit: days
+      aggregation: sum
+      description: "Number of days expenses were logged (field name: expense_logged_days)"
+
+    - id: sleep_regular_nights
+      domain: health
+      label: "Regular Sleep Nights"
+      unit: nights
+      aggregation: sum
+      description: "Number of nights with regular sleep schedule"
+
+    - id: moderate_vigorous_activity_minutes
+      domain: health
+      label: "Physical Activity Minutes"
+      unit: minutes
+      aggregation: sum
+      description: "Total minutes of moderate-to-vigorous physical activity"
+
+    - id: avoidable_health_risk_events
+      domain: health
+      label: "Avoidable Health Risk Events"
+      unit: events
+      aggregation: sum
+      description: "Count of avoidable health risk events (lower is better)"
+
+    - id: meaningful_social_contact_count
+      domain: social
+      label: "Meaningful Social Contacts"
+      unit: contacts
+      aggregation: sum
+      description: "Number of meaningful social interactions"
+
+    - id: abandoned_committed_blocks
+      domain: discipline
+      label: "Abandoned Committed Blocks"
+      unit: blocks
+      aggregation: sum
+      description: "Number of committed time blocks abandoned (lower is better)"
+
+    - id: key_milestone_progress
+      domain: milestone
+      label: "Key Milestone Progress"
+      unit: ratio
+      aggregation: last
+      description: "Progress on key milestone (field name: key_milestone_progress_pct)"

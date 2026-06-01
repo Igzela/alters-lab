@@ -1,12 +1,18 @@
 Metadata-Version: 2.4
 Name: alters-lab-api
 Version: 0.1.0
-Summary: Alters Lab API — personal future-branch simulation backend
+Summary: Alters Lab — personal future-branch simulation and calibration system
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/Igzela/alters-lab
+Project-URL: Repository, https://github.com/Igzela/alters-lab
+Project-URL: Documentation, https://github.com/Igzela/alters-lab/tree/main/docs
+Project-URL: Issues, https://github.com/Igzela/alters-lab/issues
 Requires-Python: >=3.11
-Requires-Dist: fastapi
-Requires-Dist: pydantic
-Requires-Dist: pyyaml
+Requires-Dist: fastapi<1.0,>=0.115
+Requires-Dist: pydantic<3.0,>=2.10
+Requires-Dist: pyyaml<7.0,>=6.0
+Requires-Dist: uvicorn<1.0,>=0.34
 Provides-Extra: dev
-Requires-Dist: pytest; extra == "dev"
-Requires-Dist: httpx; extra == "dev"
-Requires-Dist: uvicorn; extra == "dev"
+Requires-Dist: pytest<10.0,>=9.0; extra == "dev"
+Requires-Dist: httpx<1.0,>=0.28; extra == "dev"
+Requires-Dist: uvicorn<1.0,>=0.34; extra == "dev"

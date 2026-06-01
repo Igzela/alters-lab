@@ -1,8 +1,9 @@
-fastapi
-pydantic
-pyyaml
+fastapi<1.0,>=0.115
+pydantic<3.0,>=2.10
+pyyaml<7.0,>=6.0
+uvicorn<1.0,>=0.34
 
 [dev]
-pytest
-httpx
-uvicorn
+pytest<10.0,>=9.0
+httpx<1.0,>=0.28
+uvicorn<1.0,>=0.34

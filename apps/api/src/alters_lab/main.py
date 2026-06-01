@@ -58,6 +58,8 @@ _ROUTER_MODULES = [
     "trend_analysis",
     "dynamic_weight",
     "pattern_adjustment",
+    "behavior_metrics",
+    "behavior_metric_trend",
 ]
 
 logger = logging.getLogger("alters_lab")
