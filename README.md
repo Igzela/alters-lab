@@ -5,7 +5,7 @@
 
 **Your future is not a single path. It's a branching tree of possibilities.**
 
-Alters Lab is a personal decision-making system that helps you explore structurally different life branches, engage in dialogue with hypothetical versions of yourself, and calibrate which paths actually align with your values — not just your aspirations.
+Alters Lab is a **public-prior + personal-calibration life trajectory forecasting system**. It helps you explore structurally different life branches, engage in dialogue with hypothetical versions of yourself, and calibrate which paths actually align with your values — using both population-level evidence and your own weekly calibration data.
 
 > *"We don't rise to the level of our goals, we fall to the level of our systems."* — James Clear
 
@@ -213,6 +213,8 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration
 - [Provider Setup](docs/user/PROVIDER_SETUP.md) — How to configure LLM providers
 - [Provider Safety](docs/user/PROVIDER_SAFETY.md) — Secret handling, output safety, confirmation gating
 - [Troubleshooting](docs/user/TROUBLESHOOTING.md) — Common issues and how to fix them
+- [Product Positioning](docs/PRODUCT_POSITIONING.md) — What Alters Lab is and is not
+- [Validation Standard](docs/VALIDATION_STANDARD.md) — Population prior integration gates
 - [Product Specification](docs/product-spec.md) — System design and concepts
 - [Architecture](docs/architecture.md) — Technical architecture overview
 - [Data Model](docs/data-model.md) — Schema definitions and invariants

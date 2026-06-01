@@ -386,3 +386,133 @@ Forecast adjusted based on detected behavioral patterns.
 - **Mutual incompatibility**: Each branch must have non-empty `incompatible_with` listing the other 3 branch IDs.
 - **Rubric immutability**: `auto_modify` is always `false`. Rubric changes require explicit human approval.
 - **Approval tokens**: Write operations require an `approval_token` — a domain-specific safety gate, not HTTP auth.
+
+## Population Baseline Schemas (Phase 11)
+
+Location: `apps/api/src/alters_lab/schemas/population_baseline.py`
+
+These schemas define the offline Population Baseline Lab. They are not used in the main forecast path — they define how public datasets can produce auditable baseline priors.
+
+### PublicDatasetSource
+
+A public dataset or literature source used for population baselines.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `source_id` | str | Unique identifier |
+| `label` | str | Human-readable name |
+| `source_type` | Literal | longitudinal_dataset, panel_dataset, benchmark_dataset, literature_review, meta_analysis |
+| `access_url` | str \| None | URL to access the dataset |
+| `access_notes` | str | How to access the data |
+| `population_description` | str | Description of the study population |
+| `time_horizon` | str | Duration of follow-up |
+| `available_domains` | list[Domain] | Which domains the dataset covers |
+| `transfer_risk` | Literal | low, medium, high |
+| `allowed_use` | Literal | research_only, prior_generation, documentation_only |
+| `notes` | str | Additional notes |
+
+### PublicOutcomeDefinition
+
+An externally defined outcome used to evaluate forecasts.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `outcome_id` | str | Unique identifier |
+| `domain` | Domain | One of the 5 domains |
+| `label` | str | Human-readable name |
+| `definition` | str | Operational definition |
+| `time_horizon_months` | int \| None | Time horizon for measurement |
+| `measurement_type` | Literal | binary, ordinal, continuous, survival, categorical |
+| `dataset_source_ids` | list[str] | Which datasets have this outcome |
+| `limitations` | list[str] | Known limitations |
+
+### PublicFeatureMapping
+
+Maps public dataset variables to internal predictor/behavior fields.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `feature_id` | str | Unique identifier |
+| `construct_id` | str | The underlying construct |
+| `label` | str | Human-readable name |
+| `source_variable_names` | list[str] | Variable names in source datasets |
+| `maps_to_predictor_profile_fields` | list[str] | Which predictor profile fields this maps to |
+| `maps_to_behavior_metric_ids` | list[str] | Which behavior metrics this maps to |
+| `expected_direction` | Literal | positive, negative, mixed, unknown |
+| `transformation_notes` | str | How to transform the variable |
+| `missingness_notes` | str | Known missing data patterns |
+| `transfer_risk` | Literal | low, medium, high |
+
+### CalibrationMetrics
+
+Sub-model for model calibration metrics.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `brier_score` | float \| None | Brier score (lower is better) |
+| `calibration_slope` | float \| None | Should be near 1.0 |
+| `calibration_intercept` | float \| None | Should be near 0.0 |
+| `auc` | float \| None | Area under ROC curve |
+| `r2` | float \| None | R-squared (continuous outcomes) |
+
+### PopulationBaselineModelCard
+
+Model card for a population baseline model artifact.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `model_id` | str | Unique identifier |
+| `source_dataset_ids` | list[str] | Training datasets |
+| `outcome_id` | str | Target outcome |
+| `feature_mapping_ids` | list[str] | Features used |
+| `model_family` | Literal | logistic_regression, elastic_net, ordinal_regression, survival_model, baseline_table, literature_prior_only |
+| `training_status` | Literal | not_trained, trained, validated, rejected |
+| `evaluation_summary` | str | How the model was evaluated |
+| `calibration_metrics` | CalibrationMetrics | Calibration quality metrics |
+| `transfer_risk` | Literal | low, medium, high |
+| `approved_for_route_b` | bool | Whether this model can produce priors (default: false) |
+| `limitations` | list[str] | Known limitations |
+
+### PopulationPriorArtifact
+
+A prior derived from a population baseline model.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `artifact_id` | str | Unique identifier |
+| `model_id` | str | Source model |
+| `generated_at` | str | When the artifact was generated |
+| `domain` | Domain | Which domain this prior covers |
+| `prior_type` | Literal | textual, probability_band, percentile, baseline_table |
+| `prior_direction` | Literal | favorable, unfavorable, mixed, unknown |
+| `probability_band` | str \| None | Probability range (requires approved model) |
+| `population_percentile` | float \| None | Percentile (requires numeric baseline) |
+| `deviation_from_baseline` | float \| None | Deviation from population baseline |
+| `confidence` | Literal | low, medium, high (capped if high transfer risk) |
+| `transfer_risk` | Literal | low, medium, high |
+| `explanation` | str | Human-readable explanation |
+| `limitations` | list[str] | Known limitations |
+
+**Guardrails:**
+- High transfer_risk caps confidence at medium
+- No numeric priors without approved model card
+- `literature_prior_only` models produce textual priors only
+
+## Public Prior Integration Contract (Phase 11)
+
+Location: `apps/api/src/alters_lab/schemas/public_prior_contract.py`
+
+Defines how population baseline outputs may enter the main forecast system.
+
+### PublicPriorIntegrationContract
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `contract_id` | str | Contract identifier |
+| `version` | str | Contract version |
+| `allowed_input_artifacts` | list[str] | Artifact types allowed as input |
+| `allowed_output_fields` | list[str] | Fields that may appear in forecast output |
+| `required_guards` | list[str] | Validation guards that must pass |
+| `disallowed_behaviors` | list[str] | Behaviors that are explicitly prohibited |
+
+**Module-level constants:** `ALLOWED_OUTPUT_FIELDS`, `REQUIRED_GUARDS`, `DISALLOWED_BEHAVIORS` available for import.

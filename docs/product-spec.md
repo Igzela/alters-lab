@@ -1,10 +1,16 @@
 # Product Specification
 
-## Alters Lab -- Personal Future-Branch Simulation and Calibration System
+## Alters Lab -- Public-Prior + Personal-Calibration Life Trajectory Forecasting System
 
 ### 1. Overview
 
-Alters Lab is a personal tool for exploring potential future life paths. It captures a snapshot of your current life state, discovers structural branching decisions, generates coherent alter versions of yourself for each branch, and calibrates which paths best align with your values and energy through ongoing weekly review cycles.
+Alters Lab is a public-prior + personal-calibration life trajectory forecasting system. It captures a snapshot of your current life state, discovers structural branching decisions, generates coherent alter versions of yourself for each branch, and calibrates which paths best align with your values and energy through ongoing weekly review cycles.
+
+The system combines two evidence streams:
+- **Route A (Personal Evidence)** — your own predictor profile, behavior metrics, and weekly calibration scores
+- **Route B (Population Prior)** — directional priors from literature and (future) population baseline datasets
+
+Population baselines carry explicit transfer risk labels. The system does not claim to predict individual destiny. See `docs/PRODUCT_POSITIONING.md` for the full positioning statement and `docs/VALIDATION_STANDARD.md` for the integration gates.
 
 The system runs locally on your machine as a web application served at `http://127.0.0.1:18790`. All data is stored as YAML and JSON files in the `alters/` directory. No database is required.
 

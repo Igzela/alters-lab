@@ -1,0 +1,82 @@
+# Example dataset registry for Population Baseline Lab
+# These are reference definitions, not active configurations.
+
+datasets:
+  - source_id: nlsy79
+    label: "National Longitudinal Survey of Youth 1979"
+    source_type: longitudinal_dataset
+    access_url: "https://www.nlsinfo.org/"
+    access_notes: "Registration required. Data is free for research use."
+    population_description: "12,686 youth aged 14-22 in 1979, US nationally representative"
+    time_horizon: "40+ years"
+    available_domains:
+      - career_education
+      - financial
+      - health
+      - relationship
+    transfer_risk: high
+    allowed_use: research_only
+    notes: "Gold standard for labor economics. Extensively validated."
+
+  - source_id: nlsy97
+    label: "National Longitudinal Survey of Youth 1997"
+    source_type: longitudinal_dataset
+    access_url: "https://www.nlsinfo.org/"
+    access_notes: "Registration required. Data is free for research use."
+    population_description: "8,984 youth aged 12-17 in 1997, US nationally representative"
+    time_horizon: "20+ years"
+    available_domains:
+      - career_education
+      - financial
+      - health
+      - relationship
+    transfer_risk: high
+    allowed_use: research_only
+    notes: "More recent cohort. Includes cognitive and non-cognitive assessments."
+
+  - source_id: midus
+    label: "Midlife in the United States"
+    source_type: longitudinal_dataset
+    access_url: "https://midus.colectica.org/"
+    access_notes: "Registration required. Free for research use."
+    population_description: "~7,000 adults aged 25-74 at baseline (1995-1996)"
+    time_horizon: "20+ years"
+    available_domains:
+      - health
+      - subjective_wellbeing
+      - relationship
+    transfer_risk: high
+    allowed_use: research_only
+    notes: "Strong on psychological well-being and stress. Biomarker sub-study available."
+
+  - source_id: psid
+    label: "Panel Study of Income Dynamics"
+    source_type: panel_dataset
+    access_url: "https://psidonline.isr.umich.edu/"
+    access_notes: "Registration required. Free for research use."
+    population_description: "18,000+ individuals tracked since 1968, intergenerational"
+    time_horizon: "50+ years"
+    available_domains:
+      - career_education
+      - financial
+      - health
+      - relationship
+    transfer_risk: high
+    allowed_use: research_only
+    notes: "Longest-running household panel survey. Unique intergenerational linkages."
+
+  - source_id: ffcws
+    label: "Future of Families and Child Wellbeing Study"
+    source_type: longitudinal_dataset
+    access_url: "https://ffcws.princeton.edu/"
+    access_notes: "Registration required. Free for research use."
+    population_description: "~5,000 children born 1998-2000, oversampled non-marital births"
+    time_horizon: "20+ years"
+    available_domains:
+      - career_education
+      - financial
+      - health
+      - relationship
+    transfer_risk: high
+    allowed_use: research_only
+    notes: "Strong on family structure. Not representative of all births."

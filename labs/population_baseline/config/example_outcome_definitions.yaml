@@ -1,0 +1,132 @@
+# Example outcome definitions for Population Baseline Lab
+# Defines externally verifiable outcomes per domain.
+
+outcomes:
+  # --- Career/Education ---
+  - outcome_id: income_above_median
+    domain: career_education
+    label: "Income Above National Median (5-year average)"
+    definition: "Average household income over 5 years exceeds the national median for age bracket"
+    time_horizon_months: 60
+    measurement_type: binary
+    dataset_source_ids: [nlsy79, nlsy97, psid]
+    limitations:
+      - "National median varies by year and cost-of-living"
+      - "Household income conflates individual and partner earnings"
+      - "Top-coded in many datasets"
+
+  - outcome_id: degree_completion
+    domain: career_education
+    label: "Degree Completion Within Expected Timeframe"
+    definition: "Completed the target degree within 1.5x the standard duration"
+    time_horizon_months: null  # varies by degree
+    measurement_type: binary
+    dataset_source_ids: [nlsy79, nlsy97, psid]
+    limitations:
+      - "Does not capture partial completion value"
+      - "Institution quality not captured"
+
+  - outcome_id: career_satisfaction
+    domain: career_education
+    label: "Career Satisfaction (above midpoint)"
+    definition: "Self-reported career satisfaction above scale midpoint on validated instrument"
+    time_horizon_months: 12
+    measurement_type: ordinal
+    dataset_source_ids: [nlsy79, midus]
+    limitations:
+      - "Self-report bias"
+      - "Scale varies across datasets"
+
+  # --- Financial ---
+  - outcome_id: net_worth_growth
+    domain: financial
+    label: "Positive Net Worth Growth (5-year)"
+    definition: "Net worth increased in real terms over a 5-year window"
+    time_horizon_months: 60
+    measurement_type: binary
+    dataset_source_ids: [nlsy79, psid]
+    limitations:
+      - "Inflation adjustment methodology matters"
+      - "Housing wealth is illiquid"
+      - "Does not capture debt quality"
+
+  - outcome_id: savings_rate_above_10pct
+    domain: financial
+    label: "Savings Rate Above 10%"
+    definition: "Annual savings rate exceeds 10% of gross income"
+    time_horizon_months: 12
+    measurement_type: binary
+    dataset_source_ids: [psid]
+    limitations:
+      - "Self-reported savings may be inaccurate"
+      - "Does not distinguish voluntary vs forced savings"
+
+  # --- Health ---
+  - outcome_id: no_chronic_condition_onset
+    domain: health
+    label: "No New Chronic Condition Onset (3-year)"
+    definition: "No new chronic condition diagnosis within 3-year window"
+    time_horizon_months: 36
+    measurement_type: binary
+    dataset_source_ids: [nlsy79, midus]
+    limitations:
+      - "Self-reported diagnosis, not clinically verified"
+      - "Screening behavior varies"
+
+  - outcome_id: self_rated_health_maintained
+    domain: health
+    label: "Self-Rated Health Maintained or Improved"
+    definition: "Self-rated health did not decline by more than 1 point over 2 years"
+    time_horizon_months: 24
+    measurement_type: ordinal
+    dataset_source_ids: [midus, psid]
+    limitations:
+      - "Adaptation effect: people adjust expectations"
+      - "Floor/ceiling effects"
+
+  # --- Relationship ---
+  - outcome_id: relationship_stability
+    domain: relationship
+    label: "Relationship Stability (2-year)"
+    definition: "Primary relationship maintained without separation for 2 years"
+    time_horizon_months: 24
+    measurement_type: binary
+    dataset_source_ids: [nlsy79, nlsy97, psid, ffcws]
+    limitations:
+      - "Stability does not equal satisfaction"
+      - "Cohabitation vs marriage not always distinguished"
+
+  - outcome_id: social_connectedness
+    domain: relationship
+    label: "Social Connectedness (above median)"
+    definition: "Social network size and frequency of contact above population median"
+    time_horizon_months: 12
+    measurement_type: continuous
+    dataset_source_ids: [midus]
+    limitations:
+      - "Only available in MIDUS"
+      - "Network size does not equal quality"
+
+  # --- Subjective Wellbeing ---
+  - outcome_id: life_satisfaction_above_midpoint
+    domain: subjective_wellbeing
+    label: "Life Satisfaction Above Midpoint"
+    definition: "Self-reported life satisfaction above scale midpoint on validated instrument"
+    time_horizon_months: 12
+    measurement_type: ordinal
+    dataset_source_ids: [midus, nlsy79]
+    limitations:
+      - "Set-point theory suggests stable baseline"
+      - "Adaptation effects"
+      - "Social desirability bias"
+
+  - outcome_id: positive_affect_ratio
+    domain: subjective_wellbeing
+    label: "Positive Affect Ratio > 3:1"
+    definition: "Ratio of positive to negative affect experiences exceeds 3:1 over 2-week sampling"
+    time_horizon_months: 1
+    measurement_type: continuous
+    dataset_source_ids: [midus]
+    limitations:
+      - "Experience sampling methodology varies"
+      - "Only available in MIDUS sub-study"

@@ -1,0 +1,80 @@
+# Example feature mappings for Population Baseline Lab
+# Maps public dataset variables to Alters Lab internal fields.
+
+features:
+  - feature_id: conscientiousness
+    construct_id: big5_conscientiousness
+    label: "Conscientiousness (Big Five)"
+    source_variable_names:
+      - nlsy79: "R13909."  # NLSY79 locus of control (proxy)
+      - midus: "B1SCON"    # MIDUS Big Five Conscientiousness
+    maps_to_predictor_profile_fields:
+      - rubric.alignment.execution_discipline
+      - predictor_profile.personality.conscientiousness
+    maps_to_behavior_metric_ids:
+      - execution_consistency
+      - weekly_action_completion_rate
+    expected_direction: positive
+    transformation_notes: "Z-score normalize within source dataset before comparison"
+    missingness_notes: "NLSY79 uses locus of control as proxy, not direct Big Five"
+    transfer_risk: high
+
+  - feature_id: educational_attainment
+    construct_id: education_years
+    label: "Years of Education"
+    source_variable_names:
+      - nlsy79: "R02188."  # Highest grade completed
+      - nlsy97: "CV_HGC"   # Highest grade completed
+      - psid: "ER12076"    # Education years
+    maps_to_predictor_profile_fields:
+      - predictor_profile.education.highest_level
+    maps_to_behavior_metric_ids: []
+    expected_direction: positive
+    transformation_notes: "Map to ordinal scale: <HS, HS, some college, BA, graduate"
+    missingness_notes: "Self-reported, may overestimate"
+    transfer_risk: medium
+
+  - feature_id: income_trajectory
+    construct_id: income_growth
+    label: "Income Growth Rate"
+    source_variable_names:
+      - nlsy79: "R02188., R04058., R06187."  # Multiple income waves
+      - psid: "ER12076, ER16516, ER21003"   # Multiple income waves
+    maps_to_predictor_profile_fields:
+      - predictor_profile.career.income_trend
+    maps_to_behavior_metric_ids:
+      - financial_discipline
+    expected_direction: positive
+    transformation_notes: "Log-transform income, compute growth rate over 5-year windows"
+    missingness_notes: "Top-coded at various waves. Non-response increases over time."
+    transfer_risk: high
+
+  - feature_id: social_support_quality
+    construct_id: social_integration
+    label: "Social Support Quality"
+    source_variable_names:
+      - midus: "B1SCALL, B1SCSAT"  # Social support and satisfaction
+    maps_to_predictor_profile_fields:
+      - predictor_profile.relationship.social_support
+    maps_to_behavior_metric_ids:
+      - relationship_investment
+    expected_direction: positive
+    transformation_notes: "Average of support availability and satisfaction scales"
+    missingness_notes: "Only available in MIDUS, not in NLSY/PSID"
+    transfer_risk: high
+
+  - feature_id: self_rated_health
+    construct_id: health_status
+    label: "Self-Rated Health"
+    source_variable_names:
+      - nlsy79: "H00039."  # Self-rated health
+      - midus: "B1SA1"     # Self-rated health
+      - psid: "ER12076"    # Self-rated health
+    maps_to_predictor_profile_fields:
+      - predictor_profile.health.self_rated_health
+    maps_to_behavior_metric_ids:
+      - energy_level
+    expected_direction: positive
+    transformation_notes: "Ordinal 1-5 scale, higher is better"
+    missingness_notes: "Self-rated health correlates with education and income"
+    transfer_risk: medium
