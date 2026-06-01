@@ -60,6 +60,12 @@ _ROUTER_MODULES = [
     "pattern_adjustment",
     "behavior_metrics",
     "behavior_metric_trend",
+    "predictor_profile",
+    "branch_outcome_targets",
+    "literature_priors",
+    "branch_base_rate_anchor",
+    "calibration_divergence",
+    "branch_forecast",
 ]
 
 logger = logging.getLogger("alters_lab")

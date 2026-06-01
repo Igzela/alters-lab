@@ -2,7 +2,64 @@ behavior_metric_set:
   id: behavior_metric_set_v0_2
   version: "0.2"
   created_at: "2026-06-01T00:00:00Z"
-  description: "Observable behavioral indicators for weekly tracking"
+  description: "Observable behavioral indicators for weekly tracking with research-grounded metadata"
+
+  evidence_sources:
+    - source_id: nlsy79_longitudinal
+      label: "NLSY79 Longitudinal Dataset"
+      source_type: longitudinal_dataset
+      population_notes: "US youth cohorts tracked from 1979, nationally representative"
+      transfer_risk: medium
+      citation_hint: "Bureau of Labor Statistics, NLSY79"
+
+    - source_id: nlsy79_non_cognitive
+      label: "NLSY79 Non-Cognitive Skills Analysis"
+      source_type: longitudinal_dataset
+      population_notes: "Analyzes self-regulation and personality effects on life outcomes using NLSY79"
+      transfer_risk: medium
+      citation_hint: "Heckman, Stixrud, Urzua (2006)"
+
+    - source_id: midus_longitudinal
+      label: "MIDUS Longitudinal Study"
+      source_type: longitudinal_dataset
+      population_notes: "Midlife in the United States, national sample of adults aged 25-74"
+      transfer_risk: medium
+      citation_hint: "MIDUS, Institute on Aging, University of Wisconsin"
+
+    - source_id: big_five_consequential_outcomes
+      label: "Big Five Personality and Life Outcomes"
+      source_type: meta_analysis
+      population_notes: "Meta-analysis of personality trait correlations with job performance, health, longevity"
+      transfer_risk: medium
+      citation_hint: "Roberts et al. (2007), Psychological Bulletin"
+
+    - source_id: self_control_longitudinal
+      label: "Self-Control Predicts Health, Wealth, and Public Safety"
+      source_type: longitudinal_dataset
+      population_notes: "Dunedin birth cohort tracked to age 32"
+      transfer_risk: high
+      citation_hint: "Moffitt et al. (2011), PNAS"
+
+    - source_id: social_relationships_mortality_meta
+      label: "Social Relationships and Mortality Risk Meta-Analysis"
+      source_type: meta_analysis
+      population_notes: "148 prospective studies, 308,849 participants"
+      transfer_risk: medium
+      citation_hint: "Holt-Lunstad et al. (2010), PLoS Medicine"
+
+    - source_id: physical_activity_health_guidelines
+      label: "WHO Physical Activity Guidelines"
+      source_type: guideline
+      population_notes: "Global population, age-stratified recommendations"
+      transfer_risk: low
+      citation_hint: "WHO (2020)"
+
+    - source_id: ffc_predictive_modeling_context
+      label: "Fragile Families Challenge Predictive Modeling Context"
+      source_type: benchmark_context
+      population_notes: "US children born in large cities, 1998-2000, 15-year follow-up"
+      transfer_risk: high
+      citation_hint: "Salganik et al. (2020), Sociological Methods & Research"
 
   metrics:
     - id: career_education_deep_work_minutes
@@ -11,6 +68,15 @@ behavior_metric_set:
       unit: minutes
       aggregation: sum
       description: "Total minutes of focused deep work on career or education goals"
+      literature_construct:
+        primary: "conscientiousness / self-discipline"
+        secondary: ["goal persistence", "delayed gratification"]
+      predicted_domains: [career_education, financial]
+      evidence_source_ids: [nlsy79_non_cognitive, big_five_consequential_outcomes, self_control_longitudinal]
+      direction: higher_is_better
+      measurement_strength: moderate
+      transfer_risk: medium
+      notes: "Deep work capacity is a behavioral proxy for conscientiousness; not a direct IQ measure"
 
     - id: planned_commitment_follow_through_rate
       domain: career_education
@@ -18,6 +84,15 @@ behavior_metric_set:
       unit: ratio
       aggregation: mean
       description: "Proportion of planned commitments actually completed"
+      literature_construct:
+        primary: "conscientiousness / dependability"
+        secondary: ["commitment completion", "self-regulation"]
+      predicted_domains: [career_education, financial, relationship]
+      evidence_source_ids: [nlsy79_non_cognitive, big_five_consequential_outcomes, self_control_longitudinal]
+      direction: higher_is_better
+      measurement_strength: moderate
+      transfer_risk: medium
+      notes: "Follow-through rate is a direct behavioral indicator of self-regulation capacity"
 
     - id: financial_planfulness
       domain: financial
@@ -25,6 +100,15 @@ behavior_metric_set:
       unit: days
       aggregation: sum
       description: "Number of days expenses were logged (field name: expense_logged_days)"
+      literature_construct:
+        primary: "financial planning behavior"
+        secondary: ["conscientiousness", "future orientation"]
+      predicted_domains: [financial]
+      evidence_source_ids: [nlsy79_longitudinal, self_control_longitudinal]
+      direction: higher_is_better
+      measurement_strength: weak
+      transfer_risk: medium
+      notes: "Expense logging is a proxy for financial engagement; not equivalent to financial literacy"
 
     - id: sleep_regular_nights
       domain: health
@@ -32,6 +116,15 @@ behavior_metric_set:
       unit: nights
       aggregation: sum
       description: "Number of nights with regular sleep schedule"
+      literature_construct:
+        primary: "sleep regularity"
+        secondary: ["self-regulation", "circadian stability"]
+      predicted_domains: [health, career_education]
+      evidence_source_ids: [midus_longitudinal, physical_activity_health_guidelines]
+      direction: higher_is_better
+      measurement_strength: moderate
+      transfer_risk: low
+      notes: "Sleep regularity is associated with health outcomes independent of sleep duration"
 
     - id: moderate_vigorous_activity_minutes
       domain: health
@@ -39,6 +132,15 @@ behavior_metric_set:
       unit: minutes
       aggregation: sum
       description: "Total minutes of moderate-to-vigorous physical activity"
+      literature_construct:
+        primary: "physical activity level"
+        secondary: ["health behavior", "self-care"]
+      predicted_domains: [health, subjective_wellbeing]
+      evidence_source_ids: [physical_activity_health_guidelines, midus_longitudinal]
+      direction: higher_is_better
+      measurement_strength: strong
+      transfer_risk: low
+      notes: "WHO recommends 150-300 min/week moderate or 75-150 min/week vigorous activity"
 
     - id: avoidable_health_risk_events
       domain: health
@@ -46,6 +148,15 @@ behavior_metric_set:
       unit: events
       aggregation: sum
       description: "Count of avoidable health risk events (lower is better)"
+      literature_construct:
+        primary: "risk avoidance / health risk behavior"
+        secondary: ["self-control", "sensation seeking"]
+      predicted_domains: [health]
+      evidence_source_ids: [self_control_longitudinal, midus_longitudinal]
+      direction: lower_is_better
+      measurement_strength: weak
+      transfer_risk: medium
+      notes: "Lower is better; self-reported risk events have recall bias"
 
     - id: meaningful_social_contact_count
       domain: social
@@ -53,6 +164,15 @@ behavior_metric_set:
       unit: contacts
       aggregation: sum
       description: "Number of meaningful social interactions"
+      literature_construct:
+        primary: "social integration / relationship quality"
+        secondary: ["social support", "loneliness"]
+      predicted_domains: [relationship, health, subjective_wellbeing]
+      evidence_source_ids: [social_relationships_mortality_meta, midus_longitudinal]
+      direction: higher_is_better
+      measurement_strength: moderate
+      transfer_risk: medium
+      notes: "Social integration predicts mortality; quality over quantity matters"
 
     - id: abandoned_committed_blocks
       domain: discipline
@@ -60,6 +180,15 @@ behavior_metric_set:
       unit: blocks
       aggregation: sum
       description: "Number of committed time blocks abandoned (lower is better)"
+      literature_construct:
+        primary: "self-control / grit"
+        secondary: ["perseverance", "goal commitment"]
+      predicted_domains: [career_education, financial]
+      evidence_source_ids: [self_control_longitudinal, nlsy79_non_cognitive]
+      direction: lower_is_better
+      measurement_strength: moderate
+      transfer_risk: medium
+      notes: "Lower is better; abandonment rate inversely tracks self-discipline"
 
     - id: key_milestone_progress
       domain: milestone
@@ -67,3 +196,12 @@ behavior_metric_set:
       unit: ratio
       aggregation: last
       description: "Progress on key milestone (field name: key_milestone_progress_pct)"
+      literature_construct:
+        primary: "goal progress / implementation intentions"
+        secondary: ["self-efficacy", "planning behavior"]
+      predicted_domains: [career_education, financial, health]
+      evidence_source_ids: [ffc_predictive_modeling_context, nlsy79_longitudinal]
+      direction: higher_is_better
+      measurement_strength: weak
+      transfer_risk: high
+      notes: "Milestone progress is domain-specific; transfer to other life domains is uncertain"

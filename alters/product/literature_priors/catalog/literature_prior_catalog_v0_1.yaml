@@ -1,0 +1,280 @@
+catalog_id: literature_prior_catalog_v0_1
+version: "0.1"
+created_at: "2026-06-01T00:00:00Z"
+description: "Population and literature prior anchors for cautious base-rate reasoning. NOT a trained model. NOT individual prediction."
+
+evidence_sources:
+  - source_id: nlsy79_longitudinal
+    label: "NLSY79 Longitudinal Dataset"
+    source_type: longitudinal_dataset
+    population_notes: "US youth cohorts tracked from 1979, nationally representative"
+    transfer_risk: medium
+    citation_hint: "Bureau of Labor Statistics, NLSY79"
+
+  - source_id: nlsy79_non_cognitive
+    label: "NLSY79 Non-Cognitive Skills Analysis"
+    source_type: longitudinal_dataset
+    population_notes: "Analyzes self-regulation and personality effects on life outcomes using NLSY79"
+    transfer_risk: medium
+    citation_hint: "Heckman, Stixrud, Urzua (2006)"
+
+  - source_id: midus_longitudinal
+    label: "MIDUS Longitudinal Study"
+    source_type: longitudinal_dataset
+    population_notes: "Midlife in the United States, national sample of adults aged 25-74"
+    transfer_risk: medium
+    citation_hint: "MIDUS, Institute on Aging, University of Wisconsin"
+
+  - source_id: big_five_consequential_outcomes
+    label: "Big Five Personality and Life Outcomes"
+    source_type: meta_analysis
+    population_notes: "Meta-analysis of personality trait correlations with job performance, health, longevity"
+    transfer_risk: medium
+    citation_hint: "Roberts et al. (2007), Psychological Bulletin"
+
+  - source_id: self_control_longitudinal
+    label: "Self-Control Predicts Health, Wealth, and Public Safety"
+    source_type: longitudinal_dataset
+    population_notes: "Dunedin birth cohort tracked to age 32"
+    transfer_risk: high
+    citation_hint: "Moffitt et al. (2011), PNAS"
+
+  - source_id: social_relationships_mortality_meta
+    label: "Social Relationships and Mortality Risk Meta-Analysis"
+    source_type: meta_analysis
+    population_notes: "148 prospective studies, 308,849 participants"
+    transfer_risk: medium
+    citation_hint: "Holt-Lunstad et al. (2010), PLoS Medicine"
+
+  - source_id: physical_activity_health_guidelines
+    label: "WHO Physical Activity Guidelines"
+    source_type: guideline
+    population_notes: "Global population, age-stratified recommendations"
+    transfer_risk: low
+    citation_hint: "WHO (2020)"
+
+  - source_id: ffc_predictive_modeling_context
+    label: "Fragile Families Challenge Predictive Modeling Context"
+    source_type: benchmark_context
+    population_notes: "US children born in large cities, 1998-2000, 15-year follow-up"
+    transfer_risk: high
+    citation_hint: "Salganik et al. (2020), Sociological Methods & Research"
+
+constructs:
+  - construct_id: conscientiousness
+    label: "Conscientiousness"
+    description: "Tendency to be organized, dependable, disciplined, and achievement-oriented"
+    measured_by:
+      behavior_metrics:
+        - career_education_deep_work_minutes
+        - planned_commitment_follow_through_rate
+        - abandoned_committed_blocks
+      predictor_profile_fields:
+        - trait_baseline.conscientiousness
+
+  - construct_id: self_regulation
+    label: "Self-Regulation / Self-Control"
+    description: "Capacity to regulate impulses, delay gratification, and persist toward goals"
+    measured_by:
+      behavior_metrics:
+        - planned_commitment_follow_through_rate
+        - abandoned_committed_blocks
+        - financial_planfulness
+      predictor_profile_fields:
+        - trait_baseline.conscientiousness
+        - trait_baseline.neuroticism_negative_emotionality
+
+  - construct_id: physical_activity
+    label: "Physical Activity Level"
+    description: "Engagement in moderate-to-vigorous physical activity"
+    measured_by:
+      behavior_metrics:
+        - moderate_vigorous_activity_minutes
+      predictor_profile_fields: []
+
+  - construct_id: sleep_regularity
+    label: "Sleep Regularity"
+    description: "Consistency of sleep-wake schedule"
+    measured_by:
+      behavior_metrics:
+        - sleep_regular_nights
+      predictor_profile_fields: []
+
+  - construct_id: social_integration
+    label: "Social Integration"
+    description: "Degree of meaningful social connections and community participation"
+    measured_by:
+      behavior_metrics:
+        - meaningful_social_contact_count
+      predictor_profile_fields:
+        - current_context.relationship_status
+
+  - construct_id: goal_progress
+    label: "Goal Progress / Implementation"
+    description: "Evidence of forward progress toward self-defined milestones"
+    measured_by:
+      behavior_metrics:
+        - key_milestone_progress
+      predictor_profile_fields: []
+
+construct_domain_links:
+  - construct_id: conscientiousness
+    predicted_domain: career_education
+    expected_direction: positive
+    evidence_strength: strong
+    transfer_risk: medium
+    explanation: "Conscientiousness is one of the strongest personality predictors of career success across multiple longitudinal studies"
+    evidence_source_ids: [big_five_consequential_outcomes, nlsy79_non_cognitive]
+
+  - construct_id: conscientiousness
+    predicted_domain: financial
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: medium
+    explanation: "Conscientiousness predicts financial planning behavior and income, though effect sizes vary"
+    evidence_source_ids: [big_five_consequential_outcomes, self_control_longitudinal]
+
+  - construct_id: self_regulation
+    predicted_domain: health
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: high
+    explanation: "Self-control predicts fewer health risk behaviors, but causal pathways are complex"
+    evidence_source_ids: [self_control_longitudinal]
+
+  - construct_id: self_regulation
+    predicted_domain: financial
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: medium
+    explanation: "Self-regulation supports financial planning and savings behavior"
+    evidence_source_ids: [self_control_longitudinal, nlsy79_non_cognitive]
+
+  - construct_id: physical_activity
+    predicted_domain: health
+    expected_direction: positive
+    evidence_strength: strong
+    transfer_risk: low
+    explanation: "Physical activity is strongly associated with reduced mortality and morbidity in WHO guidelines"
+    evidence_source_ids: [physical_activity_health_guidelines, midus_longitudinal]
+
+  - construct_id: physical_activity
+    predicted_domain: subjective_wellbeing
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: low
+    explanation: "Regular physical activity is associated with improved mood and subjective wellbeing"
+    evidence_source_ids: [physical_activity_health_guidelines]
+
+  - construct_id: sleep_regularity
+    predicted_domain: health
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: low
+    explanation: "Sleep regularity is associated with metabolic health independent of sleep duration"
+    evidence_source_ids: [midus_longitudinal]
+
+  - construct_id: social_integration
+    predicted_domain: health
+    expected_direction: positive
+    evidence_strength: strong
+    transfer_risk: medium
+    explanation: "Social integration predicts mortality risk comparable to smoking cessation"
+    evidence_source_ids: [social_relationships_mortality_meta]
+
+  - construct_id: social_integration
+    predicted_domain: relationship
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: medium
+    explanation: "Social connections predict relationship quality and support availability"
+    evidence_source_ids: [social_relationships_mortality_meta, midus_longitudinal]
+
+  - construct_id: social_integration
+    predicted_domain: subjective_wellbeing
+    expected_direction: positive
+    evidence_strength: moderate
+    transfer_risk: medium
+    explanation: "Social connectedness is one of the strongest predictors of subjective wellbeing"
+    evidence_source_ids: [social_relationships_mortality_meta, midus_longitudinal]
+
+  - construct_id: goal_progress
+    predicted_domain: career_education
+    expected_direction: positive
+    evidence_strength: weak
+    transfer_risk: high
+    explanation: "Goal progress is domain-specific; transfer to career outcomes depends on goal alignment"
+    evidence_source_ids: [ffc_predictive_modeling_context]
+
+priors:
+  - prior_id: prior_conscientiousness_career
+    branch_feature: "high conscientiousness trait or strong follow-through behavior"
+    predicted_domain: career_education
+    base_rate_direction: favorable
+    prior_confidence: medium
+    transfer_risk: medium
+    explanation: "Population-level evidence suggests conscientiousness is a favorable predictor for career outcomes, but individual variation is large and this is not destiny"
+    evidence_source_ids: [big_five_consequential_outcomes, nlsy79_non_cognitive]
+
+  - prior_id: prior_conscientiousness_financial
+    branch_feature: "high conscientiousness trait or consistent financial tracking"
+    predicted_domain: financial
+    base_rate_direction: favorable
+    prior_confidence: low
+    transfer_risk: medium
+    explanation: "Conscientiousness correlates with financial planning behavior at the population level; individual financial outcomes depend on many other factors"
+    evidence_source_ids: [big_five_consequential_outcomes, self_control_longitudinal]
+
+  - prior_id: prior_self_regulation_health
+    branch_feature: "strong self-regulation or low abandoned committed blocks"
+    predicted_domain: health
+    base_rate_direction: favorable
+    prior_confidence: low
+    transfer_risk: high
+    explanation: "Self-control predicts fewer health risk behaviors in longitudinal data, but causal mechanisms and transfer to this individual are uncertain"
+    evidence_source_ids: [self_control_longitudinal]
+
+  - prior_id: prior_physical_activity_health
+    branch_feature: "meeting WHO physical activity guidelines"
+    predicted_domain: health
+    base_rate_direction: favorable
+    prior_confidence: high
+    transfer_risk: low
+    explanation: "Physical activity meeting WHO guidelines (150+ min/week moderate) is strongly associated with reduced mortality and morbidity"
+    evidence_source_ids: [physical_activity_health_guidelines]
+
+  - prior_id: prior_social_integration_health
+    branch_feature: "meaningful regular social contact"
+    predicted_domain: health
+    base_rate_direction: favorable
+    prior_confidence: medium
+    transfer_risk: medium
+    explanation: "Social integration is associated with 50% increased survival odds in meta-analysis; quality of connections matters more than quantity"
+    evidence_source_ids: [social_relationships_mortality_meta]
+
+  - prior_id: prior_social_integration_wellbeing
+    branch_feature: "meaningful regular social contact"
+    predicted_domain: subjective_wellbeing
+    base_rate_direction: favorable
+    prior_confidence: medium
+    transfer_risk: medium
+    explanation: "Social connectedness is consistently among the strongest predictors of subjective wellbeing across cultures"
+    evidence_source_ids: [social_relationships_mortality_meta, midus_longitudinal]
+
+  - prior_id: prior_sleep_regularity_health
+    branch_feature: "consistent sleep schedule"
+    predicted_domain: health
+    base_rate_direction: favorable
+    prior_confidence: low
+    transfer_risk: low
+    explanation: "Sleep regularity is associated with metabolic health outcomes independent of duration, though individual effects vary"
+    evidence_source_ids: [midus_longitudinal]
+
+  - prior_id: prior_ffc_career_unknown
+    branch_feature: "any branch"
+    predicted_domain: career_education
+    base_rate_direction: unknown
+    prior_confidence: low
+    transfer_risk: high
+    explanation: "The Fragile Families Challenge showed that even with rich longitudinal data, predicting individual life outcomes has hard limits. This is a humility anchor, not a prediction."
+    evidence_source_ids: [ffc_predictive_modeling_context]

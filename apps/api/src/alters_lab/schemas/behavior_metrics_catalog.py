@@ -5,7 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class LiteratureConstruct(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    primary: str
+    secondary: list[str] = Field(default_factory=list)
 
 
 class BehaviorMetricDefinition(BaseModel):
@@ -17,6 +24,24 @@ class BehaviorMetricDefinition(BaseModel):
     unit: str
     aggregation: str
     description: str = ""
+    literature_construct: LiteratureConstruct | None = None
+    predicted_domains: list[str] = Field(default_factory=list)
+    evidence_source_ids: list[str] = Field(default_factory=list)
+    direction: str | None = None
+    measurement_strength: str | None = None
+    transfer_risk: str | None = None
+    notes: str = ""
+
+
+class EvidenceSource(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    source_id: str
+    label: str
+    source_type: str
+    population_notes: str = ""
+    transfer_risk: str = "medium"
+    citation_hint: str = ""
 
 
 class BehaviorMetricSet(BaseModel):
@@ -27,6 +52,7 @@ class BehaviorMetricSet(BaseModel):
     created_at: str
     description: str = ""
     metrics: list[BehaviorMetricDefinition]
+    evidence_sources: list[EvidenceSource] = Field(default_factory=list)
 
 
 class BehaviorMetricCatalog(BaseModel):

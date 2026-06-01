@@ -85,3 +85,9 @@ alters/product/exports/*
 !alters/product/exports/.gitkeep
 alters/product/behavior_validation/*
 !alters/product/behavior_validation/.gitkeep
+alters/product/behavior_metrics/weekly_records/*
+!alters/product/behavior_metrics/weekly_records/.gitkeep
+alters/product/branch_outcome_targets/*
+!alters/product/branch_outcome_targets/.gitkeep
+alters/product/predictor_profiles/*
+!alters/product/predictor_profiles/.gitkeep
