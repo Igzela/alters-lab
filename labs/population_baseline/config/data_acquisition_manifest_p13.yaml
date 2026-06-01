@@ -1,0 +1,154 @@
+# Phase 13 — Data Acquisition Manifest
+# Tracks acquisition status for MIDUS + NLSY97 public datasets.
+# No raw data is committed. This manifest documents expected files and access steps.
+
+sources:
+  - source_id: nlsy97
+    label: "National Longitudinal Survey of Youth 1997"
+    official_access_url: "https://www.nlsinfo.org/investigator/"
+    access_method: investigator_extract
+    requires_account: true
+    requires_terms_acceptance: true
+    terms_description: >
+      Free registration required. No formal terms acceptance checkbox, but
+      extract creation requires authenticated session. Public use data has
+      no redistribution restrictions.
+    target_raw_dir: labs/population_baseline/data/raw/nlsy97/
+    required_files:
+      - filename: nlsy97_core_demographics.csv
+        purpose: "Age, sex, race/ethnicity, region across rounds"
+        required: true
+        status: missing
+        notes: "Variables: R0536300 (sex), R0536400 (race), R1482600 (age at 1st round)"
+      - filename: nlsy97_education.csv
+        purpose: "Highest grade, degree, enrollment, institution type"
+        required: true
+        status: missing
+        notes: "Variables: CV_HGC (highest grade), CVC_HIGHEST_DEGREE, CVC_SCHROST_ENROLLSTAT"
+      - filename: nlsy97_employment.csv
+        purpose: "Weeks/hours worked, occupation, industry, employment status"
+        required: true
+        status: missing
+        notes: "Variables: CV_WKSTAT, EMP_STATUS, CV_HRS_PER_WEEK"
+      - filename: nlsy97_income.csv
+        purpose: "Personal and household income across rounds"
+        required: true
+        status: missing
+        notes: "Variables: CV_INCOME_GROSS, YINC, household income variables"
+      - filename: nlsy97_financial_hardship.csv
+        purpose: "Late payments, debt collection, difficulty covering expenses"
+        required: false
+        status: missing
+        notes: "Variables: Q13-4 and similar financial difficulty items by round"
+      - filename: nlsy97_cognitive.csv
+        purpose: "ASVAB scores, self-esteem, locus of control at baseline"
+        required: false
+        status: missing
+        notes: "Variables: ASVAB composite, R0610100-R0610500 (self-esteem), locus of control"
+      - filename: codebook/nlsy97_codebook.pdf
+        purpose: "Variable definitions, coding schemes, skip patterns"
+        required: true
+        status: missing
+        notes: "Available as PDF from NLS Investigator extract"
+    selected_variable_groups:
+      - demographics
+      - education
+      - employment
+      - income
+      - financial_hardship
+      - cognitive_or_non_cognitive
+    user_actions_required:
+      - "Create free account at https://www.nlsinfo.org/investigator/pages/register"
+      - "Log in and select NLSY97 from the survey dropdown"
+      - "Search and add variables from each group above to your extract"
+      - "Select CSV as output format"
+      - "Submit extract and download the ZIP file"
+      - "Extract files to labs/population_baseline/data/raw/nlsy97/"
+      - "Place codebook PDF in labs/population_baseline/data/raw/nlsy97/codebook/"
+    status: pending
+
+  - source_id: midus
+    label: "Midlife in the United States"
+    official_access_url: "https://www.icpsr.umich.edu/web/ICPSR/series/203"
+    access_method: icpsr_download
+    requires_account: true
+    requires_terms_acceptance: true
+    terms_description: >
+      ICPSR account required (free with institutional affiliation).
+      Terms of use: data for research purposes only, not for commercial use.
+      Individual-level data should not be shared with unauthorized persons.
+    target_raw_dir: labs/population_baseline/data/raw/midus/
+    required_files:
+      - filename: midus1/midus1_saq.csv
+        purpose: "MIDUS I self-administered questionnaire (Big Five, mastery, health, relationships)"
+        required: true
+        status: missing
+        notes: "ICPSR 02760. Variables: B1SCON, B1SNEU, B1SEXT, B1SAGR, B1SOPN, B1SCMAS, B1SA1, B1SMSTAT, B1SCALL, B1SCSAT"
+      - filename: midus1/midus1_phone.csv
+        purpose: "MIDUS I phone interview (demographics, health, employment)"
+        required: false
+        status: missing
+        notes: "ICPSR 02760. Supplementary demographic and health data"
+      - filename: midus2/midus2_saq.csv
+        purpose: "MIDUS II follow-up SAQ (same constructs as MIDUS I)"
+        required: true
+        status: missing
+        notes: "ICPSR 04652. Same variable prefixes with B2S*/B2P* codes"
+      - filename: midus2/midus2_phone.csv
+        purpose: "MIDUS II phone interview"
+        required: false
+        status: missing
+        notes: "ICPSR 04652"
+      - filename: midus3/midus3_saq.csv
+        purpose: "MIDUS III follow-up SAQ"
+        required: true
+        status: missing
+        notes: "ICPSR 36346. Same variable prefixes with B3S*/B3P* codes"
+      - filename: midus_refresher/midus_refresher_saq.csv
+        purpose: "MIDUS Refresher survey (new cohort, 2011-2014)"
+        required: false
+        status: missing
+        notes: "ICPSR 04652 (same package). Supplementary cohort"
+      - filename: codebook/
+        purpose: "Variable definitions and coding for all waves"
+        required: true
+        status: missing
+        notes: "PDF codebooks included in each ICPSR download package"
+    selected_studies:
+      - study_id: MIDUS_I
+        icpsr_id: "02760"
+        label: "MIDUS I (1995-1996)"
+        access_url: "https://www.icpsr.umich.edu/web/ICPSR/studies/02760"
+      - study_id: MIDUS_II
+        icpsr_id: "04652"
+        label: "MIDUS II (2004-2006)"
+        access_url: "https://www.icpsr.umich.edu/web/ICPSR/studies/04652"
+      - study_id: MIDUS_III
+        icpsr_id: "36346"
+        label: "MIDUS III (2013-2014)"
+        access_url: "https://www.icpsr.umich.edu/web/ICPSR/studies/36346"
+    user_actions_required:
+      - "Create free ICPSR account at https://www.icpsr.umich.edu"
+      - "Log in and navigate to each MIDUS study page listed above"
+      - "Accept terms of use for each download"
+      - "Download the data packages (ZIP format)"
+      - "Extract to labs/population_baseline/data/raw/midus/midus1/, midus2/, midus3/ respectively"
+      - "Place codebook PDFs in each subdirectory's codebook/ folder"
+    status: pending
+
+deferred_sources:
+  - source_id: ffcws
+    label: "Future of Families and Child Wellbeing Study"
+    reason: "Urban-only, non-marital oversample limits generalizability"
+  - source_id: psid
+    label: "Panel Study of Income Dynamics"
+    reason: "Scope creep; reserved for later validation phase"
+
+# Policy invariants
+policy:
+  no_raw_data_committed: true
+  no_individual_responses_committed: true
+  no_route_b_approval: true
+  no_ml_models: true
+  no_probability_artifacts: true
+  variable_status_default: candidate

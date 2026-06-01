@@ -1,34 +1,50 @@
 # Next Decision Point
 
-## Current Status (Phase 12 — Dual-Source Public Baseline Pilot)
+## Current Status (Phase 13 — Public Data Acquisition + Metadata Confirmation)
 
-Phase 12 builds the first auditable public baseline pilot using MIDUS + NLSY97. No production ML model has been trained. No datasets have been downloaded yet. The lab remains inside `labs/population_baseline/` with no production integration.
+Phase 13 promoted the dual-source pilot from candidate planning to active data acquisition. Both NLSY97 and MIDUS require authenticated downloads (free accounts), so no raw data was fetched automatically. All variable mappings remain at **candidate** status — no codebook or raw data has been inspected yet.
 
-## What Phase 12 Built
+## What Phase 13 Built
 
-- **Source selection**: MIDUS and NLSY97 included; FFCWS and PSID deferred
-- **17 candidate outcomes** across 5 domains (career_education, financial, health, relationship, subjective_wellbeing)
-- **15 feature mappings** from MIDUS/NLSY97 variables to internal predictor_profile and behavior_metric fields
-- **Data access plan** for NLSY Investigator and ICPSR (no downloads yet)
-- **Baseline artifact design**: baseline_table (descriptive) + model_card_candidate (placeholder)
-- **Lab-only schemas**: PopulationBaselineSourceSelection, BaselineOutcomeCandidate, BaselineFeatureCandidate, BaselineTableArtifact
-- **Tests**: 25 tests enforcing source selection, outcome, feature, and artifact invariants
+- **Data acquisition manifest**: `labs/population_baseline/config/data_acquisition_manifest_p13.yaml`
+- **Acquisition documentation**: `P13_DATA_ACQUISITION.md`, `P13_USER_DOWNLOAD_INSTRUCTIONS.md`
+- **Variable confirmation tracking**: `P13_VARIABLE_CONFIRMATION.md`, `feature_mapping_p13.yaml`, `outcome_definitions_p13.yaml` — all variables remain `candidate` with explicit `confirmation_source: none`
+- **Scripts**:
+  - `acquire_public_resources.py` — creates directories, checks public page availability
+  - `inventory_raw_data.py` — scans raw dirs, computes checksums
+  - `validate_raw_data_presence.py` — checks expected files exist
+  - `parse_nlsy97_extract.py` — inspects NLSY97 CSV columns (scaffold)
+  - `parse_midus_package.py` — inspects MIDUS CSV columns with key variable detection
+- **Acquisition log**: `artifacts/acquisition_log_p13.json` — 6/7 public pages accessible
+- **Tests**: 37 new tests (1643 total) enforcing manifest, feature, outcome, and policy invariants
 
 ## What Exists Now
 
-- **Schemas**: `apps/api/src/alters_lab/schemas/population_baseline.py` (Phase 11) + `population_baseline_pilot.py` (Phase 12)
-- **Contract**: `apps/api/src/alters_lab/schemas/public_prior_contract.py`
-- **Lab configs**: `labs/population_baseline/config/source_selection_v0_1.yaml`, `outcome_definitions_p12.yaml`, `feature_mapping_p12.yaml`, `baseline_artifact_schema_p12.yaml`
-- **Lab docs**: `labs/population_baseline/P12_SOURCE_SELECTION.md`, `P12_OUTCOME_DEFINITIONS.md`, `P12_FEATURE_MAPPING.md`, `P12_DATA_ACCESS_PLAN.md`, `P12_BASELINE_ARTIFACT_DESIGN.md`
-- **Validation standard**: `docs/VALIDATION_STANDARD.md` defines 6 gates
+- **Schemas**: `population_baseline.py` (P11) + `population_baseline_pilot.py` (P12)
+- **Lab configs**: `source_selection_v0_1.yaml`, `outcome_definitions_p13.yaml`, `feature_mapping_p13.yaml`, `data_acquisition_manifest_p13.yaml`
+- **Lab docs**: `P12_DATA_ACCESS_PLAN.md`, `P13_DATA_ACQUISITION.md`, `P13_USER_DOWNLOAD_INSTRUCTIONS.md`, `P13_VARIABLE_CONFIRMATION.md`
+- **Scripts**: 5 acquisition/inventory/parser scripts
+- **Tests**: 1643 passing (37 P13-specific)
 
-## Current Next Decision After Phase 12
+## Current Next Decision After Phase 13
 
-1. **Download/prepare MIDUS and NLSY97 extracts manually** — follow the data access plan in `labs/population_baseline/P12_DATA_ACCESS_PLAN.md`
-2. **Inspect actual variable metadata** — confirm candidate variable labels against real codebooks
-3. **Promote candidate variable labels to confirmed variable mappings** — update `feature_mapping_p12.yaml` with actual variable names
-4. **Build first baseline_table artifacts** — compute descriptive statistics for preferred outcomes
-5. **Only after baseline table validation** — consider lightweight interpretable models (logistic regression, elastic net)
+### Path A: User downloads data first (required)
+
+1. **Create NLS Investigator account** → follow `P13_USER_DOWNLOAD_INSTRUCTIONS.md` Section 1
+2. **Create ICPSR account** → follow `P13_USER_DOWNLOAD_INSTRUCTIONS.md` Section 2
+3. **Download and extract** to `labs/population_baseline/data/raw/`
+4. **Run inventory**: `python3 labs/population_baseline/scripts/inventory_raw_data.py`
+5. **Run validation**: `python3 labs/population_baseline/scripts/validate_raw_data_presence.py`
+
+### Path B: After data is in place
+
+6. **Run parsers** to inspect actual column names:
+   - `python3 labs/population_baseline/scripts/parse_nlsy97_extract.py --dir labs/population_baseline/data/raw/nlsy97/`
+   - `python3 labs/population_baseline/scripts/parse_midus_package.py --dir labs/population_baseline/data/raw/midus/`
+7. **Compare columns against candidate variables** in `feature_mapping_p13.yaml`
+8. **Promote variables** from `candidate` → `metadata_confirmed` or `rejected`
+9. **Build first baseline_table artifacts** — descriptive statistics for preferred outcomes
+10. **Only after baseline table validation** — consider interpretable baseline models
 
 ## What Must NOT Happen Yet
 
