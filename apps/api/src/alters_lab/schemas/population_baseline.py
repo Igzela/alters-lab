@@ -30,6 +30,9 @@ class CalibrationMetrics(BaseModel):
     calibration_intercept: float | None = None
     auc: float | None = None
     r2: float | None = None
+    calibration_bins: list[dict] | None = None
+    n_train: int | None = None
+    n_test: int | None = None
 
 
 # --- Top-level models ---
@@ -126,6 +129,9 @@ class PopulationBaselineModelCard(BaseModel):
     )
     approval_reason: str = ""
     approval_blockers: list[str] = Field(default_factory=list)
+    model_scope: Literal["population_baseline", "individual_prediction_not_allowed"] = (
+        "population_baseline"
+    )
 
     @model_validator(mode="after")
     def _enforce_approval_guardrails(self) -> PopulationBaselineModelCard:
@@ -154,6 +160,24 @@ class PopulationBaselineModelCard(BaseModel):
             raise ValueError(
                 f"Cannot approve for Route B with blockers: {self.approval_blockers}"
             )
+
+        # Calibrated models require calibration metrics for Route B
+        if (
+            self.artifact_class == "calibrated_model"
+            and self.approval_level == "route_b_approved"
+        ):
+            has_brier = self.calibration_metrics.brier_score is not None
+            has_auc = self.calibration_metrics.auc is not None
+            if not has_brier and not has_auc:
+                raise ValueError(
+                    "calibrated_model + route_b_approved requires "
+                    "non-null brier_score or auc in calibration_metrics."
+                )
+            if self.training_status not in ("trained", "validated"):
+                raise ValueError(
+                    "calibrated_model + route_b_approved requires "
+                    "training_status in ('trained', 'validated')."
+                )
 
         return self
 
@@ -210,5 +234,20 @@ class PopulationPriorArtifact(BaseModel):
             raise ValueError(
                 "data_backed_baseline must have actual_data_used=true."
             )
+
+        # Calibrated models must have actual data, confirmed labels, and reviewed missingness
+        if self.artifact_class == "calibrated_model":
+            if not self.actual_data_used:
+                raise ValueError(
+                    "calibrated_model must have actual_data_used=true."
+                )
+            if not self.value_labels_confirmed:
+                raise ValueError(
+                    "calibrated_model must have value_labels_confirmed=true."
+                )
+            if not self.missingness_reviewed:
+                raise ValueError(
+                    "calibrated_model must have missingness_reviewed=true."
+                )
 
         return self

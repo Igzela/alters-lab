@@ -1,0 +1,313 @@
+# NLSY97 Model Specs v3 Configuration
+# Interpretable ML models for career_education and financial domains
+# Data source: NLSY97 longitudinal data (1997-2023)
+# Cohort: Born 1980-84, 2015+ rounds = age 31+
+
+version: "3.0"
+data_source: nlsy97
+archive_path: "labs/population_baseline/data/raw/nlsy97/nlsy97_all_1997-2023.zip"
+birth_cohort: "1980-84"
+model_type: interpretable
+safety:
+  no_raw_data_committed: true
+  no_individual_data: true
+  no_personal_probabilities: true
+  no_life_score: true
+  interpretable_models_only: true
+
+missing_codes:
+  "-1": "not_in_universe"
+  "-2": "dont_know"
+  "-3": "refuse"
+  "-4": "valid_skip"
+  "-5": "invalid_skip"
+
+cohort_ages:
+  2011: "27-31"
+  2013: "29-33"
+  2015: "31-35"
+  2017: "33-37"
+  2019: "35-39"
+  2021: "37-41"
+  2023: "39-43"
+
+models:
+  - model_id: nlsy97_career_education
+    domain: career_education
+    description: >
+      Logistic regression predicting bachelor's degree or higher attainment
+      using demographic features and baseline education from 2005 round.
+      Outcome measured from 2015+ rounds (age 31+).
+    model_family: logistic_regression
+    outcome_variable: CV_HIGHEST_DEGREE_EVER
+    outcome_binary: bachelor_or_higher
+    outcome_binary_definition: "1 if highest_degree_ever >= 4 (bachelor's or higher), 0 otherwise"
+    outcome_measurement_type: ordinal
+    outcome_value_labels:
+      0: "No degree"
+      1: "GED"
+      2: "High school diploma"
+      3: "Associate degree"
+      4: "Bachelor's degree"
+      5: "Master's degree"
+      6: "Doctorate"
+      7: "Professional degree"
+    outcome_rounds:
+      2011: "T6657200"
+      2013: "T8129600"
+      2015: "U0009400"
+      2017: "U1846000"
+      2019: "U3444500"
+      2021: "U4950200"
+      2023: "U6356900"
+    outcome_round_labels:
+      2011: "age 27-31"
+      2013: "age 29-33"
+      2015: "age 31-35"
+      2017: "age 33-37"
+      2019: "age 35-39"
+      2021: "age 37-41"
+      2023: "age 39-43"
+    features:
+      - feature_id: sex
+        variable_code: "R0001000"
+        display_label: "Sex"
+        measurement_type: categorical
+        value_labels:
+          1: "Male"
+          2: "Female"
+        encoding: one_hot
+        baseline_round: 1997
+        n_valid: 8984
+        missingness_rate: 0.0
+
+      - feature_id: race_ethnicity
+        variable_code: "R1482600"
+        display_label: "Race/Ethnicity"
+        measurement_type: categorical
+        value_labels:
+          1: "Hispanic"
+          2: "Black"
+          3: "Non-Black Non-Hispanic"
+        encoding: one_hot
+        baseline_round: 1997
+        n_valid: 8984
+        missingness_rate: 0.0
+
+      - feature_id: baseline_education_2005
+        variable_code: "S5413300"
+        display_label: "Highest Degree Ever (2005 baseline)"
+        measurement_type: ordinal
+        value_labels:
+          0: "No degree"
+          1: "GED"
+          2: "High school diploma"
+          3: "Associate degree"
+          4: "Bachelor's degree"
+          5: "Master's degree"
+          6: "Doctorate"
+          7: "Professional degree"
+        encoding: ordinal_numeric
+        baseline_round: 2005
+        respondent_age: "25-29"
+        n_valid: 7317
+        missingness_rate: 18.56
+
+    evaluation:
+      train_test_split: 0.8
+      test_size: 0.2
+      random_seed: 42
+      stratify: true
+      cross_validation:
+        method: stratified_kfold
+        n_folds: 5
+        shuffle: true
+        random_seed: 42
+      metrics:
+        - metric_id: accuracy
+          display_label: "Accuracy"
+          primary: false
+        - metric_id: auc_roc
+          display_label: "AUC-ROC"
+          primary: true
+        - metric_id: precision
+          display_label: "Precision"
+          primary: false
+        - metric_id: recall
+          display_label: "Recall"
+          primary: false
+        - metric_id: f1_score
+          display_label: "F1 Score"
+          primary: false
+        - metric_id: brier_score
+          display_label: "Brier Score"
+          primary: false
+      minimum_samples_per_fold: 100
+      report_coefficients: true
+      coefficient_interpretation: "odds_ratios"
+
+    limitations:
+      - "Ordinal outcome collapsed to binary — loses granularity"
+      - "Features limited to demographics and baseline education"
+      - "No behavioral, psychosocial, or contextual features"
+      - "Cohort-specific (born 1980-84) — limited transferability"
+      - "Baseline education has 18.56% missingness"
+      - "Self-reported degree may overestimate"
+      - "Does not capture institution quality or field of study"
+      - "Logistic regression assumes linear log-odds relationship"
+
+    transfer_risk: high
+    interpretation_notes: >
+      Coefficients represent log-odds ratios for bachelor's degree attainment.
+      Positive sex coefficient indicates higher odds for that sex group.
+      Baseline education is strongest predictor — each additional degree level
+      substantially increases odds of bachelor's attainment.
+
+  - model_id: nlsy97_financial
+    domain: financial
+    description: >
+      Logistic regression predicting above-median family income
+      using demographic features and education level.
+      Outcome measured from 2015+ rounds (age 31+).
+    model_family: logistic_regression
+    outcome_variable: CV_INCOME_FAMILY
+    outcome_binary: above_median_income
+    outcome_binary_definition: "1 if family_income > median, 0 otherwise"
+    outcome_measurement_type: continuous
+    outcome_unit: "USD (nominal)"
+    outcome_rounds:
+      2011: "T6656700"
+      2013: "T8129100"
+      2015: "U0008900"
+      2017: "U1845500"
+      2019: "U3444000"
+      2021: "U4949700"
+      2023: "U6356400"
+    outcome_round_labels:
+      2011: "age 27-31"
+      2013: "age 29-33"
+      2015: "age 31-35"
+      2017: "age 33-37"
+      2019: "age 35-39"
+      2021: "age 37-41"
+      2023: "age 39-43"
+    features:
+      - feature_id: sex
+        variable_code: "R0001000"
+        display_label: "Sex"
+        measurement_type: categorical
+        value_labels:
+          1: "Male"
+          2: "Female"
+        encoding: one_hot
+        baseline_round: 1997
+        n_valid: 8984
+        missingness_rate: 0.0
+
+      - feature_id: race_ethnicity
+        variable_code: "R1482600"
+        display_label: "Race/Ethnicity"
+        measurement_type: categorical
+        value_labels:
+          1: "Hispanic"
+          2: "Black"
+          3: "Non-Black Non-Hispanic"
+        encoding: one_hot
+        baseline_round: 1997
+        n_valid: 8984
+        missingness_rate: 0.0
+
+      - feature_id: education_level
+        variable_code: "S5413300"
+        display_label: "Highest Degree Ever (2005 baseline)"
+        measurement_type: ordinal
+        value_labels:
+          0: "No degree"
+          1: "GED"
+          2: "High school diploma"
+          3: "Associate degree"
+          4: "Bachelor's degree"
+          5: "Master's degree"
+          6: "Doctorate"
+          7: "Professional degree"
+        encoding: ordinal_numeric
+        baseline_round: 2005
+        respondent_age: "25-29"
+        n_valid: 7317
+        missingness_rate: 18.56
+
+    evaluation:
+      train_test_split: 0.8
+      test_size: 0.2
+      random_seed: 42
+      stratify: true
+      cross_validation:
+        method: stratified_kfold
+        n_folds: 5
+        shuffle: true
+        random_seed: 42
+      metrics:
+        - metric_id: accuracy
+          display_label: "Accuracy"
+          primary: false
+        - metric_id: auc_roc
+          display_label: "AUC-ROC"
+          primary: true
+        - metric_id: precision
+          display_label: "Precision"
+          primary: false
+        - metric_id: recall
+          display_label: "Recall"
+          primary: false
+        - metric_id: f1_score
+          display_label: "F1 Score"
+          primary: false
+        - metric_id: brier_score
+          display_label: "Brier Score"
+          primary: false
+      minimum_samples_per_fold: 100
+      report_coefficients: true
+      coefficient_interpretation: "odds_ratios"
+
+    limitations:
+      - "Family income is household-level, not individual earnings"
+      - "Above-median split loses continuous distribution information"
+      - "Features limited to demographics and baseline education"
+      - "No occupation, industry, work hours, or human capital features"
+      - "Cohort-specific (born 1980-84) — limited transferability"
+      - "Income top-coded at various rounds"
+      - "Baseline education has 18.56% missingness"
+      - "Cost-of-living differences across regions not adjusted"
+      - "Logistic regression assumes linear log-odds relationship"
+
+    transfer_risk: high
+    interpretation_notes: >
+      Coefficients represent log-odds ratios for above-median family income.
+      Education level is primary predictor — higher degrees substantially
+      increase odds of above-median income. Race/ethnicity coefficients
+      reflect structural income disparities in the US labor market.
+
+data_preprocessing:
+  missing_value_handling:
+    strategy: listwise_deletion
+    description: "Drop observations with any missing outcome or feature values"
+    nlsy97_missing_codes_filtered: [-1, -2, -3, -4, -5]
+  income_transformation:
+    strategy: none
+    description: "Raw nominal income used — no log transform for interpretable coefficients"
+  education_encoding:
+    strategy: ordinal_numeric
+    description: "Degree level encoded as 0-7 ordinal integer"
+  categorical_encoding:
+    strategy: one_hot
+    drop_first: true
+    description: "One-hot encode sex and race/ethnicity, drop one level to avoid collinearity"
+
+artifact_contract:
+  no_raw_data_committed: true
+  no_individual_level_data: true
+  no_personal_probabilities: true
+  no_life_score: true
+  approved_for_route_b: false
+  approval_level: exploratory
+  artifact_class: model_specification

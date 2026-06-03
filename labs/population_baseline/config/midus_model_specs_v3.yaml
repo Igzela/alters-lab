@@ -1,0 +1,550 @@
+# MIDUS Model Specs v3 Configuration
+# Interpretable ML models for health, relationship, and subjective_wellbeing domains
+# Data source: MIDUS 1-3 (1995-2014), cross-sectional with MIDUS 2 preferred
+# Cohort: Aged 25-74 at MIDUS 1 baseline, MIW-1950 birth cohort
+
+version: "3.0"
+data_source: midus
+raw_data_path: "labs/population_baseline/data/raw/midus/"
+archive_files:
+  midus1: "MIDUS1.sav"
+  midus2: "MIDUS2.sav"
+  midus3: "MIDUS3.sav"
+model_type: interpretable
+preferred_wave: midus2
+cross_wave_linkage: false
+missing_code_strategy: pyreadstat_value_labels
+
+waves:
+  - dataset_id: midus1
+    label: "MIDUS 1 (1995-96)"
+    year_range: "1995-1996"
+    n_total: 7108
+    age_range: "25-74"
+    saq_coverage: true
+    data_format: sav
+  - dataset_id: midus2
+    label: "MIDUS 2 (2004-06)"
+    year_range: "2004-2006"
+    n_total: 4963
+    age_range: "28-84"
+    saq_coverage: true
+    data_format: sav
+  - dataset_id: midus3
+    label: "MIDUS 3 (2013-14)"
+    year_range: "2013-2014"
+    n_total: 3294
+    age_range: "39-93"
+    saq_coverage: true
+    data_format: sav
+
+safety:
+  no_raw_data_committed: true
+  no_individual_data: true
+  no_personal_probabilities: true
+  no_life_score: true
+  interpretable_models_only: true
+
+global_missingness_notes: >
+  SAQ modules (subjective measures) show 11-19% missingness across waves.
+  Physical health questions have lower missingness (2-15%).
+  Listwise deletion applied per model; effective N varies by variable combination.
+
+models:
+  - model_id: midus_health
+    domain: health
+    preferred_wave: midus2
+    available_waves:
+      - midus1
+      - midus2
+      - midus3
+    description: >
+      Logistic regression predicting self-rated health as good or excellent
+      using age, sex, chronic conditions, sleep quality, and physical activity.
+      MIDUS 2 used as primary source; MIDUS 1 and 3 available for sensitivity.
+    model_family: logistic_regression
+    outcome_variable: B1PA1
+    outcome_wave_variables:
+      midus1: A1PA4
+      midus2: B1PA1
+      midus3: C1PA1
+    outcome_binary: self_rated_health_good_excellent
+    outcome_binary_definition: >
+      Binary outcome: 1 if self-rated health <= 3 (good/very good/excellent in
+      MIDUS 2+ scale, or equivalent in MIDUS 1 reversed scale), 0 if fair/poor.
+    outcome_measurement_type: ordinal
+    outcome_scale: "1-5"
+    outcome_value_labels:
+      1: "Excellent"
+      2: "Very good"
+      3: "Good"
+      4: "Fair"
+      5: "Poor"
+    outcome_scale_direction_issue: >
+      MIDUS 1 (A1PA4) uses reversed scale: 5=excellent, 1=poor.
+      Must reverse A1PA4 before combining with B1PA1/C1PA1.
+    outcome_cross_wave_comparable: true
+    outcome_missingness:
+      midus1: 0.15
+      midus2: 0.02
+      midus3: 0.03
+    features:
+      - feature_id: age
+        variable_code: "A1AGE"
+        wave_variable_codes:
+          midus1: A1AGE
+          midus2: B1AGE
+          midus3: C1AGE
+        display_label: "Age"
+        measurement_type: continuous
+        unit: "years"
+        encoding: numeric
+        data_source: demographic
+        missingness_rate: 0.0
+
+      - feature_id: sex
+        variable_code: "RSEX"
+        wave_variable_codes:
+          midus1: RSEX
+          midus2: RSEX
+          midus3: RSEX
+        display_label: "Sex"
+        measurement_type: categorical
+        value_labels:
+          1: "Male"
+          2: "Female"
+        encoding: one_hot
+        data_source: demographic
+        missingness_rate: 0.0
+
+      - feature_id: chronic_conditions
+        variable_code: "B1SCONDP"
+        wave_variable_codes:
+          midus1: A1SCONDP
+          midus2: B1SCONDP
+          midus3: C1SCONDP
+        display_label: "Number of Chronic Conditions"
+        measurement_type: count
+        scale: "0-27"
+        encoding: numeric
+        cross_wave_comparable: true
+        data_source: health_status
+        missingness:
+          midus1: 0.15
+          midus2: 0.02
+          midus3: 0.03
+
+      - feature_id: sleep_quality
+        variable_code: "B1SA52A"
+        display_label: "Sleep Quality (past month)"
+        measurement_type: ordinal
+        scale: "1-5"
+        value_labels:
+          1: "Very good"
+          2: "Fairly good"
+          3: "Fairly bad"
+          4: "Very bad"
+        encoding: numeric
+        data_source: saq_health
+        wave_note: "MIDUS 2 variable; similar items in other waves may differ in exact coding"
+        missingness_notes: "SAQ module, ~12% missing"
+
+      - feature_id: physical_activity
+        variable_code: "B1SA40A"
+        display_label: "Vigorous Physical Activity (frequency)"
+        measurement_type: ordinal
+        scale: "1-6"
+        value_labels:
+          1: "Every day"
+          2: "3-5 times a week"
+          3: "1-2 times a week"
+          4: "Less than once a week"
+          5: "Never"
+        encoding: numeric
+        data_source: saq_health
+        wave_note: "MIDUS 2 variable; exact item wording may vary across waves"
+        missingness_notes: "SAQ module, ~11% missing"
+
+    evaluation:
+      train_test_split: 0.8
+      test_size: 0.2
+      random_seed: 42
+      stratify: true
+      cross_validation:
+        method: stratified_kfold
+        n_folds: 5
+        shuffle: true
+        random_seed: 42
+      metrics:
+        - metric_id: accuracy
+          display_label: "Accuracy"
+          primary: false
+        - metric_id: auc_roc
+          display_label: "AUC-ROC"
+          primary: true
+          minimum_threshold: 0.65
+        - metric_id: precision
+          display_label: "Precision"
+          primary: false
+        - metric_id: recall
+          display_label: "Recall"
+          primary: false
+        - metric_id: f1_score
+          display_label: "F1 Score"
+          primary: false
+        - metric_id: brier_score
+          display_label: "Brier Score"
+          primary: false
+          minimum_threshold: 0.25
+      minimum_samples_per_fold: 100
+      report_coefficients: true
+      coefficient_interpretation: "odds_ratios"
+
+    limitations:
+      - "Outcome binary split collapses 5-point scale to 2 classes"
+      - "Physical activity is self-reported frequency, not objective measure"
+      - "Sleep quality single-item measure, low reliability"
+      - "Cross-sectional only — no longitudinal health trajectory"
+      - "SAQ non-response (11-19%) reduces effective sample via listwise deletion"
+      - "Chronic conditions are self-reported counts, not clinician-diagnosed"
+      - "Cohort-specific (aged 25-74 in 1995) — limited transferability to younger cohorts"
+      - "Logistic regression assumes linear log-odds relationship"
+
+    transfer_risk: medium
+    interpretation_notes: >
+      Coefficients represent log-odds ratios for good/excellent self-rated health.
+      Chronic conditions and sleep quality expected to be strongest predictors.
+      Age coefficient expected negative (older = lower odds of good health).
+      Physical activity expected positive (more active = higher odds of good health).
+
+  - model_id: midus_relationship
+    domain: relationship
+    preferred_wave: midus2
+    available_waves:
+      - midus2
+    lab_only: true
+    lab_only_reason: >
+      Social support composite (B1SCALL) is only available in MIDUS 2 SAQ module.
+      No equivalent measure in MIDUS 1 or MIDUS 3. Cross-wave comparison impossible.
+      Model is exploratory and should not be used as Route B prior.
+    description: >
+      Logistic regression predicting high social support using age, sex,
+      life satisfaction, and perceived mastery. MIDUS 2 only — social support
+      composite is unavailable in other waves.
+    model_family: logistic_regression
+    outcome_variable: B1SCALL
+    outcome_binary: high_social_support
+    outcome_binary_definition: "1 if B1SCALL > median, 0 otherwise"
+    outcome_measurement_type: continuous
+    outcome_scale: "1-4 composite"
+    outcome_value_labels:
+      1: "Low social support"
+      4: "High social support"
+    outcome_cross_wave_comparable: false
+    outcome_missingness:
+      midus2: 0.039
+    features:
+      - feature_id: age
+        variable_code: "B1AGE"
+        display_label: "Age"
+        measurement_type: continuous
+        unit: "years"
+        encoding: numeric
+        data_source: demographic
+        missingness_rate: 0.0
+
+      - feature_id: sex
+        variable_code: "RSEX"
+        display_label: "Sex"
+        measurement_type: categorical
+        value_labels:
+          1: "Male"
+          2: "Female"
+        encoding: one_hot
+        data_source: demographic
+        missingness_rate: 0.0
+
+      - feature_id: life_satisfaction
+        variable_code: "B1SSATIS"
+        display_label: "Life Satisfaction (Cantril scale)"
+        measurement_type: continuous
+        scale: "0-10"
+        value_labels:
+          0: "Worst possible life"
+          10: "Best possible life"
+        encoding: numeric
+        data_source: saq_subjective
+        cross_wave_comparable: true
+        missingness_notes: "18.6% missing in MIDUS 2 SAQ"
+
+      - feature_id: mastery
+        variable_code: "B1SMASTE"
+        display_label: "Perceived Mastery"
+        measurement_type: continuous
+        scale: "1-7"
+        value_labels:
+          1: "Strongly disagree"
+          7: "Strongly agree"
+        encoding: numeric
+        data_source: saq_subjective
+        cross_wave_comparable: true
+        missingness_notes: "18.3% missing in MIDUS 2 SAQ"
+
+    evaluation:
+      train_test_split: 0.8
+      test_size: 0.2
+      random_seed: 42
+      stratify: true
+      cross_validation:
+        method: stratified_kfold
+        n_folds: 5
+        shuffle: true
+        random_seed: 42
+      metrics:
+        - metric_id: accuracy
+          display_label: "Accuracy"
+          primary: false
+        - metric_id: auc_roc
+          display_label: "AUC-ROC"
+          primary: true
+          minimum_threshold: 0.60
+        - metric_id: precision
+          display_label: "Precision"
+          primary: false
+        - metric_id: recall
+          display_label: "Recall"
+          primary: false
+        - metric_id: f1_score
+          display_label: "F1 Score"
+          primary: false
+        - metric_id: brier_score
+          display_label: "Brier Score"
+          primary: false
+          minimum_threshold: 0.25
+      minimum_samples_per_fold: 100
+      report_coefficients: true
+      coefficient_interpretation: "odds_ratios"
+
+    limitations:
+      - "MIDUS 2 only — no other waves have B1SCALL composite"
+      - "Median split on continuous social support loses distributional information"
+      - "Life satisfaction and mastery have ~18% missingness each"
+      - "Effective sample size after listwise deletion significantly reduced"
+      - "Cross-sectional snapshot only"
+      - "Social support is self-perceived, not network-validated"
+      - "Cannot assess change in social support over time"
+      - "Cohort-specific (aged 28-84 in MIDUS 2)"
+      - "Logistic regression assumes linear log-odds relationship"
+
+    transfer_risk: high
+    interpretation_notes: >
+      Coefficients represent log-odds ratios for above-median social support.
+      Life satisfaction and mastery expected to be strong positive predictors.
+      Lab-only model due to MIDUS-2-only data constraint.
+      Should not be used as Route B approved prior without replication.
+
+  - model_id: midus_subjective_wellbeing
+    domain: subjective_wellbeing
+    preferred_wave: midus2
+    available_waves:
+      - midus1
+      - midus2
+      - midus3
+    description: >
+      Logistic regression predicting high life satisfaction using age, sex,
+      perceived mastery, neuroticism, and self-rated health.
+      MIDUS 2 used as primary source; MIDUS 1 and 3 available for sensitivity.
+    model_family: logistic_regression
+    outcome_variable: B1SSATIS
+    outcome_wave_variables:
+      midus1: A1SSATIS
+      midus2: B1SSATIS
+      midus3: C1SSATIS
+    outcome_binary: high_life_satisfaction
+    outcome_binary_definition: "1 if B1SSATIS >= 7, 0 otherwise"
+    outcome_measurement_type: continuous
+    outcome_scale: "0-10 Cantril ladder"
+    outcome_value_labels:
+      0: "Worst possible life"
+      10: "Best possible life"
+    outcome_cross_wave_comparable: true
+    outcome_missingness:
+      midus1: 0.1103
+      midus2: 0.186
+      midus3: 0.151
+    outcome_means:
+      midus1: 7.70
+      midus2: 7.76
+      midus3: 7.75
+    features:
+      - feature_id: age
+        variable_code: "B1AGE"
+        wave_variable_codes:
+          midus1: A1AGE
+          midus2: B1AGE
+          midus3: C1AGE
+        display_label: "Age"
+        measurement_type: continuous
+        unit: "years"
+        encoding: numeric
+        data_source: demographic
+        missingness_rate: 0.0
+
+      - feature_id: sex
+        variable_code: "RSEX"
+        display_label: "Sex"
+        measurement_type: categorical
+        value_labels:
+          1: "Male"
+          2: "Female"
+        encoding: one_hot
+        data_source: demographic
+        missingness_rate: 0.0
+
+      - feature_id: mastery
+        variable_code: "B1SMASTE"
+        wave_variable_codes:
+          midus1: A1SMASTE
+          midus2: B1SMASTE
+          midus3: C1SMASTE
+        display_label: "Perceived Mastery"
+        measurement_type: continuous
+        scale: "1-7"
+        value_labels:
+          1: "Strongly disagree"
+          7: "Strongly agree"
+        encoding: numeric
+        data_source: saq_subjective
+        cross_wave_comparable: true
+        missingness:
+          midus1: 0.1175
+          midus2: 0.183
+          midus3: 0.147
+        means:
+          midus1: 5.84
+          midus2: 5.60
+          midus3: 5.60
+
+      - feature_id: neuroticism
+        variable_code: "B1SNEURO"
+        display_label: "Neuroticism / Negative Emotionality"
+        measurement_type: continuous
+        scale: "z-scored composite"
+        encoding: numeric
+        data_source: saq_big5
+        cross_wave_comparable: false
+        wave_note: "MIDUS 2 Big Five SAQ module; not available in MIDUS 1 or 3"
+        missingness_notes: "~18% missing in MIDUS 2 SAQ"
+
+      - feature_id: self_rated_health
+        variable_code: "B1PA1"
+        wave_variable_codes:
+          midus1: A1PA4
+          midus2: B1PA1
+          midus3: C1PA1
+        display_label: "Self-Rated Health"
+        measurement_type: ordinal
+        scale: "1-5"
+        value_labels:
+          1: "Excellent"
+          2: "Very good"
+          3: "Good"
+          4: "Fair"
+          5: "Poor"
+        encoding: numeric
+        data_source: health_status
+        cross_wave_comparable: true
+        scale_direction_issue: >
+          MIDUS 1 (A1PA4) reversed: 5=excellent. Must reverse before combining.
+        missingness:
+          midus1: 0.15
+          midus2: 0.02
+          midus3: 0.03
+
+    evaluation:
+      train_test_split: 0.8
+      test_size: 0.2
+      random_seed: 42
+      stratify: true
+      cross_validation:
+        method: stratified_kfold
+        n_folds: 5
+        shuffle: true
+        random_seed: 42
+      metrics:
+        - metric_id: accuracy
+          display_label: "Accuracy"
+          primary: false
+        - metric_id: auc_roc
+          display_label: "AUC-ROC"
+          primary: true
+          minimum_threshold: 0.65
+        - metric_id: precision
+          display_label: "Precision"
+          primary: false
+        - metric_id: recall
+          display_label: "Recall"
+          primary: false
+        - metric_id: f1_score
+          display_label: "F1 Score"
+          primary: false
+        - metric_id: brier_score
+          display_label: "Brier Score"
+          primary: false
+          minimum_threshold: 0.25
+      minimum_samples_per_fold: 100
+      report_coefficients: true
+      coefficient_interpretation: "odds_ratios"
+
+    limitations:
+      - "Life satisfaction binary threshold (>= 7) is arbitrary"
+      - "Neuroticism only available in MIDUS 2 — limits cross-wave analysis"
+      - "SAQ non-response (11-19%) on mastery, neuroticism, life satisfaction"
+      - "Cross-sectional only — no longitudinal wellbeing trajectory"
+      - "Self-rated health is used as both feature and correlated construct"
+      - "Cantril ladder response styles may vary across age groups"
+      - "Cohort-specific (aged 25-74 at baseline) — limited transferability"
+      - "Logistic regression assumes linear log-odds relationship"
+
+    transfer_risk: medium
+    interpretation_notes: >
+      Coefficients represent log-odds ratios for high life satisfaction (>= 7).
+      Mastery and self-rated health expected to be strongest positive predictors.
+      Neuroticism expected negative (higher neuroticism = lower life satisfaction).
+      Age relationship is non-linear in population data; linear model may miss.
+
+data_preprocessing:
+  missing_value_handling:
+    strategy: listwise_deletion
+    description: "Drop observations with any missing outcome or feature values"
+  wave_alignment:
+    strategy: preferred_wave_primary
+    description: >
+      MIDUS 2 used as primary source for all models. MIDUS 1 and 3 available
+      for sensitivity analyses where variables are cross-wave comparable.
+  scale_harmonization:
+    self_rated_health:
+      description: >
+        Reverse MIDUS 1 (A1PA4) scale so 1=poor, 5=excellent matches
+        MIDUS 2/3 direction before any cross-wave comparison.
+    neuroticism:
+      description: >
+        Z-score normalize within MIDUS 2 sample. No equivalent in MIDUS 1/3.
+  categorical_encoding:
+    strategy: one_hot
+    drop_first: true
+    description: "One-hot encode sex, drop one level to avoid collinearity"
+  saq_missingness:
+    strategy: listwise_deletion
+    description: >
+      SAQ modules have 11-19% missingness. Listwise deletion applied.
+      Effective sample size reported per model.
+
+artifact_contract:
+  no_raw_data_committed: true
+  no_individual_level_data: true
+  no_personal_probabilities: true
+  no_life_score: true
+  approved_for_route_b: false
+  approval_level: exploratory
+  artifact_class: model_specification

@@ -116,6 +116,11 @@ def analyze_branch_forecast(
                 if dsid not in dataset_source_ids:
                     dataset_source_ids.append(dsid)
 
+    # Best artifact class (highest priority among all approved artifacts)
+    best_artifact_class = max(
+        artifact_classes, key=_artifact_class_priority, default="none"
+    ) if artifact_classes else "none"
+
     # Determine aggregate artifact class
     if not artifact_classes:
         agg_class = "none"
@@ -148,6 +153,23 @@ def analyze_branch_forecast(
         evidence_strength = "weak"
         route_b_explanation = "Literature priors not available or no matching priors found"
 
+    # Aggregate calibration_metrics from best model card (calibrated_model > data_backed_baseline)
+    agg_calibration_metrics: dict[str, float | None] = {}
+    for a in approved_artifacts:
+        card = model_cards.get(a.model_id)
+        if card and card.calibration_metrics:
+            cm = card.calibration_metrics
+            if cm.brier_score is not None:
+                agg_calibration_metrics.setdefault("brier_score", cm.brier_score)
+            if cm.calibration_slope is not None:
+                agg_calibration_metrics.setdefault("calibration_slope", cm.calibration_slope)
+            if cm.auc is not None:
+                agg_calibration_metrics.setdefault("auc", cm.auc)
+            if cm.r2 is not None:
+                agg_calibration_metrics.setdefault("r2", cm.r2)
+            if agg_calibration_metrics:
+                break  # Take metrics from the highest-priority artifact
+
     route_b = RouteBPopulationPrior(
         available=anchor.route_b_available or len(approved_artifacts) > 0,
         prior_direction=prior_dir,  # type: ignore[arg-type]
@@ -162,6 +184,7 @@ def analyze_branch_forecast(
         approved_artifact_count=len(approved_artifacts),
         artifact_class=agg_class,  # type: ignore[arg-type]
         contextual_prior_ids=contextual_prior_ids,
+        calibration_metrics=agg_calibration_metrics,
     )
 
     # Domain-level predictions from anchor data
@@ -214,6 +237,7 @@ def analyze_branch_forecast(
         divergence_status=divergence.divergence_status,
         has_targets=len(targets) > 0,
         has_divergence_warnings=len(divergence.flags) > 0,
+        best_artifact_class=best_artifact_class,
     )
 
     explanation = _build_explanation(trajectory, confidence, route_a_available, anchor.route_b_available, divergence.divergence_status)
@@ -251,6 +275,7 @@ def _compute_trajectory(
     divergence_status: str,
     has_targets: bool,
     has_divergence_warnings: bool,
+    best_artifact_class: str = "none",
 ) -> tuple[str, str, str]:
     """Returns (trajectory_direction, confidence, credibility)."""
 
@@ -289,6 +314,9 @@ def _compute_trajectory(
             credibility = "medium"
         else:
             credibility = "medium" if confidence != "low" else "low"
+        # Boost credibility for calibrated models (they're individually validated)
+        if _artifact_class_priority(best_artifact_class) >= 3 and credibility == "medium":
+            credibility = "high"
     else:
         credibility = confidence
 
@@ -302,6 +330,11 @@ _ALL_DOMAINS = [
     "relationship",
     "subjective_wellbeing",
 ]
+
+
+def _artifact_class_priority(cls: str) -> int:
+    """Higher return = preferred artifact class."""
+    return {"calibrated_model": 3, "data_backed_baseline": 2, "contextual_prior": 1}.get(cls, 0)
 
 
 def _build_domain_predictions(
@@ -348,8 +381,16 @@ def _build_domain_predictions(
         best_artifact = None
         best_card = None
         if domain_artifacts:
-            # Prefer lowest transfer risk
-            best_artifact = min(domain_artifacts, key=lambda a: {"low": 0, "medium": 1, "high": 2}.get(a.transfer_risk, 2))
+            # Sort by artifact_class priority (calibrated_model > data_backed_baseline > contextual_prior),
+            # then by transfer_risk (low > medium > high)
+            risk_order = {"low": 0, "medium": 1, "high": 2}
+            best_artifact = min(
+                domain_artifacts,
+                key=lambda a: (
+                    -_artifact_class_priority(getattr(a, "artifact_class", "none") or "none"),
+                    risk_order.get(a.transfer_risk, 2),
+                ),
+            )
             best_card = model_cards.get(best_artifact.model_id)
 
         # Resolve predicted direction with source priority
@@ -376,6 +417,13 @@ def _build_domain_predictions(
         if best_artifact:
             t_risk = best_artifact.transfer_risk
             ev_strength = "moderate" if best_artifact.confidence in ("medium", "high") else "weak"
+            artifact_cls = getattr(best_artifact, "artifact_class", "none") or "none"
+            if artifact_cls == "calibrated_model":
+                base_confidence = "high"
+            elif artifact_cls == "data_backed_baseline":
+                base_confidence = "medium"
+            else:
+                base_confidence = "low"
 
         predictions.append(DomainForecastPrediction(
             domain=domain,  # type: ignore[arg-type]
@@ -383,7 +431,7 @@ def _build_domain_predictions(
             route_b_prior_direction=route_b_dir,  # type: ignore[arg-type]
             predicted_direction=predicted,  # type: ignore[arg-type]
             predicted_direction_source=source,  # type: ignore[arg-type]
-            confidence="low",  # will be refined by evaluation
+            confidence=base_confidence if best_artifact else "low",
             evidence_strength=ev_strength,  # type: ignore[arg-type]
             transfer_risk=t_risk,  # type: ignore[arg-type]
             explanation=explanation,

@@ -128,14 +128,23 @@ export default function BranchForecast() {
                 return <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('branchForecast.routeBUnavailable')}</p>
               }
               const artifactClass = routeB.artifact_class as string
-              const isDataBacked = artifactClass === 'data_backed_baseline' || artifactClass === 'calibrated_model'
+              const classBadge = artifactClass === 'calibrated_model'
+                ? { variant: 'success' as const, label: 'Calibrated Public Model' }
+                : artifactClass === 'data_backed_baseline'
+                  ? { variant: 'warning' as const, label: 'Descriptive Public Baseline' }
+                  : artifactClass === 'contextual_prior'
+                    ? { variant: 'muted' as const, label: 'Contextual Literature Prior' }
+                    : artifactClass === 'mixed'
+                      ? { variant: 'warning' as const, label: 'Mixed (Data + Contextual)' }
+                      : { variant: 'muted' as const, label: 'No Route B Prior' }
+              const calibrationMetrics = routeB.calibration_metrics as Record<string, unknown> | undefined
               return (
                 <div className="space-y-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                   <div className="flex items-center gap-2 mb-1">
-                    <Badge variant={isDataBacked ? 'success' : artifactClass === 'mixed' ? 'warning' : 'muted'}>
-                      {isDataBacked ? 'Data-Backed Route B Prior' : artifactClass === 'mixed' ? 'Mixed (Data + Contextual)' : artifactClass === 'contextual_prior' ? 'Contextual Literature Prior Only' : 'No Route B Prior'}
+                    <Badge variant={classBadge.variant}>
+                      {classBadge.label}
                     </Badge>
-                    {!isDataBacked && artifactClass !== 'none' && (
+                    {artifactClass !== 'calibrated_model' && artifactClass !== 'data_backed_baseline' && artifactClass !== 'none' && (
                       <span style={{ color: 'var(--color-error)' }}>— Route B not fully approved for this forecast</span>
                     )}
                   </div>
@@ -150,6 +159,28 @@ export default function BranchForecast() {
                     <div><strong>Contextual Priors:</strong> {(routeB.contextual_prior_ids as string[]).join(', ')} (not driving forecast)</div>
                   )}
                   <p className="mt-1">{routeB.explanation as string}</p>
+                  {calibrationMetrics && Object.values(calibrationMetrics).some(v => v != null) && (
+                    <div className="mt-2 p-2 rounded" style={{
+                      backgroundColor: artifactClass === 'calibrated_model' ? 'var(--color-accent-bg)' : 'var(--color-surface)',
+                      border: artifactClass === 'calibrated_model' ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
+                    }}>
+                      <div className="font-medium mb-1">Model Performance</div>
+                      <div className="flex gap-4 flex-wrap">
+                        {calibrationMetrics.brier_score != null && (
+                          <span className="font-mono">Brier: {Number(calibrationMetrics.brier_score).toFixed(3)}</span>
+                        )}
+                        {calibrationMetrics.calibration_slope != null && (
+                          <span className="font-mono">Slope: {Number(calibrationMetrics.calibration_slope).toFixed(3)}</span>
+                        )}
+                        {calibrationMetrics.auc != null && (
+                          <span className="font-mono">AUC: {Number(calibrationMetrics.auc).toFixed(3)}</span>
+                        )}
+                        {calibrationMetrics.r2 != null && (
+                          <span className="font-mono">R²: {Number(calibrationMetrics.r2).toFixed(3)}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })()}

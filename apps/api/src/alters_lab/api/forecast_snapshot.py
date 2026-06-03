@@ -38,6 +38,7 @@ def _extract_domain_predictions(body: BranchForecastResult) -> list[DomainPredic
                 route_b_prior_direction=dp.route_b_prior_direction,
                 evidence_strength=dp.evidence_strength,
                 transfer_risk=dp.transfer_risk,
+                artifact_class=dp.artifact_class,
             )
             for dp in body.domain_predictions
         ]

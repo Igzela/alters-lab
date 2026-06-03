@@ -63,6 +63,8 @@ class TestArtifactClass:
             **_valid_prior_artifact(
                 artifact_class="calibrated_model",
                 actual_data_used=True,
+                value_labels_confirmed=True,
+                missingness_reviewed=True,
             )
         )
         assert artifact.artifact_class == "calibrated_model"

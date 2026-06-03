@@ -52,6 +52,7 @@ class RouteBPopulationPrior(BaseModel):
         "contextual_prior", "data_backed_baseline", "calibrated_model", "mixed", "none"
     ] = "none"
     contextual_prior_ids: list[str] = Field(default_factory=list)
+    calibration_metrics: dict[str, float | None] = Field(default_factory=dict)
 
 
 class CalibrationDivergenceSummary(BaseModel):
@@ -112,3 +113,6 @@ class BranchForecastResult(BaseModel):
     domain_predictions: list[DomainForecastPrediction] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
     next_evidence_to_collect: list[str] = Field(default_factory=list)
+    best_artifact_class: Literal[
+        "contextual_prior", "data_backed_baseline", "calibrated_model", "mixed", "none"
+    ] = "none"

@@ -169,7 +169,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                           {d.route_b_status === 'approved' ? 'Route B Approved' : d.route_b_status === 'contextual_only' ? 'Contextual Only' : 'No Prior'}
                         </Badge>
                       </td>
-                      <td className="py-2 px-2 text-center text-xs">{d.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : d.artifact_class === 'contextual_prior' ? 'Contextual' : d.artifact_class}</td>
+                      <td className="py-2 px-2 text-center text-xs">{d.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : d.artifact_class === 'calibrated_model' ? 'Calibrated Model' : d.artifact_class === 'contextual_prior' ? 'Contextual' : d.artifact_class}</td>
                       <td className="py-2 px-2 text-center capitalize">{d.prior_direction}</td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={CONFIDENCE_COLORS[d.best_confidence] || 'muted'}>
@@ -279,6 +279,9 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
               <Badge variant="info">Direction: {artifact.prior_direction}</Badge>
               {artifact.artifact_class === 'data_backed_baseline' && (
                 <Badge variant="success">Data-Backed</Badge>
+              )}
+              {artifact.artifact_class === 'calibrated_model' && (
+                <Badge variant="success">Calibrated Model</Badge>
               )}
               {artifact.artifact_class === 'contextual_prior' && (
                 <Badge variant="warning">Contextual Only</Badge>
@@ -419,8 +422,8 @@ function ModelCardsTab({
                   {selected.approval_level === 'route_b_approved' ? 'Route B Approved' : selected.approval_level === 'lab_only' ? 'Lab Only' : 'Unapproved'}
                 </Badge>
                 {selected.artifact_class && (
-                  <Badge variant={selected.artifact_class === 'data_backed_baseline' ? 'success' : selected.artifact_class === 'contextual_prior' ? 'warning' : 'info'}>
-                    {selected.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : selected.artifact_class === 'contextual_prior' ? 'Contextual' : selected.artifact_class}
+                  <Badge variant={selected.artifact_class === 'data_backed_baseline' || selected.artifact_class === 'calibrated_model' ? 'success' : selected.artifact_class === 'contextual_prior' ? 'warning' : 'info'}>
+                    {selected.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : selected.artifact_class === 'calibrated_model' ? 'Calibrated Model' : selected.artifact_class === 'contextual_prior' ? 'Contextual' : selected.artifact_class}
                   </Badge>
                 )}
                 <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>
@@ -461,20 +464,28 @@ function ModelCardsTab({
 
             {/* Calibration Metrics */}
             {selected.calibration_metrics && Object.values(selected.calibration_metrics).some(v => v != null) && (
-              <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
-                <div className="font-medium mb-1">{t('publicPriors.modelCards.calibrationMetrics')}</div>
-                <div className="flex gap-4 flex-wrap">
+              <div className="mt-2 p-3 rounded" style={{
+                backgroundColor: selected.artifact_class === 'calibrated_model' ? 'var(--color-accent-bg)' : 'var(--color-bg-secondary)',
+                border: selected.artifact_class === 'calibrated_model' ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
+              }}>
+                <div className="font-medium mb-1 flex items-center gap-2">
+                  {t('publicPriors.modelCards.calibrationMetrics')}
+                  {selected.artifact_class === 'calibrated_model' && (
+                    <Badge variant="success">Primary Validation</Badge>
+                  )}
+                </div>
+                <div className="flex gap-4 flex-wrap text-xs">
                   {selected.calibration_metrics.brier_score != null && (
-                    <span>Brier: {selected.calibration_metrics.brier_score.toFixed(3)}</span>
+                    <span className="font-mono">Brier: {selected.calibration_metrics.brier_score.toFixed(3)}</span>
                   )}
                   {selected.calibration_metrics.calibration_slope != null && (
-                    <span>Slope: {selected.calibration_metrics.calibration_slope.toFixed(3)}</span>
+                    <span className="font-mono">Slope: {selected.calibration_metrics.calibration_slope.toFixed(3)}</span>
                   )}
                   {selected.calibration_metrics.auc != null && (
-                    <span>AUC: {selected.calibration_metrics.auc.toFixed(3)}</span>
+                    <span className="font-mono">AUC: {selected.calibration_metrics.auc.toFixed(3)}</span>
                   )}
                   {selected.calibration_metrics.r2 != null && (
-                    <span>R²: {selected.calibration_metrics.r2.toFixed(3)}</span>
+                    <span className="font-mono">R²: {selected.calibration_metrics.r2.toFixed(3)}</span>
                   )}
                 </div>
               </div>

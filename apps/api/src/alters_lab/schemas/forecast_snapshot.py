@@ -33,6 +33,7 @@ class DomainPrediction(BaseModel):
     model_card_id: str | None = None
     dataset_source_id: str | None = None
     approved_for_route_b: bool = False
+    artifact_class: Literal["contextual_prior", "data_backed_baseline", "calibrated_model", "none"] = "none"
 
 
 class ForecastSummarySnapshot(BaseModel):
