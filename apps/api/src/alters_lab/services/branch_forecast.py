@@ -261,6 +261,7 @@ def analyze_branch_forecast(
         domain_predictions=domain_predictions,
         limitations=limitations,
         next_evidence_to_collect=next_evidence,
+        best_artifact_class=best_artifact_class,
     )
 
 
