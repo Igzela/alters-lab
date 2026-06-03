@@ -81,5 +81,8 @@ jobs:
       - name: Install dependencies
         run: cd apps/web && npm ci
 
+      - name: Test
+        run: cd apps/web && npm run test
+
       - name: Build
         run: cd apps/web && npm run build

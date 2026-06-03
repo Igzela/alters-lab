@@ -1,5 +1,6 @@
 import importlib
 import logging
+import os
 import uuid
 from contextlib import asynccontextmanager
 
@@ -11,6 +12,16 @@ from alters_lab.errors import AppError
 from alters_lab.logging_config import setup_logging
 from alters_lab.middleware import RateLimitMiddleware
 from alters_lab.services.local_app import configure_frontend_static
+
+_DEV_MODE = os.environ.get("ALTERS_LAB_MODE") != "packaged"
+_CORS_ORIGINS = (
+    ["*"]
+    if _DEV_MODE
+    else [
+        "http://localhost:18790",
+        "http://127.0.0.1:18790",
+    ]
+)
 
 # All API router modules. Each must export a `router` attribute.
 _ROUTER_MODULES = [
@@ -92,7 +103,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
