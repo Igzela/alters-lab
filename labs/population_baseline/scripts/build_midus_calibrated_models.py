@@ -34,19 +34,20 @@ ARTIFACTS_DIR = REPO_ROOT / "labs" / "population_baseline" / "artifacts"
 # --- Variable definitions ---
 
 # Feature variables (predictors from MIDUS-2)
+# Verified against M2_P1_SURVEY_N4963_20200720.sav column headers.
 FEATURE_VARIABLES = {
-    "B1SCONDP": {
-        "label": "Chronic conditions count",
+    "B1SCHRON": {
+        "label": "Number of chronic conditions",
         "domain": "health",
         "measurement": "continuous",
     },
-    "B1SCALL": {
-        "label": "Social support total",
+    "B1SMPQSC": {
+        "label": "Social Closeness (Multidimensional Personality)",
         "domain": "social",
         "measurement": "continuous",
     },
-    "B1SCSAT": {
-        "label": "Social satisfaction",
+    "B1SSWBSI": {
+        "label": "Social Integration (Social Well-Being)",
         "domain": "social",
         "measurement": "continuous",
     },
@@ -76,20 +77,16 @@ FEATURE_VARIABLES = {
         "measurement": "categorical",
         "value_labels": {"1": "Male", "2": "Female"},
     },
-    "B1SA52A": {
-        "label": "Sleep quality",
+    "B1SA57A": {
+        "label": "Hours of sleep on workdays",
         "domain": "health_behavior",
-        "measurement": "ordinal",
-    },
-    "B1SA40A": {
-        "label": "Physical activity level",
-        "domain": "health_behavior",
-        "measurement": "ordinal",
+        "measurement": "continuous",
     },
 }
 
-# Outcome variable used to derive binary labels
-OUTCOME_VARIABLE = {
+# Outcome variables used to derive binary labels
+# B1PA1 for health, B1SMPQSC also used as social closeness outcome (above median).
+OUTCOME_VARIABLES = {
     "B1PA1": {
         "label": "Self-rated health",
         "domain": "health",
@@ -108,16 +105,15 @@ SENTINEL_HIGH = {8, 9, 98, 99}  # Not calculated / missing
 
 # Default imputation values per feature
 IMPUTATION_DEFAULTS = {
-    "B1SCONDP": 0.0,   # No chronic conditions
-    "B1SCALL": 0.0,    # No social support
-    "B1SCSAT": 0.0,    # No social satisfaction
-    "B1SSATIS": 5.0,   # Neutral life satisfaction
-    "B1SMASTE": 3.0,   # Mid-range mastery
-    "B1SNEURO": 3.0,   # Mid-range neuroticism
-    "B1PAGE_M2": 55.0, # MIDUS-2 median age approximate
-    "B1PRSEX": 1.0,    # Default male
-    "B1SA52A": 3.0,    # Mid-range sleep
-    "B1SA40A": 2.0,    # Mid-range activity
+    "B1SCHRON": 2.0,    # Median chronic conditions
+    "B1SMPQSC": 12.0,   # Mean social closeness
+    "B1SSWBSI": 15.0,   # Mean social integration
+    "B1SSATIS": 5.0,    # Neutral life satisfaction
+    "B1SMASTE": 3.0,    # Mid-range mastery
+    "B1SNEURO": 3.0,    # Mid-range neuroticism
+    "B1PAGE_M2": 55.0,  # MIDUS-2 median age approximate
+    "B1PRSEX": 1.0,     # Default male
+    "B1SA57A": 7.0,     # Median hours sleep
 }
 
 
@@ -181,14 +177,14 @@ def create_binary_outcomes(rows: list[dict]) -> tuple[list[int], dict]:
 
     Outcomes:
       - health_good_excellent: B1PA1 <= 3 (1=excellent, lower is better in M2)
-      - high_social_support: B1SCALL > median of valid values
+      - high_social_closeness: B1SMPQSC > median of valid values
       - high_life_satisfaction: B1SSATIS >= 7
 
-    Returns (health_labels, outcome_metadata).
+    Returns (health_labels, social_labels, lsat_labels, outcome_metadata).
     """
-    # Compute median social support for binary split
-    valid_support = [r["B1SCALL"] for r in rows if "B1SCALL" in r]
-    support_median = statistics.median(valid_support) if valid_support else 0
+    # Compute median social closeness for binary split
+    valid_closeness = [r["B1SMPQSC"] for r in rows if "B1SMPQSC" in r]
+    closeness_median = statistics.median(valid_closeness) if valid_closeness else 0
 
     valid_lsat = [r["B1SSATIS"] for r in rows if "B1SSATIS" in r]
     lsat_median = statistics.median(valid_lsat) if valid_lsat else 0
@@ -202,9 +198,9 @@ def create_binary_outcomes(rows: list[dict]) -> tuple[list[int], dict]:
         hp = row.get("B1PA1")
         health_labels.append(1 if hp is not None and hp <= 3 else 0)
 
-        # Social support: above median
-        sp = row.get("B1SCALL")
-        social_labels.append(1 if sp is not None and sp > support_median else 0)
+        # Social closeness: above median
+        sp = row.get("B1SMPQSC")
+        social_labels.append(1 if sp is not None and sp > closeness_median else 0)
 
         # Life satisfaction: >= 7
         lp = row.get("B1SSATIS")
@@ -215,11 +211,11 @@ def create_binary_outcomes(rows: list[dict]) -> tuple[list[int], dict]:
     n_l = sum(lsat_labels)
     n = len(rows)
     print(f"  health_good_excellent: {n_h}/{n} ({n_h/n*100:.1f}%)")
-    print(f"  high_social_support:   {n_s}/{n} ({n_s/n*100:.1f}%)")
+    print(f"  high_social_closeness: {n_s}/{n} ({n_s/n*100:.1f}%)")
     print(f"  high_life_satisfaction: {n_l}/{n} ({n_l/n*100:.1f}%)")
 
     metadata = {
-        "support_median": round(support_median, 4),
+        "closeness_median": round(closeness_median, 4),
         "lsat_median": round(lsat_median, 4),
     }
     return health_labels, social_labels, lsat_labels, metadata
@@ -233,32 +229,60 @@ def build_feature_matrix(rows: list[dict]) -> tuple[list[list[float]], list[str]
     Sex (B1PRSEX): 1=male, 2=female → sex_female binary.
     """
     feature_names = [
-        "chronic_conditions", "social_support", "social_satisfaction",
+        "chronic_conditions", "social_closeness", "social_integration",
         "life_satisfaction", "mastery", "neuroticism",
-        "age", "sex_female", "sleep_quality", "physical_activity",
+        "age", "sex_female", "sleep_hours",
     ]
 
     X = []
     for row in rows:
-        chronic = row.get("B1SCONDP", IMPUTATION_DEFAULTS["B1SCONDP"])
-        support = row.get("B1SCALL", IMPUTATION_DEFAULTS["B1SCALL"])
-        soc_sat = row.get("B1SCSAT", IMPUTATION_DEFAULTS["B1SCSAT"])
+        chronic = row.get("B1SCHRON", IMPUTATION_DEFAULTS["B1SCHRON"])
+        closeness = row.get("B1SMPQSC", IMPUTATION_DEFAULTS["B1SMPQSC"])
+        integration = row.get("B1SSWBSI", IMPUTATION_DEFAULTS["B1SSWBSI"])
         life_sat = row.get("B1SSATIS", IMPUTATION_DEFAULTS["B1SSATIS"])
         mastery = row.get("B1SMASTE", IMPUTATION_DEFAULTS["B1SMASTE"])
         neuro = row.get("B1SNEURO", IMPUTATION_DEFAULTS["B1SNEURO"])
         age = row.get("B1PAGE_M2", IMPUTATION_DEFAULTS["B1PAGE_M2"])
         sex = row.get("B1PRSEX", IMPUTATION_DEFAULTS["B1PRSEX"])
-        sleep = row.get("B1SA52A", IMPUTATION_DEFAULTS["B1SA52A"])
-        activity = row.get("B1SA40A", IMPUTATION_DEFAULTS["B1SA40A"])
+        sleep = row.get("B1SA57A", IMPUTATION_DEFAULTS["B1SA57A"])
 
         # Sex: 2=female → 1.0, else 0.0
         sex_female = 1.0 if sex == 2.0 else 0.0
 
         X.append([
-            chronic, support, soc_sat, life_sat, mastery, neuro,
-            age, sex_female, sleep, activity,
+            chronic, closeness, integration, life_sat, mastery, neuro,
+            age, sex_female, sleep,
         ])
 
+    return X, feature_names
+
+
+def _build_feature_matrix_excluding(
+    rows: list[dict], exclude_vars: list[str]
+) -> tuple[list[list[float]], list[str]]:
+    """Build feature matrix excluding specific MIDUS-2 variables (to avoid leakage)."""
+    all_feature_names = [
+        "chronic_conditions", "social_closeness", "social_integration",
+        "life_satisfaction", "mastery", "neuroticism",
+        "age", "sex_female", "sleep_hours",
+    ]
+    var_to_feature = {
+        "B1SCHRON": "chronic_conditions",
+        "B1SMPQSC": "social_closeness",
+        "B1SSWBSI": "social_integration",
+        "B1SSATIS": "life_satisfaction",
+        "B1SMASTE": "mastery",
+        "B1SNEURO": "neuroticism",
+        "B1PAGE_M2": "age",
+        "B1PRSEX": "sex_female",
+        "B1SA57A": "sleep_hours",
+    }
+    exclude_features = {var_to_feature[v] for v in exclude_vars if v in var_to_feature}
+    keep_indices = [i for i, name in enumerate(all_feature_names) if name not in exclude_features]
+    feature_names = [all_feature_names[i] for i in keep_indices]
+
+    X_full, _ = build_feature_matrix(rows)
+    X = [[row[i] for i in keep_indices] for row in X_full]
     return X, feature_names
 
 
@@ -390,9 +414,9 @@ def build_model_card(models: list[dict], n_accepted: int, n_rejected: int, total
                 "scale_note": "M2 health: 1=excellent, lower is better",
             },
             {
-                "name": "high_social_support",
-                "definition": "B1SCALL > median of valid values",
-                "source_variable": "B1SCALL",
+                "name": "high_social_closeness",
+                "definition": "B1SMPQSC > median of valid values",
+                "source_variable": "B1SMPQSC",
             },
             {
                 "name": "high_life_satisfaction",
@@ -459,7 +483,7 @@ def main():
 
     # --- Step 2: Extract and clean ---
     print("\nStep 2: Extracting variables and filtering sentinels...")
-    all_vars = {**FEATURE_VARIABLES, **OUTCOME_VARIABLE}
+    all_vars = {**FEATURE_VARIABLES, **OUTCOME_VARIABLES}
     rows, var_stats = extract_and_clean(df, all_vars)
 
     print(f"  Usable rows after sentinel filter: {len(rows):,}")
@@ -473,10 +497,17 @@ def main():
     print()
 
     # --- Step 3: Build features ---
-    print("Step 3: Building feature matrix...")
-    X, feature_names = build_feature_matrix(rows)
-    print(f"  Features: {feature_names}")
-    print(f"  Matrix shape: {len(X)} x {len(X[0])}")
+    # Build separate feature matrices per outcome to avoid leakage:
+    # - health model: exclude B1PA1 (outcome source) — not in features, OK
+    # - social model: exclude B1SMPQSC (used as both feature and outcome source)
+    # - lsat model: exclude B1SSATIS (used as both feature and outcome source)
+    print("Step 3: Building feature matrices (leakage-safe)...")
+    X_health, feature_names_health = build_feature_matrix(rows)
+    X_social, feature_names_social = _build_feature_matrix_excluding(rows, ["B1SMPQSC"])
+    X_lsat, feature_names_lsat = _build_feature_matrix_excluding(rows, ["B1SSATIS"])
+    print(f"  Health features: {feature_names_health}")
+    print(f"  Social features: {feature_names_social}")
+    print(f"  LSAT features:   {feature_names_lsat}")
     print()
 
     # --- Step 4: Create binary outcomes ---
@@ -486,9 +517,9 @@ def main():
 
     # --- Step 5: Train/test split ---
     print("Step 5: Splitting data 80/20...")
-    X_tr_h, X_te_h, y_tr_h, y_te_h = train_test_split(X, health_labels, test_size=0.2, random_state=42)
-    X_tr_s, X_te_s, y_tr_s, y_te_s = train_test_split(X, social_labels, test_size=0.2, random_state=42)
-    X_tr_l, X_te_l, y_tr_l, y_te_l = train_test_split(X, lsat_labels, test_size=0.2, random_state=42)
+    X_tr_h, X_te_h, y_tr_h, y_te_h = train_test_split(X_health, health_labels, test_size=0.2, random_state=42)
+    X_tr_s, X_te_s, y_tr_s, y_te_s = train_test_split(X_social, social_labels, test_size=0.2, random_state=42)
+    X_tr_l, X_te_l, y_tr_l, y_te_l = train_test_split(X_lsat, lsat_labels, test_size=0.2, random_state=42)
     print(f"  health model: train={len(y_tr_h)}, test={len(y_te_h)}")
     print(f"  social model: train={len(y_tr_s)}, test={len(y_te_s)}")
     print(f"  lsat model:   train={len(y_tr_l)}, test={len(y_te_l)}")
@@ -496,9 +527,9 @@ def main():
 
     # --- Step 6: Train models ---
     print("Step 6: Training logistic regression models...")
-    health_model = train_and_evaluate(X_tr_h, X_te_h, y_tr_h, y_te_h, feature_names, "health_good_excellent")
-    social_model = train_and_evaluate(X_tr_s, X_te_s, y_tr_s, y_te_s, feature_names, "high_social_support")
-    lsat_model = train_and_evaluate(X_tr_l, X_te_l, y_tr_l, y_te_l, feature_names, "high_life_satisfaction")
+    health_model = train_and_evaluate(X_tr_h, X_te_h, y_tr_h, y_te_h, feature_names_health, "health_good_excellent")
+    social_model = train_and_evaluate(X_tr_s, X_te_s, y_tr_s, y_te_s, feature_names_social, "high_social_closeness")
+    lsat_model = train_and_evaluate(X_tr_l, X_te_l, y_tr_l, y_te_l, feature_names_lsat, "high_life_satisfaction")
 
     for m in [health_model, social_model, lsat_model]:
         auc_str = f"{m['auc_roc']:.3f}" if m['auc_roc'] is not None else "N/A"

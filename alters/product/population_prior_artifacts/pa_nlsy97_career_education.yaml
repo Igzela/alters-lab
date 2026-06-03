@@ -9,21 +9,20 @@ prior_direction: favorable
 probability_band: null
 population_percentile: null
 deviation_from_baseline: null
-confidence: medium
+confidence: high
 transfer_risk: high
 explanation: >
-  Career/education baseline from NLSY97 2005 round (respondents age 25-29).
-  Highest grade completed: mean=12.96 (about 1 year college), median=12 (HS grad).
-  Highest degree: 60% HS diploma, 12% Bachelor's, 13% no degree.
-  Population-level descriptive statistics from actual survey data.
+  Calibrated logistic regression predicting bachelor_or_higher (2015) from
+  NLSY97 2005 baseline. AUC=0.924, Brier=0.0919. 7,100 rows, 80/20 split.
+  Strong discrimination; well-calibrated in high-probability bins.
 limitations:
   - "Cohort born 1980-84 — transfer to other generations limited"
-  - "2005 snapshot only — no longitudinal follow-up linked"
+  - "2005→2015 prospective design (10-year gap)"
   - "Self-reported education levels"
-  - "Sample of 50K rows from full NLSY97 dataset"
+  - "7 features only: grade, degree, income, sex, race"
   - "Transfer risk high due to cohort specificity"
-  - "This is a population baseline, not an individual prediction"
-artifact_class: data_backed_baseline
+  - "This is a population model, not an individual prediction"
+artifact_class: calibrated_model
 actual_data_used: true
 baseline_table_id: nlsy97_route_b_baselines_v2
 value_labels_confirmed: true

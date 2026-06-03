@@ -1,34 +1,35 @@
-# Model Card: MIDUS Social Support Quality baseline table
+# Model Card: MIDUS Social Closeness calibrated model
 
 model_id: mc_midus_social_support
 source_dataset_ids:
-  - midus1
   - midus2
-  - midus3
-outcome_id: social_support_quality
+outcome_id: social_closeness
 feature_mapping_ids:
-  - social_support_variables
-model_family: baseline_table
-training_status: validated
+  - social_closeness_b1smpqsc
+model_family: logistic_regression
+training_status: trained
 evaluation_summary: >
-  Average of MIDUS social support scales: availability of support and satisfaction
-  with support. Data confirmed via raw data inspection (variables B1SCALL, B1SCSAT).
-  Continuous, higher = better support.
+  Calibrated logistic regression predicting high_social_closeness (B1SMPQSC > median)
+  from MIDUS-2 features (excluding B1SMPQSC to avoid leakage). 1,067 usable rows,
+  80/20 split. AUC=0.689, Brier=0.2261.
 calibration_metrics:
-  brier_score: null
+  brier_score: 0.2261
   calibration_slope: null
   calibration_intercept: null
-  auc: null
+  auc: 0.689
   r2: null
+  n_train: 853
+  n_test: 214
+  calibration_bins: null
 transfer_risk: high
 approved_for_route_b: true
-artifact_class: data_backed_baseline
+artifact_class: calibrated_model
 approval_level: route_b_approved
-approval_reason: "Data-backed baseline from MIDUS SPSS data confirmed via pyreadstat."
+approval_reason: "Calibrated logistic regression trained on MIDUS-2. AUC=0.689, Brier=0.2261. Passes quality gate (AUC≥0.6, Brier≤0.25)."
 approval_blockers: []
 limitations:
-  - "Only available in MIDUS"
-  - "Self-reported quality may differ from actual support received"
-  - "Scale items may not capture digital/remote support patterns"
-  - "Cross-wave aggregate comparison only"
-  - "High transfer risk caps confidence at medium"
+  - "MIDUS-2 cross-sectional: 1,067 usable respondents"
+  - "Social Closeness (B1SMPQSC) is a personality trait scale, not direct support measure"
+  - "Cross-sectional — no temporal separation between features and outcome"
+  - "High transfer risk: US national sample, age ~25-74"
+  - "Outcome source variable excluded from features to prevent leakage"
