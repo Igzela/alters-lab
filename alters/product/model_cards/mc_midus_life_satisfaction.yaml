@@ -1,0 +1,29 @@
+# Model Card: MIDUS Life Satisfaction baseline table
+
+model_id: mc_midus_life_satisfaction
+source_dataset_ids:
+  - midus1
+  - midus2
+  - midus3
+outcome_id: life_satisfaction
+feature_mapping_ids:
+  - life_satisfaction_variables
+model_family: baseline_table
+training_status: validated
+evaluation_summary: >
+  Self-rated life satisfaction from MIDUS waves 1-3. Data confirmed via raw data
+  inspection (variables A1SSATIS, B1SSATIS, C1SSATIS). Ordinal scale.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: high
+approved_for_route_b: true
+limitations:
+  - "Set-point theory suggests stable baseline"
+  - "Adaptation effects reduce sensitivity to life changes"
+  - "Social desirability bias"
+  - "Cross-wave aggregate comparison only"
+  - "High transfer risk caps confidence at medium"

@@ -1,0 +1,23 @@
+# Population Prior Artifact: MIDUS Perceived Control / Mastery baseline table
+
+artifact_id: pa_midus_perceived_control
+model_id: mc_midus_perceived_control
+generated_at: "2026-06-03T00:00:00Z"
+domain: subjective_wellbeing
+prior_type: baseline_table
+prior_direction: favorable
+probability_band: null
+population_percentile: null
+deviation_from_baseline: null
+confidence: medium
+transfer_risk: medium
+explanation: >
+  Perceived mastery baseline from MIDUS waves 1-3 using Pearlin Mastery Scale.
+  Most respondents report moderate to high perceived control. Cross-wave aggregate
+  shows stable mastery patterns.
+limitations:
+  - "Cultural variation in control beliefs"
+  - "May reflect socioeconomic position as much as psychological trait"
+  - "Cross-wave aggregate comparison only"
+  - "Attrition bias across waves"
+  - "This is a population baseline, not an individual prediction"

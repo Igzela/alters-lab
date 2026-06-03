@@ -1,0 +1,29 @@
+# Model Card: MIDUS Perceived Control / Mastery baseline table
+
+model_id: mc_midus_perceived_control
+source_dataset_ids:
+  - midus1
+  - midus2
+  - midus3
+outcome_id: perceived_control_or_mastery
+feature_mapping_ids:
+  - mastery_variables
+model_family: baseline_table
+training_status: validated
+evaluation_summary: >
+  Pearlin Mastery Scale from MIDUS waves 1-3. Data confirmed via raw data
+  inspection (variables A1SMASTE, B1SMASTE, C1SMASTE). Continuous, higher = greater
+  sense of control.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: medium
+approved_for_route_b: true
+limitations:
+  - "Cultural variation in control beliefs"
+  - "May reflect socioeconomic position as much as psychological trait"
+  - "Cross-wave aggregate comparison only"
+  - "Attrition bias across waves"

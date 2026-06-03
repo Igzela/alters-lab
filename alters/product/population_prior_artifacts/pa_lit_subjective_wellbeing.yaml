@@ -1,0 +1,24 @@
+# Population Prior Artifact: subjective_wellbeing from literature
+
+artifact_id: pa_lit_subjective_wellbeing
+model_id: mc_lit_subjective_wellbeing
+generated_at: "2026-06-03T00:00:00Z"
+domain: subjective_wellbeing
+prior_type: textual
+prior_direction: favorable
+probability_band: null
+population_percentile: null
+deviation_from_baseline: null
+confidence: medium
+transfer_risk: medium
+explanation: >
+  Social connectedness is consistently among the strongest predictors of subjective
+  wellbeing across cultures (Holt-Lunstad 2010). Physical activity is associated
+  with improved mood and subjective wellbeing. MIDUS data shows life satisfaction
+  and perceived mastery are stable across waves.
+limitations:
+  - "Subjective wellbeing set-point theory suggests stable baseline"
+  - "Adaptation effects reduce sensitivity to life changes"
+  - "Social desirability bias in self-report measures"
+  - "Cultural variation in wellbeing concepts"
+  - "Literature priors are directional anchors, not predictions"

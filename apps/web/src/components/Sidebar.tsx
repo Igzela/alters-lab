@@ -19,6 +19,7 @@ import {
   Target,
   Binoculars,
   Crosshair,
+  Books,
 } from '@phosphor-icons/react'
 import type { Page } from '../types'
 import { useTheme } from './ThemeContext'
@@ -73,6 +74,7 @@ const navGroups: NavGroup[] = [
       { page: 'outcome-targets', icon: <Target size={18} />, labelKey: 'nav.outcomeTargets' },
       { page: 'branch-forecast', icon: <Binoculars size={18} />, labelKey: 'nav.branchForecast' },
       { page: 'forecast-calibration', icon: <Crosshair size={18} />, labelKey: 'nav.forecastCalibration' },
+      { page: 'public-priors', icon: <Books size={18} />, labelKey: 'nav.publicPriors' },
     ],
   },
   {

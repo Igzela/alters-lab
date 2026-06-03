@@ -24,4 +24,7 @@ export const queryKeys = {
   externalEvidence: ['external-evidence'] as const,
   forecastEvaluations: ['forecast-evaluations'] as const,
   forecastScorecard: ['forecast-scorecard'] as const,
+  publicPriorArtifacts: ['public-prior-artifacts'] as const,
+  publicPriorModelCards: ['public-prior-model-cards'] as const,
+  publicPriorCoverage: ['public-prior-coverage'] as const,
 } as const

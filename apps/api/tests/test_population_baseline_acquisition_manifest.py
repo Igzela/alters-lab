@@ -203,13 +203,27 @@ class TestNoRawDataCommitted:
     def test_raw_dir_only_has_gitkeep(self):
         if not RAW_DIR.exists():
             return  # Directory doesn't exist yet, which is fine
+        # Allowed files in raw directories (gitignored, not committed)
+        ALLOWED_RAW_FILES = {
+            ".gitkeep",
+            "acquisition_log_p13.json",
+            # Phase 14: Downloaded raw data files (gitignored, not committed)
+            "nlsy97_all_1997-2023.zip",
+            "M1_P1_SURVEY_N7108_20190116.sav",
+            "M2_P1_SURVEY_N4963_20200720.sav",
+            "M3_P1_SURVEY_N3294_20251029.sav",
+            # Codebooks (documentation, not individual-level data)
+            "M1_P1_Codebook_20220505.pdf",
+            "M2_P1_Codebook_20210129.pdf",
+            "M3_P1_Codebook_20251125.pdf",
+        }
         for subdir in ["nlsy97", "midus"]:
             subdir_path = RAW_DIR / subdir
             if not subdir_path.exists():
                 continue
             for f in subdir_path.rglob("*"):
                 if f.is_file():
-                    assert f.name == ".gitkeep" or f.name == "acquisition_log_p13.json", \
+                    assert f.name in ALLOWED_RAW_FILES, \
                         f"Unexpected file in raw dir: {f.relative_to(REPO_ROOT)}"
 
 

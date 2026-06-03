@@ -1,0 +1,24 @@
+# Population Prior Artifact: MIDUS Self-Rated Health baseline table
+
+artifact_id: pa_midus_self_rated_health
+model_id: mc_midus_self_rated_health
+generated_at: "2026-06-03T00:00:00Z"
+domain: health
+prior_type: baseline_table
+prior_direction: favorable
+probability_band: null
+population_percentile: null
+deviation_from_baseline: null
+confidence: medium
+transfer_risk: medium
+explanation: >
+  Self-rated health baseline from MIDUS waves 1-3. Most respondents rate their
+  health as good to excellent (scale 1-5, lower=better). Cross-wave aggregate
+  shows stable self-rated health patterns in the MIDUS cohort.
+limitations:
+  - "Single-item measure, limited reliability"
+  - "Self-report bias correlates with education and income"
+  - "Adaptation effect: people adjust expectations over time"
+  - "Cross-wave aggregate comparison only"
+  - "Attrition bias across waves"
+  - "This is a population baseline, not an individual prediction"

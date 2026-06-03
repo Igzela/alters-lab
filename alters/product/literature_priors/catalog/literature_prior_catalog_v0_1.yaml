@@ -278,3 +278,12 @@ priors:
     transfer_risk: high
     explanation: "The Fragile Families Challenge showed that even with rich longitudinal data, predicting individual life outcomes has hard limits. This is a humility anchor, not a prediction."
     evidence_source_ids: [ffc_predictive_modeling_context]
+
+  - prior_id: prior_social_integration_relationship
+    branch_feature: "meaningful regular social contact"
+    predicted_domain: relationship
+    base_rate_direction: favorable
+    prior_confidence: medium
+    transfer_risk: medium
+    explanation: "Social integration predicts relationship quality and support availability. Meta-analysis of 148 prospective studies shows social connections are among the strongest predictors of relational wellbeing."
+    evidence_source_ids: [social_relationships_mortality_meta, midus_longitudinal]

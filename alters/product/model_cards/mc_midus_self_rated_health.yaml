@@ -1,0 +1,32 @@
+# Model Card: MIDUS Self-Rated Health baseline table
+# Baseline table from MIDUS data-confirmed outcome.
+
+model_id: mc_midus_self_rated_health
+source_dataset_ids:
+  - midus1
+  - midus2
+  - midus3
+outcome_id: self_rated_health
+feature_mapping_ids:
+  - self_rated_health_variable
+model_family: baseline_table
+training_status: validated
+evaluation_summary: >
+  Self-rated health on 5-point scale (1=excellent, 5=poor) from MIDUS waves 1-3.
+  Data confirmed via raw data inspection (variables B1PA1, B1PA4, C1PA1).
+  Cross-wave aggregate comparison; no individual longitudinal linkage.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: medium
+approved_for_route_b: true
+limitations:
+  - "Single-item measure, limited reliability"
+  - "Self-report bias correlates with education and income"
+  - "Adaptation effect: people adjust expectations over time"
+  - "Cross-wave aggregate comparison, not individual longitudinal linkage"
+  - "Attrition bias across waves"
+  - "Cohort effects not controlled"

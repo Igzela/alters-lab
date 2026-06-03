@@ -42,7 +42,8 @@
     "predictorProfile": "Predictor Profile",
     "outcomeTargets": "Outcome Targets",
     "branchForecast": "Branch Forecast",
-    "forecastCalibration": "Forecast Calibration"
+    "forecastCalibration": "Forecast Calibration",
+    "publicPriors": "Public Priors"
   },
   "status": {
     "title": "System Status",
@@ -561,5 +562,38 @@
     "byDomain": "By Domain",
     "hitRate": "Hit Rate",
     "signalQuality": "Signal Quality"
+  },
+  "publicPriors": {
+    "title": "Public Priors",
+    "description": "Population baseline priors derived from public datasets (MIDUS, NLSY97) and literature meta-analyses. These provide Route B directional anchors for branch forecasts.",
+    "tabs": {
+      "coverage": "Domain Coverage",
+      "artifacts": "Prior Artifacts",
+      "modelCards": "Model Cards"
+    },
+    "coverage": {
+      "domainMatrix": "Domain Coverage Matrix",
+      "domain": "Domain",
+      "status": "Status",
+      "direction": "Direction",
+      "confidence": "Confidence",
+      "transferRisk": "Transfer Risk",
+      "modelFamily": "Model Family",
+      "artifacts": "Artifacts",
+      "routeBSummary": "Route B Summary",
+      "routeBExplanation": "Route B priors are directional anchors from population-level data. They do NOT predict individual outcomes. Route A (personal evidence) always takes priority when available."
+    },
+    "artifacts": {
+      "empty": "No approved artifacts yet.",
+      "limitations": "Limitations"
+    },
+    "modelCards": {
+      "empty": "No model cards found.",
+      "family": "Model Family",
+      "status": "Training Status",
+      "outcome": "Outcome",
+      "datasets": "Source Datasets",
+      "limitations": "Limitations"
+    }
   }
 }

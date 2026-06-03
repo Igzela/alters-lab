@@ -21,6 +21,9 @@ dev = [
     "httpx>=0.28,<1.0",
     "uvicorn>=0.34,<1.0",
 ]
+lab = [
+    "pyreadstat>=1.2,<2.0",
+]
 
 [project.scripts]
 alters-lab = "alters_lab.cli:main"

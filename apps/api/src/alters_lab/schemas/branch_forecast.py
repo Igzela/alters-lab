@@ -44,6 +44,10 @@ class RouteBPopulationPrior(BaseModel):
     population_percentile: float | None = None
     deviation_from_baseline: float | None = None
     explanation: str
+    artifact_ids: list[str] = Field(default_factory=list)
+    model_card_ids: list[str] = Field(default_factory=list)
+    dataset_source_ids: list[str] = Field(default_factory=list)
+    approved_artifact_count: int = 0
 
 
 class CalibrationDivergenceSummary(BaseModel):
@@ -81,6 +85,10 @@ class DomainForecastPrediction(BaseModel):
     evidence_strength: Literal["weak", "moderate", "strong"] = "weak"
     transfer_risk: Literal["low", "medium", "high"] = "high"
     explanation: str = ""
+    artifact_id: str | None = None
+    model_card_id: str | None = None
+    dataset_source_id: str | None = None
+    approved_for_route_b: bool = False
 
 
 class BranchForecastResult(BaseModel):

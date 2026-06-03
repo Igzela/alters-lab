@@ -1,0 +1,36 @@
+# Model Card: Literature priors for health domain
+# NOT a trained model. Curated population-level literature anchors.
+
+model_id: mc_lit_health
+source_dataset_ids:
+  - physical_activity_health_guidelines
+  - social_relationships_mortality_meta
+  - midus_longitudinal
+  - self_control_longitudinal
+outcome_id: health_composite
+feature_mapping_ids:
+  - physical_activity_construct
+  - social_integration_construct
+  - sleep_regularity_construct
+  - self_regulation_construct
+model_family: literature_prior_only
+training_status: validated
+evaluation_summary: >
+  Literature prior based on WHO guidelines (physical activity), Holt-Lunstad et al.
+  (2010) meta-analysis of 148 prospective studies (social integration and mortality),
+  MIDUS longitudinal data (sleep regularity), and Moffitt et al. (2011) self-control.
+  Physical activity has strongest evidence (WHO guidelines, low transfer risk).
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: low
+approved_for_route_b: true
+limitations:
+  - "WHO guidelines are population averages; individual response varies"
+  - "Social integration effect sizes are observational; causal mechanisms debated"
+  - "Sleep regularity evidence is from MIDUS; may not generalize to all populations"
+  - "Self-control → health pathway is complex and mediated by many factors"
+  - "Literature priors are directional anchors, not individual predictions"

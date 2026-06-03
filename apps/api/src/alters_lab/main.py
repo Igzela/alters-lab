@@ -82,6 +82,7 @@ _ROUTER_MODULES = [
     "external_evidence",
     "forecast_evaluation",
     "calibration_scorecard",
+    "public_prior",
 ]
 
 logger = logging.getLogger("alters_lab")

@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate:types": "python ../api/scripts/export_openapi.py && npx openapi-typescript src/api-schema.json -o src/api-types.d.ts"
+    "generate:types": "python ../api/scripts/export_openapi.py && npx openapi-typescript src/api-schema.json -o src/api-types.ts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

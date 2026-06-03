@@ -35,10 +35,11 @@ export type Page =
   | 'outcome-targets'
   | 'branch-forecast'
   | 'forecast-calibration'
+  | 'public-priors'
 
 export const VALID_PAGES: Page[] = [
   'dashboard', 'status', 'weekly', 'dialogue', 'reality', 'history',
   'rubric', 'checkpoint', 'provider', 'getting-started', 'patterns',
   'validation', 'data', 'predictor-profile', 'outcome-targets',
-  'branch-forecast', 'forecast-calibration',
+  'branch-forecast', 'forecast-calibration', 'public-priors',
 ]

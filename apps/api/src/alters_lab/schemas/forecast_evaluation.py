@@ -30,6 +30,9 @@ class DomainResult(BaseModel):
     route_a_direction: Literal["improving", "declining", "stable", "insufficient_data", "unknown"] = "unknown"
     route_b_prior_direction: Literal["favorable", "unfavorable", "mixed", "unknown"] = "unknown"
     transfer_risk: Literal["low", "medium", "high"] = "high"
+    artifact_id: str | None = None
+    model_card_id: str | None = None
+    approved_for_route_b: bool = False
 
 
 class ForecastEvaluationRecord(BaseModel):

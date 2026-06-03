@@ -117,10 +117,11 @@ def _get_domain_predictions(snapshot: ForecastSnapshotRecord) -> dict[str, Domai
 def _resolve_predicted_direction(
     domain: str,
     domain_preds: dict[str, DomainPrediction],
-) -> tuple[str, str, str, str, str, str, str]:
+) -> tuple[str, str, str, str, str, str, str, str | None, str | None, bool]:
     """Resolve predicted direction for a domain.
 
-    Returns (direction, source, confidence, explanation, route_a_direction, route_b_prior_direction, transfer_risk).
+    Returns (direction, source, confidence, explanation, route_a_direction,
+    route_b_prior_direction, transfer_risk, artifact_id, model_card_id, approved_for_route_b).
     """
     if domain in domain_preds:
         dp = domain_preds[domain]
@@ -132,9 +133,12 @@ def _resolve_predicted_direction(
             dp.route_a_direction,
             dp.route_b_prior_direction,
             dp.transfer_risk,
+            dp.artifact_id,
+            dp.model_card_id,
+            dp.approved_for_route_b,
         )
 
-    return "unknown", "unknown", "low", f"No domain prediction available for {domain}.", "unknown", "unknown", "high"
+    return "unknown", "unknown", "low", f"No domain prediction available for {domain}.", "unknown", "unknown", "high", None, None, False
 
 
 def _aggregate_evidence_by_domain(
@@ -267,6 +271,9 @@ def _build_domain_result(
     route_a_direction: str = "unknown",
     route_b_prior_direction: str = "unknown",
     transfer_risk: str = "high",
+    artifact_id: str | None = None,
+    model_card_id: str | None = None,
+    approved_for_route_b: bool = False,
 ) -> DomainResult:
     """Build a single domain evaluation result."""
     if not evidence_list:
@@ -283,6 +290,9 @@ def _build_domain_result(
             route_a_direction=route_a_direction,
             route_b_prior_direction=route_b_prior_direction,
             transfer_risk=transfer_risk,
+            artifact_id=artifact_id,
+            model_card_id=model_card_id,
+            approved_for_route_b=approved_for_route_b,
         )
 
     observed = _aggregate_observed_direction(evidence_list, targets)
@@ -304,6 +314,9 @@ def _build_domain_result(
         route_a_direction=route_a_direction,
         route_b_prior_direction=route_b_prior_direction,
         transfer_risk=transfer_risk,
+        artifact_id=artifact_id,
+        model_card_id=model_card_id,
+        approved_for_route_b=approved_for_route_b,
     )
 
 
@@ -372,10 +385,11 @@ def evaluate_forecast(
 
     # Evaluate domains that have evidence
     for domain, ev_list in by_domain.items():
-        direction, source, confidence, explanation, ra_dir, rb_dir, t_risk = _resolve_predicted_direction(domain, domain_preds)
+        direction, source, confidence, explanation, ra_dir, rb_dir, t_risk, art_id, mc_id, approved = _resolve_predicted_direction(domain, domain_preds)
         result = _build_domain_result(
             domain, direction, source, confidence, explanation, ev_list, targets_map,
             route_a_direction=ra_dir, route_b_prior_direction=rb_dir, transfer_risk=t_risk,
+            artifact_id=art_id, model_card_id=mc_id, approved_for_route_b=approved,
         )
         domain_results.append(result)
         seen_domains.add(domain)
@@ -396,6 +410,9 @@ def evaluate_forecast(
                 route_a_direction=dp.route_a_direction,
                 route_b_prior_direction=dp.route_b_prior_direction,
                 transfer_risk=dp.transfer_risk,
+                artifact_id=dp.artifact_id,
+                model_card_id=dp.model_card_id,
+                approved_for_route_b=dp.approved_for_route_b,
             ))
             seen_domains.add(domain)
 

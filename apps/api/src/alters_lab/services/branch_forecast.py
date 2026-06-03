@@ -29,6 +29,7 @@ from alters_lab.services.branch_base_rate_anchor import analyze_base_rate_anchor
 from alters_lab.services.branch_outcome_targets import list_targets_for_branch
 from alters_lab.services.calibration_divergence import analyze_calibration_divergence
 from alters_lab.services.p6_runtime import utc_now
+from alters_lab.services.public_prior import list_approved_artifacts, list_model_cards
 
 
 def analyze_branch_forecast(
@@ -92,6 +93,26 @@ def analyze_branch_forecast(
     )
     anchor = analyze_base_rate_anchor(anchor_req, repo_root=repo_root)
 
+    # Load approved population prior artifacts
+    approved_artifacts = list_approved_artifacts(repo_root=repo_root)
+    model_cards = {c.model_id: c for c in list_model_cards(repo_root=repo_root)}
+    artifacts_by_domain: dict[str, list] = {}
+    for a in approved_artifacts:
+        artifacts_by_domain.setdefault(a.domain, []).append(a)
+
+    artifact_ids: list[str] = []
+    model_card_ids: list[str] = []
+    dataset_source_ids: list[str] = []
+    for a in approved_artifacts:
+        artifact_ids.append(a.artifact_id)
+        if a.model_id not in model_card_ids:
+            model_card_ids.append(a.model_id)
+        card = model_cards.get(a.model_id)
+        if card:
+            for dsid in card.source_dataset_ids:
+                if dsid not in dataset_source_ids:
+                    dataset_source_ids.append(dsid)
+
     if anchor.route_b_available and anchor.domain_anchors:
         favorable = sum(1 for a in anchor.domain_anchors if a.route_b_prior_direction == "favorable")
         unfavorable = sum(1 for a in anchor.domain_anchors if a.route_b_prior_direction == "unfavorable")
@@ -115,13 +136,17 @@ def analyze_branch_forecast(
         route_b_explanation = "Literature priors not available or no matching priors found"
 
     route_b = RouteBPopulationPrior(
-        available=anchor.route_b_available,
+        available=anchor.route_b_available or len(approved_artifacts) > 0,
         prior_direction=prior_dir,  # type: ignore[arg-type]
         transfer_risk=transfer_risk,  # type: ignore[arg-type]
         evidence_strength=evidence_strength,  # type: ignore[arg-type]
         population_percentile=None,  # No numeric prior data by default
         deviation_from_baseline=None,  # No numeric baseline by default
         explanation=route_b_explanation,
+        artifact_ids=artifact_ids,
+        model_card_ids=model_card_ids,
+        dataset_source_ids=dataset_source_ids,
+        approved_artifact_count=len(approved_artifacts),
     )
 
     # Domain-level predictions from anchor data
@@ -129,6 +154,8 @@ def analyze_branch_forecast(
         anchor.domain_anchors if anchor.route_b_available else [],
         route_a_available,
         overall_direction=trajectory if route_a_available else "unknown",
+        artifacts_by_domain=artifacts_by_domain,
+        model_cards=model_cards,
     )
 
     # Calibration divergence
@@ -266,6 +293,8 @@ def _build_domain_predictions(
     domain_anchors: list,
     route_a_available: bool,
     overall_direction: str,
+    artifacts_by_domain: dict[str, list] | None = None,
+    model_cards: dict[str, object] | None = None,
 ) -> list[DomainForecastPrediction]:
     """Build per-domain predictions from anchor data.
 
@@ -275,6 +304,8 @@ def _build_domain_predictions(
     3. overall_fallback using overall trajectory
     """
     predictions: list[DomainForecastPrediction] = []
+    artifacts_by_domain = artifacts_by_domain or {}
+    model_cards = model_cards or {}
 
     # Index anchors by domain for lookup
     anchor_by_domain: dict[str, object] = {}
@@ -297,6 +328,15 @@ def _build_domain_predictions(
             t_risk = "high"
             anchor_explanation = ""
 
+        # Look up approved artifact for this domain
+        domain_artifacts = artifacts_by_domain.get(domain, [])
+        best_artifact = None
+        best_card = None
+        if domain_artifacts:
+            # Prefer lowest transfer risk
+            best_artifact = min(domain_artifacts, key=lambda a: {"low": 0, "medium": 1, "high": 2}.get(a.transfer_risk, 2))
+            best_card = model_cards.get(best_artifact.model_id)
+
         # Resolve predicted direction with source priority
         if route_a_available and route_a_dir not in ("insufficient_data", "unknown"):
             predicted = route_a_dir
@@ -317,6 +357,11 @@ def _build_domain_predictions(
                 else f"No domain-specific data available for {domain}."
             )
 
+        # Use artifact transfer risk if available, overriding anchor risk
+        if best_artifact:
+            t_risk = best_artifact.transfer_risk
+            ev_strength = "moderate" if best_artifact.confidence in ("medium", "high") else "weak"
+
         predictions.append(DomainForecastPrediction(
             domain=domain,  # type: ignore[arg-type]
             route_a_direction=route_a_dir,  # type: ignore[arg-type]
@@ -327,6 +372,10 @@ def _build_domain_predictions(
             evidence_strength=ev_strength,  # type: ignore[arg-type]
             transfer_risk=t_risk,  # type: ignore[arg-type]
             explanation=explanation,
+            artifact_id=best_artifact.artifact_id if best_artifact else None,
+            model_card_id=best_artifact.model_id if best_artifact else None,
+            dataset_source_id=best_card.source_dataset_ids[0] if best_card and best_card.source_dataset_ids else None,
+            approved_for_route_b=best_card.approved_for_route_b if best_card else False,
         ))
 
     return predictions

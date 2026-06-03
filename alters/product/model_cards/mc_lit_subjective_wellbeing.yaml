@@ -1,0 +1,35 @@
+# Model Card: Literature priors for subjective_wellbeing domain
+# NOT a trained model. Curated population-level literature anchors.
+
+model_id: mc_lit_subjective_wellbeing
+source_dataset_ids:
+  - social_relationships_mortality_meta
+  - midus_longitudinal
+  - physical_activity_health_guidelines
+outcome_id: subjective_wellbeing_composite
+feature_mapping_ids:
+  - social_integration_construct
+  - physical_activity_construct
+model_family: literature_prior_only
+training_status: validated
+evaluation_summary: >
+  Literature prior based on social integration meta-analysis (Holt-Lunstad 2010),
+  MIDUS longitudinal data (life satisfaction, perceived mastery across waves),
+  and physical activity guidelines (mood and wellbeing association).
+  Social connectedness is consistently among the strongest predictors of
+  subjective wellbeing across cultures.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: medium
+approved_for_route_b: true
+limitations:
+  - "Subjective wellbeing set-point theory suggests stable baseline"
+  - "Adaptation effects reduce sensitivity to life changes"
+  - "Social desirability bias in self-report measures"
+  - "Cultural variation in wellbeing concepts"
+  - "Physical activity → wellbeing link is observational"
+  - "Literature priors are directional anchors, not predictions"

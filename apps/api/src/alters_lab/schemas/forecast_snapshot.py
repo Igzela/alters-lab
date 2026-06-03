@@ -29,6 +29,10 @@ class DomainPrediction(BaseModel):
     route_b_prior_direction: Literal["favorable", "unfavorable", "mixed", "unknown"] = "unknown"
     evidence_strength: Literal["weak", "moderate", "strong"] = "weak"
     transfer_risk: Literal["low", "medium", "high"] = "high"
+    artifact_id: str | None = None
+    model_card_id: str | None = None
+    dataset_source_id: str | None = None
+    approved_for_route_b: bool = False
 
 
 class ForecastSummarySnapshot(BaseModel):

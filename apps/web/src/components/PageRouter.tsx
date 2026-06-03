@@ -19,6 +19,7 @@ const PredictorProfile = lazy(() => import('../pages/PredictorProfile'))
 const OutcomeTargets = lazy(() => import('../pages/OutcomeTargets'))
 const BranchForecast = lazy(() => import('../pages/BranchForecast'))
 const ForecastCalibration = lazy(() => import('../pages/ForecastCalibration'))
+const PublicPriors = lazy(() => import('../pages/PublicPriors'))
 
 export default function PageRouter() {
   return (
@@ -42,6 +43,7 @@ export default function PageRouter() {
         <Route path="/outcome-targets" element={<OutcomeTargets />} />
         <Route path="/branch-forecast" element={<BranchForecast />} />
         <Route path="/forecast-calibration" element={<ForecastCalibration />} />
+        <Route path="/public-priors" element={<PublicPriors />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

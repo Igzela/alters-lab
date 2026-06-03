@@ -5571,6 +5571,205 @@
           }
         }
       }
+    },
+    "/public-priors/artifacts": {
+      "get": {
+        "tags": [
+          "public-priors"
+        ],
+        "summary": "List Artifacts",
+        "operationId": "list_artifacts_public_priors_artifacts_get",
+        "parameters": [
+          {
+            "name": "approved_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Approved Only"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public-priors/artifacts/{artifact_id}": {
+      "get": {
+        "tags": [
+          "public-priors"
+        ],
+        "summary": "Get Artifact By Id",
+        "operationId": "get_artifact_by_id_public_priors_artifacts__artifact_id__get",
+        "parameters": [
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Artifact Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public-priors/artifacts/domain/{domain}": {
+      "get": {
+        "tags": [
+          "public-priors"
+        ],
+        "summary": "List Artifacts By Domain",
+        "operationId": "list_artifacts_by_domain_public_priors_artifacts_domain__domain__get",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Domain"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public-priors/model-cards": {
+      "get": {
+        "tags": [
+          "public-priors"
+        ],
+        "summary": "List All Model Cards",
+        "operationId": "list_all_model_cards_public_priors_model_cards_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public-priors/model-cards/{model_id}": {
+      "get": {
+        "tags": [
+          "public-priors"
+        ],
+        "summary": "Get Model Card By Id",
+        "operationId": "get_model_card_by_id_public_priors_model_cards__model_id__get",
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public-priors/coverage": {
+      "get": {
+        "tags": [
+          "public-priors"
+        ],
+        "summary": "Domain Coverage",
+        "operationId": "domain_coverage_public_priors_coverage_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9422,6 +9621,44 @@
             "type": "string",
             "title": "Explanation",
             "default": ""
+          },
+          "artifact_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Artifact Id"
+          },
+          "model_card_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Card Id"
+          },
+          "dataset_source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Source Id"
+          },
+          "approved_for_route_b": {
+            "type": "boolean",
+            "title": "Approved For Route B",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -16006,6 +16243,32 @@
           "explanation": {
             "type": "string",
             "title": "Explanation"
+          },
+          "artifact_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Artifact Ids"
+          },
+          "model_card_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Model Card Ids"
+          },
+          "dataset_source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Dataset Source Ids"
+          },
+          "approved_artifact_count": {
+            "type": "integer",
+            "title": "Approved Artifact Count",
+            "default": 0
           }
         },
         "additionalProperties": false,

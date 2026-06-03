@@ -11,6 +11,7 @@ dist/
 *.deb
 
 # Node
+node_modules/
 apps/web/node_modules/
 apps/web/dist/
 

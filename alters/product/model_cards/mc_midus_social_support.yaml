@@ -1,0 +1,30 @@
+# Model Card: MIDUS Social Support Quality baseline table
+
+model_id: mc_midus_social_support
+source_dataset_ids:
+  - midus1
+  - midus2
+  - midus3
+outcome_id: social_support_quality
+feature_mapping_ids:
+  - social_support_variables
+model_family: baseline_table
+training_status: validated
+evaluation_summary: >
+  Average of MIDUS social support scales: availability of support and satisfaction
+  with support. Data confirmed via raw data inspection (variables B1SCALL, B1SCSAT).
+  Continuous, higher = better support.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: high
+approved_for_route_b: true
+limitations:
+  - "Only available in MIDUS"
+  - "Self-reported quality may differ from actual support received"
+  - "Scale items may not capture digital/remote support patterns"
+  - "Cross-wave aggregate comparison only"
+  - "High transfer risk caps confidence at medium"

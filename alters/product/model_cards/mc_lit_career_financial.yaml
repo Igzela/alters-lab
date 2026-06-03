@@ -1,0 +1,35 @@
+# Model Card: Literature priors for career_education and financial domains
+# NOT a trained model. Curated population-level literature anchors.
+
+model_id: mc_lit_career_financial
+source_dataset_ids:
+  - big_five_consequential_outcomes
+  - nlsy79_non_cognitive
+  - nlsy79_longitudinal
+  - self_control_longitudinal
+outcome_id: career_financial_composite
+feature_mapping_ids:
+  - conscientiousness_construct
+  - self_regulation_construct
+model_family: literature_prior_only
+training_status: validated
+evaluation_summary: >
+  Literature prior based on meta-analyses of personality-outcome correlations.
+  Roberts et al. (2007) meta-analysis covers job performance and income.
+  Heckman et al. (2006) NLSY79 analysis links non-cognitive skills to earnings.
+  Moffitt et al. (2011) Dunedin cohort links self-control to financial outcomes.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: medium
+approved_for_route_b: true
+limitations:
+  - "Personality-outcome correlations are population-level; individual variation is large"
+  - "Effect sizes vary by study, culture, and era"
+  - "Does not account for structural barriers, luck, or systemic factors"
+  - "Conscientiousness measurement varies across instruments"
+  - "Financial outcomes depend on many factors beyond personality"
+  - "Literature priors are directional anchors, not predictions"

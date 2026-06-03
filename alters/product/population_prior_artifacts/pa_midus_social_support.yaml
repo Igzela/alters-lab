@@ -1,0 +1,24 @@
+# Population Prior Artifact: MIDUS Social Support Quality baseline table
+
+artifact_id: pa_midus_social_support
+model_id: mc_midus_social_support
+generated_at: "2026-06-03T00:00:00Z"
+domain: relationship
+prior_type: baseline_table
+prior_direction: favorable
+probability_band: null
+population_percentile: null
+deviation_from_baseline: null
+confidence: medium
+transfer_risk: high
+explanation: >
+  Social support quality baseline from MIDUS waves 1-3. Most respondents report
+  moderate to high social support availability and satisfaction. Cross-wave aggregate
+  shows relatively stable support patterns.
+limitations:
+  - "Only available in MIDUS"
+  - "Self-reported quality may differ from actual support received"
+  - "Scale items may not capture digital/remote support patterns"
+  - "Cross-wave aggregate comparison only"
+  - "High transfer risk caps confidence at medium"
+  - "This is a population baseline, not an individual prediction"
