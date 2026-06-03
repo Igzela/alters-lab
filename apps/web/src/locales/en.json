@@ -572,6 +572,11 @@
       "modelCards": "Model Cards"
     },
     "coverage": {
+      "baselineSummary": "Baseline Summary",
+      "domainsApproved": "Domains Approved",
+      "totalArtifacts": "Total Artifacts",
+      "lowRiskDomains": "Low-Risk Domains",
+      "sourceDatasets": "Source Datasets",
       "domainMatrix": "Domain Coverage Matrix",
       "domain": "Domain",
       "status": "Status",
@@ -585,7 +590,9 @@
     },
     "artifacts": {
       "empty": "No approved artifacts yet.",
-      "limitations": "Limitations"
+      "limitations": "Limitations",
+      "transferRiskDetail": "Transfer Risk & Missingness",
+      "highRiskWarning": "High transfer risk: this prior has limited applicability to your individual situation."
     },
     "modelCards": {
       "empty": "No model cards found.",
@@ -593,7 +600,11 @@
       "status": "Training Status",
       "outcome": "Outcome",
       "datasets": "Source Datasets",
-      "limitations": "Limitations"
+      "limitations": "Limitations",
+      "featureMappings": "Feature Mappings / Value Labels",
+      "calibrationMetrics": "Calibration Metrics",
+      "transferRiskDetail": "Transfer Risk & Validation",
+      "highRiskWarning": "High transfer risk: calibration metrics may not transfer to your population."
     }
   }
 }

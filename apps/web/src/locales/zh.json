@@ -572,6 +572,11 @@
       "modelCards": "模型卡片"
     },
     "coverage": {
+      "baselineSummary": "基线摘要",
+      "domainsApproved": "已批准领域",
+      "totalArtifacts": "制品总数",
+      "lowRiskDomains": "低风险领域",
+      "sourceDatasets": "源数据集",
       "domainMatrix": "领域覆盖矩阵",
       "domain": "领域",
       "status": "状态",
@@ -585,7 +590,9 @@
     },
     "artifacts": {
       "empty": "暂无已批准的制品。",
-      "limitations": "局限性"
+      "limitations": "局限性",
+      "transferRiskDetail": "迁移风险与缺失性",
+      "highRiskWarning": "高迁移风险：此先验对您个人情况的适用性有限。"
     },
     "modelCards": {
       "empty": "未找到模型卡片。",
@@ -593,7 +600,11 @@
       "status": "训练状态",
       "outcome": "结果",
       "datasets": "源数据集",
-      "limitations": "局限性"
+      "limitations": "局限性",
+      "featureMappings": "特征映射 / 值标签",
+      "calibrationMetrics": "校准指标",
+      "transferRiskDetail": "迁移风险与验证",
+      "highRiskWarning": "高迁移风险：校准指标可能无法迁移到您的人群。"
     }
   }
 }

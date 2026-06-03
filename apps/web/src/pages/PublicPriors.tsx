@@ -108,8 +108,37 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
 
   const domains = Object.keys(data)
 
+  const approvedCount = domains.filter(d => data[d].has_approved_artifact).length
+  const totalArtifacts = domains.reduce((sum, d) => sum + data[d].artifact_count, 0)
+  const lowRiskCount = domains.filter(d => data[d].best_transfer_risk === 'low').length
+
   return (
     <div className="space-y-4">
+      {/* Baseline Summary */}
+      <Card>
+        <div className="p-4">
+          <h3 className="font-semibold mb-3">{t('publicPriors.coverage.baselineSummary')}</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>{approvedCount}/5</div>
+              <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('publicPriors.coverage.domainsApproved')}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>{totalArtifacts}</div>
+              <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('publicPriors.coverage.totalArtifacts')}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>{lowRiskCount}</div>
+              <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('publicPriors.coverage.lowRiskDomains')}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>2</div>
+              <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('publicPriors.coverage.sourceDatasets')}</div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       <Card>
         <div className="p-4">
           <h3 className="font-semibold mb-3">{t('publicPriors.coverage.domainMatrix')}</h3>
@@ -197,6 +226,9 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
     transfer_risk: string
     explanation: string
     limitations: string[]
+    probability_band?: string | null
+    population_percentile?: number | null
+    deviation_from_baseline?: number | null
   }> } | undefined
 
   if (!data?.artifacts?.length) {
@@ -233,8 +265,31 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
             <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
               {artifact.explanation}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Badge variant="info">Direction: {artifact.prior_direction}</Badge>
+              {artifact.prior_type === 'baseline_table' && (
+                <Badge variant="muted">Baseline Table</Badge>
+              )}
+              {artifact.population_percentile != null && (
+                <Badge variant="info">Percentile: {artifact.population_percentile}</Badge>
+              )}
+              {artifact.probability_band && (
+                <Badge variant="info">Band: {artifact.probability_band}</Badge>
+              )}
+            </div>
+            {/* Missingness / Transfer Risk Detail */}
+            <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
+              <div className="font-medium mb-1">{t('publicPriors.artifacts.transferRiskDetail')}</div>
+              <div className="flex gap-4">
+                <span>Transfer Risk: <Badge variant={RISK_COLORS[artifact.transfer_risk] || 'muted'}>{artifact.transfer_risk}</Badge></span>
+                <span>Confidence: <Badge variant={CONFIDENCE_COLORS[artifact.confidence] || 'muted'}>{artifact.confidence}</Badge></span>
+                <span>Type: {artifact.prior_type}</span>
+              </div>
+              {artifact.transfer_risk === 'high' && (
+                <p className="mt-1" style={{ color: 'var(--color-error)' }}>
+                  {t('publicPriors.artifacts.highRiskWarning')}
+                </p>
+              )}
             </div>
             {artifact.limitations?.length > 0 && (
               <details className="mt-2">
@@ -273,12 +328,19 @@ function ModelCardsTab({
     model_id: string
     source_dataset_ids: string[]
     outcome_id: string
+    feature_mapping_ids: string[]
     model_family: string
     training_status: string
     evaluation_summary: string
     transfer_risk: string
     approved_for_route_b: boolean
     limitations: string[]
+    calibration_metrics?: {
+      brier_score?: number | null
+      calibration_slope?: number | null
+      auc?: number | null
+      r2?: number | null
+    }
   }> } | undefined
 
   if (!data?.model_cards?.length) {
@@ -348,6 +410,54 @@ function ModelCardsTab({
                 {selected.evaluation_summary}
               </p>
             )}
+            {/* Value Labels / Feature Mappings */}
+            {selected.feature_mapping_ids?.length > 0 && (
+              <div className="mt-2">
+                <h5 className="text-xs font-medium mb-1">{t('publicPriors.modelCards.featureMappings')}</h5>
+                <div className="flex flex-wrap gap-1">
+                  {selected.feature_mapping_ids.map(fid => (
+                    <Badge key={fid} variant="muted">{fid}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Calibration Metrics */}
+            {selected.calibration_metrics && Object.values(selected.calibration_metrics).some(v => v != null) && (
+              <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
+                <div className="font-medium mb-1">{t('publicPriors.modelCards.calibrationMetrics')}</div>
+                <div className="flex gap-4 flex-wrap">
+                  {selected.calibration_metrics.brier_score != null && (
+                    <span>Brier: {selected.calibration_metrics.brier_score.toFixed(3)}</span>
+                  )}
+                  {selected.calibration_metrics.calibration_slope != null && (
+                    <span>Slope: {selected.calibration_metrics.calibration_slope.toFixed(3)}</span>
+                  )}
+                  {selected.calibration_metrics.auc != null && (
+                    <span>AUC: {selected.calibration_metrics.auc.toFixed(3)}</span>
+                  )}
+                  {selected.calibration_metrics.r2 != null && (
+                    <span>R²: {selected.calibration_metrics.r2.toFixed(3)}</span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Missingness / Transfer Risk */}
+            <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
+              <div className="font-medium mb-1">{t('publicPriors.modelCards.transferRiskDetail')}</div>
+              <div className="flex gap-4">
+                <span>Transfer Risk: <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>{selected.transfer_risk}</Badge></span>
+                <span>Status: {selected.training_status}</span>
+                <span>Approved: {selected.approved_for_route_b ? 'Yes' : 'No'}</span>
+              </div>
+              {selected.transfer_risk === 'high' && (
+                <p className="mt-1" style={{ color: 'var(--color-error)' }}>
+                  {t('publicPriors.modelCards.highRiskWarning')}
+                </p>
+              )}
+            </div>
+
             {selected.limitations?.length > 0 && (
               <details className="mt-2" open>
                 <summary className="text-xs font-medium cursor-pointer" style={{ color: 'var(--color-text-secondary)' }}>
