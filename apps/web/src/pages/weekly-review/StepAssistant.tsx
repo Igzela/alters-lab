@@ -122,7 +122,7 @@ export default function StepAssistant({
         <div className="mt-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
           <p>{t('weeklyReview.statusCompleted')}</p>
           <p>{t('weeklyReview.nextCorrection')} {session.next_week_primary_correction}</p>
-          <p>{t('weeklyReview.supportingActions')} {session.supporting_actions.join(', ') || t('weeklyReview.none')}</p>
+          <p>{t('weeklyReview.supportingActions')} {(session.supporting_actions ?? []).join(', ') || t('weeklyReview.none')}</p>
         </div>
       )}
     </Card>

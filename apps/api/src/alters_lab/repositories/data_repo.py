@@ -13,6 +13,8 @@ This replaces:
 from __future__ import annotations
 
 import shutil
+import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -270,10 +272,101 @@ class DataRepo:
                     results.append(data)
         return results
 
-    # ─── Product data (alters/product/) — via p6_runtime ───
+    # ─── Product data (alters/product/) ───
+
+    _PRODUCT_AREAS = {
+        "weekly_notes": "alters/product/weekly_notes",
+        "weekly_reviews": "alters/product/weekly_reviews",
+        "calibration_records": "alters/product/calibration_records",
+        "self_deception_challenges": "alters/product/self_deception_challenges",
+        "alter_recommendations": "alters/product/alter_recommendations",
+        "reminders": "alters/product/reminders",
+        "pattern_reviews": "alters/product/pattern_reviews",
+        "exports": "alters/product/exports",
+        "behavior_validation": "alters/product/behavior_validation",
+        "behavior_metrics": "alters/product/behavior_metrics/weekly_records",
+        "branch_milestones": "alters/product/branch_milestones",
+        "predictor_profiles": "alters/product/predictor_profiles",
+        "branch_outcome_targets": "alters/product/branch_outcome_targets",
+        "forecast_snapshots": "alters/product/forecast_snapshots",
+        "external_evidence": "alters/product/external_evidence",
+        "forecast_evaluations": "alters/product/forecast_evaluations",
+    }
 
     def product_dir(self) -> Path:
         return self._layout.product_data_dir
+
+    def _area_dir(self, area: str) -> Path:
+        if area not in self._PRODUCT_AREAS:
+            raise ValueError(f"Unknown product area: {area}")
+        return self.repo_root / self._PRODUCT_AREAS[area]
+
+    def list_records(self, area: str) -> list[dict[str, Any]]:
+        results = []
+        directory = self._area_dir(area)
+        if not directory.exists():
+            return results
+        for p in sorted(directory.glob("*.yaml")):
+            if p.name.startswith("_"):
+                continue
+            data = io.read_yaml(p)
+            if isinstance(data, dict):
+                results.append(data)
+        return results
+
+    def read_record(self, area: str, record_id: str) -> dict[str, Any] | None:
+        path = self._area_dir(area) / f"{record_id}.yaml"
+        return io.read_yaml(path)
+
+    def write_record(self, area: str, record_id: str, data: dict) -> Path:
+        path = self._area_dir(area) / f"{record_id}.yaml"
+        io.write_yaml(path, data)
+        return path
+
+    def delete_record(self, area: str, record_id: str) -> bool:
+        path = self._area_dir(area) / f"{record_id}.yaml"
+        if path.exists():
+            path.unlink()
+            return True
+        return False
+
+    # ─── Transactions ───
+
+    @contextmanager
+    def transaction(self, *paths: Path):
+        """Multi-file transaction: snapshot before, rollback on exception.
+
+        Usage:
+            with repo.transaction(repo.snapshot_path(), repo.branches_path()):
+                repo.write_snapshot(...)
+                repo.write_branches(...)  # if this fails, snapshot is restored
+        """
+        snapshots: dict[Path, bytes] = {}
+        tmp_files: dict[Path, Path] = {}
+        target_list = list(paths)
+
+        try:
+            for p in target_list:
+                if p.exists():
+                    snapshots[p] = p.read_bytes()
+                    tmp = tempfile.NamedTemporaryFile(
+                        dir=p.parent, delete=False, prefix=f".txn-{p.name}."
+                    )
+                    tmp.write(snapshots[p])
+                    tmp.close()
+                    tmp_files[p] = Path(tmp.name)
+            yield
+        except Exception:
+            for p, original in snapshots.items():
+                p.write_bytes(original)
+            for tmp_path in tmp_files.values():
+                if tmp_path.exists():
+                    tmp_path.unlink()
+            raise
+        else:
+            for tmp_path in tmp_files.values():
+                if tmp_path.exists():
+                    tmp_path.unlink()
 
     # ─── Config ───
 

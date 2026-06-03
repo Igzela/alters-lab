@@ -71,7 +71,7 @@ export type WizardAction =
   | { type: 'SAVE_EDIT_COMPLETE'; record: WeeklyNoteRecord; message: string }
   | { type: 'START_REVIEW_COMPLETE'; session: WeeklyReviewSession; message: string }
   | { type: 'COMPLETE_REVIEW_COMPLETE'; session: WeeklyReviewSession; correction: string; message: string }
-  | { type: 'SUBMIT_SCORE_COMPLETE'; score: ActionAlignmentScore; scorePath: string; message: string }
+  | { type: 'SUBMIT_SCORE_COMPLETE'; score: ActionAlignmentScore; scorePath: string | null; message: string }
   | { type: 'RESET' }
 
 export const INITIAL_WIZARD_STATE: WizardState = {

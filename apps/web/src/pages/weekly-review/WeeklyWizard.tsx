@@ -122,7 +122,7 @@ export default function WeeklyWizard() {
     dispatch({
       type: 'SUBMIT_SCORE_COMPLETE',
       score: result.score,
-      scorePath: result.score_path,
+      scorePath: result.score_path ?? null,
       message: `${t('weeklyReview.alignmentSaved')} ${result.score.score_id}`,
     })
   })

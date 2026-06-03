@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from alters_lab.errors import AppError
 from alters_lab.logging_config import setup_logging
 from alters_lab.middleware import RateLimitMiddleware
+from alters_lab.repositories.data_repo import DataRepo, get_data_repo
 from alters_lab.services.local_app import configure_frontend_static
 
 _DEV_MODE = os.environ.get("ALTERS_LAB_MODE") != "packaged"
@@ -148,6 +149,9 @@ async def unhandled_error_handler(request: Request, exc: Exception) -> JSONRespo
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "alters-lab-api"}
+
+
+app.dependency_overrides[get_data_repo] = get_data_repo
 
 
 for module_name in _ROUTER_MODULES:
