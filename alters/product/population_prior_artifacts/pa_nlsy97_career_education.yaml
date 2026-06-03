@@ -1,0 +1,30 @@
+# Population Prior Artifact: NLSY97 Career/Education data-backed baseline
+
+artifact_id: pa_nlsy97_career_education
+model_id: mc_nlsy97_career_education
+generated_at: "2026-06-03T00:00:00Z"
+domain: career_education
+prior_type: baseline_table
+prior_direction: favorable
+probability_band: null
+population_percentile: null
+deviation_from_baseline: null
+confidence: medium
+transfer_risk: high
+explanation: >
+  Career/education baseline from NLSY97 2005 round (respondents age 25-29).
+  Highest grade completed: mean=12.96 (about 1 year college), median=12 (HS grad).
+  Highest degree: 60% HS diploma, 12% Bachelor's, 13% no degree.
+  Population-level descriptive statistics from actual survey data.
+limitations:
+  - "Cohort born 1980-84 — transfer to other generations limited"
+  - "2005 snapshot only — no longitudinal follow-up linked"
+  - "Self-reported education levels"
+  - "Sample of 50K rows from full NLSY97 dataset"
+  - "Transfer risk high due to cohort specificity"
+  - "This is a population baseline, not an individual prediction"
+artifact_class: data_backed_baseline
+actual_data_used: true
+baseline_table_id: nlsy97_route_b_baselines_v2
+value_labels_confirmed: true
+missingness_reviewed: true

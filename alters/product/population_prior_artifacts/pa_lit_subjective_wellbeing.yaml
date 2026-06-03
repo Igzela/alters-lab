@@ -16,6 +16,10 @@ explanation: >
   wellbeing across cultures (Holt-Lunstad 2010). Physical activity is associated
   with improved mood and subjective wellbeing. MIDUS data shows life satisfaction
   and perceived mastery are stable across waves.
+artifact_class: contextual_prior
+actual_data_used: false
+value_labels_confirmed: false
+missingness_reviewed: false
 limitations:
   - "Subjective wellbeing set-point theory suggests stable baseline"
   - "Adaptation effects reduce sensitivity to life changes"

@@ -97,11 +97,14 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
   const data = coverage.data as Record<string, {
     has_approved_artifact: boolean
     artifact_count: number
+    contextual_prior_count: number
     best_confidence: string
     best_transfer_risk: string
     prior_direction: string
     model_family: string
+    artifact_class: string
     artifact_ids: string[]
+    route_b_status: string
   }> | undefined
 
   if (!data) return null
@@ -147,11 +150,11 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                   <th className="text-left py-2 px-2 font-medium">{t('publicPriors.coverage.domain')}</th>
-                  <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.status')}</th>
+                  <th className="text-center py-2 px-2 font-medium">Route B Status</th>
+                  <th className="text-center py-2 px-2 font-medium">Class</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.direction')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.confidence')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.transferRisk')}</th>
-                  <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.modelFamily')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.artifacts')}</th>
                 </tr>
               </thead>
@@ -162,10 +165,11 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                     <tr key={domain} style={{ borderBottom: '1px solid var(--color-border)' }}>
                       <td className="py-2 px-2 font-medium">{DOMAIN_LABELS[domain] || domain}</td>
                       <td className="py-2 px-2 text-center">
-                        <Badge variant={d.has_approved_artifact ? 'success' : 'muted'}>
-                          {d.has_approved_artifact ? 'Approved' : 'None'}
+                        <Badge variant={d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'muted'}>
+                          {d.route_b_status === 'approved' ? 'Route B Approved' : d.route_b_status === 'contextual_only' ? 'Contextual Only' : 'No Prior'}
                         </Badge>
                       </td>
+                      <td className="py-2 px-2 text-center text-xs">{d.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : d.artifact_class === 'contextual_prior' ? 'Contextual' : d.artifact_class}</td>
                       <td className="py-2 px-2 text-center capitalize">{d.prior_direction}</td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={CONFIDENCE_COLORS[d.best_confidence] || 'muted'}>
@@ -177,8 +181,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                           {d.best_transfer_risk}
                         </Badge>
                       </td>
-                      <td className="py-2 px-2 text-center text-xs">{d.model_family}</td>
-                      <td className="py-2 px-2 text-center">{d.artifact_count}</td>
+                      <td className="py-2 px-2 text-center">{d.artifact_count}{d.contextual_prior_count > 0 ? ` +${d.contextual_prior_count}c` : ''}</td>
                     </tr>
                   )
                 })}
@@ -197,9 +200,11 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
           <div className="mt-3 flex gap-2 flex-wrap">
             {domains.map(domain => {
               const d = data[domain]
+              const variant = d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'error'
+              const label = d.route_b_status === 'approved' ? 'Route B Approved' : d.route_b_status === 'contextual_only' ? 'Contextual Only' : 'No Prior'
               return (
-                <Badge key={domain} variant={d.has_approved_artifact ? 'success' : 'error'}>
-                  {DOMAIN_LABELS[domain] || domain}: {d.has_approved_artifact ? 'Route B Available' : 'Route A Only'}
+                <Badge key={domain} variant={variant}>
+                  {DOMAIN_LABELS[domain] || domain}: {label}
                 </Badge>
               )
             })}
@@ -229,6 +234,11 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
     probability_band?: string | null
     population_percentile?: number | null
     deviation_from_baseline?: number | null
+    artifact_class?: string
+    actual_data_used?: boolean
+    baseline_table_id?: string | null
+    value_labels_confirmed?: boolean
+    missingness_reviewed?: boolean
   }> } | undefined
 
   if (!data?.artifacts?.length) {
@@ -267,8 +277,23 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
             </p>
             <div className="flex items-center gap-2 flex-wrap">
               <Badge variant="info">Direction: {artifact.prior_direction}</Badge>
-              {artifact.prior_type === 'baseline_table' && (
-                <Badge variant="muted">Baseline Table</Badge>
+              {artifact.artifact_class === 'data_backed_baseline' && (
+                <Badge variant="success">Data-Backed</Badge>
+              )}
+              {artifact.artifact_class === 'contextual_prior' && (
+                <Badge variant="warning">Contextual Only</Badge>
+              )}
+              {artifact.actual_data_used && (
+                <Badge variant="success">Actual Data</Badge>
+              )}
+              {artifact.value_labels_confirmed && (
+                <Badge variant="info">Value Labels Confirmed</Badge>
+              )}
+              {artifact.missingness_reviewed && (
+                <Badge variant="info">Missingness Reviewed</Badge>
+              )}
+              {artifact.baseline_table_id && (
+                <Badge variant="muted">Table: {artifact.baseline_table_id}</Badge>
               )}
               {artifact.population_percentile != null && (
                 <Badge variant="info">Percentile: {artifact.population_percentile}</Badge>
@@ -335,6 +360,10 @@ function ModelCardsTab({
     transfer_risk: string
     approved_for_route_b: boolean
     limitations: string[]
+    artifact_class?: string
+    approval_level?: string
+    approval_reason?: string
+    approval_blockers?: string[]
     calibration_metrics?: {
       brier_score?: number | null
       calibration_slope?: number | null
@@ -370,8 +399,11 @@ function ModelCardsTab({
             }}
           >
             {card.model_id}
-            {card.approved_for_route_b && (
-              <Badge variant="success" className="ml-1.5">Approved</Badge>
+            {card.approval_level === 'route_b_approved' && (
+              <Badge variant="success" className="ml-1.5">Route B</Badge>
+            )}
+            {card.approval_level === 'lab_only' && (
+              <Badge variant="warning" className="ml-1.5">Lab Only</Badge>
             )}
           </button>
         ))}
@@ -383,9 +415,14 @@ function ModelCardsTab({
             <div className="flex items-start justify-between mb-2">
               <h4 className="font-semibold">{selected.model_id}</h4>
               <div className="flex gap-1.5">
-                <Badge variant={selected.approved_for_route_b ? 'success' : 'muted'}>
-                  {selected.approved_for_route_b ? 'Approved for Route B' : 'Not Approved'}
+                <Badge variant={selected.approval_level === 'route_b_approved' ? 'success' : selected.approval_level === 'lab_only' ? 'warning' : 'muted'}>
+                  {selected.approval_level === 'route_b_approved' ? 'Route B Approved' : selected.approval_level === 'lab_only' ? 'Lab Only' : 'Unapproved'}
                 </Badge>
+                {selected.artifact_class && (
+                  <Badge variant={selected.artifact_class === 'data_backed_baseline' ? 'success' : selected.artifact_class === 'contextual_prior' ? 'warning' : 'info'}>
+                    {selected.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : selected.artifact_class === 'contextual_prior' ? 'Contextual' : selected.artifact_class}
+                  </Badge>
+                )}
                 <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>
                   {selected.transfer_risk} risk
                 </Badge>
@@ -443,14 +480,23 @@ function ModelCardsTab({
               </div>
             )}
 
-            {/* Missingness / Transfer Risk */}
+            {/* Approval & Transfer Risk */}
             <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
-              <div className="font-medium mb-1">{t('publicPriors.modelCards.transferRiskDetail')}</div>
-              <div className="flex gap-4">
+              <div className="font-medium mb-1">Approval Status</div>
+              <div className="flex gap-4 flex-wrap">
+                <span>Level: <Badge variant={selected.approval_level === 'route_b_approved' ? 'success' : selected.approval_level === 'lab_only' ? 'warning' : 'muted'}>{selected.approval_level || 'unapproved'}</Badge></span>
+                <span>Class: {selected.artifact_class || 'unknown'}</span>
                 <span>Transfer Risk: <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>{selected.transfer_risk}</Badge></span>
-                <span>Status: {selected.training_status}</span>
-                <span>Approved: {selected.approved_for_route_b ? 'Yes' : 'No'}</span>
               </div>
+              {selected.approval_reason && (
+                <p className="mt-1">{selected.approval_reason}</p>
+              )}
+              {selected.approval_blockers && selected.approval_blockers.length > 0 && (
+                <div className="mt-1">
+                  <span style={{ color: 'var(--color-error)' }}>Blockers: </span>
+                  {selected.approval_blockers.join(', ')}
+                </div>
+              )}
               {selected.transfer_risk === 'high' && (
                 <p className="mt-1" style={{ color: 'var(--color-error)' }}>
                   {t('publicPriors.modelCards.highRiskWarning')}

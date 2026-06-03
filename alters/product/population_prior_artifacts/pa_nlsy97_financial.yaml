@@ -1,0 +1,32 @@
+# Population Prior Artifact: NLSY97 Financial data-backed baseline
+
+artifact_id: pa_nlsy97_financial
+model_id: mc_nlsy97_financial
+generated_at: "2026-06-03T00:00:00Z"
+domain: financial
+prior_type: baseline_table
+prior_direction: favorable
+probability_band: null
+population_percentile: null
+deviation_from_baseline: null
+confidence: medium
+transfer_risk: high
+explanation: >
+  Financial baseline from NLSY97 2005 round (respondents age 25-29).
+  Total family income: mean=$55,111, median=$37,650 (2005 dollars).
+  Distribution: 27% under $25K, 27% $25-50K, 15% $50-75K, 24% over $75K.
+  Population-level descriptive statistics from actual survey data.
+limitations:
+  - "Cohort born 1980-84 — transfer to other generations limited"
+  - "2005 snapshot only — no longitudinal follow-up linked"
+  - "Family income (household-level), not individual earnings"
+  - "Not inflation-adjusted (2005 dollars)"
+  - "32% missingness due to income non-response"
+  - "Sample of 50K rows from full NLSY97 dataset"
+  - "Transfer risk high due to cohort specificity"
+  - "This is a population baseline, not an individual prediction"
+artifact_class: data_backed_baseline
+actual_data_used: true
+baseline_table_id: nlsy97_route_b_baselines_v2
+value_labels_confirmed: true
+missingness_reviewed: true

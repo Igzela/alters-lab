@@ -15,6 +15,10 @@ explanation: >
   Chronic condition count baseline from MIDUS. Condition prevalence increases
   across waves as the cohort ages. Cross-wave aggregate shows expected age-related
   pattern of increasing chronic conditions.
+artifact_class: data_backed_baseline
+actual_data_used: true
+value_labels_confirmed: true
+missingness_reviewed: true
 limitations:
   - "Self-reported diagnosis, not clinically verified"
   - "Screening behavior varies by education and access"

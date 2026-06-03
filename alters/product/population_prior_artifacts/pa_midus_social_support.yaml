@@ -15,6 +15,10 @@ explanation: >
   Social support quality baseline from MIDUS waves 1-3. Most respondents report
   moderate to high social support availability and satisfaction. Cross-wave aggregate
   shows relatively stable support patterns.
+artifact_class: data_backed_baseline
+actual_data_used: true
+value_labels_confirmed: true
+missingness_reviewed: true
 limitations:
   - "Only available in MIDUS"
   - "Self-reported quality may differ from actual support received"

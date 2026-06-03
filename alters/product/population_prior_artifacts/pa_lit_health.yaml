@@ -16,6 +16,10 @@ explanation: >
   associated with reduced mortality and morbidity. Social integration predicts 50%
   increased survival odds in meta-analysis of 148 prospective studies. Sleep
   regularity is associated with metabolic health independent of duration.
+artifact_class: contextual_prior
+actual_data_used: false
+value_labels_confirmed: false
+missingness_reviewed: false
 limitations:
   - "WHO guidelines are population averages; individual response varies"
   - "Social integration effect sizes are observational"

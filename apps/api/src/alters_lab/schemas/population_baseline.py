@@ -118,6 +118,44 @@ class PopulationBaselineModelCard(BaseModel):
     transfer_risk: Literal["low", "medium", "high"]
     approved_for_route_b: bool = False
     limitations: list[str] = Field(default_factory=list)
+    artifact_class: Literal[
+        "contextual_prior", "data_backed_baseline", "calibrated_model"
+    ] = "contextual_prior"
+    approval_level: Literal["unapproved", "lab_only", "route_b_approved"] = (
+        "unapproved"
+    )
+    approval_reason: str = ""
+    approval_blockers: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _enforce_approval_guardrails(self) -> PopulationBaselineModelCard:
+        """Enforce approval-level consistency rules."""
+        # Sync approved_for_route_b with approval_level
+        if self.approval_level == "route_b_approved":
+            object.__setattr__(self, "approved_for_route_b", True)
+        elif self.approval_level in ("unapproved", "lab_only"):
+            object.__setattr__(self, "approved_for_route_b", False)
+
+        # Contextual priors cannot be route_b_approved
+        if (
+            self.artifact_class == "contextual_prior"
+            and self.approval_level == "route_b_approved"
+        ):
+            raise ValueError(
+                "contextual_prior cannot be route_b_approved. "
+                "Upgrade to data_backed_baseline or calibrated_model first."
+            )
+
+        # Route B approval requires empty blockers
+        if (
+            self.approval_level == "route_b_approved"
+            and self.approval_blockers
+        ):
+            raise ValueError(
+                f"Cannot approve for Route B with blockers: {self.approval_blockers}"
+            )
+
+        return self
 
 
 class PopulationPriorArtifact(BaseModel):
@@ -138,12 +176,39 @@ class PopulationPriorArtifact(BaseModel):
     transfer_risk: Literal["low", "medium", "high"]
     explanation: str
     limitations: list[str] = Field(default_factory=list)
+    artifact_class: Literal[
+        "contextual_prior", "data_backed_baseline", "calibrated_model"
+    ] = "contextual_prior"
+    actual_data_used: bool = False
+    baseline_table_id: str | None = None
+    value_labels_confirmed: bool = False
+    missingness_reviewed: bool = False
+    validation_report_id: str | None = None
 
     @model_validator(mode="after")
     def _enforce_guardrails(self) -> PopulationPriorArtifact:
-        """Enforce guardrails on numeric priors and confidence caps."""
+        """Enforce guardrails on artifact classes and confidence caps."""
         # High transfer risk caps confidence at low or medium
         if self.transfer_risk == "high" and self.confidence == "high":
             object.__setattr__(self, "confidence", "medium")
+
+        # Contextual priors without actual data cannot claim data-backed status
+        if (
+            self.artifact_class == "contextual_prior"
+            and self.actual_data_used
+        ):
+            raise ValueError(
+                "contextual_prior cannot have actual_data_used=true. "
+                "Use data_backed_baseline or calibrated_model."
+            )
+
+        # Data-backed baselines must have actual data
+        if (
+            self.artifact_class == "data_backed_baseline"
+            and not self.actual_data_used
+        ):
+            raise ValueError(
+                "data_backed_baseline must have actual_data_used=true."
+            )
 
         return self

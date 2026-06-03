@@ -1,0 +1,35 @@
+# Model Card: NLSY97 Career/Education baseline table
+# Data-backed baseline from NLSY97 2005 round.
+
+model_id: mc_nlsy97_career_education
+source_dataset_ids:
+  - nlsy97
+outcome_id: career_education_composite
+feature_mapping_ids:
+  - highest_grade_completed
+  - highest_degree_received
+model_family: baseline_table
+training_status: validated
+evaluation_summary: >
+  Career/education baseline from NLSY97 2005 round (respondents age 25-29).
+  Variables: S5412600 (Highest Grade Completed), S5413300 (Highest Degree).
+  Data confirmed via streaming CSV analysis of 50K-row sample.
+  Value labels from NLSY97 standard codebook conventions.
+calibration_metrics:
+  brier_score: null
+  calibration_slope: null
+  calibration_intercept: null
+  auc: null
+  r2: null
+transfer_risk: high
+approved_for_route_b: true
+artifact_class: data_backed_baseline
+approval_level: route_b_approved
+approval_reason: "Data-backed baseline from NLSY97 2005 round CSV data. Career/education variables confirmed with value labels and missingness audit."
+approval_blockers: []
+limitations:
+  - "Cohort born 1980-84 — transfer to other generations limited"
+  - "2005 snapshot only — no longitudinal follow-up linked"
+  - "Self-reported education levels"
+  - "No calibration metrics (descriptive baseline only)"
+  - "Transfer risk high due to cohort specificity"

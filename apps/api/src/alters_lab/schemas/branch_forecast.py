@@ -48,6 +48,10 @@ class RouteBPopulationPrior(BaseModel):
     model_card_ids: list[str] = Field(default_factory=list)
     dataset_source_ids: list[str] = Field(default_factory=list)
     approved_artifact_count: int = 0
+    artifact_class: Literal[
+        "contextual_prior", "data_backed_baseline", "calibrated_model", "mixed", "none"
+    ] = "none"
+    contextual_prior_ids: list[str] = Field(default_factory=list)
 
 
 class CalibrationDivergenceSummary(BaseModel):
@@ -89,6 +93,9 @@ class DomainForecastPrediction(BaseModel):
     model_card_id: str | None = None
     dataset_source_id: str | None = None
     approved_for_route_b: bool = False
+    artifact_class: Literal[
+        "contextual_prior", "data_backed_baseline", "calibrated_model", "none"
+    ] = "none"
 
 
 class BranchForecastResult(BaseModel):

@@ -16,6 +16,10 @@ explanation: >
   and income at the population level (Moffitt et al. 2011, Roberts et al. 2007).
   However, individual financial outcomes depend on many other factors including
   structural conditions, market forces, and luck.
+artifact_class: contextual_prior
+actual_data_used: false
+value_labels_confirmed: false
+missingness_reviewed: false
 limitations:
   - "Financial outcomes depend on many factors beyond personality"
   - "Effect sizes for personality → income are modest"

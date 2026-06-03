@@ -29,18 +29,19 @@ def prior_repo(tmp_path: Path) -> Path:
     artifacts_dir = tmp_path / "alters" / "product" / "population_prior_artifacts"
     artifacts_dir.mkdir(parents=True)
 
-    # Approved model card
+    # Approved model card (data-backed, route_b_approved)
     card = {
         "model_id": "mc_test_approved",
         "source_dataset_ids": ["test_dataset"],
         "outcome_id": "test_outcome",
         "feature_mapping_ids": ["test_feature"],
-        "model_family": "literature_prior_only",
+        "model_family": "baseline_table",
         "training_status": "validated",
         "evaluation_summary": "Test model card",
         "calibration_metrics": {},
         "transfer_risk": "medium",
-        "approved_for_route_b": True,
+        "artifact_class": "data_backed_baseline",
+        "approval_level": "route_b_approved",
         "limitations": ["Test limitation"],
     }
     (cards_dir / "mc_test_approved.yaml").write_text(yaml.dump(card))
@@ -58,22 +59,24 @@ def prior_repo(tmp_path: Path) -> Path:
     }
     (cards_dir / "mc_test_unapproved.yaml").write_text(yaml.dump(card_unapproved))
 
-    # Approved artifact
+    # Approved artifact (data-backed)
     artifact = {
         "artifact_id": "pa_test_approved",
         "model_id": "mc_test_approved",
         "generated_at": "2026-06-03T00:00:00Z",
         "domain": "health",
-        "prior_type": "textual",
+        "prior_type": "baseline_table",
         "prior_direction": "favorable",
         "confidence": "medium",
         "transfer_risk": "medium",
         "explanation": "Test artifact",
         "limitations": ["Test limitation"],
+        "artifact_class": "data_backed_baseline",
+        "actual_data_used": True,
     }
     (artifacts_dir / "pa_test_approved.yaml").write_text(yaml.dump(artifact))
 
-    # Artifact linked to unapproved model
+    # Artifact linked to unapproved model (contextual prior)
     artifact_unapproved = {
         "artifact_id": "pa_test_unapproved",
         "model_id": "mc_test_unapproved",
@@ -84,20 +87,23 @@ def prior_repo(tmp_path: Path) -> Path:
         "confidence": "low",
         "transfer_risk": "high",
         "explanation": "Unapproved artifact",
+        "artifact_class": "contextual_prior",
     }
     (artifacts_dir / "pa_test_unapproved.yaml").write_text(yaml.dump(artifact_unapproved))
 
-    # Second approved artifact for a different domain
+    # Second approved artifact for a different domain (data-backed)
     artifact2 = {
         "artifact_id": "pa_test_career",
         "model_id": "mc_test_approved",
         "generated_at": "2026-06-03T00:00:00Z",
         "domain": "career_education",
-        "prior_type": "textual",
+        "prior_type": "baseline_table",
         "prior_direction": "favorable",
         "confidence": "medium",
         "transfer_risk": "medium",
         "explanation": "Career test artifact",
+        "artifact_class": "data_backed_baseline",
+        "actual_data_used": True,
     }
     (artifacts_dir / "pa_test_career.yaml").write_text(yaml.dump(artifact2))
 
@@ -116,7 +122,9 @@ def test_get_model_card(prior_repo: Path):
     card = get_model_card("mc_test_approved", repo_root=prior_repo)
     assert card.model_id == "mc_test_approved"
     assert card.approved_for_route_b is True
-    assert card.model_family == "literature_prior_only"
+    assert card.approval_level == "route_b_approved"
+    assert card.artifact_class == "data_backed_baseline"
+    assert card.model_family == "baseline_table"
 
 
 def test_get_model_card_not_found(prior_repo: Path):

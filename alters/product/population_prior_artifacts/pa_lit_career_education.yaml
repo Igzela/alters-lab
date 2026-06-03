@@ -18,6 +18,10 @@ explanation: >
   career success. Individuals with high conscientiousness or strong follow-through
   behavior tend to have better career outcomes at the population level. However,
   individual variation is large and this is not destiny.
+artifact_class: contextual_prior
+actual_data_used: false
+value_labels_confirmed: false
+missingness_reviewed: false
 limitations:
   - "Personality-outcome correlations are population-level; individual variation is large"
   - "Effect sizes vary by study, culture, and era"

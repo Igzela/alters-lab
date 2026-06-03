@@ -1,0 +1,62 @@
+# NLSY97 Route B Baselines v2 Configuration
+# Data-backed baselines for career_education and financial domains
+# Uses 2005 round data (respondents age 25-29, born 1980-84)
+
+version: "2.0"
+data_source: nlsy97
+survey_year: 2005
+respondent_age_range: "25-29"
+sample_size: 50000
+
+variables:
+  career_education:
+    - code: S5412600
+      display_label: Highest Grade Completed (Ever)
+      measurement_type: continuous
+      value_range: "0-20"
+      n_valid: 7271
+      missingness_rate: 19.07
+
+    - code: S5413300
+      display_label: Highest Degree Ever Received
+      measurement_type: ordinal
+      value_labels:
+        0: None
+        1: GED
+        2: High school diploma
+        3: Associate degree
+        4: Bachelor's degree
+        5: Master's degree
+        6: Doctorate
+        7: Professional degree
+      n_valid: 7317
+      missingness_rate: 18.56
+
+  financial:
+    - code: S5412800
+      display_label: Total Family Income
+      measurement_type: continuous
+      n_valid: 6110
+      missingness_rate: 31.99
+      income_bands:
+        "$0": 121
+        "$1-$9,999": 800
+        "$10,000-$24,999": 1178
+        "$25,000-$49,999": 1624
+        "$50,000-$74,999": 920
+        "$75,000-$99,999": 654
+        "$100,000-$149,999": 467
+        "$150,000+": 346
+
+limitations:
+  - 2005 round baseline only — longitudinal follow-up not linked
+  - Cohort born 1980-84 — transfer to other generations limited
+  - Family income is household-level, not individual earnings
+  - No individual-level data committed
+  - Transfer risk: high (cohort specificity)
+
+safety:
+  no_raw_data_committed: true
+  no_individual_data: true
+  no_personal_probabilities: true
+  no_life_score: true

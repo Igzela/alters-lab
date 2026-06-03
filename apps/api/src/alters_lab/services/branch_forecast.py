@@ -29,7 +29,7 @@ from alters_lab.services.branch_base_rate_anchor import analyze_base_rate_anchor
 from alters_lab.services.branch_outcome_targets import list_targets_for_branch
 from alters_lab.services.calibration_divergence import analyze_calibration_divergence
 from alters_lab.services.p6_runtime import utc_now
-from alters_lab.services.public_prior import list_approved_artifacts, list_model_cards
+from alters_lab.services.public_prior import list_approved_artifacts, list_contextual_priors, list_model_cards
 
 
 def analyze_branch_forecast(
@@ -93,8 +93,9 @@ def analyze_branch_forecast(
     )
     anchor = analyze_base_rate_anchor(anchor_req, repo_root=repo_root)
 
-    # Load approved population prior artifacts
+    # Load approved population prior artifacts (data-backed only)
     approved_artifacts = list_approved_artifacts(repo_root=repo_root)
+    contextual_priors = list_contextual_priors(repo_root=repo_root)
     model_cards = {c.model_id: c for c in list_model_cards(repo_root=repo_root)}
     artifacts_by_domain: dict[str, list] = {}
     for a in approved_artifacts:
@@ -103,8 +104,10 @@ def analyze_branch_forecast(
     artifact_ids: list[str] = []
     model_card_ids: list[str] = []
     dataset_source_ids: list[str] = []
+    artifact_classes: set[str] = set()
     for a in approved_artifacts:
         artifact_ids.append(a.artifact_id)
+        artifact_classes.add(a.artifact_class)
         if a.model_id not in model_card_ids:
             model_card_ids.append(a.model_id)
         card = model_cards.get(a.model_id)
@@ -112,6 +115,16 @@ def analyze_branch_forecast(
             for dsid in card.source_dataset_ids:
                 if dsid not in dataset_source_ids:
                     dataset_source_ids.append(dsid)
+
+    # Determine aggregate artifact class
+    if not artifact_classes:
+        agg_class = "none"
+    elif len(artifact_classes) == 1:
+        agg_class = artifact_classes.pop()
+    else:
+        agg_class = "mixed"
+
+    contextual_prior_ids = [a.artifact_id for a in contextual_priors]
 
     if anchor.route_b_available and anchor.domain_anchors:
         favorable = sum(1 for a in anchor.domain_anchors if a.route_b_prior_direction == "favorable")
@@ -147,6 +160,8 @@ def analyze_branch_forecast(
         model_card_ids=model_card_ids,
         dataset_source_ids=dataset_source_ids,
         approved_artifact_count=len(approved_artifacts),
+        artifact_class=agg_class,  # type: ignore[arg-type]
+        contextual_prior_ids=contextual_prior_ids,
     )
 
     # Domain-level predictions from anchor data
@@ -375,7 +390,8 @@ def _build_domain_predictions(
             artifact_id=best_artifact.artifact_id if best_artifact else None,
             model_card_id=best_artifact.model_id if best_artifact else None,
             dataset_source_id=best_card.source_dataset_ids[0] if best_card and best_card.source_dataset_ids else None,
-            approved_for_route_b=best_card.approved_for_route_b if best_card else False,
+            approved_for_route_b=best_card.approval_level == "route_b_approved" if best_card else False,
+            artifact_class=best_artifact.artifact_class if best_artifact else "none",  # type: ignore[arg-type]
         ))
 
     return predictions

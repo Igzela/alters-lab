@@ -16,6 +16,10 @@ explanation: >
   Meta-analysis of 148 prospective studies (308,849 participants) shows social
   connections are among the strongest predictors of relational wellbeing. MIDUS
   data confirms social support quality and strain predict relationship outcomes.
+artifact_class: contextual_prior
+actual_data_used: false
+value_labels_confirmed: false
+missingness_reviewed: false
 limitations:
   - "Social integration is measured differently across studies"
   - "Meta-analysis combines diverse relationship measures"

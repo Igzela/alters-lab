@@ -23,6 +23,10 @@ calibration_metrics:
   r2: null
 transfer_risk: medium
 approved_for_route_b: true
+artifact_class: data_backed_baseline
+approval_level: route_b_approved
+approval_reason: "Data-backed baseline from MIDUS SPSS data confirmed via pyreadstat."
+approval_blockers: []
 limitations:
   - "Single-item measure, limited reliability"
   - "Self-report bias correlates with education and income"

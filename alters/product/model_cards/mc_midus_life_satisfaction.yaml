@@ -21,6 +21,10 @@ calibration_metrics:
   r2: null
 transfer_risk: high
 approved_for_route_b: true
+artifact_class: data_backed_baseline
+approval_level: route_b_approved
+approval_reason: "Data-backed baseline from MIDUS SPSS data confirmed via pyreadstat."
+approval_blockers: []
 limitations:
   - "Set-point theory suggests stable baseline"
   - "Adaptation effects reduce sensitivity to life changes"

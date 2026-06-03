@@ -127,14 +127,28 @@ export default function BranchForecast() {
               if (!routeB?.available) {
                 return <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('branchForecast.routeBUnavailable')}</p>
               }
+              const artifactClass = routeB.artifact_class as string
+              const isDataBacked = artifactClass === 'data_backed_baseline' || artifactClass === 'calibrated_model'
               return (
                 <div className="space-y-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant={isDataBacked ? 'success' : artifactClass === 'mixed' ? 'warning' : 'muted'}>
+                      {isDataBacked ? 'Data-Backed Route B Prior' : artifactClass === 'mixed' ? 'Mixed (Data + Contextual)' : artifactClass === 'contextual_prior' ? 'Contextual Literature Prior Only' : 'No Route B Prior'}
+                    </Badge>
+                    {!isDataBacked && artifactClass !== 'none' && (
+                      <span style={{ color: 'var(--color-error)' }}>— Route B not fully approved for this forecast</span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2">
                     <span>{t('branchForecast.priorDirection')}:</span>
                     <Badge variant={DIRECTION_COLORS[routeB.prior_direction as string] || 'muted'}>{routeB.prior_direction as string}</Badge>
                   </div>
                   <div><strong>{t('branchForecast.transferRisk')}:</strong> {routeB.transfer_risk as string}</div>
                   <div><strong>{t('branchForecast.evidenceStrength')}:</strong> {routeB.evidence_strength as string}</div>
+                  <div><strong>Approved Artifacts:</strong> {routeB.approved_artifact_count as number}</div>
+                  {(routeB.contextual_prior_ids as string[] || []).length > 0 && (
+                    <div><strong>Contextual Priors:</strong> {(routeB.contextual_prior_ids as string[]).join(', ')} (not driving forecast)</div>
+                  )}
                   <p className="mt-1">{routeB.explanation as string}</p>
                 </div>
               )

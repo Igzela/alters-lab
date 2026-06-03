@@ -22,7 +22,14 @@ calibration_metrics:
   auc: null
   r2: null
 transfer_risk: medium
-approved_for_route_b: true
+approved_for_route_b: false
+artifact_class: contextual_prior
+approval_level: lab_only
+approval_reason: "Literature-only prior — no actual data backing. Directional anchor only."
+approval_blockers:
+  - "No actual dataset used"
+  - "No calibration metrics"
+  - "No baseline table"
 limitations:
   - "Social integration is measured differently across studies"
   - "Meta-analysis combines diverse relationship measures"
