@@ -18,6 +18,8 @@ SCRIPTS_DIR = LABS_DIR / "scripts"
 CONFIG_DIR = LABS_DIR / "config"
 ARTIFACTS_DIR = LABS_DIR / "artifacts"
 
+_artifacts_exist = ARTIFACTS_DIR.exists() and any(ARTIFACTS_DIR.glob("*.json"))
+
 
 class TestNLSY97VariableDictionary:
     """Test NLSY97 variable dictionary extraction."""
@@ -67,6 +69,7 @@ class TestNLSY97PrioritySearch:
             assert "confidence" in var
 
 
+@pytest.mark.skipif(not _artifacts_exist, reason="Phase 16 artifacts not generated locally")
 class TestColumnVerification:
     """Test column verification against CSV header."""
 
@@ -128,6 +131,7 @@ class TestOutcomeDefinitionsP16:
         assert "data_confirmed" in content
 
 
+@pytest.mark.skipif(not _artifacts_exist, reason="Phase 16 artifacts not generated locally")
 class TestNLSY97BaselineTables:
     """Test NLSY97 baseline table artifacts."""
 
@@ -184,6 +188,7 @@ class TestNLSY97BaselineTables:
             assert "individual_probability" not in table
 
 
+@pytest.mark.skipif(not _artifacts_exist, reason="Phase 16 artifacts not generated locally")
 class TestMIDUSCrossWaveAnalysis:
     """Test MIDUS cross-wave analysis outputs."""
 
@@ -230,6 +235,7 @@ class TestMIDUSCrossWaveAnalysis:
                 assert "personal_probability" not in var_stats
 
 
+@pytest.mark.skipif(not _artifacts_exist, reason="Phase 16 artifacts not generated locally")
 class TestMissingnessAudit:
     """Test missingness audit outputs."""
 

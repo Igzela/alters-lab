@@ -117,6 +117,10 @@ class TestOutcomeDefinitionsP15:
                     f"Outcome {outcome['outcome_id']} has confirmation_source='none' but is confirmed"
 
 
+@pytest.mark.skipif(
+    not (Path(__file__).resolve().parents[3] / "labs" / "population_baseline" / "artifacts" / "baseline_tables_p15.json").exists(),
+    reason="Phase 15 artifact not generated locally",
+)
 class TestBaselineTablesP15:
     """Test baseline table artifacts."""
 
