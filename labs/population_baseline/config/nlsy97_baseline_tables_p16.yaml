@@ -1,0 +1,67 @@
+# Phase 16 — NLSY97 Baseline Tables Configuration
+# Exploratory baseline tables from NLSY97 sample.
+# No ML integration, no Route B approval.
+
+phase: 16
+created_at: "2026-06-03"
+status: exploratory
+approved_for_route_b: false
+sample_size: 50000
+
+tables:
+  - artifact_id: nlsy97_demographics_R0000300
+    dataset_source_id: nlsy97
+    outcome_id: age
+    variable_codes: ["R0000300"]
+    variable_labels: ["Age"]
+    n_valid: 8984
+    missingness_rate: 0.0
+
+  - artifact_id: nlsy97_demographics_R0000400
+    dataset_source_id: nlsy97
+    outcome_id: sex
+    variable_codes: ["R0000400"]
+    variable_labels: ["Sex"]
+    n_valid: 8984
+    missingness_rate: 0.0
+
+  - artifact_id: nlsy97_demographics_R0000500
+    dataset_source_id: nlsy97
+    outcome_id: race_ethnicity
+    variable_codes: ["R0000500"]
+    variable_labels: ["Race/Ethnicity"]
+    n_valid: 8984
+    missingness_rate: 0.0
+
+  - artifact_id: nlsy97_education_R0010100
+    dataset_source_id: nlsy97
+    outcome_id: highest_degree
+    variable_codes: ["R0010100"]
+    variable_labels: ["Highest Degree"]
+    n_valid: 8984
+    missingness_rate: 0.0
+
+  - artifact_id: nlsy97_employment_R0020100
+    dataset_source_id: nlsy97
+    outcome_id: employment_status
+    variable_codes: ["R0020100"]
+    variable_labels: ["Employment Status"]
+    n_valid: 8984
+    missingness_rate: 0.0
+
+  - artifact_id: nlsy97_financial_R0030100
+    dataset_source_id: nlsy97
+    outcome_id: personal_income
+    variable_codes: ["R0030100"]
+    variable_labels: ["Personal Income"]
+    n_valid: 8984
+    missingness_rate: 0.0
+
+limitations:
+  - "Exploratory baseline tables only"
+  - "Sample of 50,000 rows from full dataset"
+  - "No individual-level data"
+  - "No production ML integration"
+  - "No personal probabilities"
+  - "Round 1 only (1997)"
+  - "No value labels mapped yet"

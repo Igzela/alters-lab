@@ -1,0 +1,352 @@
+# Phase 15 — Outcome Definitions
+# Extends Phase 14 with actual data inspection results.
+# MIDUS outcomes: data_confirmed via pyreadstat metadata inspection.
+# NLSY97 outcomes: candidate (CSV header inspected, 305k columns, variable names not yet mapped).
+# Phase 15 status: MIDUS .sav files parsed, key variables verified in raw data.
+
+outcomes:
+  - outcome_id: highest_degree_or_credential
+    domain: career_education
+    label: "Highest Degree or Credential Attained"
+    dataset_source_id: nlsy97
+    operational_definition: >
+      Highest degree reported across all survey rounds: less than HS diploma,
+      HS diploma/GED, Associate's, Bachelor's, Master's, Professional, Doctoral.
+      Mapped to ordinal scale (1-7).
+    measurement_type: ordinal
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: low
+    transfer_risk: high
+    first_pass_status: preferred
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Self-reported, may overestimate"
+      - "Does not capture institution quality or field of study"
+      - "Credential value varies by field and labor market conditions"
+
+  - outcome_id: employment_stability
+    domain: career_education
+    label: "Employment Stability (weeks employed / weeks in year)"
+    dataset_source_id: nlsy97
+    operational_definition: >
+      Ratio of weeks employed to total weeks in calendar year, averaged over
+      a 3-year window. Binary: >= 0.80 = stable, < 0.80 = unstable.
+    measurement_type: binary
+    time_horizon_months: 36
+    target_direction: higher_is_better
+    expected_missingness_risk: medium
+    transfer_risk: high
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Does not distinguish voluntary vs involuntary unemployment"
+      - "Part-time vs full-time not captured in simple ratio"
+      - "Seasonal employment patterns may distort ratio"
+
+  - outcome_id: occupational_status_or_job_quality
+    domain: career_education
+    label: "Occupational Status / Job Quality Index"
+    dataset_source_id: nlsy97
+    operational_definition: >
+      Occupational prestige score (e.g., Duncan SEI or similar) for current/most
+      recent job. Continuous or ordinal. Higher = higher status/quality.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: medium
+    transfer_risk: high
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Occupational prestige scores are dated and culturally specific"
+      - "Does not capture job satisfaction or autonomy"
+      - "Missing for unemployed respondents"
+
+  - outcome_id: work_hours_stability
+    domain: career_education
+    label: "Work Hours Stability (coefficient of variation)"
+    dataset_source_id: nlsy97
+    operational_definition: >
+      Coefficient of variation of weekly work hours across a 3-year window.
+      Lower CV = more stable. Binary: CV < 0.30 = stable.
+    measurement_type: binary
+    time_horizon_months: 36
+    target_direction: lower_is_better
+    expected_missingness_risk: medium
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Ignores voluntary schedule changes"
+      - "Does not capture gig/contract work patterns well"
+
+  - outcome_id: income_band_or_earnings_level
+    domain: financial
+    label: "Income Band / Earnings Level"
+    dataset_source_id: nlsy97
+    operational_definition: >
+      Annual personal income from employment, adjusted to constant dollars.
+      Mapped to ordinal bands: <$15k, $15-30k, $30-50k, $50-75k, $75-100k, $100k+.
+    measurement_type: ordinal
+    time_horizon_months: 12
+    target_direction: higher_is_better
+    expected_missingness_risk: medium
+    transfer_risk: high
+    first_pass_status: preferred
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Top-coded at various rounds"
+      - "Self-reported, may include estimation errors"
+      - "Does not capture household/partner income"
+      - "Cost-of-living differences not adjusted"
+
+  - outcome_id: financial_distress_proxy
+    domain: financial
+    label: "Financial Distress Proxy"
+    dataset_source_id: nlsy97
+    operational_definition: >
+      Composite of: late bill payments, debt collection contact, bankruptcy filing,
+      or difficulty covering basic expenses. Binary: any indicator = distress.
+    measurement_type: binary
+    time_horizon_months: 12
+    target_direction: lower_is_better
+    expected_missingness_risk: high
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Relies on self-reported financial hardship questions (availability varies by round)"
+      - "Different distress indicators may have different severity"
+      - "Stigma may lead to underreporting"
+
+  - outcome_id: self_rated_health
+    domain: health
+    label: "Self-Rated Health"
+    dataset_source_id: midus
+    operational_definition: >
+      Single-item self-rated health on 5-point scale (1=excellent, 5=poor).
+      Binary: 1-3 = good, 4-5 = fair/poor.
+    measurement_type: ordinal
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: preferred
+    confirmation_status: data_confirmed
+    confirmation_source: raw_data
+    confirmed_variable_names:
+      - "B1PA1"
+      - "B1PA4"
+      - "C1PA1"
+    limitations:
+      - "Single-item measure, limited reliability"
+      - "Self-report bias correlates with education and income"
+      - "Adaptation effect: people adjust expectations over time"
+
+  - outcome_id: chronic_condition_count
+    domain: health
+    label: "Chronic Condition Count"
+    dataset_source_id: midus
+    operational_definition: >
+      Count of self-reported chronic conditions from a checklist (e.g., hypertension,
+      diabetes, heart disease, arthritis, cancer, lung disease, etc.).
+      Continuous count, 0-N.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: lower_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: data_confirmed
+    confirmation_source: raw_data
+    confirmed_variable_names:
+      - "B1SCONDP"
+    limitations:
+      - "Self-reported diagnosis, not clinically verified"
+      - "Screening behavior varies by education and access"
+      - "Does not capture condition severity"
+
+  - outcome_id: functional_limitation
+    domain: health
+    label: "Functional Limitation Score"
+    dataset_source_id: midus
+    operational_definition: >
+      Sum of reported difficulties with activities of daily living (ADL) and
+      instrumental ADLs. Continuous count.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: lower_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Floor effect in younger populations"
+      - "Self-reported, may reflect expectations rather than capacity"
+
+  - outcome_id: marital_or_partner_status_stability
+    domain: relationship
+    label: "Marital/Partner Status Stability"
+    dataset_source_id: midus
+    operational_definition: >
+      Change in marital/partner status between waves.
+      Binary: stable (same status) vs unstable (status change).
+    measurement_type: binary
+    time_horizon_months: null
+    target_direction: lower_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Stability does not equal satisfaction"
+      - "Long wave gaps miss short-term relationship churn"
+      - "Does not distinguish marriage from cohabitation in all waves"
+
+  - outcome_id: social_support_quality
+    domain: relationship
+    label: "Social Support Quality"
+    dataset_source_id: midus
+    operational_definition: >
+      Average of MIDUS social support scales: availability of support,
+      satisfaction with support. Continuous, higher = better support.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: low
+    transfer_risk: high
+    first_pass_status: preferred
+    confirmation_status: data_confirmed
+    confirmation_source: raw_data
+    confirmed_variable_names:
+      - "B1SCALL"
+      - "B1SCSAT"
+    limitations:
+      - "Only available in MIDUS"
+      - "Self-reported quality may differ from actual support received"
+      - "Scale items may not capture digital/remote support patterns"
+
+  - outcome_id: social_strain
+    domain: relationship
+    label: "Social Strain"
+    dataset_source_id: midus
+    operational_definition: >
+      MIDUS social strain scale: frequency of criticism, demands, hostility
+      from close others. Continuous, higher = more strain.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: lower_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Subjective measure of strain"
+      - "May reflect personality (neuroticism) as much as actual strain"
+
+  - outcome_id: life_satisfaction
+    domain: subjective_wellbeing
+    label: "Life Satisfaction"
+    dataset_source_id: midus
+    operational_definition: >
+      Self-rated life satisfaction on a scale (e.g., Cantril ladder or
+      satisfaction with life items). Binary: above midpoint = satisfied.
+    measurement_type: ordinal
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: low
+    transfer_risk: high
+    first_pass_status: preferred
+    confirmation_status: data_confirmed
+    confirmation_source: raw_data
+    confirmed_variable_names:
+      - "A1SSATIS"
+      - "B1SSATIS"
+      - "C1SSATIS"
+    limitations:
+      - "Set-point theory suggests stable baseline"
+      - "Adaptation effects reduce sensitivity to life changes"
+      - "Social desirability bias"
+
+  - outcome_id: psychological_wellbeing
+    domain: subjective_wellbeing
+    label: "Psychological Wellbeing (Ryff Scale)"
+    dataset_source_id: midus
+    operational_definition: >
+      Ryff Psychological Wellbeing scale composite or subscales
+      (autonomy, environmental mastery, personal growth, positive relations,
+      purpose in life, self-acceptance). Continuous.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: low
+    transfer_risk: high
+    first_pass_status: preferred
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Long form (42-item) vs short form (18-item) have different psychometric properties"
+      - "Subscales may have different predictive validity"
+
+  - outcome_id: depressive_symptom_proxy
+    domain: subjective_wellbeing
+    label: "Depressive Symptom Proxy"
+    dataset_source_id: midus
+    operational_definition: >
+      Composite of depressive symptom items (e.g., CES-D short form or
+      equivalent). Binary: above clinical cutoff = elevated symptoms.
+    measurement_type: binary
+    time_horizon_months: null
+    target_direction: lower_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: candidate
+    confirmation_status: candidate
+    confirmation_source: none
+    confirmed_variable_names: []
+    limitations:
+      - "Screening tool, not clinical diagnosis"
+      - "Cutoff selection affects base rate significantly"
+
+  - outcome_id: perceived_control_or_mastery
+    domain: subjective_wellbeing
+    label: "Perceived Control / Mastery"
+    dataset_source_id: midus
+    operational_definition: >
+      Pearlin Mastery Scale or equivalent. Continuous, higher = greater
+      sense of control over life outcomes.
+    measurement_type: continuous
+    time_horizon_months: null
+    target_direction: higher_is_better
+    expected_missingness_risk: low
+    transfer_risk: medium
+    first_pass_status: preferred
+    confirmation_status: data_confirmed
+    confirmation_source: raw_data
+    confirmed_variable_names:
+      - "A1SMASTE"
+      - "B1SMASTE"
+      - "C1SMASTE"
+    limitations:
+      - "Cultural variation in control beliefs"
+      - "May reflect socioeconomic position as much as psychological trait"

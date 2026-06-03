@@ -1,61 +1,89 @@
 # Next Decision Point
 
-## Current Status (Phase 13 — Public Data Acquisition + Metadata Confirmation)
+## Current Status (Phase 16 — NLSY97 Variable Mapping + Cross-Wave Analysis Complete)
 
-Phase 13 promoted the dual-source pilot from candidate planning to active data acquisition. Both NLSY97 and MIDUS require authenticated downloads (free accounts), so no raw data was fetched automatically. All variable mappings remain at **candidate** status — no codebook or raw data has been inspected yet.
+Phase 16 has been completed locally. NLSY97 variable dictionary extracted, MIDUS cross-wave analysis and missingness audit done, Route B readiness reviewed.
 
-## What Phase 13 Built
+## What Phase 16 Built
 
-- **Data acquisition manifest**: `labs/population_baseline/config/data_acquisition_manifest_p13.yaml`
-- **Acquisition documentation**: `P13_DATA_ACQUISITION.md`, `P13_USER_DOWNLOAD_INSTRUCTIONS.md`
-- **Variable confirmation tracking**: `P13_VARIABLE_CONFIRMATION.md`, `feature_mapping_p13.yaml`, `outcome_definitions_p13.yaml` — all variables remain `candidate` with explicit `confirmation_source: none`
-- **Scripts**:
-  - `acquire_public_resources.py` — creates directories, checks public page availability
-  - `inventory_raw_data.py` — scans raw dirs, computes checksums
-  - `validate_raw_data_presence.py` — checks expected files exist
-  - `parse_nlsy97_extract.py` — inspects NLSY97 CSV columns (scaffold)
-  - `parse_midus_package.py` — inspects MIDUS CSV columns with key variable detection
-- **Acquisition log**: `artifacts/acquisition_log_p13.json` — 6/7 public pages accessible
-- **Tests**: 37 new tests (1643 total) enforcing manifest, feature, outcome, and policy invariants
+- **NLSY97 variable dictionary**: Extracted 305,325 variable labels from SAS/R files in ZIP archive
+- **NLSY97 priority variables**: 46,548 priority variable headers verified
+- **NLSY97 baseline tables**: Aggregate tables generated for NLSY97 outcomes
+- **MIDUS cross-wave analysis**: Trajectories across waves 1-3 analyzed
+- **MIDUS missingness audit**: SAQ non-response patterns assessed
+- **Route B readiness review**: Integration readiness evaluated (not yet approved)
 
 ## What Exists Now
 
-- **Schemas**: `population_baseline.py` (P11) + `population_baseline_pilot.py` (P12)
-- **Lab configs**: `source_selection_v0_1.yaml`, `outcome_definitions_p13.yaml`, `feature_mapping_p13.yaml`, `data_acquisition_manifest_p13.yaml`
-- **Lab docs**: `P12_DATA_ACCESS_PLAN.md`, `P13_DATA_ACQUISITION.md`, `P13_USER_DOWNLOAD_INSTRUCTIONS.md`, `P13_VARIABLE_CONFIRMATION.md`
-- **Scripts**: 5 acquisition/inventory/parser scripts
-- **Tests**: 1643 passing (37 P13-specific)
+- **Scripts** (12 total):
+  - `inspect_nlsy97_archive.py` - ZIP inspection without extraction
+  - `parse_nlsy97_streaming.py` - Streaming CSV parser
+  - `extract_nlsy97_variable_dictionary.py` - Variable label extraction
+  - `search_nlsy97_variables.py` - Variable search utility
+  - `build_nlsy97_baseline_tables.py` - NLSY97 aggregate table builder
+  - `parse_midus_sav.py` - SPSS .sav parser with pyreadstat
+  - `build_baseline_tables.py` - Aggregate table builder
+  - `analyze_midus_cross_wave.py` - Cross-wave trajectory analysis
+  - `analyze_missingness_p16.py` - Missingness pattern analysis
+  - Plus P13 scripts (`inventory_raw_data.py`, `validate_raw_data_presence.py`)
+- **Configs**: P14/P15/P16 feature mappings, outcome definitions, baseline tables, variable dictionaries
+- **Artifacts**: P13-P16 artifacts including baseline tables, summaries, variable dictionaries, cross-wave analysis, missingness audit
+- **Raw data** (gitignored, not committed):
+  - NLSY97: 454MB ZIP (15.8GB uncompressed)
+  - MIDUS 1/2/3: 39.6MB + 20.2MB + 15.4MB SPSS files
 
-## Current Next Decision After Phase 13
+## Phase 16 Completion Summary
 
-### Path A: User downloads data first (required)
+- ✅ NLSY97 variable dictionary extracted (305k labels)
+- ✅ NLSY97 priority variables verified (46k headers)
+- ✅ NLSY97 baseline tables generated
+- ✅ MIDUS cross-wave analysis complete
+- ✅ MIDUS missingness audit complete
+- ✅ Route B readiness reviewed (NOT approved)
+- ✅ No individual-level data committed
+- ✅ No production ML added
+- ✅ No Route B approval granted
 
-1. **Create NLS Investigator account** → follow `P13_USER_DOWNLOAD_INSTRUCTIONS.md` Section 1
-2. **Create ICPSR account** → follow `P13_USER_DOWNLOAD_INSTRUCTIONS.md` Section 2
-3. **Download and extract** to `labs/population_baseline/data/raw/`
-4. **Run inventory**: `python3 labs/population_baseline/scripts/inventory_raw_data.py`
-5. **Run validation**: `python3 labs/population_baseline/scripts/validate_raw_data_presence.py`
+## What's NOT Done Yet
 
-### Path B: After data is in place
+- **Route B approval**: Public priors not approved for integration into forecast path
+- **Production integration**: No `approved_for_route_b` flags set to true
+- **Missingness imputation**: Analysis done, strategies not yet implemented
+- **Cross-source harmonization**: MIDUS and NLSY97 not yet linked
 
-6. **Run parsers** to inspect actual column names:
-   - `python3 labs/population_baseline/scripts/parse_nlsy97_extract.py --dir labs/population_baseline/data/raw/nlsy97/`
-   - `python3 labs/population_baseline/scripts/parse_midus_package.py --dir labs/population_baseline/data/raw/midus/`
-7. **Compare columns against candidate variables** in `feature_mapping_p13.yaml`
-8. **Promote variables** from `candidate` → `metadata_confirmed` or `rejected`
-9. **Build first baseline_table artifacts** — descriptive statistics for preferred outcomes
-10. **Only after baseline table validation** — consider interpretable baseline models
+## Next Phase: Phase 17 — Route B Integration Decision
+
+### Required Steps
+
+1. **Route B approval gate**
+   - Review readiness review findings
+   - Decide: approve, conditionally approve, or reject Route B integration
+   - If approved: set `approved_for_route_b: true` on specific priors
+
+2. **Hybrid forecast integration**
+   - Route A (personal evidence) + Route B (population priors)
+   - Display both sources separately in BranchForecast page
+   - Implement transfer risk labeling
+
+3. **Calibration divergence enhancement**
+   - Use population priors to contextualize personal calibration divergence
+   - Add cross-source comparison to divergence analysis
+
+4. **Missingness handling**
+   - Implement imputation strategy for key variables
+   - Document impact on longitudinal analyses
 
 ## What Must NOT Happen Yet
 
-- No production ML model integration
-- No route_b approval granted
 - No exact personal probabilities emitted
 - No raw data committed to the repository
 - No modification to active YAML or rubric
+- No Route B priors used in forecasts without explicit approval
 
-## Blocked On
+## Architecture Status
 
-- Manual data download (NLS Investigator + ICPSR accounts)
-- Variable metadata inspection against real codebooks
-- Baseline table computation and review
+- Backend: 1749 tests passing (FastAPI + Pydantic + YAML I/O)
+- Frontend: 78 tests passing (React + TypeScript + Vitest)
+- Data layer: DataRepo with transaction support, 16 product areas
+- Type contract: OpenAPI → TypeScript auto-generation
+- CI: GitHub Actions (backend tests + frontend test + build)

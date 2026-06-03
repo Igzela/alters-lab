@@ -1,0 +1,104 @@
+# Phase 14 Downloaded File Manifest
+# Generated: 2026-06-03
+# Purpose: Track raw data files for Phase 14 ingestion
+# Safety: Contains only non-sensitive file metadata, no individual-level data
+
+files:
+  # NLSY97
+  - source_id: nlsy97
+    local_relative_path: data/raw/nlsy97/nlsy97_all_1997-2023.zip
+    file_type: zip
+    size_bytes: 475462343
+    likely_content: "NLSY97 longitudinal survey data (1997-2023) in multiple formats"
+    contains_raw_individual_data: true
+    commit_allowed: false
+    documentation_available: false
+    codebook_available: false
+    notes: "ZIP contains CSV (8.1GB), DAT (8.1GB), CDB (329MB), SAS (128MB), SDF (65MB), R (161MB), NLSY97 (2.7MB). No separate codebook PDF included."
+
+  # MIDUS 1
+  - source_id: midus1
+    local_relative_path: data/raw/midus/midus1/M1_P1_SURVEY_N7108_20190116.sav
+    file_type: sav
+    size_bytes: 39574094
+    likely_content: "MIDUS Wave 1 Project 1 Survey data (N=7,108 respondents)"
+    contains_raw_individual_data: true
+    commit_allowed: false
+    documentation_available: true
+    codebook_available: true
+    notes: "SPSS format. Requires pyreadstat to parse. Codebook at codebook/M1_P1_Codebook_20220505.pdf"
+
+  - source_id: midus1
+    local_relative_path: data/raw/midus/midus1/codebook/M1_P1_Codebook_20220505.pdf
+    file_type: pdf
+    size_bytes: 6283262
+    likely_content: "MIDUS Wave 1 codebook with variable definitions"
+    contains_raw_individual_data: false
+    commit_allowed: false
+    documentation_available: true
+    codebook_available: true
+    notes: "PDF codebook for MIDUS 1 variables"
+
+  # MIDUS 2
+  - source_id: midus2
+    local_relative_path: data/raw/midus/midus2/M2_P1_SURVEY_N4963_20200720.sav
+    file_type: sav
+    size_bytes: 20233563
+    likely_content: "MIDUS Wave 2 Project 1 Survey data (N=4,963 respondents)"
+    contains_raw_individual_data: true
+    commit_allowed: false
+    documentation_available: true
+    codebook_available: true
+    notes: "SPSS format. Requires pyreadstat to parse. Codebook at codebook/M2_P1_Codebook_20210129.pdf"
+
+  - source_id: midus2
+    local_relative_path: data/raw/midus/midus2/codebook/M2_P1_Codebook_20210129.pdf
+    file_type: pdf
+    size_bytes: 7997787
+    likely_content: "MIDUS Wave 2 codebook with variable definitions"
+    contains_raw_individual_data: false
+    commit_allowed: false
+    documentation_available: true
+    codebook_available: true
+    notes: "PDF codebook for MIDUS 2 variables"
+
+  # MIDUS 3
+  - source_id: midus3
+    local_relative_path: data/raw/midus/midus3/M3_P1_SURVEY_N3294_20251029.sav
+    file_type: sav
+    size_bytes: 15395155
+    likely_content: "MIDUS Wave 3 Project 1 Survey data (N=3,294 respondents)"
+    contains_raw_individual_data: true
+    commit_allowed: false
+    documentation_available: true
+    codebook_available: true
+    notes: "SPSS format. Requires pyreadstat to parse. Codebook at codebook/M3_P1_Codebook_20251125.pdf"
+
+  - source_id: midus3
+    local_relative_path: data/raw/midus/midus3/codebook/M3_P1_Codebook_20251125.pdf
+    file_type: pdf
+    size_bytes: 54376156
+    likely_content: "MIDUS Wave 3 codebook with variable definitions"
+    contains_raw_individual_data: false
+    commit_allowed: false
+    documentation_available: true
+    codebook_available: true
+    notes: "PDF codebook for MIDUS 3 variables"
+
+# Summary
+summary:
+  total_files: 7
+  total_size_bytes: 619322360
+  sources:
+    - source_id: nlsy97
+      files: 1
+      total_size_bytes: 475462343
+    - source_id: midus1
+      files: 2
+      total_size_bytes: 45857356
+    - source_id: midus2
+      files: 2
+      total_size_bytes: 28231350
+    - source_id: midus3
+      files: 2
+      total_size_bytes: 69771311

@@ -1,0 +1,58 @@
+# Phase 16 — MIDUS Cross-Wave Tables Configuration
+# Aggregate cross-wave comparison, not individual longitudinal linkage.
+
+phase: 16
+created_at: "2026-06-03"
+status: exploratory
+approved_for_route_b: false
+
+waves:
+  - dataset_id: midus1
+    name: "MIDUS 1"
+    year: "1995-1996"
+    n_total: 7108
+
+  - dataset_id: midus2
+    name: "MIDUS 2"
+    year: "2004-2006"
+    n_total: 4963
+
+  - dataset_id: midus3
+    name: "MIDUS 3"
+    year: "2013-2014"
+    n_total: 3294
+
+variables:
+  - variable_id: self_rated_health
+    label: "Self-Rated Health"
+    scale: "1-5 (1=excellent, 5=poor)"
+    direction: "lower_is_better"
+
+  - variable_id: life_satisfaction
+    label: "Life Satisfaction"
+    scale: "0-10 Cantril ladder"
+    direction: "higher_is_better"
+
+  - variable_id: neuroticism
+    label: "Neuroticism"
+    scale: "1-4 (low to high)"
+    direction: "lower_is_better"
+
+  - variable_id: perceived_mastery
+    label: "Perceived Mastery"
+    scale: "1-7 (low to high mastery)"
+    direction: "higher_is_better"
+
+comparison_notes:
+  methodology: "Aggregate cross-wave comparison, not individual longitudinal linkage"
+  attrition: "Sample sizes decrease across waves due to attrition"
+  cohort_effects: "Not controlled - interpret as cross-sectional patterns"
+  caution: "Do not claim aging effects without controlling cohort/attrition"
+
+limitations:
+  - "Aggregate comparison only"
+  - "No individual longitudinal linkage"
+  - "Attrition bias across waves"
+  - "Cohort effects not controlled"
+  - "No causal claims possible"
+  - "Exploratory analysis only"
