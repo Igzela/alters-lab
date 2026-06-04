@@ -58,6 +58,17 @@ Automatically adjusts evaluation emphasis based on your current state. Low align
 - **YAML on disk** — All data is readable, editable, version-controllable files. No database.
 - **User-driven scoring** — The system never infers your scores. You submit them explicitly.
 - **Advisory algorithms** — Trend analysis, pattern detection, and weight adjustments are evidence. They never trigger automatic actions.
+- **No life_score** — The system does not produce a single number representing your life quality.
+- **No exact probability** — Directional forecasts only, with explicit transfer risk labels.
+
+### Route B — Population Priors
+Population-level baselines from longitudinal datasets (NLSY97, MIDUS) inform forecasts across 5 life domains:
+- **career_education** / **financial** — strong_calibrated (NLSY97 calibrated models)
+- **health** / **subjective_wellbeing** — data_backed (MIDUS baselines)
+- **relationship** — contextual (literature prior)
+
+### Personal Prior Adapter
+Combines Route A (personal evidence), Route B (population priors), and external evidence into per-domain adjusted forecasts. Surfaces conflicts between sources for human judgment. Not a destiny prediction — a decision-support layer.
 
 ## Quick Start
 
@@ -108,6 +119,8 @@ This loads a career-change scenario with 4 branches, 4 alters, and a snapshot. E
 - **Weekly Review** — Run through the 6-step flow with sample data
 - **Alter Dialogue** — Chat with your alters about their paths
 - **Calibration History** — View trends and pattern detection
+- **Public Priors** — View Route B domain coverage and model cards
+- **Branch Forecast** — See Route A / Route B / Adapter combined forecasts
 
 ### 4. Configure a Provider (Optional)
 
@@ -154,18 +167,26 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration
 │  ├── Weekly Review (6-step calibration flow)            │
 │  ├── Alter Dialogue (chat with your alters)             │
 │  ├── Calibration History (trends, patterns, scores)     │
-│  └── 13 pages total                                     │
+│  ├── Public Priors (Route B coverage, model cards)      │
+│  ├── Branch Forecast (Route A + B + Adapter)            │
+│  └── 15 pages total                                     │
 ├─────────────────────────────────────────────────────────┤
 │  Backend (Python + FastAPI + Pydantic)                  │
-│  ├── 44 API routers                                     │
-│  ├── 50 service modules                                 │
-│  ├── 44 Pydantic schema modules                         │
+│  ├── 47 API routers                                     │
+│  ├── 54 service modules                                 │
+│  ├── 49 Pydantic schema modules                         │
+│  ├── Route B: population priors (NLSY97 + MIDUS)        │
+│  ├── Personal Prior Adapter                             │
 │  └── Pattern detection, trend analysis, dynamic weights │
 ├─────────────────────────────────────────────────────────┤
 │  Storage (YAML + JSON files)                            │
 │  ├── alters/current/    Active user data                │
 │  ├── alters/sample/     Demo data for new users         │
 │  ├── alters/product/    Weekly reviews, calibration     │
+│  │   ├── forecast_snapshots/  Locked forecasts          │
+│  │   ├── external_evidence/   Real-world observations   │
+│  │   ├── forecast_evaluations/ Hit/miss tracking        │
+│  │   └── predictor_profiles/  User trait baselines      │
 │  └── alters/calibration Rubric, scores, state           │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -184,7 +205,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration
 | Storage | YAML + JSON files (no database) |
 | Packaging | Debian `.deb`, Docker |
 | Routing | React Router v6 |
-| Tests | pytest (1291 backend), vitest (23 frontend) |
+| Tests | pytest (1931 backend), vitest (81 frontend) |
 
 ## CLI Commands
 
@@ -256,13 +277,15 @@ Looking for a way to contribute? Check issues labeled `good-first-issue` for tas
 
 ## Roadmap
 
+- [x] Route B population priors (NLSY97 + MIDUS, all 5 domains)
+- [x] Personal Prior Adapter (combines Route A + B + external evidence)
+- [x] Forecast snapshots, evaluations, scorecard with per-source tracking
+- [ ] Real user pilot (4-8 weeks of calibration data)
 - [ ] P6 behavior validation gate (collecting evidence)
+- [ ] Relationship domain calibrated model (currently contextual only)
 - [ ] Mobile-responsive navigation improvements
 - [ ] PDF export for calibration reports
-- [ ] Cross-pattern correlation analysis
-- [ ] Keyboard shortcuts for all workflows
 - [ ] Accessibility audit and improvements
-- [ ] Plugin system for custom rubric dimensions
 
 ## License
 

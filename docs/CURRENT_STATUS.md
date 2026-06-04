@@ -1,38 +1,89 @@
 # Current Status
 
-## Phase 11 — Population Baseline Lab + Public-Prior Integration Contract
+## V1.0 Release Candidate (2026-06-04)
 
-**Status**: COMPLETE
+**Status**: v1.0-rc — all release gates PASS, ready for v1.0 tag
 
-### What Was Done
+### System Health
 
-1. **Repository repositioning** — Updated docs and README to describe Alters Lab as a "public-prior + personal-calibration life trajectory forecasting system"
-2. **Population Baseline schemas** — Created `population_baseline.py` with PublicDatasetSource, PublicOutcomeDefinition, PublicFeatureMapping, CalibrationMetrics, PopulationBaselineModelCard, PopulationPriorArtifact
-3. **Public-prior integration contract** — Created `public_prior_contract.py` with PublicPriorIntegrationContract and module-level constants
-4. **Population Baseline Lab scaffold** — Created `labs/population_baseline/` with README, data source docs, example configs (dataset registry, feature mapping, outcome definitions), model card template
-5. **Validation standard** — Created `docs/VALIDATION_STANDARD.md` with 6 gates
-6. **Product positioning** — Created `docs/PRODUCT_POSITIONING.md`
-7. **Documentation updates** — Updated product-spec.md, data-model.md, README.md
-8. **Tests** — Schema tests for population_baseline.py and public_prior_contract.py, doc smoke tests for product positioning
+| Metric | Value |
+|--------|-------|
+| Backend tests | 1931 passing, 2 skipped, 1 xpassed |
+| Frontend tests | 81 passing |
+| Frontend build | Clean (3.2s) |
+| OpenAPI typegen | 15,807 lines, 293 schemas |
+| Life score | Confirmed absent (9+ guard-rail tests) |
+| Exact probability | Confirmed banned (6+ guard-rail tests) |
+| Provider safety audit | ✅ All sections PASS |
+| Release readiness | ✅ GO — see V1_RELEASE_READINESS.md |
 
-### What Was NOT Done
+### Route B Strength Matrix
 
-- No real datasets downloaded
-- No real ML models trained
-- No production forecast path changes
-- No new API endpoints
-- No frontend changes
+| Domain | Strength Level | Source |
+|--------|---------------|--------|
+| `career_education` | `strong_calibrated` | NLSY97 calibrated model |
+| `financial` | `strong_calibrated` | NLSY97 calibrated model |
+| `health` | `data_backed` | MIDUS data-backed baseline |
+| `subjective_wellbeing` | `data_backed` | MIDUS data-backed baseline |
+| `relationship` | `contextual` | Weak prior only |
 
-### Existing System Status
+All 5 domains covered. 2 strong + 2 data-backed + 1 contextual.
 
-- Backend tests: 1488+ passing
-- Frontend build: passing
-- All calibration modules intact (forecast_snapshot, external_evidence, forecast_evaluation, forecast_scorecard)
-- Route B remains literature-prior only
+### Personal Prior Adapter
 
-### Known Limitations
+Fully integrated into the branch forecast pipeline. Combines Route A (personal evidence), Route B (population priors), and external evidence into per-domain adjusted forecasts. Key properties:
 
-- Population Baseline Lab is scaffold only — no real data or models yet
-- Integration contract is a schema definition — no runtime enforcement code
-- Doc smoke tests are file-content checks, not integration tests
-- No automated validation gate enforcement in the forecast path
+- External evidence can override weak Route B
+- Strong Route A can reduce pessimism but cannot erase transfer risk
+- `strong_calibrated` Route B increases confidence when aligned
+- `contextual` prior cannot drive adjusted direction
+- Unknown remains unknown
+- No exact probabilities
+
+### Forecast Traceability
+
+Complete end-to-end traceability:
+
+1. **Predictor Profile** → captures traits, context, target domains
+2. **Outcome Target** → defines measurable goals per branch/domain
+3. **Behavior Metrics** → weekly structured indicators
+4. **Branch Forecast** → Route A + Route B + Adapter combined
+5. **Forecast Snapshot** → locked, immutable record of forecast
+6. **External Evidence** → real-world observations
+7. **Forecast Evaluation** → hit/miss/partial/unknown per domain, per source
+8. **Calibration Scorecard** → aggregate accuracy tracking
+
+### What Is Production-Usable
+
+- Core pipeline: snapshot → branch discovery → alter generation → dialogue → calibration
+- Weekly review with trend analysis and pattern detection
+- Forecast snapshots with full traceability
+- External evidence recording
+- Forecast evaluation with Route A / Route B / Adapter match tracking
+- Calibration scorecard with per-source hit rates
+- Personal Prior Adapter for combining all evidence sources
+- Docker deployment
+- CLI (start, stop, status, doctor, backup, load-sample)
+
+### What Remains Experimental
+
+- Population Baseline Lab (offline analysis scripts, not runtime ML)
+- SQLite repository backend (code exists, YAML is active)
+- Provider integration (LLM dialogue is optional, disabled by default)
+- P6 behavior validation (collecting evidence, not yet sealed)
+
+### Pilot Results
+
+A seeded realistic pilot (25 tests) verified the full product flow:
+
+- 1 predictor profile (mid-career professional)
+- 2 branches (career_education + health)
+- 4 weeks of behavior metrics
+- 2 outcome targets
+- Branch forecasts with Route A / Route B / Adapter visible
+- Locked snapshots preserving all adapter results
+- 3 external evidence records
+- 2 evaluations with per-source match results
+- Scorecard with Route A / Route B / Adapter hit tracking
+- No life_score anywhere
+- No exact probability anywhere

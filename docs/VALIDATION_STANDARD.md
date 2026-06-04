@@ -2,6 +2,8 @@
 
 This document defines the 6 validation gates that any population baseline must pass before entering the main Alters Lab forecast system.
 
+**v1.0-rc status:** Route B has been approved and integrated. NLSY97 strong_calibrated models cover career_education and financial. MIDUS data_backed baselines cover health and subjective_wellbeing. Relationship domain uses contextual prior only.
+
 ## Gate 1 — Public Data Traceability
 
 **PASS requires:**
@@ -18,6 +20,8 @@ This document defines the 6 validation gates that any population baseline must p
 - A model artifact lacks a model card
 - A prior has no transfer_risk label
 
+**v1.0-rc status:** ✅ PASS — 9 model cards, 10 approved artifacts, all with traceable dataset sources.
+
 ## Gate 2 — Model Calibration
 
 **PASS requires:**
@@ -31,6 +35,8 @@ This document defines the 6 validation gates that any population baseline must p
 - A model card lacks calibration metrics but emits probability bands
 - Transfer risk is high but confidence is set to high
 
+**v1.0-rc status:** ✅ PASS — NLSY97 calibrated models have brier_score, calibration_slope, auc. MIDUS data_backed baselines have appropriate metrics.
+
 ## Gate 3 — Transfer Risk
 
 **PASS requires:**
@@ -43,6 +49,8 @@ This document defines the 6 validation gates that any population baseline must p
 - A high-transfer-risk dataset is presented as low risk
 - Population-level associations are stated as individual-level predictions
 
+**v1.0-rc status:** ✅ PASS — All domain predictions carry transfer_risk labels. Strength levels (strong_calibrated > data_backed > contextual > none) reflect evidence quality.
+
 ## Gate 4 — Hybrid Integration
 
 **PASS requires:**
@@ -54,6 +62,8 @@ This document defines the 6 validation gates that any population baseline must p
 - Public prior overrides personal evidence without explicit user action
 - Population baseline output replaces forecast evaluation as the calibration source
 - The system presents a blended score without distinguishing sources
+
+**v1.0-rc status:** ✅ PASS — Personal Prior Adapter displays Route A, Route B, and external evidence as separate components. Per-source match results tracked in evaluation.
 
 ## Gate 5 — No False Precision
 
@@ -70,6 +80,8 @@ This document defines the 6 validation gates that any population baseline must p
 - A population_percentile is computed without a numeric baseline
 - Unknown states are filled with default estimates
 
+**v1.0-rc status:** ✅ PASS — 9+ tests confirm no life_score. 6+ tests confirm no exact probability. extra="forbid" on all schemas.
+
 ## Gate 6 — Calibration Module Preserved
 
 **PASS requires:**
@@ -85,6 +97,8 @@ This document defines the 6 validation gates that any population baseline must p
 - Evaluation produces results other than hit/miss/partial/unknown
 - Scorecard is not updated after evaluation
 - The forecast path skips evaluation entirely
+
+**v1.0-rc status:** ✅ PASS — Full traceability verified: forecast → snapshot → evidence → evaluation → scorecard. 25 pilot tests confirm end-to-end flow.
 
 ## Contract Enforcement
 

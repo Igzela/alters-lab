@@ -195,23 +195,6 @@ def analyze_branch_forecast(
         strength_level=best_strength,  # type: ignore[arg-type]
     )
 
-    # Domain-level predictions from anchor data
-    domain_predictions = _build_domain_predictions(
-        anchor.domain_anchors if anchor.route_b_available else [],
-        route_a_available,
-        overall_direction=trajectory if route_a_available else "unknown",
-        artifacts_by_domain=artifacts_by_domain,
-        model_cards=model_cards,
-    )
-
-    # Personal prior adapter — combines Route A, Route B, external evidence
-    behavior_metric_count = sum(1 for t in trend_resp.trends if t.direction in ("improving", "declining", "stable"))
-    adapter_result = adapt_personal_prior(
-        domain_predictions=domain_predictions,
-        route_a=route_a,
-        behavior_metric_count=behavior_metric_count,
-    )
-
     # Calibration divergence
     div_req = CalibrationDivergenceRequest(
         branch_id=request.branch_id,
@@ -254,6 +237,23 @@ def analyze_branch_forecast(
         has_targets=len(targets) > 0,
         has_divergence_warnings=len(divergence.flags) > 0,
         best_artifact_class=best_artifact_class,
+    )
+
+    # Domain-level predictions from anchor data
+    domain_predictions = _build_domain_predictions(
+        anchor.domain_anchors if anchor.route_b_available else [],
+        route_a_available,
+        overall_direction=trajectory if route_a_available else "unknown",
+        artifacts_by_domain=artifacts_by_domain,
+        model_cards=model_cards,
+    )
+
+    # Personal prior adapter — combines Route A, Route B, external evidence
+    behavior_metric_count = sum(1 for t in trend_resp.trends if t.direction in ("improving", "declining", "stable"))
+    adapter_result = adapt_personal_prior(
+        domain_predictions=domain_predictions,
+        route_a=route_a,
+        behavior_metric_count=behavior_metric_count,
     )
 
     explanation = _build_explanation(trajectory, confidence, route_a_available, anchor.route_b_available, divergence.divergence_status)

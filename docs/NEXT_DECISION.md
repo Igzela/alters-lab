@@ -1,89 +1,78 @@
 # Next Decision Point
 
-## Current Status (Phase 16 — NLSY97 Variable Mapping + Cross-Wave Analysis Complete)
+## Current Status (v1.0-rc — 2026-06-04)
 
-Phase 16 has been completed locally. NLSY97 variable dictionary extracted, MIDUS cross-wave analysis and missingness audit done, Route B readiness reviewed.
+V1.0 release candidate is complete. All release gates pass. Provider safety audit clean. Ready for v1.0 tag.
 
-## What Phase 16 Built
+See `docs/V1_RELEASE_READINESS.md` for the full go/no-go assessment.
 
-- **NLSY97 variable dictionary**: Extracted 305,325 variable labels from SAS/R files in ZIP archive
-- **NLSY97 priority variables**: 46,548 priority variable headers verified
-- **NLSY97 baseline tables**: Aggregate tables generated for NLSY97 outcomes
-- **MIDUS cross-wave analysis**: Trajectories across waves 1-3 analyzed
-- **MIDUS missingness audit**: SAQ non-response patterns assessed
-- **Route B readiness review**: Integration readiness evaluated (not yet approved)
+## What v1.0-rc Built
+
+Since Phase 16, the following has been completed:
+
+- **Route B productization** — 9 model cards, 10 approved artifacts, all 5 domains covered
+- **Route B approval hardening** — artifact_class, approval_level, data-backed gate, 21 guardrail tests
+- **Route B v3** — Calibrated public baseline models, NLSY97 career/financial, MIDUS health/wellbeing
+- **Route B v4** — Personal Prior Adapter, strength-aware forecast policy, 33 adapter tests
+- **Forecast snapshots** — locked immutable records preserving adapter results
+- **External evidence** — structured observation recording
+- **Forecast evaluation** — Route A / Route B / Adapter match tracking
+- **Calibration scorecard** — aggregate accuracy with per-source hit rates
+- **Frontend** — Public Priors page, Branch Forecast page, Personal Prior Adapter card
+- **OpenAPI typegen** — 15,807 lines, 293 TypeScript types
+- **E2E product flow test** — 14 tests verifying no life_score, Route B traceability
+- **V1.0-rc pilot** — 25 tests verifying full product flow end-to-end
+- **Bug fix** — trajectory variable used before definition in branch_forecast.py
 
 ## What Exists Now
 
-- **Scripts** (12 total):
-  - `inspect_nlsy97_archive.py` - ZIP inspection without extraction
-  - `parse_nlsy97_streaming.py` - Streaming CSV parser
-  - `extract_nlsy97_variable_dictionary.py` - Variable label extraction
-  - `search_nlsy97_variables.py` - Variable search utility
-  - `build_nlsy97_baseline_tables.py` - NLSY97 aggregate table builder
-  - `parse_midus_sav.py` - SPSS .sav parser with pyreadstat
-  - `build_baseline_tables.py` - Aggregate table builder
-  - `analyze_midus_cross_wave.py` - Cross-wave trajectory analysis
-  - `analyze_missingness_p16.py` - Missingness pattern analysis
-  - Plus P13 scripts (`inventory_raw_data.py`, `validate_raw_data_presence.py`)
-- **Configs**: P14/P15/P16 feature mappings, outcome definitions, baseline tables, variable dictionaries
-- **Artifacts**: P13-P16 artifacts including baseline tables, summaries, variable dictionaries, cross-wave analysis, missingness audit
-- **Raw data** (gitignored, not committed):
-  - NLSY97: 454MB ZIP (15.8GB uncompressed)
-  - MIDUS 1/2/3: 39.6MB + 20.2MB + 15.4MB SPSS files
+- **Backend**: 1931 tests passing
+- **Frontend**: 81 tests passing, build clean
+- **Route B**: All 5 domains covered (2 strong_calibrated, 2 data_backed, 1 contextual)
+- **Personal Prior Adapter**: Fully integrated
+- **Traceability**: Forecast → snapshot → evidence → evaluation → scorecard
+- **Safety**: No life_score, no exact probability, extra="forbid" on all schemas
 
-## Phase 16 Completion Summary
+## Next Recommended Steps
 
-- ✅ NLSY97 variable dictionary extracted (305k labels)
-- ✅ NLSY97 priority variables verified (46k headers)
-- ✅ NLSY97 baseline tables generated
-- ✅ MIDUS cross-wave analysis complete
-- ✅ MIDUS missingness audit complete
-- ✅ Route B readiness reviewed (NOT approved)
-- ✅ No individual-level data committed
-- ✅ No production ML added
-- ✅ No Route B approval granted
+### Option A: Real User Pilot (Recommended)
 
-## What's NOT Done Yet
+The system is ready for a real user pilot over several weeks:
 
-- **Route B approval**: Public priors not approved for integration into forecast path
-- **Production integration**: No `approved_for_route_b` flags set to true
-- **Missingness imputation**: Analysis done, strategies not yet implemented
-- **Cross-source harmonization**: MIDUS and NLSY97 not yet linked
+1. A real user creates their predictor profile and outcome targets
+2. They record behavior metrics weekly
+3. Branch forecasts are generated and locked as snapshots
+4. External evidence is recorded as real events occur
+5. Forecasts are evaluated against evidence
+6. Scorecard accumulates calibration data
 
-## Next Phase: Phase 17 — Route B Integration Decision
+**What this validates:**
+- Does the forecast system produce useful, non-obvious insights?
+- Does the adapter correctly combine Route A + Route B + evidence?
+- Does the calibration feedback loop improve over time?
+- Are the directional predictions (not exact probabilities) actually helpful?
 
-### Required Steps
+**Duration:** 4-8 weeks minimum for meaningful calibration data
 
-1. **Route B approval gate**
-   - Review readiness review findings
-   - Decide: approve, conditionally approve, or reject Route B integration
-   - If approved: set `approved_for_route_b: true` on specific priors
+### Option B: Additional Model Cards
 
-2. **Hybrid forecast integration**
-   - Route A (personal evidence) + Route B (population priors)
-   - Display both sources separately in BranchForecast page
-   - Implement transfer risk labeling
+Expand Route B coverage with additional datasets:
 
-3. **Calibration divergence enhancement**
-   - Use population priors to contextualize personal calibration divergence
-   - Add cross-source comparison to divergence analysis
+- Relationship domain: currently contextual only
+- Financial domain: additional calibrated models
+- Cross-source harmonization: link NLSY97 and MIDUS variables
 
-4. **Missingness handling**
-   - Implement imputation strategy for key variables
-   - Document impact on longitudinal analyses
+### Option C: Frontend Polish
 
-## What Must NOT Happen Yet
+- Mobile responsiveness improvements
+- Accessibility audit
+- PDF export for calibration reports
+- Keyboard shortcuts for all workflows
+
+## What Must NOT Happen
 
 - No exact personal probabilities emitted
 - No raw data committed to the repository
 - No modification to active YAML or rubric
-- No Route B priors used in forecasts without explicit approval
-
-## Architecture Status
-
-- Backend: 1749 tests passing (FastAPI + Pydantic + YAML I/O)
-- Frontend: 78 tests passing (React + TypeScript + Vitest)
-- Data layer: DataRepo with transaction support, 16 product areas
-- Type contract: OpenAPI → TypeScript auto-generation
-- CI: GitHub Actions (backend tests + frontend test + build)
+- No life_score field introduced
+- No bypassing forecast snapshot / external evidence / evaluation / scorecard
