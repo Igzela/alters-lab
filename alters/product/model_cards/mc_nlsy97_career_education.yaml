@@ -1,5 +1,5 @@
 # Model Card: NLSY97 Career/Education baseline table
-# Data-backed baseline from NLSY97 2005 round.
+# Calibrated logistic regression from NLSY97 2005→2015 with Tier 1 improvements.
 
 model_id: mc_nlsy97_career_education
 source_dataset_ids:
@@ -8,17 +8,26 @@ outcome_id: career_education_composite
 feature_mapping_ids:
   - highest_grade_completed
   - highest_degree_received
+  - census_region
+  - household_size
+  - marital_status
+  - piat_percentile
+  - asvab_symbol
+  - father_education
+  - mother_education
 model_family: logistic_regression
 training_status: trained
 evaluation_summary: >
   Calibrated logistic regression predicting bachelor_or_higher (2015) from
-  2005 NLSY97 baseline features. 7,100 usable rows, 80/20 split.
-  AUC=0.924, Brier=0.0919. Well-calibrated in high-probability bins.
+  2005 NLSY97 baseline features with isotonic calibration (CalibratedClassifierCV),
+  IterativeImputer for missing data, and interaction terms (degree×income, sex×grade).
+  16 features, 7,100 usable rows, 80/20 split.
+  AUC=0.939, Brier=0.0824. Well-calibrated.
 calibration_metrics:
-  brier_score: 0.0919
+  brier_score: 0.0824
   calibration_slope: null
   calibration_intercept: null
-  auc: 0.924
+  auc: 0.939
   r2: null
   n_train: 5680
   n_test: 1420
@@ -27,12 +36,14 @@ transfer_risk: high
 approved_for_route_b: true
 artifact_class: calibrated_model
 approval_level: route_b_approved
-approval_reason: "Calibrated logistic regression trained on NLSY97 2005→2015 prospective data. AUC=0.924, Brier=0.0919. Passes quality gate (AUC≥0.6, Brier≤0.25)."
+approval_reason: "Calibrated logistic regression trained on NLSY97 2005→2015 prospective data. AUC=0.939, Brier=0.0824. Isotonic calibration + IterativeImputer + 16 features. Passes quality gate (AUC≥0.6, Brier≤0.25)."
 approval_blockers: []
 limitations:
   - "Cohort born 1980-84 — transfer to other generations limited"
   - "2005→2015 prospective design (10-year gap)"
   - "Self-reported education levels"
-  - "Logistic regression only — no nonlinear interactions"
+  - "Logistic regression with interaction terms (degree×income, sex×grade)"
+  - "Isotonic calibration via CalibratedClassifierCV (cv=5)"
+  - "IterativeImputer for missing data (multivariate chained equations)"
   - "Transfer risk high due to cohort specificity"
-  - "7 features only: grade, degree, income, sex, race"
+  - "16 features: grade, degree, income, sex, race, region, HH size, marital, PIAT, ASVAB, parent educ, interactions"

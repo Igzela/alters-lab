@@ -1,35 +1,46 @@
-# Model Card: MIDUS Life Satisfaction calibrated model
+# Model Card: MIDUS Life Satisfaction baseline table
+# Calibrated logistic regression from MIDUS-2 with Tier 1 improvements.
 
 model_id: mc_midus_life_satisfaction
 source_dataset_ids:
   - midus2
-outcome_id: life_satisfaction
+outcome_id: wellbeing_composite
 feature_mapping_ids:
-  - life_satisfaction_b1ssatis
+  - chronic_conditions
+  - social_closeness
+  - social_integration
+  - personal_mastery
+  - neuroticism
+  - age
+  - sex
+  - sleep_hours
 model_family: logistic_regression
 training_status: trained
 evaluation_summary: >
-  Calibrated logistic regression predicting high_life_satisfaction (B1SSATIS >= 7)
-  from MIDUS-2 features (excluding B1SSATIS to avoid leakage). 1,067 usable rows,
-  80/20 split. AUC=0.668, Brier=0.2180.
+  Calibrated logistic regression predicting high_life_satisfaction (>=7) from
+  MIDUS-2 baseline features with isotonic calibration (CalibratedClassifierCV)
+  and IterativeImputer. Excludes B1SSATIS from features (leakage prevention).
+  8 features, 1,067 usable rows, 80/20 split.
+  AUC=0.674, Brier=0.2182.
 calibration_metrics:
-  brier_score: 0.2180
+  brier_score: 0.2182
   calibration_slope: null
   calibration_intercept: null
-  auc: 0.668
+  auc: 0.674
   r2: null
   n_train: 853
   n_test: 214
   calibration_bins: null
-transfer_risk: high
+transfer_risk: medium
 approved_for_route_b: true
 artifact_class: calibrated_model
 approval_level: route_b_approved
-approval_reason: "Calibrated logistic regression trained on MIDUS-2. AUC=0.668, Brier=0.2180. Passes quality gate (AUC≥0.6, Brier≤0.25)."
+approval_reason: "Calibrated logistic regression trained on MIDUS-2 cross-sectional data. AUC=0.674, Brier=0.2182. Isotonic calibration + IterativeImputer. Passes quality gate (AUC≥0.6, Brier≤0.25)."
 approval_blockers: []
 limitations:
-  - "MIDUS-2 cross-sectional: 1,067 usable respondents"
-  - "Life satisfaction >= 7 threshold is arbitrary (scale 0-10)"
-  - "Cross-sectional — no temporal separation between features and outcome"
-  - "High transfer risk: US national sample, age ~25-74"
-  - "Outcome source variable excluded from features to prevent leakage"
+  - "MIDUS-2 cross-sectional sample: 1,067 usable respondents"
+  - "Cross-domain prediction from single-wave data"
+  - "Logistic regression with isotonic calibration (CalibratedClassifierCV, cv=5)"
+  - "IterativeImputer for missing data (multivariate chained equations)"
+  - "B1SSATIS excluded from features to prevent leakage"
+  - "Transfer risk moderate: US national sample, not population-representative for all contexts"

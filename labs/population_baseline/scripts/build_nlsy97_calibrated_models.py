@@ -24,6 +24,9 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.experimental import enable_iterative_imputer  # noqa: F401
+from sklearn.impute import IterativeImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.model_selection import train_test_split
@@ -89,6 +92,42 @@ FEATURE_VARIABLES = {
             "3": "Mixed race",
             "0": "Other",
         },
+    },
+    # --- Tier 1 additions: more features ---
+    "S5405600": {
+        "label": "CV_CENSUS_REGION 2005",
+        "domain": "demographics",
+        "measurement": "categorical",
+    },
+    "S5413000": {
+        "label": "CV_HH_SIZE 2005 (Household Size)",
+        "domain": "social",
+        "measurement": "continuous",
+    },
+    "S5423000": {
+        "label": "CV_MARSTAT 2005 (Marital Status)",
+        "domain": "social",
+        "measurement": "categorical",
+    },
+    "R1210700": {
+        "label": "CV_PIAT_PERCENTILE_SCORE 1997 (Cognitive Ability)",
+        "domain": "cognitive",
+        "measurement": "continuous",
+    },
+    "R0538900": {
+        "label": "CAT-ASVAB!STPEL (Symbol) 1997",
+        "domain": "cognitive",
+        "measurement": "continuous",
+    },
+    "R1302400": {
+        "label": "CV_HGC_BIO_DAD 1997 (Father's Education)",
+        "domain": "demographics",
+        "measurement": "continuous",
+    },
+    "R1302500": {
+        "label": "CV_HGC_BIO_MOM 1997 (Mother's Education)",
+        "domain": "demographics",
+        "measurement": "continuous",
     },
 }
 
@@ -236,49 +275,147 @@ def create_binary_outcomes(rows: list[dict], income_col: str) -> tuple[list[int]
 
 def build_feature_matrix(
     rows: list[dict],
+    exclude_columns: set[str] | None = None,
 ) -> tuple[list[list[float]], list[str]]:
     """
-    Build feature matrix from 2005 baseline variables.
+    Build feature matrix from 2005 baseline variables + Tier 1 additions.
 
-    Features:
-      - S5412600 (grade, continuous) — imputed to 12 if missing
-      - S5413300 (degree, ordinal) — imputed to 2 (HS diploma) if missing
-      - S5412800 (income, continuous) — imputed to 0 if missing
-      - sex_binary: R0000400 == 1 → 1.0, else 0.0
-      - race_white: R0000500 == 0 → 1.0, else 0.0
-      - race_black: R0000500 == 1 → 1.0, else 0.0
-      - race_hispanic: R0000500 == 2 → 1.0, else 0.0
+    Base features:
+      - grade_2005, degree_2005, income_2005
+      - sex_female, race_white, race_black, race_hispanic
+
+    Tier 1 additions:
+      - census_region (S5405600): region dummies
+      - hh_size_2005 (S5413000): household size
+      - marital_2005 (S5423000): married=1 / else=0
+      - piat_pct_1997 (R1210700): cognitive ability percentile
+      - asvab_stpel_1997 (R0538900): ASVAB symbol test
+      - father_educ (R1302400): father's years of education
+      - mother_educ (R1302500): mother's years of education
+
+    Interaction terms:
+      - degree_x_income: degree * log1p(income)
+      - sex_x_grade: sex_female * grade
+
+    Args:
+        rows: data rows
+        exclude_columns: variable codes to exclude (for leakage prevention)
     """
-    feature_names = [
-        "grade_2005", "degree_2005", "income_2005",
-        "sex_female", "race_white", "race_black", "race_hispanic",
-    ]
+    exclude_columns = exclude_columns or set()
 
-    X = []
+    # Build raw columns first (may include NaN for IterativeImputer)
+    raw_columns: dict[str, list[float | None]] = {
+        "grade_2005": [],
+        "degree_2005": [],
+        "income_2005": [],
+        "sex_female": [],
+        "race_white": [],
+        "race_black": [],
+        "race_hispanic": [],
+        "census_region": [],
+        "hh_size_2005": [],
+        "married_2005": [],
+        "piat_pct_1997": [],
+        "asvab_stpel_1997": [],
+        "father_educ": [],
+        "mother_educ": [],
+    }
+
+    # Map raw column names to source variable codes
+    col_to_var = {
+        "grade_2005": "S5412600",
+        "degree_2005": "S5413300",
+        "income_2005": "S5412800",
+        "sex_female": "R0000400",
+        "race_white": "R0000500",
+        "race_black": "R0000500",
+        "race_hispanic": "R0000500",
+        "census_region": "S5405600",
+        "hh_size_2005": "S5413000",
+        "married_2005": "S5423000",
+        "piat_pct_1997": "R1210700",
+        "asvab_stpel_1997": "R0538900",
+        "father_educ": "R1302400",
+        "mother_educ": "R1302500",
+    }
+
+    # Remove columns whose source variable is excluded
+    if exclude_columns:
+        raw_columns = {
+            name: vals for name, vals in raw_columns.items()
+            if col_to_var.get(name) not in exclude_columns
+        }
+
     for row in rows:
-        grade = row.get("S5412600")
-        degree = row.get("S5413300")
-        income = row.get("S5412800")
         sex = row.get("R0000400")
         race = row.get("R0000500")
+        income = row.get("S5412800")
+        marital = row.get("S5423000")
 
-        grade_imputed = grade if grade is not None else 12.0
-        degree_imputed = degree if degree is not None else 2.0
-        income_imputed = income if income is not None else 0.0
+        grade = row.get("S5412600")
+        degree = row.get("S5413300")
 
-        # Sex: 1 = female, 0 = male (NLSY97 coding)
-        sex_female = 1.0 if sex == 1.0 else 0.0
+        sex_female = 1.0 if sex == 1.0 else (0.0 if sex is not None else None)
+        race_val = race if race is not None else None
+        race_white = 1.0 if race_val == 0.0 else (0.0 if race_val is not None else None)
+        race_black = 1.0 if race_val == 1.0 else (0.0 if race_val is not None else None)
+        race_hispanic = 1.0 if race_val == 2.0 else (0.0 if race_val is not None else None)
 
-        # Race: one-hot from NLSY97 codes (0=Other/White, 1=Black, 2=Hispanic, 3=Mixed)
-        race_white = 1.0 if race == 0.0 else 0.0
-        race_black = 1.0 if race == 1.0 else 0.0
-        race_hispanic = 1.0 if race == 2.0 else 0.0
+        married = 1.0 if marital == 1.0 else (0.0 if marital is not None else None)
 
-        X.append([
-            grade_imputed, degree_imputed, income_imputed,
-            sex_female, race_white, race_black, race_hispanic,
-        ])
+        raw_columns["grade_2005"].append(grade)
+        raw_columns["degree_2005"].append(degree)
+        raw_columns["income_2005"].append(income)
+        raw_columns["sex_female"].append(sex_female)
+        raw_columns["race_white"].append(race_white)
+        raw_columns["race_black"].append(race_black)
+        raw_columns["race_hispanic"].append(race_hispanic)
+        if "census_region" in raw_columns:
+            raw_columns["census_region"].append(row.get("S5405600"))
+        if "hh_size_2005" in raw_columns:
+            raw_columns["hh_size_2005"].append(row.get("S5413000"))
+        if "married_2005" in raw_columns:
+            raw_columns["married_2005"].append(married)
+        if "piat_pct_1997" in raw_columns:
+            raw_columns["piat_pct_1997"].append(row.get("R1210700"))
+        if "asvab_stpel_1997" in raw_columns:
+            raw_columns["asvab_stpel_1997"].append(row.get("R0538900"))
+        if "father_educ" in raw_columns:
+            raw_columns["father_educ"].append(row.get("R1302400"))
+        if "mother_educ" in raw_columns:
+            raw_columns["mother_educ"].append(row.get("R1302500"))
 
+    # --- IterativeImputer for missing values ---
+    feature_names = list(raw_columns.keys())
+    n_rows = len(rows)
+    n_features = len(feature_names)
+
+    # Build matrix with NaN for missing
+    import numpy as np
+    X_nan = np.full((n_rows, n_features), np.nan)
+    for j, name in enumerate(feature_names):
+        for i, val in enumerate(raw_columns[name]):
+            if val is not None:
+                X_nan[i, j] = val
+
+    imputer = IterativeImputer(max_iter=10, random_state=42, sample_posterior=False)
+    X_imputed = imputer.fit_transform(X_nan)
+
+    # Add interaction terms after imputation
+    grade_idx = feature_names.index("grade_2005")
+    degree_idx = feature_names.index("degree_2005")
+    income_idx = feature_names.index("income_2005")
+    sex_idx = feature_names.index("sex_female")
+
+    import numpy as np
+    log_income = np.log1p(np.clip(X_imputed[:, income_idx], 0, None))
+    degree_x_income = X_imputed[:, degree_idx] * log_income
+    sex_x_grade = X_imputed[:, sex_idx] * X_imputed[:, grade_idx]
+
+    X_imputed = np.column_stack([X_imputed, degree_x_income, sex_x_grade])
+    feature_names.extend(["degree_x_income", "sex_x_grade"])
+
+    X = X_imputed.tolist()
     return X, feature_names
 
 
@@ -315,20 +452,35 @@ def train_and_evaluate(
     outcome_name: str,
     sample_size: int,
 ) -> dict:
-    """Train logistic regression and compute all metrics."""
+    """Train logistic regression with isotonic calibration and compute all metrics."""
+    import numpy as np
+
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
-    model = LogisticRegression(max_iter=1000, random_state=42)
-    model.fit(X_train_scaled, y_train)
+    base_model = LogisticRegression(max_iter=1000, random_state=42)
 
-    # Predictions
-    y_prob = model.predict_proba(X_test_scaled)[:, 1].tolist()
-    y_pred = model.predict(X_test_scaled).tolist()
+    # Use isotonic calibration via CalibratedClassifierCV (Tier 1 improvement)
+    # cv=5 for calibration on training set
+    min_class = min(sum(y_train), len(y_train) - sum(y_train))
+    cv_folds = min(5, min_class) if min_class > 1 else 2
+    calibrated_model = CalibratedClassifierCV(
+        base_model, method="isotonic", cv=cv_folds
+    )
+    calibrated_model.fit(X_train_scaled, y_train)
 
-    # Metrics
+    # Predictions from calibrated model
+    y_prob = calibrated_model.predict_proba(X_test_scaled)[:, 1].tolist()
+    y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
+
+    # Also get uncalibrated probabilities for comparison
+    base_model.fit(X_train_scaled, y_train)
+    y_prob_raw = base_model.predict_proba(X_test_scaled)[:, 1].tolist()
+
+    # Metrics (calibrated)
     brier = brier_score_loss(y_test, y_prob)
+    brier_raw = brier_score_loss(y_test, y_prob_raw)
 
     # AUC requires both classes present
     unique_test = set(y_test)
@@ -343,11 +495,11 @@ def train_and_evaluate(
     # Calibration curve
     calibration_bins = compute_calibration_bins(y_test, y_prob)
 
-    # Coefficients
+    # Coefficients (from base model, calibrated model doesn't expose coef)
     coefficients = {}
-    for name, coef in zip(feature_names, model.coef_[0].tolist()):
+    for name, coef in zip(feature_names, base_model.coef_[0].tolist()):
         coefficients[name] = round(coef, 4)
-    intercept = round(float(model.intercept_[0]), 4)
+    intercept = round(float(base_model.intercept_[0]), 4)
 
     # Quality gate
     is_weak = False
@@ -366,7 +518,7 @@ def train_and_evaluate(
     n_positive_test = sum(y_test)
 
     return {
-        "model_type": "logistic_regression",
+        "model_type": "logistic_regression_isotonic_calibrated",
         "outcome": outcome_name,
         "n_train": len(y_train),
         "n_test": len(y_test),
@@ -375,21 +527,16 @@ def train_and_evaluate(
         "positive_rate_train": round(n_positive_train / len(y_train), 4),
         "positive_rate_test": round(n_positive_test / len(y_test), 4),
         "brier_score": round(brier, 6),
+        "brier_score_raw": round(brier_raw, 6),
+        "brier_improvement": round(brier_raw - brier, 6),
         "auc_roc": round(auc, 6) if auc is not None else None,
         "accuracy": round(accuracy, 4),
         "calibration_bins": calibration_bins,
         "coefficients": coefficients,
         "intercept": intercept,
         "feature_names": feature_names,
-        "feature_imputation": {
-            "grade_2005": "missing → 12 (high school)",
-            "degree_2005": "missing → 2 (HS diploma)",
-            "income_2005": "missing → 0",
-            "sex_female": "missing → 0 (male)",
-            "race_white": "missing → 0",
-            "race_black": "missing → 0",
-            "race_hispanic": "missing → 0",
-        },
+        "imputation_method": "IterativeImputer (multivariate, max_iter=10)",
+        "calibration_method": "isotonic (CalibratedClassifierCV, cv=5)",
         "status": status,
         "rejection_reasons": rejection_reasons if rejection_reasons else None,
         "artifact_class": artifact_class,
@@ -485,8 +632,8 @@ def main():
     n_rejected = sum(1 for m in models if m["status"] == "rejected")
 
     output = {
-        "artifact_id": "nlsy97_calibrated_models_v3",
-        "version": "3.0",
+        "artifact_id": "nlsy97_calibrated_models_v4",
+        "version": "4.0",
         "artifact_class": "calibrated_model" if n_accepted > 0 else "data_backed_baseline",
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sample_size_scanned": args.sample_size,
@@ -499,7 +646,7 @@ def main():
         "feature_age_range": "25-29",
         "income_median_2015": income_median,
         "train_test_split": "80/20",
-        "model_family": "logistic_regression",
+        "model_family": "logistic_regression_isotonic_calibrated",
         "models": models,
         "model_card": {
             "artifact_class": "calibrated_model" if n_accepted > 0 else "data_backed_baseline",
@@ -534,19 +681,17 @@ def main():
                 },
             ],
             "imputation_policy": {
-                "grade_2005": "missing → 12 (high school completion)",
-                "degree_2005": "missing → 2 (HS diploma)",
-                "income_2005": "missing → 0",
-                "sex": "missing → male (0)",
-                "race": "missing → other/white (0)",
+                "method": "IterativeImputer (multivariate, max_iter=10, random_state=42)",
+                "description": "Chained equations imputation using all observed features",
             },
             "limitations": [
                 f"Sample of {args.sample_size:,} rows from full NLSY97 dataset ({len(rows):,} usable)",
                 "Cohort born 1980-84 — transfer to other generations limited",
-                "Logistic regression only — no nonlinear interaction terms",
+                "Logistic regression with interaction terms (degree×income, sex×grade)",
+                "Isotonic calibration via CalibratedClassifierCV (cv=5)",
+                "IterativeImputer for missing data (multivariate chained equations)",
                 "No individual-level predictions committed",
                 "No life_score or personal probability emitted",
-                "Missing features imputed with population-mode defaults",
                 "2005 baseline → 2015 outcome only — no longitudinal trajectory",
             ],
         },
@@ -561,7 +706,7 @@ def main():
     }
 
     # --- Step 7: Write output ---
-    output_path = ARTIFACTS_DIR / "nlsy97_calibrated_models_v3.json"
+    output_path = ARTIFACTS_DIR / "nlsy97_calibrated_models_v4.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
 

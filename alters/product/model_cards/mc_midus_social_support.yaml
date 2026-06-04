@@ -1,19 +1,29 @@
-# Model Card: MIDUS Social Closeness calibrated model
+# Model Card: MIDUS Social Support baseline table
+# Calibrated logistic regression from MIDUS-2 with Tier 1 improvements.
 
 model_id: mc_midus_social_support
 source_dataset_ids:
   - midus2
-outcome_id: social_closeness
+outcome_id: social_composite
 feature_mapping_ids:
-  - social_closeness_b1smpqsc
+  - chronic_conditions
+  - social_integration
+  - life_satisfaction
+  - personal_mastery
+  - neuroticism
+  - age
+  - sex
+  - sleep_hours
 model_family: logistic_regression
 training_status: trained
 evaluation_summary: >
-  Calibrated logistic regression predicting high_social_closeness (B1SMPQSC > median)
-  from MIDUS-2 features (excluding B1SMPQSC to avoid leakage). 1,067 usable rows,
-  80/20 split. AUC=0.689, Brier=0.2261.
+  Calibrated logistic regression predicting high_social_closeness from
+  MIDUS-2 baseline features with isotonic calibration (CalibratedClassifierCV)
+  and IterativeImputer. Excludes B1SMPQSC from features (leakage prevention).
+  8 features, 1,067 usable rows, 80/20 split.
+  AUC=0.689, Brier=0.2260.
 calibration_metrics:
-  brier_score: 0.2261
+  brier_score: 0.2260
   calibration_slope: null
   calibration_intercept: null
   auc: 0.689
@@ -21,15 +31,16 @@ calibration_metrics:
   n_train: 853
   n_test: 214
   calibration_bins: null
-transfer_risk: high
+transfer_risk: medium
 approved_for_route_b: true
 artifact_class: calibrated_model
 approval_level: route_b_approved
-approval_reason: "Calibrated logistic regression trained on MIDUS-2. AUC=0.689, Brier=0.2261. Passes quality gate (AUC≥0.6, Brier≤0.25)."
+approval_reason: "Calibrated logistic regression trained on MIDUS-2 cross-sectional data. AUC=0.689, Brier=0.2260. Isotonic calibration + IterativeImputer. Passes quality gate (AUC≥0.6, Brier≤0.25)."
 approval_blockers: []
 limitations:
-  - "MIDUS-2 cross-sectional: 1,067 usable respondents"
-  - "Social Closeness (B1SMPQSC) is a personality trait scale, not direct support measure"
-  - "Cross-sectional — no temporal separation between features and outcome"
-  - "High transfer risk: US national sample, age ~25-74"
-  - "Outcome source variable excluded from features to prevent leakage"
+  - "MIDUS-2 cross-sectional sample: 1,067 usable respondents"
+  - "Cross-domain prediction from single-wave data"
+  - "Logistic regression with isotonic calibration (CalibratedClassifierCV, cv=5)"
+  - "IterativeImputer for missing data (multivariate chained equations)"
+  - "B1SMPQSC excluded from features to prevent leakage"
+  - "Transfer risk moderate: US national sample, not population-representative for all contexts"

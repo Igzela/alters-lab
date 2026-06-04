@@ -12,7 +12,7 @@ Reads MIDUS-2 SPSS file via pyreadstat. Respects scale directions:
 Usage:
     python build_midus_calibrated_models.py \
         --sav-path labs/population_baseline/data/raw/midus/midus2/M2_P1_SURVEY_N4963_20200720.sav \
-        --output labs/population_baseline/artifacts/midus_calibrated_models_v3.json
+        --output labs/population_baseline/artifacts/midus_calibrated_models_v4.json
 """
 
 import argparse
@@ -22,7 +22,11 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import numpy as np
 import pyreadstat
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.experimental import enable_iterative_imputer  # noqa: F401
+from sklearn.impute import IterativeImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.model_selection import train_test_split
@@ -221,52 +225,21 @@ def create_binary_outcomes(rows: list[dict]) -> tuple[list[int], dict]:
     return health_labels, social_labels, lsat_labels, metadata
 
 
-def build_feature_matrix(rows: list[dict]) -> tuple[list[list[float]], list[str]]:
+def build_feature_matrix(
+    rows: list[dict],
+    exclude_columns: list[str] | None = None,
+) -> tuple[list[list[float]], list[str]]:
     """
-    Build feature matrix from MIDUS-2 variables.
+    Build feature matrix from MIDUS-2 variables with IterativeImputer.
 
-    Imputes missing values with population-mode defaults.
     Sex (B1PRSEX): 1=male, 2=female → sex_female binary.
     """
-    feature_names = [
-        "chronic_conditions", "social_closeness", "social_integration",
-        "life_satisfaction", "mastery", "neuroticism",
-        "age", "sex_female", "sleep_hours",
-    ]
-
-    X = []
-    for row in rows:
-        chronic = row.get("B1SCHRON", IMPUTATION_DEFAULTS["B1SCHRON"])
-        closeness = row.get("B1SMPQSC", IMPUTATION_DEFAULTS["B1SMPQSC"])
-        integration = row.get("B1SSWBSI", IMPUTATION_DEFAULTS["B1SSWBSI"])
-        life_sat = row.get("B1SSATIS", IMPUTATION_DEFAULTS["B1SSATIS"])
-        mastery = row.get("B1SMASTE", IMPUTATION_DEFAULTS["B1SMASTE"])
-        neuro = row.get("B1SNEURO", IMPUTATION_DEFAULTS["B1SNEURO"])
-        age = row.get("B1PAGE_M2", IMPUTATION_DEFAULTS["B1PAGE_M2"])
-        sex = row.get("B1PRSEX", IMPUTATION_DEFAULTS["B1PRSEX"])
-        sleep = row.get("B1SA57A", IMPUTATION_DEFAULTS["B1SA57A"])
-
-        # Sex: 2=female → 1.0, else 0.0
-        sex_female = 1.0 if sex == 2.0 else 0.0
-
-        X.append([
-            chronic, closeness, integration, life_sat, mastery, neuro,
-            age, sex_female, sleep,
-        ])
-
-    return X, feature_names
-
-
-def _build_feature_matrix_excluding(
-    rows: list[dict], exclude_vars: list[str]
-) -> tuple[list[list[float]], list[str]]:
-    """Build feature matrix excluding specific MIDUS-2 variables (to avoid leakage)."""
     all_feature_names = [
         "chronic_conditions", "social_closeness", "social_integration",
         "life_satisfaction", "mastery", "neuroticism",
         "age", "sex_female", "sleep_hours",
     ]
-    var_to_feature = {
+    all_var_to_feature = {
         "B1SCHRON": "chronic_conditions",
         "B1SMPQSC": "social_closeness",
         "B1SSWBSI": "social_integration",
@@ -277,13 +250,40 @@ def _build_feature_matrix_excluding(
         "B1PRSEX": "sex_female",
         "B1SA57A": "sleep_hours",
     }
-    exclude_features = {var_to_feature[v] for v in exclude_vars if v in var_to_feature}
-    keep_indices = [i for i, name in enumerate(all_feature_names) if name not in exclude_features]
-    feature_names = [all_feature_names[i] for i in keep_indices]
 
-    X_full, _ = build_feature_matrix(rows)
-    X = [[row[i] for i in keep_indices] for row in X_full]
-    return X, feature_names
+    exclude_columns = exclude_columns or []
+    exclude_features = {all_var_to_feature[v] for v in exclude_columns if v in all_var_to_feature}
+    feature_names = [n for n in all_feature_names if n not in exclude_features]
+
+    # Build raw matrix with NaN for missing
+    n_rows = len(rows)
+    n_features = len(feature_names)
+    X_nan = np.full((n_rows, n_features), np.nan)
+
+    var_code_by_feature = {v: k for k, v in all_var_to_feature.items()}
+
+    for i, row in enumerate(rows):
+        for j, fname in enumerate(feature_names):
+            var_code = var_code_by_feature[fname]
+            val = row.get(var_code)
+            if val is not None:
+                if fname == "sex_female":
+                    X_nan[i, j] = 1.0 if val == 2.0 else 0.0
+                else:
+                    X_nan[i, j] = val
+
+    # IterativeImputer for multivariate imputation
+    imputer = IterativeImputer(max_iter=10, random_state=42, sample_posterior=False)
+    X_imputed = imputer.fit_transform(X_nan)
+
+    return X_imputed.tolist(), feature_names
+
+
+def _build_feature_matrix_excluding(
+    rows: list[dict], exclude_vars: list[str]
+) -> tuple[list[list[float]], list[str]]:
+    """Build feature matrix excluding specific MIDUS-2 variables (to avoid leakage)."""
+    return build_feature_matrix(rows, exclude_columns=exclude_vars)
 
 
 def compute_calibration_bins(y_true: list[int], y_prob: list[float], n_bins: int = 10) -> list[dict]:
@@ -317,18 +317,30 @@ def train_and_evaluate(
     feature_names: list[str],
     outcome_name: str,
 ) -> dict:
-    """Train logistic regression and compute all metrics."""
+    """Train logistic regression with isotonic calibration and compute all metrics."""
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
-    model = LogisticRegression(max_iter=1000, random_state=42)
-    model.fit(X_train_scaled, y_train)
+    base_model = LogisticRegression(max_iter=1000, random_state=42)
 
-    y_prob = model.predict_proba(X_test_scaled)[:, 1].tolist()
-    y_pred = model.predict(X_test_scaled).tolist()
+    # Isotonic calibration via CalibratedClassifierCV
+    min_class = min(sum(y_train), len(y_train) - sum(y_train))
+    cv_folds = min(5, min_class) if min_class > 1 else 2
+    calibrated_model = CalibratedClassifierCV(
+        base_model, method="isotonic", cv=cv_folds
+    )
+    calibrated_model.fit(X_train_scaled, y_train)
+
+    y_prob = calibrated_model.predict_proba(X_test_scaled)[:, 1].tolist()
+    y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
+
+    # Uncalibrated for comparison
+    base_model.fit(X_train_scaled, y_train)
+    y_prob_raw = base_model.predict_proba(X_test_scaled)[:, 1].tolist()
 
     brier = brier_score_loss(y_test, y_prob)
+    brier_raw = brier_score_loss(y_test, y_prob_raw)
 
     unique_test = set(y_test)
     if len(unique_test) >= 2:
@@ -340,9 +352,9 @@ def train_and_evaluate(
     calibration_bins = compute_calibration_bins(y_test, y_prob)
 
     coefficients = {}
-    for name, coef in zip(feature_names, model.coef_[0].tolist()):
+    for name, coef in zip(feature_names, base_model.coef_[0].tolist()):
         coefficients[name] = round(coef, 4)
-    intercept = round(float(model.intercept_[0]), 4)
+    intercept = round(float(base_model.intercept_[0]), 4)
 
     # Weak model gate
     is_weak = False
@@ -361,7 +373,7 @@ def train_and_evaluate(
     n_positive_test = sum(y_test)
 
     return {
-        "model_type": "logistic_regression",
+        "model_type": "logistic_regression_isotonic_calibrated",
         "outcome": outcome_name,
         "n_train": len(y_train),
         "n_test": len(y_test),
@@ -370,13 +382,16 @@ def train_and_evaluate(
         "positive_rate_train": round(n_positive_train / len(y_train), 4),
         "positive_rate_test": round(n_positive_test / len(y_test), 4),
         "brier_score": round(brier, 6),
+        "brier_score_raw": round(brier_raw, 6),
+        "brier_improvement": round(brier_raw - brier, 6),
         "auc_roc": round(auc, 6) if auc is not None else None,
         "accuracy": round(accuracy, 4),
         "calibration_bins": calibration_bins,
         "coefficients": coefficients,
         "intercept": intercept,
         "feature_names": feature_names,
-        "feature_imputation": {k: f"missing -> {v}" for k, v in IMPUTATION_DEFAULTS.items()},
+        "imputation_method": "IterativeImputer (multivariate, max_iter=10)",
+        "calibration_method": "isotonic (CalibratedClassifierCV, cv=5)",
         "status": status,
         "rejection_reasons": rejection_reasons if rejection_reasons else None,
         "artifact_class": artifact_class,
@@ -425,16 +440,17 @@ def build_model_card(models: list[dict], n_accepted: int, n_rejected: int, total
             },
         ],
         "imputation_policy": {
-            k: f"missing -> {v}" for k, v in IMPUTATION_DEFAULTS.items()
+            "method": "IterativeImputer (multivariate, max_iter=10, random_state=42)",
+            "description": "Chained equations imputation using all observed features",
         },
         "limitations": [
             f"MIDUS-2 cross-sectional sample: {total_rows:,} usable respondents",
             "Cross-domain prediction (health, social, wellbeing) from single-wave data",
-            "Logistic regression only — no nonlinear interaction terms",
+            "Logistic regression with isotonic calibration (CalibratedClassifierCV, cv=5)",
+            "IterativeImputer for missing data (multivariate chained equations)",
             "No individual-level predictions committed",
             "No life_score or personal probability emitted",
             "Sentinel values (-1, 8, 9, 98, 99) excluded as missing",
-            "Missing features imputed with population-mode defaults",
             "Scale direction respected: M2 health 1=excellent (lower=better)",
         ],
         "transfer_risk": {
@@ -468,7 +484,7 @@ def main():
         print(f"ERROR: File not found: {sav_path}")
         return 1
 
-    output_path = Path(args.output) if args.output else ARTIFACTS_DIR / "midus_calibrated_models_v3.json"
+    output_path = Path(args.output) if args.output else ARTIFACTS_DIR / "midus_calibrated_models_v4.json"
     if not output_path.is_absolute():
         output_path = REPO_ROOT / output_path
 
@@ -543,8 +559,8 @@ def main():
     n_rejected = sum(1 for m in models if m["status"] == "rejected")
 
     output = {
-        "artifact_id": "midus_calibrated_models_v3",
-        "version": "3.0",
+        "artifact_id": "midus_calibrated_models_v4",
+        "version": "4.0",
         "artifact_class": "calibrated_model" if n_accepted > 0 else "data_backed_baseline",
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "data_source": "midus2",
@@ -553,7 +569,7 @@ def main():
         "sample_size_usable": len(rows),
         "scale_direction": "M2 health: 1=excellent, 5=poor (lower=better)",
         "train_test_split": "80/20",
-        "model_family": "logistic_regression",
+        "model_family": "logistic_regression_isotonic_calibrated",
         "outcome_metadata": outcome_meta,
         "models": models,
         "model_card": build_model_card(models, n_accepted, n_rejected, len(rows)),

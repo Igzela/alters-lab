@@ -1,25 +1,32 @@
 # Model Card: MIDUS Self-Rated Health baseline table
-# Baseline table from MIDUS data-confirmed outcome.
+# Calibrated logistic regression from MIDUS-2 with Tier 1 improvements.
 
 model_id: mc_midus_self_rated_health
 source_dataset_ids:
-  - midus1
   - midus2
-  - midus3
-outcome_id: self_rated_health
+outcome_id: health_composite
 feature_mapping_ids:
-  - self_rated_health_variable
+  - chronic_conditions
+  - social_closeness
+  - social_integration
+  - life_satisfaction
+  - personal_mastery
+  - neuroticism
+  - age
+  - sex
+  - sleep_hours
 model_family: logistic_regression
 training_status: trained
 evaluation_summary: >
-  Calibrated logistic regression predicting health_good_excellent (B1PA1 <= 3)
-  from MIDUS-2 features. 1,067 usable rows, 80/20 split.
-  AUC=0.772, Brier=0.1504. Good discrimination.
+  Calibrated logistic regression predicting health_good_excellent from
+  MIDUS-2 baseline features with isotonic calibration (CalibratedClassifierCV)
+  and IterativeImputer for missing data. 9 features, 1,067 usable rows, 80/20 split.
+  AUC=0.767, Brier=0.1568. Scale direction: 1=excellent (lower=better).
 calibration_metrics:
-  brier_score: 0.1504
+  brier_score: 0.1568
   calibration_slope: null
   calibration_intercept: null
-  auc: 0.772
+  auc: 0.767
   r2: null
   n_train: 853
   n_test: 214
@@ -28,11 +35,12 @@ transfer_risk: medium
 approved_for_route_b: true
 artifact_class: calibrated_model
 approval_level: route_b_approved
-approval_reason: "Calibrated logistic regression trained on MIDUS-2 cross-sectional data. AUC=0.772, Brier=0.1504. Passes quality gate."
+approval_reason: "Calibrated logistic regression trained on MIDUS-2 cross-sectional data. AUC=0.767, Brier=0.1568. Isotonic calibration + IterativeImputer. Passes quality gate (AUC≥0.6, Brier≤0.25)."
 approval_blockers: []
 limitations:
-  - "MIDUS-2 cross-sectional: 1,067 usable respondents after sentinel filter"
-  - "Single-item health measure, limited reliability"
-  - "Self-report bias correlates with education and income"
-  - "Cross-sectional design — no temporal separation between features and outcome"
-  - "Transfer risk medium: US national sample, age ~25-74"
+  - "MIDUS-2 cross-sectional sample: 1,067 usable respondents"
+  - "Cross-domain prediction from single-wave data"
+  - "Logistic regression with isotonic calibration (CalibratedClassifierCV, cv=5)"
+  - "IterativeImputer for missing data (multivariate chained equations)"
+  - "Scale direction: M2 health 1=excellent (lower=better)"
+  - "Transfer risk moderate: US national sample, not population-representative for all contexts"
