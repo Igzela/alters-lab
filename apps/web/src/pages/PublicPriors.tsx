@@ -105,6 +105,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
     artifact_class: string
     artifact_ids: string[]
     route_b_status: string
+    strength_level: string
   }> | undefined
 
   if (!data) return null
