@@ -29,6 +29,7 @@ from alters_lab.services.branch_base_rate_anchor import analyze_base_rate_anchor
 from alters_lab.services.branch_outcome_targets import list_targets_for_branch
 from alters_lab.services.calibration_divergence import analyze_calibration_divergence
 from alters_lab.services.p6_runtime import utc_now
+from alters_lab.services.personal_prior_adapter import adapt_personal_prior
 from alters_lab.services.public_prior import list_approved_artifacts, list_contextual_priors, list_model_cards
 
 
@@ -203,6 +204,14 @@ def analyze_branch_forecast(
         model_cards=model_cards,
     )
 
+    # Personal prior adapter — combines Route A, Route B, external evidence
+    behavior_metric_count = sum(1 for t in trend_resp.trends if t.direction in ("improving", "declining", "stable"))
+    adapter_result = adapt_personal_prior(
+        domain_predictions=domain_predictions,
+        route_a=route_a,
+        behavior_metric_count=behavior_metric_count,
+    )
+
     # Calibration divergence
     div_req = CalibrationDivergenceRequest(
         branch_id=request.branch_id,
@@ -266,6 +275,7 @@ def analyze_branch_forecast(
         calibration_divergence=div_summary,
         outcome_targets=outcome_summary,
         domain_predictions=domain_predictions,
+        personal_prior_adapter=adapter_result,
         limitations=limitations,
         next_evidence_to_collect=next_evidence,
         best_artifact_class=best_artifact_class,

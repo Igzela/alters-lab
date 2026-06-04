@@ -26,9 +26,17 @@ def _extract_domain_predictions(body: BranchForecastResult) -> list[DomainPredic
     map each to a DomainPrediction directly. Only fall back to overall_fallback
     when no domain-level data exists.
     """
+    # Index adapter results by domain for enrichment
+    adapter_by_domain: dict[str, object] = {}
+    if body.personal_prior_adapter and body.personal_prior_adapter.domain_results:
+        for ar in body.personal_prior_adapter.domain_results:
+            adapter_by_domain[ar.domain] = ar
+
     if body.domain_predictions:
-        return [
-            DomainPrediction(
+        results = []
+        for dp in body.domain_predictions:
+            adapter = adapter_by_domain.get(dp.domain)
+            results.append(DomainPrediction(
                 domain=dp.domain,
                 predicted_direction=dp.predicted_direction,
                 source=dp.predicted_direction_source,
@@ -39,9 +47,12 @@ def _extract_domain_predictions(body: BranchForecastResult) -> list[DomainPredic
                 evidence_strength=dp.evidence_strength,
                 transfer_risk=dp.transfer_risk,
                 artifact_class=dp.artifact_class,
-            )
-            for dp in body.domain_predictions
-        ]
+                strength_level=dp.strength_level,
+                adapter_adjusted_direction=adapter.adjusted_forecast_direction if adapter else None,
+                adapter_conflict_level=adapter.conflict_level if adapter else None,
+                adapter_alignment=adapter.alignment if adapter else None,
+            ))
+        return results
 
     # Fallback: no domain-level data, use overall trajectory for all domains
     overall_direction = body.forecast_summary.trajectory_direction
@@ -90,6 +101,7 @@ def create_from_forecast(body: BranchForecastResult):
             domain_predictions=domain_predictions,
             route_a_summary=body.route_a_personal_evidence.model_dump(),
             route_b_summary=body.route_b_population_prior.model_dump(),
+            adapter_summary=body.personal_prior_adapter.model_dump() if body.personal_prior_adapter else {},
             calibration_divergence_summary=body.calibration_divergence.model_dump(),
             limitations=body.limitations,
         )

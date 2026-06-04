@@ -6,6 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from alters_lab.schemas.personal_prior_adapter import PersonalPriorAdapterSummary
+
 
 class BranchForecastRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -113,6 +115,7 @@ class BranchForecastResult(BaseModel):
     calibration_divergence: CalibrationDivergenceSummary
     outcome_targets: OutcomeTargetSummary
     domain_predictions: list[DomainForecastPrediction] = Field(default_factory=list)
+    personal_prior_adapter: PersonalPriorAdapterSummary = Field(default_factory=PersonalPriorAdapterSummary)
     limitations: list[str] = Field(default_factory=list)
     next_evidence_to_collect: list[str] = Field(default_factory=list)
     best_artifact_class: Literal[

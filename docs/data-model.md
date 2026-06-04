@@ -516,3 +516,69 @@ Defines how population baseline outputs may enter the main forecast system.
 | `disallowed_behaviors` | list[str] | Behaviors that are explicitly prohibited |
 
 **Module-level constants:** `ALLOWED_OUTPUT_FIELDS`, `REQUIRED_GUARDS`, `DISALLOWED_BEHAVIORS` available for import.
+
+## Personal Prior Adapter (Route B v4)
+
+Location: `apps/api/src/alters_lab/schemas/personal_prior_adapter.py`
+
+Combines Route A personal evidence, Route B public priors, external evidence, and behavior metric completeness into per-domain adapted forecasts. See `docs/PERSONAL_PRIOR_ADAPTER_POLICY.md` for the full policy.
+
+### EvidenceComponent
+
+A single evidence input to the adapter.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `source` | Literal | route_a_behavior, route_b_public_prior, external_evidence, outcome_target, calibration_history, contextual_prior |
+| `domain` | Domain | One of the 5 domains |
+| `direction` | Literal | improving, declining, stable, mixed, unknown |
+| `strength` | Literal | weak, medium, strong |
+| `confidence` | Literal | low, medium, high |
+| `freshness_days` | int \| None | Days since evidence was collected |
+| `explanation` | str | Human-readable explanation |
+| `limitations` | list[str] | Known limitations |
+
+### PersonalPriorAdapterResult
+
+Per-domain adapter result combining all evidence sources.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `domain` | Domain | One of the 5 domains |
+| `route_a_direction` | Literal | Personal evidence direction |
+| `route_b_direction` | Literal | Public prior direction |
+| `route_b_strength_level` | Literal | strong_calibrated, data_backed, contextual, unavailable |
+| `external_evidence_direction` | Literal | External evidence direction |
+| `alignment` | Literal | aligned, conflicted, route_a_only, route_b_only, insufficient_data |
+| `conflict_level` | Literal | none, low, medium, high |
+| `adjusted_forecast_direction` | Literal | Final adapted direction |
+| `adjusted_confidence` | Literal | Final adapted confidence |
+| `confidence_drivers` | list[str] | What increased confidence |
+| `confidence_penalties` | list[str] | What decreased confidence |
+| `next_evidence_to_collect` | list[str] | Suggestions for improving the forecast |
+| `explanation` | str | Human-readable explanation |
+
+### PersonalPriorAdapterSummary
+
+Aggregate adapter result across all domains.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `domain_results` | list[PersonalPriorAdapterResult] | Per-domain results |
+| `overall_alignment` | Literal | aligned, conflicted, mixed, insufficient_data |
+| `overall_conflict_level` | Literal | none, low, medium, high |
+| `forecast_readiness` | Literal | insufficient, provisional, usable, strong |
+| `readiness_reasons` | list[str] | Why readiness is at this level |
+| `readiness_blockers` | list[str] | What blocks higher readiness |
+| `evidence_components` | list[EvidenceComponent] | All evidence inputs used |
+
+### SourceHitRates (CalibrationScorecard extension)
+
+Per-source hit rates for comparing Route A, Route B, and Adapter accuracy.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `route_a_hit/miss/partial/unknown_count` | int | Route A match counts |
+| `route_b_hit/miss/partial/unknown_count` | int | Route B match counts |
+| `adapter_hit/miss/partial/unknown_count` | int | Adapter match counts |
+| `conflict_outcomes` | dict[str, int] | Conflict level → match result counts |

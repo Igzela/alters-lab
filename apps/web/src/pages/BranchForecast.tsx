@@ -16,6 +16,26 @@ const DIRECTION_COLORS: Record<string, 'success' | 'error' | 'warning' | 'info' 
   unknown: 'muted',
   favorable: 'success',
   unfavorable: 'error',
+  aligned: 'success',
+  conflicted: 'error',
+  route_a_only: 'info',
+  route_b_only: 'warning',
+  insufficient_data: 'muted',
+}
+
+const ALIGNMENT_LABELS: Record<string, string> = {
+  aligned: 'Aligned',
+  conflicted: 'Conflict Detected',
+  route_a_only: 'Personal Evidence Only',
+  route_b_only: 'Public Prior Only',
+  insufficient_data: 'Insufficient Data',
+}
+
+const READINESS_VARIANTS: Record<string, 'success' | 'warning' | 'error' | 'muted'> = {
+  strong: 'success',
+  usable: 'success',
+  provisional: 'warning',
+  insufficient: 'error',
 }
 
 export default function BranchForecast() {
@@ -186,6 +206,109 @@ export default function BranchForecast() {
               )
             })()}
           </Card>
+
+          {/* Personal Prior Adapter */}
+          {(() => {
+            const adapter = forecast.personal_prior_adapter as Record<string, unknown> | undefined
+            if (!adapter || !(adapter.domain_results as unknown[])?.length) return null
+            const readiness = adapter.forecast_readiness as string
+            return (
+              <Card accent="blue">
+                <h3 className="text-sm font-semibold mb-2">{t('branchForecast.personalAdapter')}</h3>
+                <div className="space-y-3 text-xs">
+                  {/* Overall readiness */}
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>{t('branchForecast.forecastReadiness')}:</span>
+                    <Badge variant={READINESS_VARIANTS[readiness] || 'muted'}>
+                      {readiness === 'strong' ? t('branchForecast.strongForecast')
+                        : readiness === 'usable' ? t('branchForecast.usableForecast')
+                        : readiness === 'provisional' ? t('branchForecast.provisionalForecast')
+                        : t('branchForecast.insufficientData')}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>{t('branchForecast.evidenceAlignment')}:</span>
+                    <Badge variant={DIRECTION_COLORS[adapter.overall_alignment as string] || 'muted'}>
+                      {ALIGNMENT_LABELS[adapter.overall_alignment as string] || adapter.overall_alignment as string}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>{t('branchForecast.conflictLevel')}:</span>
+                    <Badge variant={adapter.overall_conflict_level === 'none' ? 'success' : adapter.overall_conflict_level === 'high' ? 'error' : 'warning'}>
+                      {adapter.overall_conflict_level as string}
+                    </Badge>
+                  </div>
+
+                  {/* Readiness reasons */}
+                  {(adapter.readiness_reasons as string[] || []).length > 0 && (
+                    <div className="p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
+                      <div className="font-medium mb-1" style={{ color: 'var(--color-text-secondary)' }}>Reasons</div>
+                      {(adapter.readiness_reasons as string[]).map((r, i) => (
+                        <div key={i} className="flex gap-1.5"><span style={{ color: 'var(--color-accent)' }}>+</span>{r}</div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Readiness blockers */}
+                  {(adapter.readiness_blockers as string[] || []).length > 0 && (
+                    <div className="p-2 rounded" style={{ backgroundColor: 'var(--color-error-bg, var(--color-surface))' }}>
+                      <div className="font-medium mb-1" style={{ color: 'var(--color-error)' }}>Blockers</div>
+                      {(adapter.readiness_blockers as string[]).map((b, i) => (
+                        <div key={i} className="flex gap-1.5"><span style={{ color: 'var(--color-error)' }}>!</span>{b}</div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Per-domain results */}
+                  <div className="space-y-2">
+                    {(adapter.domain_results as Record<string, unknown>[] || []).map((dr, i) => (
+                      <div key={i} className="p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium">{dr.domain as string}</span>
+                          <Badge variant={DIRECTION_COLORS[dr.adjusted_forecast_direction as string] || 'muted'}>
+                            {dr.adjusted_forecast_direction as string}
+                          </Badge>
+                          <Badge variant={DIRECTION_COLORS[dr.alignment as string] || 'muted'}>
+                            {ALIGNMENT_LABELS[dr.alignment as string] || dr.alignment as string}
+                          </Badge>
+                          {dr.conflict_level !== 'none' && (
+                            <Badge variant="error">{dr.conflict_level as string} conflict</Badge>
+                          )}
+                        </div>
+                        <div className="flex gap-4" style={{ color: 'var(--color-text-secondary)' }}>
+                          <span>Route A: {dr.route_a_direction as string}</span>
+                          <span>Route B: {dr.route_b_direction as string} ({dr.route_b_strength_level as string})</span>
+                          <span>Confidence: {dr.adjusted_confidence as string}</span>
+                        </div>
+                        {(dr.explanation as string) && (
+                          <p className="mt-1" style={{ color: 'var(--color-text-muted)' }}>{dr.explanation as string}</p>
+                        )}
+                        {(dr.confidence_drivers as string[] || []).length > 0 && (
+                          <div className="mt-1">
+                            {(dr.confidence_drivers as string[]).map((d, j) => (
+                              <span key={j} className="inline-block mr-2 px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: 'var(--color-accent-bg)', color: 'var(--color-accent)' }}>+ {d}</span>
+                            ))}
+                          </div>
+                        )}
+                        {(dr.confidence_penalties as string[] || []).length > 0 && (
+                          <div className="mt-1">
+                            {(dr.confidence_penalties as string[]).map((p, j) => (
+                              <span key={j} className="inline-block mr-2 px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: 'var(--color-error-bg, var(--color-surface))', color: 'var(--color-error)' }}>- {p}</span>
+                            ))}
+                          </div>
+                        )}
+                        {(dr.next_evidence_to_collect as string[] || []).length > 0 && (
+                          <div className="mt-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                            Next: {(dr.next_evidence_to_collect as string[]).join('; ')}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            )
+          })()}
 
           {/* Calibration Divergence */}
           <Card accent="amber">

@@ -22,6 +22,26 @@ class SignalQuality(BaseModel):
     misleading_signals: list[str] = Field(default_factory=list)
 
 
+class SourceHitRates(BaseModel):
+    """Hit rates broken down by prediction source (Route A, Route B, Adapter)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    route_a_hit_count: int = 0
+    route_a_miss_count: int = 0
+    route_a_partial_count: int = 0
+    route_a_unknown_count: int = 0
+    route_b_hit_count: int = 0
+    route_b_miss_count: int = 0
+    route_b_partial_count: int = 0
+    route_b_unknown_count: int = 0
+    adapter_hit_count: int = 0
+    adapter_miss_count: int = 0
+    adapter_partial_count: int = 0
+    adapter_unknown_count: int = 0
+    conflict_outcomes: dict[str, int] = Field(default_factory=dict)
+
+
 class CalibrationScorecard(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -32,5 +52,6 @@ class CalibrationScorecard(BaseModel):
     unknown_count: int = 0
     by_domain: list[DomainScore] = Field(default_factory=list)
     signal_quality: SignalQuality = Field(default_factory=SignalQuality)
+    source_hit_rates: SourceHitRates = Field(default_factory=SourceHitRates)
     calibration_confidence: Literal["low", "medium", "high"] = "low"
     limitations: list[str] = Field(default_factory=list)

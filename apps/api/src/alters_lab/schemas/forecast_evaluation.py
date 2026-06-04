@@ -20,7 +20,7 @@ class DomainResult(BaseModel):
         "subjective_wellbeing",
     ]
     predicted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"]
-    predicted_direction_source: Literal["route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "unknown"] = "unknown"
+    predicted_direction_source: Literal["route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "adapter", "unknown"] = "unknown"
     predicted_direction_confidence: Literal["low", "medium", "high"] = "low"
     predicted_direction_explanation: str = ""
     observed_direction: Literal["improved", "declined", "stable", "mixed", "unknown"]
@@ -33,6 +33,11 @@ class DomainResult(BaseModel):
     artifact_id: str | None = None
     model_card_id: str | None = None
     approved_for_route_b: bool = False
+    route_a_match_result: Literal["hit", "miss", "partial", "unknown"] | None = None
+    route_b_match_result: Literal["hit", "miss", "partial", "unknown"] | None = None
+    adapter_match_result: Literal["hit", "miss", "partial", "unknown"] | None = None
+    conflict_level_at_forecast_time: Literal["none", "low", "medium", "high"] | None = None
+    evidence_alignment_at_forecast_time: Literal["aligned", "conflicted", "route_a_only", "route_b_only", "insufficient_data"] | None = None
 
 
 class ForecastEvaluationRecord(BaseModel):

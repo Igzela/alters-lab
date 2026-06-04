@@ -8,6 +8,7 @@ from alters_lab.schemas.calibration_scorecard import (
     CalibrationScorecard,
     DomainScore,
     SignalQuality,
+    SourceHitRates,
 )
 from alters_lab.schemas.forecast_evaluation import ForecastEvaluationRecord
 from alters_lab.services.forecast_evaluation import list_evaluations
@@ -44,6 +45,12 @@ def build_scorecard(repo_root: Path | None = None) -> CalibrationScorecard:
     all_predictive: list[str] = []
     all_misleading: list[str] = []
 
+    # Per-source hit tracking
+    ra_hit = ra_miss = ra_partial = ra_unknown = 0
+    rb_hit = rb_miss = rb_partial = rb_unknown = 0
+    adapter_hit = adapter_miss = adapter_partial = adapter_unknown = 0
+    conflict_outcomes: dict[str, int] = {}
+
     for ev in evaluations:
         if ev.overall_result == "hit":
             hit += 1
@@ -60,6 +67,42 @@ def build_scorecard(repo_root: Path | None = None) -> CalibrationScorecard:
                 domain_hits[dr.domain] = domain_hits.get(dr.domain, 0) + 1
             strengths = domain_strengths.setdefault(dr.domain, {})
             strengths[dr.evidence_strength] = strengths.get(dr.evidence_strength, 0) + 1
+
+            # Track per-source match results
+            if dr.route_a_match_result:
+                if dr.route_a_match_result == "hit":
+                    ra_hit += 1
+                elif dr.route_a_match_result == "miss":
+                    ra_miss += 1
+                elif dr.route_a_match_result == "partial":
+                    ra_partial += 1
+                else:
+                    ra_unknown += 1
+
+            if dr.route_b_match_result:
+                if dr.route_b_match_result == "hit":
+                    rb_hit += 1
+                elif dr.route_b_match_result == "miss":
+                    rb_miss += 1
+                elif dr.route_b_match_result == "partial":
+                    rb_partial += 1
+                else:
+                    rb_unknown += 1
+
+            if dr.adapter_match_result:
+                if dr.adapter_match_result == "hit":
+                    adapter_hit += 1
+                elif dr.adapter_match_result == "miss":
+                    adapter_miss += 1
+                elif dr.adapter_match_result == "partial":
+                    adapter_partial += 1
+                else:
+                    adapter_unknown += 1
+
+            # Track conflict outcomes
+            if dr.conflict_level_at_forecast_time and dr.conflict_level_at_forecast_time != "none":
+                key = f"{dr.conflict_level_at_forecast_time}_{dr.match_result}"
+                conflict_outcomes[key] = conflict_outcomes.get(key, 0) + 1
 
         all_predictive.extend(ev.predictive_signals)
         all_misleading.extend(ev.misleading_signals)
@@ -93,6 +136,21 @@ def build_scorecard(repo_root: Path | None = None) -> CalibrationScorecard:
         signal_quality=SignalQuality(
             predictive_signals=list(set(all_predictive)),
             misleading_signals=list(set(all_misleading)),
+        ),
+        source_hit_rates=SourceHitRates(
+            route_a_hit_count=ra_hit,
+            route_a_miss_count=ra_miss,
+            route_a_partial_count=ra_partial,
+            route_a_unknown_count=ra_unknown,
+            route_b_hit_count=rb_hit,
+            route_b_miss_count=rb_miss,
+            route_b_partial_count=rb_partial,
+            route_b_unknown_count=rb_unknown,
+            adapter_hit_count=adapter_hit,
+            adapter_miss_count=adapter_miss,
+            adapter_partial_count=adapter_partial,
+            adapter_unknown_count=adapter_unknown,
+            conflict_outcomes=conflict_outcomes,
         ),
         calibration_confidence=confidence,
         limitations=limitations,

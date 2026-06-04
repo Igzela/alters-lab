@@ -22,7 +22,7 @@ class DomainPrediction(BaseModel):
         "subjective_wellbeing",
     ]
     predicted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"]
-    source: Literal["route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "unknown"] = "unknown"
+    source: Literal["route_a", "route_b", "behavior_metric", "outcome_target", "overall_fallback", "adapter", "unknown"] = "unknown"
     confidence: Literal["low", "medium", "high"] = "low"
     explanation: str = ""
     route_a_direction: Literal["improving", "declining", "stable", "insufficient_data", "unknown"] = "unknown"
@@ -34,6 +34,10 @@ class DomainPrediction(BaseModel):
     dataset_source_id: str | None = None
     approved_for_route_b: bool = False
     artifact_class: Literal["contextual_prior", "data_backed_baseline", "calibrated_model", "none"] = "none"
+    strength_level: Literal["strong_calibrated", "data_backed", "contextual", "none"] = "none"
+    adapter_adjusted_direction: Literal["improving", "declining", "stable", "mixed", "unknown"] | None = None
+    adapter_conflict_level: Literal["none", "low", "medium", "high"] | None = None
+    adapter_alignment: Literal["aligned", "conflicted", "route_a_only", "route_b_only", "insufficient_data"] | None = None
 
 
 class ForecastSummarySnapshot(BaseModel):
@@ -58,6 +62,7 @@ class ForecastSnapshotRecord(BaseModel):
     domain_predictions: list[DomainPrediction] = Field(default_factory=list)
     route_a_summary: dict[str, Any] = Field(default_factory=dict)
     route_b_summary: dict[str, Any] = Field(default_factory=dict)
+    adapter_summary: dict[str, Any] = Field(default_factory=dict)
     calibration_divergence_summary: dict[str, Any] = Field(default_factory=dict)
     outcome_target_ids: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
