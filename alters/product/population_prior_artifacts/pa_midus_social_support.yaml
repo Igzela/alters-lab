@@ -1,4 +1,5 @@
-# Population Prior Artifact: MIDUS Social Closeness calibrated model
+# Population Prior: MIDUS Social Closeness
+# Demoted from calibrated_model to data_backed_baseline (no model improvement)
 
 artifact_id: pa_midus_social_support
 model_id: mc_midus_social_support
@@ -9,20 +10,21 @@ prior_direction: favorable
 probability_band: null
 population_percentile: null
 deviation_from_baseline: null
-confidence: high
+confidence: medium
 transfer_risk: high
 explanation: >
-  Calibrated logistic regression predicting high_social_closeness (B1SMPQSC > median)
-  from MIDUS-2 features. AUC=0.689, Brier=0.2261. 1,067 rows, 80/20 split.
-  Moderate discrimination for social closeness outcome.
-artifact_class: calibrated_model
+  Data-backed baseline from MIDUS-2 cross-sectional survey. 1,067 usable
+  respondents. 42.3% report high social closeness. Model AUC=0.689 but no
+  improvement over baseline. Use as descriptive population statistic.
+artifact_class: data_backed_baseline
 actual_data_used: true
 value_labels_confirmed: true
 missingness_reviewed: true
+baseline_table_id: null
 limitations:
   - "Only available in MIDUS"
   - "Self-reported quality may differ from actual support received"
-  - "Scale items may not capture digital/remote support patterns"
-  - "Cross-wave aggregate comparison only"
+  - "No model improvement over baseline"
+  - "Use as descriptive baseline, not strong prediction"
   - "High transfer risk caps confidence at medium"
   - "This is a population baseline, not an individual prediction"

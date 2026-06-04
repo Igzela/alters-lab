@@ -53,6 +53,7 @@ class RouteBPopulationPrior(BaseModel):
     ] = "none"
     contextual_prior_ids: list[str] = Field(default_factory=list)
     calibration_metrics: dict[str, float | None] = Field(default_factory=dict)
+    strength_level: Literal["strong_calibrated", "data_backed", "contextual", "none"] = "none"
 
 
 class CalibrationDivergenceSummary(BaseModel):
@@ -97,6 +98,7 @@ class DomainForecastPrediction(BaseModel):
     artifact_class: Literal[
         "contextual_prior", "data_backed_baseline", "calibrated_model", "none"
     ] = "none"
+    strength_level: Literal["strong_calibrated", "data_backed", "contextual", "none"] = "none"
 
 
 class BranchForecastResult(BaseModel):

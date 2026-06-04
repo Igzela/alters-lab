@@ -128,11 +128,12 @@ export default function BranchForecast() {
                 return <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('branchForecast.routeBUnavailable')}</p>
               }
               const artifactClass = routeB.artifact_class as string
-              const classBadge = artifactClass === 'calibrated_model'
-                ? { variant: 'success' as const, label: 'Calibrated Public Model' }
-                : artifactClass === 'data_backed_baseline'
-                  ? { variant: 'warning' as const, label: 'Descriptive Public Baseline' }
-                  : artifactClass === 'contextual_prior'
+              const strengthLevel = routeB.strength_level as string
+              const classBadge = strengthLevel === 'strong_calibrated'
+                ? { variant: 'success' as const, label: 'Strong Calibrated Public Model' }
+                : strengthLevel === 'data_backed'
+                  ? { variant: 'warning' as const, label: 'Data-Backed Descriptive Baseline' }
+                  : strengthLevel === 'contextual'
                     ? { variant: 'muted' as const, label: 'Contextual Literature Prior' }
                     : artifactClass === 'mixed'
                       ? { variant: 'warning' as const, label: 'Mixed (Data + Contextual)' }
@@ -144,7 +145,7 @@ export default function BranchForecast() {
                     <Badge variant={classBadge.variant}>
                       {classBadge.label}
                     </Badge>
-                    {artifactClass !== 'calibrated_model' && artifactClass !== 'data_backed_baseline' && artifactClass !== 'none' && (
+                    {strengthLevel !== 'strong_calibrated' && strengthLevel !== 'data_backed' && strengthLevel !== 'none' && (
                       <span style={{ color: 'var(--color-error)' }}>— Route B not fully approved for this forecast</span>
                     )}
                   </div>
@@ -161,8 +162,8 @@ export default function BranchForecast() {
                   <p className="mt-1">{routeB.explanation as string}</p>
                   {calibrationMetrics && Object.values(calibrationMetrics).some(v => v != null) && (
                     <div className="mt-2 p-2 rounded" style={{
-                      backgroundColor: artifactClass === 'calibrated_model' ? 'var(--color-accent-bg)' : 'var(--color-surface)',
-                      border: artifactClass === 'calibrated_model' ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
+                      backgroundColor: strengthLevel === 'strong_calibrated' ? 'var(--color-accent-bg)' : 'var(--color-surface)',
+                      border: strengthLevel === 'strong_calibrated' ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
                     }}>
                       <div className="font-medium mb-1">Model Performance</div>
                       <div className="flex gap-4 flex-wrap">

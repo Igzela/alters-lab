@@ -1,5 +1,5 @@
-# Model Card: MIDUS Social Support baseline table
-# Calibrated logistic regression from MIDUS-2 with Tier 1 improvements.
+# Model Card: MIDUS Social Support
+# Demoted to lab_only: no improvement over baseline after Tier 1 enhancements.
 
 model_id: mc_midus_social_support
 source_dataset_ids:
@@ -17,11 +17,10 @@ feature_mapping_ids:
 model_family: logistic_regression
 training_status: trained
 evaluation_summary: >
-  Calibrated logistic regression predicting high_social_closeness from
-  MIDUS-2 baseline features with isotonic calibration (CalibratedClassifierCV)
-  and IterativeImputer. Excludes B1SMPQSC from features (leakage prevention).
-  8 features, 1,067 usable rows, 80/20 split.
-  AUC=0.689, Brier=0.2260.
+  Logistic regression predicting high_social_closeness from MIDUS-2 baseline
+  with isotonic calibration and IterativeImputer. 8 features (B1SMPQSC excluded
+  for leakage prevention), 1,067 usable rows. AUC=0.689, Brier=0.2260.
+  No improvement over v3 baseline.
 calibration_metrics:
   brier_score: 0.2260
   calibration_slope: null
@@ -32,15 +31,20 @@ calibration_metrics:
   n_test: 214
   calibration_bins: null
 transfer_risk: medium
-approved_for_route_b: true
+approved_for_route_b: false
 artifact_class: calibrated_model
-approval_level: route_b_approved
-approval_reason: "Calibrated logistic regression trained on MIDUS-2 cross-sectional data. AUC=0.689, Brier=0.2260. Isotonic calibration + IterativeImputer. Passes quality gate (AUC≥0.6, Brier≤0.25)."
-approval_blockers: []
+approval_level: lab_only
+approval_reason: >
+  Passes quality gate (AUC≥0.6, Brier≤0.25) but no improvement over baseline.
+  AUC unchanged at 0.689. Effective sample (1,067) too small for enhancements.
+  Promoted to data_backed_baseline at artifact level.
+approval_blockers:
+  - "No AUC improvement over baseline (0.689 → 0.689)"
+  - "No Brier improvement over baseline (0.2261 → 0.2260)"
+  - "n_test=214 too small for reliable calibration assessment"
 limitations:
   - "MIDUS-2 cross-sectional sample: 1,067 usable respondents"
   - "Cross-domain prediction from single-wave data"
-  - "Logistic regression with isotonic calibration (CalibratedClassifierCV, cv=5)"
-  - "IterativeImputer for missing data (multivariate chained equations)"
+  - "No improvement after Tier 1 enhancements"
   - "B1SMPQSC excluded from features to prevent leakage"
-  - "Transfer risk moderate: US national sample, not population-representative for all contexts"
+  - "Use as descriptive baseline, not strong predictive model"

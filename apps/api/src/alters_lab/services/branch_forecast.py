@@ -155,8 +155,14 @@ def analyze_branch_forecast(
 
     # Aggregate calibration_metrics from best model card (calibrated_model > data_backed_baseline)
     agg_calibration_metrics: dict[str, float | None] = {}
+    # Determine strength level from best approved artifact
+    strength_priority = {"strong_calibrated": 3, "data_backed": 2, "contextual": 1, "none": 0}
+    best_strength = "none"
     for a in approved_artifacts:
         card = model_cards.get(a.model_id)
+        sl = _strength_level(a.artifact_class, card.approval_level if card else "unapproved")
+        if strength_priority.get(sl, 0) > strength_priority.get(best_strength, 0):
+            best_strength = sl
         if card and card.calibration_metrics:
             cm = card.calibration_metrics
             if cm.brier_score is not None:
@@ -185,6 +191,7 @@ def analyze_branch_forecast(
         artifact_class=agg_class,  # type: ignore[arg-type]
         contextual_prior_ids=contextual_prior_ids,
         calibration_metrics=agg_calibration_metrics,
+        strength_level=best_strength,  # type: ignore[arg-type]
     )
 
     # Domain-level predictions from anchor data
@@ -338,6 +345,24 @@ def _artifact_class_priority(cls: str) -> int:
     return {"calibrated_model": 3, "data_backed_baseline": 2, "contextual_prior": 1}.get(cls, 0)
 
 
+def _strength_level(artifact_class: str, approval_level: str) -> str:
+    """Map artifact_class + approval_level to a strength level for display.
+
+    Promotion gate:
+    - calibrated_model + route_b_approved → "strong_calibrated"
+    - data_backed_baseline + route_b_approved → "data_backed"
+    - contextual_prior or lab_only → "contextual"
+    - none → "none"
+    """
+    if artifact_class == "calibrated_model" and approval_level == "route_b_approved":
+        return "strong_calibrated"
+    if artifact_class == "data_backed_baseline" and approval_level == "route_b_approved":
+        return "data_backed"
+    if artifact_class in ("contextual_prior", "calibrated_model", "data_backed_baseline"):
+        return "contextual"
+    return "none"
+
+
 def _build_domain_predictions(
     domain_anchors: list,
     route_a_available: bool,
@@ -415,10 +440,13 @@ def _build_domain_predictions(
             )
 
         # Use artifact transfer risk if available, overriding anchor risk
+        domain_strength = "none"
         if best_artifact:
             t_risk = best_artifact.transfer_risk
             ev_strength = "moderate" if best_artifact.confidence in ("medium", "high") else "weak"
             artifact_cls = getattr(best_artifact, "artifact_class", "none") or "none"
+            approval_lvl = best_card.approval_level if best_card else "unapproved"
+            domain_strength = _strength_level(artifact_cls, approval_lvl)
             if artifact_cls == "calibrated_model":
                 base_confidence = "high"
             elif artifact_cls == "data_backed_baseline":
@@ -441,6 +469,7 @@ def _build_domain_predictions(
             dataset_source_id=best_card.source_dataset_ids[0] if best_card and best_card.source_dataset_ids else None,
             approved_for_route_b=best_card.approval_level == "route_b_approved" if best_card else False,
             artifact_class=best_artifact.artifact_class if best_artifact else "none",  # type: ignore[arg-type]
+            strength_level=domain_strength,  # type: ignore[arg-type]
         ))
 
     return predictions

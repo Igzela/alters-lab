@@ -1,4 +1,4 @@
-# Population Prior Artifact: NLSY97 Career/Education data-backed baseline
+# Population Prior: NLSY97 Career/Education — Strong Calibrated Model
 
 artifact_id: pa_nlsy97_career_education
 model_id: mc_nlsy97_career_education
@@ -12,14 +12,13 @@ deviation_from_baseline: null
 confidence: high
 transfer_risk: high
 explanation: >
-  Calibrated logistic regression predicting bachelor_or_higher (2015) from
-  NLSY97 2005 baseline. AUC=0.924, Brier=0.0919. 7,100 rows, 80/20 split.
-  Strong discrimination; well-calibrated in high-probability bins.
+  Strong calibrated model from NLSY97 prospective design (2005→2015).
+  7,100 usable rows, 16 features, isotonic calibration. AUC=0.939, Brier=0.0824.
+  Clear improvement over baseline. Well-calibrated in high-probability bins.
 limitations:
   - "Cohort born 1980-84 — transfer to other generations limited"
   - "2005→2015 prospective design (10-year gap)"
   - "Self-reported education levels"
-  - "7 features only: grade, degree, income, sex, race"
   - "Transfer risk high due to cohort specificity"
   - "This is a population model, not an individual prediction"
 artifact_class: calibrated_model

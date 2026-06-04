@@ -151,6 +151,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                 <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                   <th className="text-left py-2 px-2 font-medium">{t('publicPriors.coverage.domain')}</th>
                   <th className="text-center py-2 px-2 font-medium">Route B Status</th>
+                  <th className="text-center py-2 px-2 font-medium">Strength</th>
                   <th className="text-center py-2 px-2 font-medium">Class</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.direction')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.confidence')}</th>
@@ -167,6 +168,11 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                       <td className="py-2 px-2 text-center">
                         <Badge variant={d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'muted'}>
                           {d.route_b_status === 'approved' ? 'Route B Approved' : d.route_b_status === 'contextual_only' ? 'Contextual Only' : 'No Prior'}
+                        </Badge>
+                      </td>
+                      <td className="py-2 px-2 text-center">
+                        <Badge variant={d.strength_level === 'strong_calibrated' ? 'success' : d.strength_level === 'data_backed' ? 'warning' : 'muted'}>
+                          {d.strength_level === 'strong_calibrated' ? 'Strong Model' : d.strength_level === 'data_backed' ? 'Data-Backed' : d.strength_level === 'contextual' ? 'Contextual' : 'None'}
                         </Badge>
                       </td>
                       <td className="py-2 px-2 text-center text-xs">{d.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : d.artifact_class === 'calibrated_model' ? 'Calibrated Model' : d.artifact_class === 'contextual_prior' ? 'Contextual' : d.artifact_class}</td>

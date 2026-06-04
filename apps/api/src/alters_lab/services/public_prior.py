@@ -11,6 +11,17 @@ from alters_lab.schemas.population_baseline import (
 from alters_lab.services.p6_runtime import list_records, read_record
 
 
+def _strength_level(artifact_class: str, approval_level: str) -> str:
+    """Map artifact_class + approval_level to a strength level for display."""
+    if artifact_class == "calibrated_model" and approval_level == "route_b_approved":
+        return "strong_calibrated"
+    if artifact_class == "data_backed_baseline" and approval_level == "route_b_approved":
+        return "data_backed"
+    if artifact_class in ("contextual_prior", "calibrated_model", "data_backed_baseline"):
+        return "contextual"
+    return "none"
+
+
 def _load_model_cards(repo_root: Path | None = None) -> list[PopulationBaselineModelCard]:
     records = list_records("model_cards", repo_root=repo_root)
     return [PopulationBaselineModelCard(**r) for r in records]
@@ -105,6 +116,10 @@ def get_domain_coverage(repo_root: Path | None = None) -> dict[str, dict]:
                 "artifact_class": best.artifact_class,
                 "artifact_ids": [a.artifact_id for a in domain_approved],
                 "route_b_status": "approved",
+                "strength_level": _strength_level(
+                    best.artifact_class,
+                    card.approval_level if card else "unapproved",
+                ),
             }
         elif domain_contextual:
             coverage[domain] = {
@@ -118,6 +133,7 @@ def get_domain_coverage(repo_root: Path | None = None) -> dict[str, dict]:
                 "artifact_class": "contextual_prior",
                 "artifact_ids": [a.artifact_id for a in domain_contextual],
                 "route_b_status": "contextual_only",
+                "strength_level": "contextual",
             }
         else:
             coverage[domain] = {
@@ -131,5 +147,6 @@ def get_domain_coverage(repo_root: Path | None = None) -> dict[str, dict]:
                 "artifact_class": "none",
                 "artifact_ids": [],
                 "route_b_status": "no_prior",
+                "strength_level": "none",
             }
     return coverage
