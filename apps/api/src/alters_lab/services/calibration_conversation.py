@@ -410,6 +410,12 @@ def confirm_draft(
         week_start_str = bm.week_start or utc_now()[:10]
         week_end_str = bm.week_end or utc_now()[:10]
 
+        milestone_pct = bm.key_milestone_progress_pct or 0.0
+        # WeeklyBehaviorMetricsRecord requires milestone_id when progress > 0
+        # Since LLM extraction doesn't have milestone context, default to 0
+        if milestone_pct > 0 and not bm.branch_id:
+            milestone_pct = 0.0
+
         record = WeeklyBehaviorMetricsRecord(
             record_id=generate_record_id("bm"),
             week_start=date.fromisoformat(week_start_str),
@@ -426,7 +432,7 @@ def confirm_draft(
             avoidable_health_risk_events=bm.avoidable_health_risk_events or 0,
             meaningful_social_contact_count=bm.meaningful_social_contact_count or 0,
             abandoned_committed_blocks=bm.abandoned_committed_blocks or 0,
-            key_milestone_progress_pct=bm.key_milestone_progress_pct or 0.0,
+            key_milestone_progress_pct=milestone_pct,
             notes=bm.notes,
         )
 

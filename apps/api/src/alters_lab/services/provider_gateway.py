@@ -216,6 +216,9 @@ def provider_gateway_complete(request: ProviderGatewayRequest) -> ProviderGatewa
             if system_msg:
                 payload["system"] = system_msg
             payload["temperature"] = temperature
+            # Disable thinking mode for models that support it (e.g. mimo)
+            # to get plain text responses instead of thinking blocks
+            payload.setdefault("thinking", {"type": "disabled"})
             resp = httpx.post(f"{base_url}/v1/messages", json=payload, headers=headers, timeout=timeout)
             resp.raise_for_status()
             data = resp.json()
