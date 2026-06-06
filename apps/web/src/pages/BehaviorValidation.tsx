@@ -106,7 +106,7 @@ export default function BehaviorValidation() {
         <Button variant="primary" onClick={evaluate} disabled={evalMutation.isPending}>
           {evalMutation.isPending ? t('validation.evaluating') : t('validation.runEvaluation')}
         </Button>
-        {evalMutation.data && <span className="text-sm" style={{ color: 'var(--color-success)' }}>{t('validation.evalComplete')} {String((evalMutation.data as Record<string, unknown>)?.validation && ((evalMutation.data as Record<string, unknown>).validation as Record<string, unknown>).outcome || '')}</span>}
+        {evalMutation.data && <span className="text-sm" style={{ color: 'var(--color-success)' }}>{t('validation.evalComplete')} {(() => { const outcome = String((evalMutation.data as Record<string, unknown>)?.validation && ((evalMutation.data as Record<string, unknown>).validation as Record<string, unknown>).outcome || ''); return outcome ? t(`validation.outcomes.${outcome}`, { defaultValue: outcome.replace(/_/g, ' ') }) : '' })()}</span>}
         {evalMutation.error && <ErrorDisplay message={(evalMutation.error as Error).message} />}
       </div>
 
@@ -123,7 +123,7 @@ export default function BehaviorValidation() {
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2.5 mb-3">
             <div>
               <Badge variant={OUTCOME_BADGE[record.outcome] || 'muted'}>
-                {record.outcome.replace(/_/g, ' ')}
+                {t(`validation.outcomes.${record.outcome}`, { defaultValue: record.outcome.replace(/_/g, ' ') })}
               </Badge>
             </div>
             <div className="text-sm"><strong>{record.weekly_review_count}</strong><br /><span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('validation.weeklyReviews')}</span></div>

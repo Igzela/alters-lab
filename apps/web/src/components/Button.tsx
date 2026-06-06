@@ -11,7 +11,7 @@ export function Button({ variant = 'primary', children, className = '', style: s
   const variants: Record<string, string> = {
     primary: `${base} px-5 py-2.5 text-sm rounded-full border-none`,
     secondary: `${base} px-5 py-2.5 text-sm rounded-full border`,
-    ghost: `${base} px-3 py-1.5 text-sm rounded-lg border-none bg-transparent hover:bg-black/5`,
+    ghost: `${base} px-3 py-1.5 text-sm rounded-lg border-none bg-transparent hover:bg-[var(--color-surface-raised)]`,
     danger: `${base} px-5 py-2.5 text-sm rounded-full border-none`,
   }
 

@@ -157,7 +157,7 @@ export default function BranchForecast() {
                     ? { variant: 'muted' as const, label: 'Contextual Literature Prior' }
                     : artifactClass === 'mixed'
                       ? { variant: 'warning' as const, label: 'Mixed (Data + Contextual)' }
-                      : { variant: 'muted' as const, label: 'No Route B Prior' }
+                      : { variant: 'muted' as const, label: 'No Population Data' }
               const calibrationMetrics = routeB.calibration_metrics as Record<string, unknown> | undefined
               return (
                 <div className="space-y-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
@@ -166,7 +166,7 @@ export default function BranchForecast() {
                       {classBadge.label}
                     </Badge>
                     {strengthLevel !== 'strong_calibrated' && strengthLevel !== 'data_backed' && strengthLevel !== 'none' && (
-                      <span style={{ color: 'var(--color-error)' }}>— Route B not fully approved for this forecast</span>
+                      <span style={{ color: 'var(--color-error)' }}>— Population data not fully approved for this forecast</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -276,8 +276,8 @@ export default function BranchForecast() {
                           )}
                         </div>
                         <div className="flex gap-4" style={{ color: 'var(--color-text-secondary)' }}>
-                          <span>Route A: {dr.route_a_direction as string}</span>
-                          <span>Route B: {dr.route_b_direction as string} ({dr.route_b_strength_level as string})</span>
+                          <span>{t('branchForecast.routeA')}: {dr.route_a_direction as string}</span>
+                          <span>{t('branchForecast.routeB')}: {dr.route_b_direction as string} ({dr.route_b_strength_level as string})</span>
                           <span>Confidence: {dr.adjusted_confidence as string}</span>
                         </div>
                         {(dr.explanation as string) && (

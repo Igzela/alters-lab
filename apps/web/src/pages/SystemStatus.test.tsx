@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { describe, it, expect, vi } from 'vitest'
 import '../test/mocks'
@@ -30,8 +30,9 @@ describe('SystemStatus', () => {
     expect(screen.getByText('status.title')).toBeInTheDocument()
   })
 
-  it('shows local app and product surface cards', () => {
+  it('shows local app and product surface cards after expanding advanced', () => {
     renderPage()
+    fireEvent.click(screen.getByText(/status.advancedInfo/))
     expect(screen.getByText('status.localApp')).toBeInTheDocument()
     expect(screen.getByText('status.productSurface')).toBeInTheDocument()
   })

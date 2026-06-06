@@ -22,19 +22,19 @@ function renderAt() {
 describe('PublicPriors', () => {
   it('renders without crashing', () => {
     renderAt()
-    expect(screen.getByText(/Public Priors/i)).toBeTruthy()
+    expect(screen.getByText(/Population Data/i)).toBeTruthy()
   })
 
   it('shows title and description', () => {
     renderAt()
-    expect(screen.getByText('Public Priors')).toBeTruthy()
-    expect(screen.getByText(/Population baseline priors/i)).toBeTruthy()
+    expect(screen.getByText('Population Data')).toBeTruthy()
+    expect(screen.getByText(/Population baseline data/i)).toBeTruthy()
   })
 
   it('shows tab navigation', () => {
     renderAt()
     expect(screen.getByText('Domain Coverage')).toBeTruthy()
-    expect(screen.getByText('Prior Artifacts')).toBeTruthy()
+    expect(screen.getByText('Data Artifacts')).toBeTruthy()
     expect(screen.getByText('Model Cards')).toBeTruthy()
   })
 })

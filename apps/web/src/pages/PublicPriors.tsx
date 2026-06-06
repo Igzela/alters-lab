@@ -151,7 +151,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                   <th className="text-left py-2 px-2 font-medium">{t('publicPriors.coverage.domain')}</th>
-                  <th className="text-center py-2 px-2 font-medium">Route B Status</th>
+                  <th className="text-center py-2 px-2 font-medium">{t('strengthOverview.routeBStatus')}</th>
                   <th className="text-center py-2 px-2 font-medium">Strength</th>
                   <th className="text-center py-2 px-2 font-medium">Class</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.direction')}</th>
@@ -168,7 +168,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                       <td className="py-2 px-2 font-medium">{DOMAIN_LABELS[domain] || domain}</td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'muted'}>
-                          {d.route_b_status === 'approved' ? 'Route B Approved' : d.route_b_status === 'contextual_only' ? 'Contextual Only' : 'No Prior'}
+                          {d.route_b_status === 'approved' ? t('strengthOverview.stats.routeBApproved') : d.route_b_status === 'contextual_only' ? 'Contextual Only' : t('strengthOverview.stats.noPrior')}
                         </Badge>
                       </td>
                       <td className="py-2 px-2 text-center">
@@ -208,7 +208,7 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
             {domains.map(domain => {
               const d = data[domain]
               const variant = d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'error'
-              const label = d.route_b_status === 'approved' ? 'Route B Approved' : d.route_b_status === 'contextual_only' ? 'Contextual Only' : 'No Prior'
+              const label = d.route_b_status === 'approved' ? t('strengthOverview.stats.routeBApproved') : d.route_b_status === 'contextual_only' ? 'Contextual Only' : t('strengthOverview.stats.noPrior')
               return (
                 <Badge key={domain} variant={variant}>
                   {DOMAIN_LABELS[domain] || domain}: {label}
@@ -410,7 +410,7 @@ function ModelCardsTab({
           >
             {card.model_id}
             {card.approval_level === 'route_b_approved' && (
-              <Badge variant="success" className="ml-1.5">Route B</Badge>
+              <Badge variant="success" className="ml-1.5">Approved</Badge>
             )}
             {card.approval_level === 'lab_only' && (
               <Badge variant="warning" className="ml-1.5">Lab Only</Badge>
@@ -426,7 +426,7 @@ function ModelCardsTab({
               <h4 className="font-semibold">{selected.model_id}</h4>
               <div className="flex gap-1.5">
                 <Badge variant={selected.approval_level === 'route_b_approved' ? 'success' : selected.approval_level === 'lab_only' ? 'warning' : 'muted'}>
-                  {selected.approval_level === 'route_b_approved' ? 'Route B Approved' : selected.approval_level === 'lab_only' ? 'Lab Only' : 'Unapproved'}
+                  {selected.approval_level === 'route_b_approved' ? t('strengthOverview.stats.routeBApproved') : selected.approval_level === 'lab_only' ? 'Lab Only' : 'Unapproved'}
                 </Badge>
                 {selected.artifact_class && (
                   <Badge variant={selected.artifact_class === 'data_backed_baseline' || selected.artifact_class === 'calibrated_model' ? 'success' : selected.artifact_class === 'contextual_prior' ? 'warning' : 'info'}>

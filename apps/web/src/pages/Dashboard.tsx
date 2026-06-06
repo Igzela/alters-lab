@@ -1,11 +1,13 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWeeklyReviews, useActionAlignmentScores, usePatternReviews } from '../hooks/useApi'
+import { useWeeklyReviews, useActionAlignmentScores, usePatternReviews, useProviderStatus } from '../hooks/useApi'
 import { Card } from '../components/Card'
 import { Badge } from '../components/Badge'
 import { SkeletonCard } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import { useTheme } from '../components/ThemeContext'
+import OnboardingModal, { shouldShowOnboarding } from '../components/OnboardingModal'
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr)
@@ -25,12 +27,18 @@ export default function Dashboard() {
   const reviews = useWeeklyReviews()
   const scores = useActionAlignmentScores()
   const patterns = usePatternReviews()
+  const providerStatus = useProviderStatus()
+  const [showOnboarding, setShowOnboarding] = useState(shouldShowOnboarding)
 
   const isLoading = reviews.isLoading || scores.isLoading || patterns.isLoading
   const error = reviews.error || scores.error || patterns.error
 
   const textColor = theme === 'dark' ? '#a8a29e' : '#78716c'
   const borderColor = theme === 'dark' ? '#3a3a3a' : '#e8e6e1'
+
+  const providerMode = (providerStatus.data as Record<string, unknown>)?.mode as string ?? t('dashboard.statusUnknown')
+  const providerModeLabel = providerMode === 'disabled' ? t('dashboard.providerDisabled') : providerMode === 'mock' ? t('dashboard.providerMock') : providerMode === 'live' ? t('dashboard.providerLive') : providerMode
+  const providerBadgeVariant = providerMode === 'live' ? 'success' : providerMode === 'mock' ? 'amber' : 'muted'
 
   const reviewCount = reviews.data?.count ?? 0
   const scoreCount = scores.data?.count ?? 0
@@ -67,7 +75,7 @@ export default function Dashboard() {
   if (isLoading) return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>{t('dashboard.title')}</h2>
-      <div className="grid grid-cols-3 gap-4"><SkeletonCard /><SkeletonCard /><SkeletonCard /></div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><SkeletonCard /><SkeletonCard /><SkeletonCard /></div>
       <SkeletonCard />
       <SkeletonCard />
     </div>
@@ -77,8 +85,30 @@ export default function Dashboard() {
     <div className="space-y-4">
       <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>{t('dashboard.title')}</h2>
 
+      {/* System health card */}
+      <Card accent="blue">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>{t('dashboard.systemHealth')}</h3>
+          <Badge variant={providerMode === 'disabled' ? 'muted' : 'success'}>{providerMode === 'disabled' ? t('dashboard.statusWarning') : t('dashboard.statusOk')}</Badge>
+        </div>
+        <div className="flex gap-6 mt-3">
+          <div>
+            <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('dashboard.providerMode')}</span>
+            <div className="mt-1">
+              <Badge variant={providerBadgeVariant}>{providerModeLabel}</Badge>
+            </div>
+          </div>
+          <div>
+            <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('dashboard.frontendStatus')}</span>
+            <div className="mt-1">
+              <Badge variant="success">{t('dashboard.statusOk')}</Badge>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* Summary counters */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <div className="text-center">
             <div className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>{reviewCount}</div>
@@ -166,6 +196,8 @@ export default function Dashboard() {
           <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('dashboard.noPatterns')}</p>
         )}
       </Card>
+
+      {showOnboarding && <OnboardingModal onClose={() => setShowOnboarding(false)} />}
     </div>
   )
 }

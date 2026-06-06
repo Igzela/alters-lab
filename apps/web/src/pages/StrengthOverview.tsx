@@ -126,7 +126,7 @@ export default function StrengthOverview() {
                       </td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'muted'}>
-                          {d.route_b_status === 'approved' ? 'Route B' : d.route_b_status === 'contextual_only' ? 'Contextual' : 'None'}
+                          {d.route_b_status === 'approved' ? 'Approved' : d.route_b_status === 'contextual_only' ? 'Contextual' : 'None'}
                         </Badge>
                       </td>
                       <td className="py-2 px-2 text-center text-xs">{d.model_family}</td>

@@ -1,11 +1,10 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { STORAGE_KEY as LANG_STORAGE_KEY } from '../i18n'
 import {
-  House,
-  Compass,
   ClipboardText,
   ChatCircle,
   ChartLineUp,
-  GitBranch,
   Gear,
   MagnifyingGlass,
   ArrowsClockwise,
@@ -16,95 +15,77 @@ import {
   Moon,
   ChartBarIcon,
   TrendUp,
-  Target,
   Binoculars,
-  Crosshair,
+  Target,
   Books,
   Pulse,
   Gauge,
+  CaretDown,
+  CaretRight,
 } from '@phosphor-icons/react'
 import type { Page } from '../types'
 import { useTheme } from './ThemeContext'
-
-interface NavItem {
-  page: Page
-  icon: React.ReactNode
-  labelKey: string
-}
-
-interface NavGroup {
-  labelKey: string
-  items: NavItem[]
-}
-
-const navGroups: NavGroup[] = [
-  {
-    labelKey: 'nav.overview',
-    items: [
-      { page: 'dashboard', icon: <ChartBarIcon size={18} />, labelKey: 'nav.dashboard' },
-      { page: 'status', icon: <House size={18} />, labelKey: 'nav.status' },
-      { page: 'getting-started', icon: <Compass size={18} />, labelKey: 'nav.gettingStarted' },
-    ],
-  },
-  {
-    labelKey: 'nav.calibration',
-    items: [
-      { page: 'weekly', icon: <ClipboardText size={18} />, labelKey: 'nav.weeklyReview' },
-      { page: 'history', icon: <ChartLineUp size={18} />, labelKey: 'nav.history' },
-      { page: 'reality', icon: <Sparkle size={18} />, labelKey: 'nav.realityScore' },
-      { page: 'rubric', icon: <ArrowsClockwise size={18} />, labelKey: 'nav.rubricDelta' },
-      { page: 'calibration-conversation', icon: <ChatCircle size={18} />, labelKey: 'nav.calibrationConversation' },
-      { page: 'behavior-metrics', icon: <Pulse size={18} />, labelKey: 'nav.behaviorMetrics' },
-    ],
-  },
-  {
-    labelKey: 'nav.dialogue',
-    items: [
-      { page: 'dialogue', icon: <ChatCircle size={18} />, labelKey: 'nav.dialogue' },
-      { page: 'provider', icon: <Gear size={18} />, labelKey: 'nav.provider' },
-    ],
-  },
-  {
-    labelKey: 'nav.analysis',
-    items: [
-      { page: 'patterns', icon: <MagnifyingGlass size={18} />, labelKey: 'nav.patterns' },
-      { page: 'validation', icon: <ShieldCheck size={18} />, labelKey: 'nav.validation' },
-    ],
-  },
-  {
-    labelKey: 'nav.prediction',
-    items: [
-      { page: 'predictor-profile', icon: <TrendUp size={18} />, labelKey: 'nav.predictorProfile' },
-      { page: 'outcome-targets', icon: <Target size={18} />, labelKey: 'nav.outcomeTargets' },
-      { page: 'branch-forecast', icon: <Binoculars size={18} />, labelKey: 'nav.branchForecast' },
-      { page: 'forecast-calibration', icon: <Crosshair size={18} />, labelKey: 'nav.forecastCalibration' },
-      { page: 'public-priors', icon: <Books size={18} />, labelKey: 'nav.publicPriors' },
-      { page: 'strength-overview', icon: <Gauge size={18} />, labelKey: 'nav.strengthOverview' },
-    ],
-  },
-  {
-    labelKey: 'nav.system',
-    items: [
-      { page: 'checkpoint', icon: <GitBranch size={18} />, labelKey: 'nav.checkpointPlan' },
-      { page: 'p6-progress', icon: <ChartLineUp size={18} />, labelKey: 'nav.p6Progress' },
-      { page: 'data', icon: <Database size={18} />, labelKey: 'nav.data' },
-    ],
-  },
-]
 
 interface SidebarProps {
   currentPage: Page
   onNavigate: (page: Page) => void
 }
 
+const coreItems: { page: Page; icon: React.ReactNode; labelKey: string }[] = [
+  { page: 'dashboard', icon: <ChartBarIcon size={18} />, labelKey: 'nav.home' },
+  { page: 'p6-progress', icon: <TrendUp size={18} />, labelKey: 'nav.yourProgress' },
+  { page: 'dialogue', icon: <ChatCircle size={18} />, labelKey: 'nav.dialogue' },
+  { page: 'weekly', icon: <ClipboardText size={18} />, labelKey: 'nav.weeklyReview' },
+  { page: 'branch-forecast', icon: <Binoculars size={18} />, labelKey: 'nav.branchForecast' },
+  { page: 'outcome-targets', icon: <Target size={18} />, labelKey: 'nav.outcomeTargets' },
+  { page: 'forecast-calibration', icon: <ChartLineUp size={18} />, labelKey: 'nav.forecastCalibration' },
+]
+
+const moreItems: { page: Page; icon: React.ReactNode; labelKey: string }[] = [
+  { page: 'calibration-conversation', icon: <ChatCircle size={18} />, labelKey: 'nav.calibrationConversation' },
+  { page: 'behavior-metrics', icon: <Pulse size={18} />, labelKey: 'nav.behaviorMetrics' },
+  { page: 'reality', icon: <Sparkle size={18} />, labelKey: 'nav.realityScore' },
+  { page: 'rubric', icon: <ArrowsClockwise size={18} />, labelKey: 'nav.rubricDelta' },
+  { page: 'patterns', icon: <MagnifyingGlass size={18} />, labelKey: 'nav.patterns' },
+  { page: 'validation', icon: <ShieldCheck size={18} />, labelKey: 'nav.validation' },
+  { page: 'public-priors', icon: <Books size={18} />, labelKey: 'nav.publicPriors' },
+  { page: 'strength-overview', icon: <Gauge size={18} />, labelKey: 'nav.strengthOverview' },
+  { page: 'predictor-profile', icon: <TrendUp size={18} />, labelKey: 'nav.predictorProfile' },
+  { page: 'provider', icon: <Gear size={18} />, labelKey: 'nav.provider' },
+  { page: 'data', icon: <Database size={18} />, labelKey: 'nav.data' },
+]
+
 export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
   const { t, i18n } = useTranslation()
   const { theme, toggleTheme } = useTheme()
+  const [moreOpen, setMoreOpen] = useState(false)
 
   const toggleLang = () => {
     const next = i18n.language === 'en' ? 'zh' : 'en'
     i18n.changeLanguage(next)
-    localStorage.setItem('alters_lab_language', next)
+    localStorage.setItem(LANG_STORAGE_KEY, next)
+  }
+
+  const renderItem = (item: { page: Page; icon: React.ReactNode; labelKey: string }) => {
+    const isActive = currentPage === item.page
+    return (
+      <button
+        key={item.page}
+        onClick={() => onNavigate(item.page)}
+        aria-current={isActive ? 'page' : undefined}
+        className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors duration-150 border-none cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b45309] focus-visible:ring-offset-1 focus-visible:ring-offset-[#1c1917]"
+        style={{
+          backgroundColor: isActive ? '#44403c' : 'transparent',
+          color: isActive ? '#faf9f7' : '#a8a29e',
+          borderLeft: isActive ? '2px solid #b45309' : '2px solid transparent',
+        }}
+        onMouseEnter={e => { if (!isActive) { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' } }}
+        onMouseLeave={e => { if (!isActive) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#a8a29e' } }}
+      >
+        <span className="flex-shrink-0">{item.icon}</span>
+        <span>{t(item.labelKey)}</span>
+      </button>
+    )
   }
 
   return (
@@ -116,34 +97,24 @@ export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3" role="navigation" aria-label={t('app.title')}>
-        {navGroups.map((group, gi) => (
-          <div key={gi} className="mb-4">
-            <div className="px-2 mb-1 text-[11px] font-medium uppercase tracking-wider" style={{ color: '#78716c' }}>
-              {t(group.labelKey)}
-            </div>
-            {group.items.map(item => {
-              const isActive = currentPage === item.page
-              return (
-                <button
-                  key={item.page}
-                  onClick={() => onNavigate(item.page)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors duration-150 border-none cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b45309] focus-visible:ring-offset-1 focus-visible:ring-offset-[#1c1917]"
-                  style={{
-                    backgroundColor: isActive ? '#44403c' : 'transparent',
-                    color: isActive ? '#faf9f7' : '#a8a29e',
-                    borderLeft: isActive ? '2px solid #b45309' : '2px solid transparent',
-                  }}
-                  onMouseEnter={e => { if (!isActive) { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' } }}
-                  onMouseLeave={e => { if (!isActive) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#a8a29e' } }}
-                >
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  <span>{t(item.labelKey)}</span>
-                </button>
-              )
-            })}
-          </div>
-        ))}
+        <div className="mb-4">
+          {coreItems.map(renderItem)}
+        </div>
+
+        <div className="mb-4">
+          <button
+            onClick={() => setMoreOpen(v => !v)}
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-sm border-none cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b45309]"
+            style={{ color: '#78716c', backgroundColor: 'transparent' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#78716c' }}
+            aria-expanded={moreOpen}
+          >
+            {moreOpen ? <CaretDown size={14} /> : <CaretRight size={14} />}
+            <span>{t('nav.more')}</span>
+          </button>
+          {moreOpen && moreItems.map(renderItem)}
+        </div>
       </nav>
 
       <div className="px-3 py-4 border-t" style={{ borderColor: '#292524' }}>
@@ -154,10 +125,10 @@ export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
             style={{ color: '#78716c', backgroundColor: 'transparent' }}
             onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' }}
             onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#78716c' }}
-            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            aria-label={theme === 'light' ? t('nav.switchToDark') : t('nav.switchToLight')}
           >
             {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
-            <span className="text-xs">{theme === 'light' ? 'Dark' : 'Light'}</span>
+            <span className="text-xs">{theme === 'light' ? t('nav.themeDark') : t('nav.themeLight')}</span>
           </button>
           <button
             onClick={toggleLang}
@@ -165,7 +136,7 @@ export default function Sidebar({ currentPage, onNavigate }: SidebarProps) {
             style={{ color: '#78716c', backgroundColor: 'transparent' }}
             onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#292524'; e.currentTarget.style.color = '#d6d3d1' }}
             onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#78716c' }}
-            aria-label={i18n.language === 'en' ? 'Switch to Chinese' : 'Switch to English'}
+            aria-label={i18n.language === 'en' ? t('nav.switchToChinese') : t('nav.switchToEnglish')}
           >
             <span className="text-xs">{i18n.language === 'en' ? 'EN' : 'ZH'}</span>
           </button>

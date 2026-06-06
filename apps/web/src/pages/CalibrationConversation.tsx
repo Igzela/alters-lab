@@ -29,6 +29,25 @@ const CONFIDENCE_VARIANTS: Record<string, 'success' | 'warning' | 'error'> = {
 
 const RUBRIC_KEYS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
 
+const RUBRIC_KEY_MAP: Record<string, string> = {
+  execution_discipline: 'calConversation.fields.executionDiscipline',
+  exploration_freedom: 'calConversation.fields.explorationFreedom',
+  life_state_match: 'calConversation.fields.lifeStateMatch',
+  energy_level: 'calConversation.fields.energyLevel',
+}
+
+const BEHAVIOR_METRIC_KEY_MAP: Record<string, string> = {
+  career_education_deep_work_minutes: 'behaviorMetrics.metrics.career_education_deep_work_minutes',
+  planned_commitment_follow_through_rate: 'behaviorMetrics.metrics.planned_commitment_follow_through_rate',
+  expense_logged_days: 'behaviorMetrics.metrics.expense_logged_days',
+  regular_sleep_nights: 'behaviorMetrics.metrics.regular_sleep_nights',
+  moderate_vigorous_activity_minutes: 'behaviorMetrics.metrics.moderate_vigorous_activity_minutes',
+  avoidable_health_risk_events: 'behaviorMetrics.metrics.avoidable_health_risk_events',
+  meaningful_social_contact_count: 'behaviorMetrics.metrics.meaningful_social_contact_count',
+  abandoned_committed_blocks: 'behaviorMetrics.metrics.abandoned_committed_blocks',
+  key_milestone_progress_pct: 'behaviorMetrics.metrics.key_milestone_progress_pct',
+}
+
 interface DraftCardProps {
   draft: Record<string, unknown>
   onConfirm: (id: string) => void
@@ -61,7 +80,7 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
     <div ref={ref}>
       <Card accent="amber">
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-medium">{t('calConversation.draftTitle')}</h4>
+          <h4 className="text-sm font-medium">{t('calConversation.draft.title')}</h4>
           <span
             className="text-xs px-2 py-0.5 rounded-full font-medium"
             style={{
@@ -69,21 +88,21 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
               color: `var(--color-${CONFIDENCE_VARIANTS[confidence]})`,
             }}
           >
-            {t(`calConversation.confidence.${confidence}`)}
+            {t(`calConversation.draft.confidence.${confidence}`)}
           </span>
         </div>
 
         {behaviorMetrics && (
           <div className="mb-3">
             <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
-              {t('calConversation.behaviorMetrics')}
+              {t('calConversation.draft.behaviorMetrics')}
             </h5>
             <div className="grid grid-cols-2 gap-1.5 text-xs">
               {Object.entries(behaviorMetrics).map(([key, val]) => {
                 if (val == null || val === '') return null
                 return (
                   <div key={key} className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                    <span style={{ color: 'var(--color-text-muted)' }}>{key.replace(/_/g, ' ')}</span>
+                    <span style={{ color: 'var(--color-text-muted)' }}>{t(BEHAVIOR_METRIC_KEY_MAP[key] || key)}</span>
                     <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(val)}</span>
                   </div>
                 )
@@ -95,7 +114,7 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
         {rubricScores && (
           <div className="mb-3">
             <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
-              {t('calConversation.rubricScores')}
+              {t('calConversation.draft.rubricScores')}
             </h5>
             <div className="grid grid-cols-2 gap-1.5 text-xs">
               {RUBRIC_KEYS.map(key => {
@@ -103,8 +122,8 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
                 if (val == null) return null
                 return (
                   <div key={key} className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                    <span style={{ color: 'var(--color-text-muted)' }}>{key.replace(/_/g, ' ')}</span>
-                    <span className="font-mono" style={{ color: 'var(--color-text)' }}>{val}/5</span>
+                    <span style={{ color: 'var(--color-text-muted)' }}>{t(RUBRIC_KEY_MAP[key] || key)}</span>
+                    <span className="font-mono" style={{ color: 'var(--color-text)' }}>{t('calConversation.rubricScoreValue', { value: val })}</span>
                   </div>
                 )
               })}
@@ -115,17 +134,17 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
         {externalEvidence.length > 0 && (
           <div className="mb-3">
             <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
-              {t('calConversation.externalEvidence')}
+              {t('calConversation.draft.externalEvidence')}
             </h5>
             <ul className="space-y-1 text-xs list-disc pl-4">
               {externalEvidence.map((ev, i) => (
                 <li key={i}>
-                  <span className="font-medium">{(ev.domain as string).replace(/_/g, ' ')}</span>
+                  <span className="font-medium">{t(`calConversation.evidenceDomains.${ev.domain as string}`, { defaultValue: (ev.domain as string).replace(/_/g, ' ') })}</span>
                   {': '}
                   <span style={{ color: 'var(--color-text-secondary)' }}>{ev.description as string}</span>
                   {' '}
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    ({ev.objective_strength as string})
+                    ({t(`calConversation.evidenceStrength.${ev.objective_strength as string}`, { defaultValue: ev.objective_strength as string })})
                   </span>
                 </li>
               ))}
@@ -245,10 +264,10 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
 
         <div className="flex gap-2">
           <Button variant="primary" onClick={() => onConfirm(draftId)} disabled={confirming}>
-            {confirming ? t('common.sending') : t('calConversation.confirm')}
+            {confirming ? t('common.sending') : t('calConversation.draft.confirm')}
           </Button>
           <Button variant="danger" onClick={() => onReject(draftId)} disabled={rejecting}>
-            {rejecting ? t('common.sending') : t('calConversation.reject')}
+            {rejecting ? t('common.sending') : t('calConversation.draft.reject')}
           </Button>
         </div>
       </Card>
@@ -317,7 +336,7 @@ export default function CalibrationConversation() {
   if (!conversationId) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-bold tracking-tight">{t('calConversation.title')}</h2>
+        <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>{t('calConversation.title')}</h2>
         <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('calConversation.description')}</p>
         <Button variant="primary" onClick={startConversation} disabled={startMutation.isPending}>
           {startMutation.isPending ? t('common.sending') : t('calConversation.start')}
@@ -329,7 +348,7 @@ export default function CalibrationConversation() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold tracking-tight">{t('calConversation.title')}</h2>
+      <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>{t('calConversation.title')}</h2>
       <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('calConversation.description')}</p>
 
       {conversationQuery.isLoading && <LoadingSpinner label={t('common.loading')} />}
@@ -391,6 +410,7 @@ export default function CalibrationConversation() {
           onChange={e => setMessage(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
           placeholder={t('calConversation.placeholder')}
+          aria-label={t('calConversation.placeholder')}
           className="flex-1"
         />
         <Button variant="primary" onClick={send} disabled={sendMutation.isPending || !message.trim()}>
