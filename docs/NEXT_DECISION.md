@@ -1,10 +1,8 @@
 # Next Decision Point
 
-## Current Status (v1.0 + LLM-Driven Calibration Phase 1-2 — 2026-06-06)
+## Current Status (v1.0 + LLM-Driven Calibration Complete — 2026-06-06)
 
-V1.0 released (2026-06-04). LLM-Driven Calibration Phase 1 (behavior metrics + rubric scores) and Phase 2 (external evidence capture) are complete — backend schema/service/API and frontend page/hooks/i18n all implemented.
-
-See `docs/LDRIVEN_CALIBRATION_PLAN.md` for the full plan.
+V1.0 released (2026-06-04). LLM-Driven Calibration fully implemented — all 4 phases complete (behavior metrics, external evidence, frontend UI, outcome targets + predictor profile). See `docs/LDRIVEN_CALIBRATION_PLAN.md` for the full plan.
 
 ## What v1.0-rc Built
 
@@ -35,23 +33,18 @@ Since Phase 16, the following has been completed:
 
 ## Next Recommended Steps
 
-### Option A: LLM-Driven Calibration Phase 3-4 (Recommended)
+### Option A: Real User Pilot (Recommended)
 
-**Full plan: `docs/LDRIVEN_CALIBRATION_PLAN.md`**
-
-Phase 1 (behavior metrics + rubric scores extraction) and Phase 2 (external evidence capture) are **complete**. Backend schema/service/API and frontend page/hooks/i18n all implemented.
-
-**Remaining:**
-- **Phase 3** — Extended frontend UI: draft editing inline, conversation polish, error handling
-- **Phase 4** — Expand extraction to outcome targets + predictor profile
+LLM-Driven Calibration 全部完成。系统已具备完整的产品流 + LLM 引导对话，可以开始真实用户试用。
 
 **为什么推荐：**
-- Phase 1-2 已完成，Phase 3-4 是自然延续
-- Phase 4 对新用户价值最大（引导定义 outcome targets 和 predictor profile）
+- 全部技术组件就绪，无阻塞项
+- 真实用户反馈是验证系统价值的唯一方式
+- P6 状态仍是 NOT_VALIDATED，pilot 数据可用于验证
 
-### Option B: Real User Pilot
+### Option B: P6 Validation Gate
 
-系统已具备完整的产品流 + LLM 引导对话。可以开始真实用户试用。建议在 Phase 3 完成后启动 pilot。
+收集 pilot 数据后，推进 P6 的 validation sealing。
 
 ### Option C: Additional Model Cards
 

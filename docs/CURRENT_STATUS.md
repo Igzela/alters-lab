@@ -1,8 +1,8 @@
 # Current Status
 
-## V1.0 + LLM-Driven Calibration Phase 1-2 Complete (2026-06-06)
+## V1.0 + LLM-Driven Calibration Complete (2026-06-06)
 
-**Status**: v1.0 released, LLM-Driven Calibration Phase 1-2 backend+frontend complete
+**Status**: v1.0 released, LLM-Driven Calibration all 4 phases complete
 
 ### System Health
 
@@ -72,16 +72,16 @@ Complete end-to-end traceability:
 - Provider integration (LLM dialogue is optional, disabled by default)
 - P6 behavior validation (collecting evidence, not yet sealed)
 
-### LLM-Driven Calibration Progress
+### LLM-Driven Calibration — COMPLETE
 
 **Plan: `docs/LDRIVEN_CALIBRATION_PLAN.md`**
 
-目标：LLM 作为主导者，通过自然对话引导用户完成所有校准数据的提取。消除手动填表的使用障碍。
+LLM 作为主导者，通过自然对话引导用户完成所有校准数据的提取。消除手动填表的使用障碍。
 
-- **Phase 1** (behavior metrics + rubric scores): COMPLETE -- schema, service, API router, frontend page, hooks, i18n, tests
-- **Phase 2** (external evidence capture): COMPLETE -- `ExternalEvidenceExtract` schema, service extraction + confirm logic
-- **Phase 3** (extended frontend UI): NEXT -- draft editing, conversation polish
-- **Phase 4** (outcome targets + predictor profile): PLANNED
+- **Phase 1** (behavior metrics + rubric scores): DONE -- schema, service, API router, frontend page, hooks, i18n, tests
+- **Phase 2** (external evidence capture): DONE -- `ExternalEvidenceExtract` schema, service extraction + confirm logic
+- **Phase 3** (extended frontend UI): DONE -- draft editing, conversation polish, error handling
+- **Phase 4** (outcome targets + predictor profile): DONE -- extraction expanded to outcome targets and predictor profile
 
 ### Pilot Results
 

@@ -13,6 +13,8 @@ from alters_lab.schemas.calibration_conversation import (
     CalibrationDraft,
     ConversationMessage,
     ExternalEvidenceExtract,
+    OutcomeTargetExtract,
+    PredictorProfileExtract,
 )
 from alters_lab.schemas.calibration_loop import CalibrationScoreValues
 from alters_lab.services import calibration_conversation as svc
@@ -114,6 +116,54 @@ class TestSchemaValidation:
         msg = ConversationMessage(role="user", content="hello")
         assert msg.timestamp  # auto-filled
 
+    def test_outcome_target_extract(self):
+        ot = OutcomeTargetExtract(
+            domain="career_education",
+            outcome_name="Get promoted",
+            objective_definition="Receive a promotion to senior engineer",
+            success_threshold="Title change confirmed by manager",
+            measurement_method="HR records",
+            horizon_months=12,
+            baseline_value="mid-level",
+            target_value="senior",
+        )
+        assert ot.domain == "career_education"
+        assert ot.outcome_name == "Get promoted"
+        assert ot.horizon_months == 12
+        assert ot.baseline_value == "mid-level"
+
+    def test_outcome_target_extract_requires_objective_definition(self):
+        with pytest.raises(Exception):
+            OutcomeTargetExtract(
+                domain="health",
+                outcome_name="Lose weight",
+                objective_definition="",
+                success_threshold="5kg lost",
+                measurement_method="scale",
+            )
+
+    def test_predictor_profile_extract(self):
+        pp = PredictorProfileExtract(
+            conscientiousness=0.7,
+            neuroticism_negative_emotionality=0.3,
+            extraversion=0.6,
+            agreeableness=0.8,
+            openness=0.9,
+            trait_source="short_self_report",
+            education_status="bachelors",
+            employment_status="full_time",
+            financial_stability="stable",
+            relationship_status="single",
+            health_constraints=["mild_back_pain"],
+            target_domains=["career_education", "health"],
+            time_horizon_months=12,
+            limitations=["limited_evening_time"],
+        )
+        assert pp.conscientiousness == 0.7
+        assert pp.trait_source == "short_self_report"
+        assert pp.target_domains == ["career_education", "health"]
+        assert pp.limitations == ["limited_evening_time"]
+
 
 # --- Extraction parser tests ---
 
@@ -161,6 +211,48 @@ class TestExtractionParser:
         result = svc._extract_json_from_llm_output(output)
         assert result is not None
         assert len(result["external_evidence"]) == 1
+
+    def test_extraction_with_outcome_targets(self):
+        output = """<extraction>
+{
+  "outcome_targets": [
+    {
+      "domain": "career_education",
+      "outcome_name": "Learn Rust",
+      "objective_definition": "Complete Rust book and ship a CLI tool",
+      "success_threshold": "Published CLI on GitHub with 10+ stars",
+      "measurement_method": "GitHub metrics",
+      "horizon_months": 6
+    }
+  ],
+  "extraction_confidence": "medium",
+  "reasoning": "User mentioned learning goal"
+}
+</extraction>"""
+        result = svc._extract_json_from_llm_output(output)
+        assert result is not None
+        assert len(result["outcome_targets"]) == 1
+        assert result["outcome_targets"][0]["outcome_name"] == "Learn Rust"
+
+    def test_extraction_with_predictor_profile(self):
+        output = """<extraction>
+{
+  "predictor_profile": {
+    "conscientiousness": 0.7,
+    "extraversion": 0.5,
+    "education_status": "bachelors",
+    "employment_status": "full_time",
+    "target_domains": ["career_education"],
+    "time_horizon_months": 12
+  },
+  "extraction_confidence": "medium",
+  "reasoning": "User described personality and situation"
+}
+</extraction>"""
+        result = svc._extract_json_from_llm_output(output)
+        assert result is not None
+        assert result["predictor_profile"]["conscientiousness"] == 0.7
+        assert result["predictor_profile"]["target_domains"] == ["career_education"]
 
 
 # --- Draft building tests ---
@@ -221,6 +313,51 @@ class TestDraftBuilding:
     def test_build_draft_none_returns_none(self):
         draft = svc._build_draft_from_extraction(None, "conv_test")
         assert draft is None
+
+    def test_build_draft_with_outcome_targets(self):
+        extraction = {
+            "outcome_targets": [
+                {
+                    "domain": "health",
+                    "outcome_name": "Run a marathon",
+                    "objective_definition": "Complete a full 42km marathon",
+                    "success_threshold": "Finish under 4:30",
+                    "measurement_method": "Race timing chip",
+                    "horizon_months": 12,
+                }
+            ],
+            "extraction_confidence": "medium",
+            "reasoning": "User shared fitness goal",
+        }
+        draft = svc._build_draft_from_extraction(extraction, "conv_test")
+        assert draft is not None
+        assert len(draft.outcome_targets) == 1
+        assert draft.outcome_targets[0].outcome_name == "Run a marathon"
+        assert draft.extraction_confidence == "medium"
+
+    def test_build_draft_with_predictor_profile(self):
+        extraction = {
+            "predictor_profile": {
+                "conscientiousness": 0.8,
+                "neuroticism_negative_emotionality": 0.4,
+                "trait_source": "manual_estimate",
+                "education_status": "masters",
+                "employment_status": "freelance",
+                "target_domains": ["career_education", "financial"],
+                "time_horizon_months": 6,
+            },
+            "extraction_confidence": "medium",
+            "reasoning": "User described background",
+        }
+        draft = svc._build_draft_from_extraction(extraction, "conv_test")
+        assert draft is not None
+        assert draft.predictor_profile is not None
+        assert draft.predictor_profile.conscientiousness == 0.8
+        assert draft.predictor_profile.trait_source == "manual_estimate"
+        assert draft.predictor_profile.target_domains == [
+            "career_education",
+            "financial",
+        ]
 
 
 # --- Conversation lifecycle tests ---
@@ -318,6 +455,55 @@ class TestDraftLifecycle:
         svc._save_draft(draft, repo_root=repo)
         with pytest.raises(ValueError, match="not pending"):
             svc.reject_draft(draft.draft_id, repo_root=repo)
+
+    def test_confirm_draft_writes_outcome_targets(self, repo, monkeypatch):
+        written = []
+
+        def fake_write_record(record_type, record_id, data, repo_root):
+            written.append(record_type)
+
+        monkeypatch.setattr(svc, "write_record", fake_write_record)
+
+        draft = CalibrationDraft(
+            conversation_id="conv_test",
+            outcome_targets=[
+                OutcomeTargetExtract(
+                    domain="career_education",
+                    outcome_name="Ship a product",
+                    objective_definition="Launch v1 of side project",
+                    success_threshold="100 users signed up",
+                    measurement_method="Analytics dashboard",
+                    horizon_months=6,
+                ),
+            ],
+        )
+        svc._save_draft(draft, repo_root=repo)
+        confirmed = svc.confirm_draft(draft.draft_id, repo_root=repo)
+        assert confirmed.status == "confirmed"
+        assert "branch_outcome_targets" in written
+
+    def test_confirm_draft_writes_predictor_profile(self, repo, monkeypatch):
+        written = []
+
+        def fake_write_record(record_type, record_id, data, repo_root):
+            written.append(record_type)
+
+        monkeypatch.setattr(svc, "write_record", fake_write_record)
+
+        draft = CalibrationDraft(
+            conversation_id="conv_test",
+            predictor_profile=PredictorProfileExtract(
+                conscientiousness=0.7,
+                extraversion=0.5,
+                trait_source="short_self_report",
+                target_domains=["health"],
+                time_horizon_months=6,
+            ),
+        )
+        svc._save_draft(draft, repo_root=repo)
+        confirmed = svc.confirm_draft(draft.draft_id, repo_root=repo)
+        assert confirmed.status == "confirmed"
+        assert "predictor_profiles" in written
 
 
 # --- Mock provider integration test ---
@@ -446,3 +632,66 @@ Let me know if I got anything wrong!"""
         svc._save_draft(draft, repo_root=repo)
         confirmed = svc.confirm_draft(draft.draft_id, repo_root=repo)
         assert confirmed.status == "confirmed"
+
+    def test_full_extraction_with_all_types(self):
+        output = """<extraction>
+{
+  "behavior_metrics": {
+    "career_education_deep_work_minutes": 120,
+    "regular_sleep_nights": 6
+  },
+  "rubric_scores": {
+    "execution_discipline": 4,
+    "exploration_freedom": 3,
+    "life_state_match": 4,
+    "energy_level": 3
+  },
+  "external_evidence": [
+    {
+      "domain": "health",
+      "evidence_type": "health_measurement",
+      "description": "Ran 5k in 22 minutes",
+      "objective_strength": "strong",
+      "polarity": "positive"
+    }
+  ],
+  "outcome_targets": [
+    {
+      "domain": "career_education",
+      "outcome_name": "Master Rust",
+      "objective_definition": "Build a production CLI tool in Rust",
+      "success_threshold": "Published on crates.io with downloads",
+      "measurement_method": "crates.io stats",
+      "horizon_months": 6
+    }
+  ],
+  "predictor_profile": {
+    "conscientiousness": 0.8,
+    "neuroticism_negative_emotionality": 0.3,
+    "extraversion": 0.5,
+    "trait_source": "short_self_report",
+    "education_status": "bachelors",
+    "employment_status": "full_time",
+    "target_domains": ["career_education", "health"],
+    "time_horizon_months": 12
+  },
+  "extraction_confidence": "high",
+  "reasoning": "User provided detailed information across all categories"
+}
+</extraction>"""
+        result = svc._extract_json_from_llm_output(output)
+        assert result is not None
+        assert result["behavior_metrics"]["career_education_deep_work_minutes"] == 120
+        assert result["rubric_scores"]["execution_discipline"] == 4
+        assert len(result["external_evidence"]) == 1
+        assert len(result["outcome_targets"]) == 1
+        assert result["predictor_profile"]["conscientiousness"] == 0.8
+
+        draft = svc._build_draft_from_extraction(result, "conv_test")
+        assert draft is not None
+        assert draft.behavior_metrics is not None
+        assert draft.rubric_scores is not None
+        assert len(draft.external_evidence) == 1
+        assert len(draft.outcome_targets) == 1
+        assert draft.predictor_profile is not None
+        assert draft.extraction_confidence == "high"

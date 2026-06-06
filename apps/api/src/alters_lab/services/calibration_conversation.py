@@ -14,6 +14,8 @@ from alters_lab.schemas.calibration_conversation import (
     CalibrationDraft,
     ConversationMessage,
     ExternalEvidenceExtract,
+    OutcomeTargetExtract,
+    PredictorProfileExtract,
 )
 from alters_lab.schemas.calibration_loop import CalibrationScoreValues
 from alters_lab.schemas.provider_gateway import ProviderGatewayRequest
@@ -55,6 +57,21 @@ SYSTEM_PROMPT = """你是一个校准对话助手。你的任务是通过自然�
    - objective_strength: weak/moderate/strong
    - polarity: positive/negative/neutral/mixed
 
+4. Outcome Targets（结果目标）：
+   当用户谈论未来目标或计划时，帮助他们定义可测量的 outcome target：
+   - domain: 属于哪个生活领域
+   - outcome_name: 目标名称
+   - objective_definition: 客观定义（怎样算达成）
+   - success_threshold: 成功阈值
+   - measurement_method: 怎么测量
+   - horizon_months: 目标时间范围 (1-24 月)
+
+5. Predictor Profile（预测者画像）：
+   当用户描述自己的性格、处境时，提取为 trait baseline 和 current context：
+   - Big Five traits (0.0-1.0)
+   - education/employment/financial/relationship status
+   - health constraints
+
 对话风格：
 - 自然、友好，不要像填表
 - 从用户的自然描述中识别数据
@@ -68,6 +85,8 @@ SYSTEM_PROMPT = """你是一个校准对话助手。你的任务是通过自然�
   "behavior_metrics": { ... },
   "rubric_scores": { ... },
   "external_evidence": [ ... ],
+  "outcome_targets": [ ... ],
+  "predictor_profile": { ... },
   "extraction_confidence": "high|medium|low",
   "reasoning": "为什么提取了这些值"
 }
@@ -129,8 +148,22 @@ def _build_draft_from_extraction(
         except Exception:
             pass
 
+    target_list = []
+    for ot in extraction.get("outcome_targets", []):
+        try:
+            target_list.append(OutcomeTargetExtract(**ot))
+        except Exception:
+            pass
+
+    predictor = None
+    if extraction.get("predictor_profile"):
+        try:
+            predictor = PredictorProfileExtract(**extraction["predictor_profile"])
+        except Exception:
+            pass
+
     # Only create draft if we extracted something
-    if not behavior and not rubric and not evidence_list:
+    if not behavior and not rubric and not evidence_list and not target_list and not predictor:
         return None
 
     return CalibrationDraft(
@@ -138,6 +171,8 @@ def _build_draft_from_extraction(
         behavior_metrics=behavior,
         rubric_scores=rubric,
         external_evidence=evidence_list,
+        outcome_targets=target_list,
+        predictor_profile=predictor,
         llm_model=llm_model,
         extraction_confidence=extraction.get("extraction_confidence", "low"),
         llm_reasoning=extraction.get("reasoning", ""),
@@ -455,6 +490,68 @@ def confirm_draft(
 
         data = evidence.model_dump()
         write_record("external_evidence", evidence.evidence_id, data, repo_root)
+
+    # Write outcome targets if present
+    for ot_extract in draft.outcome_targets:
+        from alters_lab.schemas.branch_outcome_targets import BranchOutcomeTargetRecord
+
+        target = BranchOutcomeTargetRecord(
+            target_id=generate_record_id("bot"),
+            branch_id=ot_extract.branch_id or "branch_A",
+            milestone_id=ot_extract.milestone_id,
+            domain=ot_extract.domain,
+            horizon_months=ot_extract.horizon_months,
+            outcome_name=ot_extract.outcome_name,
+            objective_definition=ot_extract.objective_definition,
+            success_threshold=ot_extract.success_threshold,
+            measurement_method=ot_extract.measurement_method,
+            baseline_value=ot_extract.baseline_value,
+            target_value=ot_extract.target_value,
+            created_at=utc_now(),
+        )
+
+        data = target.model_dump()
+        data["created_at"] = str(data["created_at"])
+        write_record("branch_outcome_targets", target.target_id, data, repo_root)
+
+    # Write predictor profile if present
+    if draft.predictor_profile:
+        from alters_lab.schemas.predictor_profile import (
+            CurrentContext,
+            PredictorProfileRecord,
+            PredictionTargets,
+            TraitBaseline,
+        )
+
+        pp = draft.predictor_profile
+        profile = PredictorProfileRecord(
+            profile_id=generate_record_id("pp"),
+            created_at=utc_now(),
+            trait_baseline=TraitBaseline(
+                conscientiousness=pp.conscientiousness,
+                neuroticism_negative_emotionality=pp.neuroticism_negative_emotionality,
+                extraversion=pp.extraversion,
+                agreeableness=pp.agreeableness,
+                openness=pp.openness,
+                source=pp.trait_source,
+            ),
+            current_context=CurrentContext(
+                education_status=pp.education_status,
+                employment_status=pp.employment_status,
+                financial_stability=pp.financial_stability,
+                relationship_status=pp.relationship_status,
+                health_constraints=pp.health_constraints,
+            ),
+            prediction_targets=PredictionTargets(
+                target_domains=pp.target_domains,
+                time_horizon_months=pp.time_horizon_months,
+            ),
+            limitations=pp.limitations,
+        )
+
+        data = profile.model_dump()
+        data["created_at"] = str(data["created_at"])
+        write_record("predictor_profiles", profile.profile_id, data, repo_root)
 
     # Mark draft as confirmed
     draft.status = "confirmed"

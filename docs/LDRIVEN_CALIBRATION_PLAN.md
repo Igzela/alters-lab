@@ -1,7 +1,7 @@
 # LLM-Driven Calibration — Implementation Plan
 
 **Created:** 2026-06-04
-**Status:** PLANNED — not started
+**Status:** COMPLETE — all 4 phases implemented (2026-06-06)
 **Depends on:** v1.0 (tagged and released)
 
 ---
@@ -88,7 +88,7 @@
 
 ---
 
-## Phase 1: Behavior Metrics + Rubric Scores Extraction
+## Phase 1: Behavior Metrics + Rubric Scores Extraction — DONE
 
 **目标：** 用户跟 LLM 聊天，LLM 自动提取每周 behavior metrics 和 rubric 评分
 
@@ -238,7 +238,7 @@ GET /calibration-conversation/drafts
 
 ---
 
-## Phase 2: External Evidence Capture
+## Phase 2: External Evidence Capture — DONE
 
 **目标：** 用户在对话中提到真实世界事件，LLM 自动识别并提取为 external evidence
 
@@ -295,7 +295,7 @@ class ExternalEvidenceExtract(BaseModel):
 
 ---
 
-## Phase 3: Frontend Conversation UI + Draft Confirmation
+## Phase 3: Frontend Conversation UI + Draft Confirmation — DONE
 
 **目标：** 在前端实现完整的对话界面和 draft 确认流程
 
@@ -360,7 +360,7 @@ class ExternalEvidenceExtract(BaseModel):
 
 ---
 
-## Phase 4: Expand to Outcome Targets + Predictor Profile
+## Phase 4: Expand to Outcome Targets + Predictor Profile — DONE
 
 **目标：** 扩展 LLM 引导能力到低频数据类型
 

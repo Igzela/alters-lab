@@ -71,6 +71,68 @@ class ExternalEvidenceExtract(BaseModel):
         return self
 
 
+class OutcomeTargetExtract(BaseModel):
+    """Single outcome target the LLM can extract from conversation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    branch_id: str | None = None
+    domain: Literal[
+        "career_education",
+        "financial",
+        "health",
+        "relationship",
+        "subjective_wellbeing",
+    ]
+    horizon_months: int = Field(default=6, ge=1, le=24)
+    outcome_name: str
+    objective_definition: str
+    success_threshold: str
+    measurement_method: str
+    baseline_value: str | None = None
+    target_value: str | None = None
+    milestone_id: str | None = None
+
+    @model_validator(mode="after")
+    def require_fields(self):
+        if not self.objective_definition or not self.objective_definition.strip():
+            raise ValueError("objective_definition is required")
+        if not self.success_threshold or not self.success_threshold.strip():
+            raise ValueError("success_threshold is required")
+        return self
+
+
+class PredictorProfileExtract(BaseModel):
+    """Predictor profile data the LLM can extract from conversation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    conscientiousness: float | None = Field(default=None, ge=0.0, le=1.0)
+    neuroticism_negative_emotionality: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    extraversion: float | None = Field(default=None, ge=0.0, le=1.0)
+    agreeableness: float | None = Field(default=None, ge=0.0, le=1.0)
+    openness: float | None = Field(default=None, ge=0.0, le=1.0)
+    trait_source: Literal["short_self_report", "manual_estimate", "unknown"] = "unknown"
+    education_status: str | None = None
+    employment_status: str | None = None
+    financial_stability: str | None = None
+    relationship_status: str | None = None
+    health_constraints: list[str] = Field(default_factory=list)
+    target_domains: list[
+        Literal[
+            "career_education",
+            "financial",
+            "health",
+            "relationship",
+            "subjective_wellbeing",
+        ]
+    ] = Field(default_factory=list)
+    time_horizon_months: int = Field(default=6, ge=1, le=24)
+    limitations: list[str] = Field(default_factory=list)
+
+
 # --- Draft (the LLM's extraction, pending user confirmation) ---
 
 
@@ -89,6 +151,8 @@ class CalibrationDraft(BaseModel):
     behavior_metrics: BehaviorMetricsExtract | None = None
     rubric_scores: CalibrationScoreValues | None = None
     external_evidence: list[ExternalEvidenceExtract] = Field(default_factory=list)
+    outcome_targets: list[OutcomeTargetExtract] = Field(default_factory=list)
+    predictor_profile: PredictorProfileExtract | None = None
 
     # LLM metadata
     llm_model: str | None = None

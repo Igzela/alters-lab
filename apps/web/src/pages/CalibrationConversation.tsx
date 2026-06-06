@@ -48,6 +48,11 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
   const behaviorMetrics = draft.behavior_metrics as Record<string, unknown> | null
   const rubricScores = draft.rubric_scores as Record<string, number> | null
   const externalEvidence = (draft.external_evidence as Array<Record<string, unknown>>) || []
+  const outcomeTargets = (draft.outcome_targets as Array<Record<string, unknown>>) || []
+  const predictorProfile = draft.predictor_profile as Record<string, unknown> | null
+  const bigFive = predictorProfile?.big_five as Record<string, number> | null
+  const currentContext = predictorProfile?.current_context as Record<string, unknown> | null
+  const healthConstraints = ((predictorProfile?.health_constraints as string[]) || [])
   const confidence = (draft.extraction_confidence as string) || 'low'
   const reasoning = (draft.llm_reasoning as string) || ''
   const draftId = draft.draft_id as string
@@ -125,6 +130,119 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {outcomeTargets.length > 0 && (
+          <div className="mb-3">
+            <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
+              {t('calConversation.draft.outcomeTargets')}
+            </h5>
+            <div className="space-y-2">
+              {outcomeTargets.map((target, i) => (
+                <div key={i} className="rounded p-2 text-xs" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                  {target.outcome_name && (
+                    <p className="font-medium mb-1">{String(target.outcome_name)}</p>
+                  )}
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {target.domain && (
+                      <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
+                        <span style={{ color: 'var(--color-text-muted)' }}>{t('outcomeTargets.domain')}</span>
+                        <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(target.domain)}</span>
+                      </div>
+                    )}
+                    {target.horizon_months != null && (
+                      <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
+                        <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.horizonMonths')}</span>
+                        <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(target.horizon_months)}</span>
+                      </div>
+                    )}
+                  </div>
+                  {target.objective_definition && (
+                    <p className="mt-1" style={{ color: 'var(--color-text-secondary)' }}>{String(target.objective_definition)}</p>
+                  )}
+                  {target.success_threshold && (
+                    <p className="mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                      {t('outcomeTargets.threshold')}: {String(target.success_threshold)}
+                    </p>
+                  )}
+                  {target.measurement_method && (
+                    <p className="mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                      {t('outcomeTargets.measurement')}: {String(target.measurement_method)}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {predictorProfile && (
+          <div className="mb-3">
+            <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
+              {t('calConversation.draft.predictorProfile')}
+            </h5>
+
+            {bigFive && (
+              <div className="mb-2">
+                <p className="text-xs mb-1" style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.draft.traits')}</p>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  {(['conscientiousness', 'neuroticism', 'extraversion', 'agreeableness', 'openness'] as const).map(trait => {
+                    const val = bigFive[trait]
+                    if (val == null) return null
+                    return (
+                      <div key={trait} className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                        <span style={{ color: 'var(--color-text-muted)' }}>{t(`calConversation.fields.${trait}`)}</span>
+                        <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(val)}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {currentContext && (
+              <div className="mb-2">
+                <p className="text-xs mb-1" style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.draft.context')}</p>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  {currentContext.education_status && (
+                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.educationStatus')}</span>
+                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.education_status)}</span>
+                    </div>
+                  )}
+                  {currentContext.employment_status && (
+                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.employmentStatus')}</span>
+                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.employment_status)}</span>
+                    </div>
+                  )}
+                  {currentContext.financial_stability && (
+                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.financialStability')}</span>
+                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.financial_stability)}</span>
+                    </div>
+                  )}
+                  {currentContext.relationship_status && (
+                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.relationshipStatus')}</span>
+                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.relationship_status)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {healthConstraints.length > 0 && (
+              <div>
+                <p className="text-xs mb-1" style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.healthConstraints')}</p>
+                <ul className="space-y-0.5 text-xs list-disc pl-4">
+                  {healthConstraints.map((item, i) => (
+                    <li key={i} style={{ color: 'var(--color-text-secondary)' }}>{String(item)}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
 

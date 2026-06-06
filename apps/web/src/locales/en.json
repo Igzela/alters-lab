@@ -646,7 +646,11 @@
       "reject": "Reject",
       "continueChat": "Continue Chatting",
       "noEvidence": "No external evidence found for this period.",
-      "corrected": "Corrected"
+      "corrected": "Corrected",
+      "outcomeTargets": "Outcome Targets",
+      "predictorProfile": "Predictor Profile",
+      "traits": "Personality Traits",
+      "context": "Current Context"
     },
     "fields": {
       "deepWork": "Deep Work Hours",
@@ -661,7 +665,22 @@
       "executionDiscipline": "Execution Discipline",
       "explorationFreedom": "Exploration Freedom",
       "lifeStateMatch": "Life-State Match",
-      "energyLevel": "Energy Level"
+      "energyLevel": "Energy Level",
+      "conscientiousness": "Conscientiousness",
+      "neuroticism": "Neuroticism",
+      "extraversion": "Extraversion",
+      "agreeableness": "Agreeableness",
+      "openness": "Openness",
+      "educationStatus": "Education Status",
+      "employmentStatus": "Employment Status",
+      "financialStability": "Financial Stability",
+      "relationshipStatus": "Relationship Status",
+      "healthConstraints": "Health Constraints",
+      "horizonMonths": "Horizon (months)",
+      "outcomeName": "Outcome Name",
+      "objectiveDefinition": "Objective Definition",
+      "successThreshold": "Success Threshold",
+      "measurementMethod": "Measurement Method"
     }
   }
 }

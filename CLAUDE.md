@@ -6,17 +6,17 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 ## 当前阶段
 - v1.0 已 tag 并发布（2026-06-04）
 - P6 状态：NOT_VALIDATED / NOT_SEALED
-- LLM-Driven Calibration Phase 1-2 完成（schema/service/API/前端 page/hooks/i18n）
-- 下一步：Phase 3（前端 UI 打磨）+ Phase 4（outcome targets + predictor profile 提取）
+- LLM-Driven Calibration 全部 4 个 Phase 完成
+- 下一步：真实用户 Pilot / P6 validation gate
 - 1970 backend tests, 84 frontend tests
 
 ## 下一个 Session 待办
 
-**LLM-Driven Calibration**（详见 `docs/LDRIVEN_CALIBRATION_PLAN.md`）：
+**系统已具备完整产品流 + LLM 引导对话。** 候选方向：
 
-Phase 1-2：✅ 完成
-Phase 3：前端 UI 打磨（draft 编辑、对话体验优化、错误处理）
-Phase 4：扩展到 outcome targets + predictor profile 提取
+1. 真实用户 Pilot（详见 `docs/NEXT_DECISION.md`）
+2. P6 validation gate
+3. 扩展 Route B 模型覆盖（低优先级）
 
 ## 技术栈
 - **后端**: Python 3.11+, FastAPI, Pydantic, PyYAML

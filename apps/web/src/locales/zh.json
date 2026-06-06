@@ -646,7 +646,11 @@
       "reject": "拒绝",
       "continueChat": "继续对话",
       "noEvidence": "此时间段未找到外部证据。",
-      "corrected": "已纠正"
+      "corrected": "已纠正",
+      "outcomeTargets": "结果目标",
+      "predictorProfile": "预测者画像",
+      "traits": "人格特质",
+      "context": "当前状态"
     },
     "fields": {
       "deepWork": "深度工作时长",
@@ -661,7 +665,22 @@
       "executionDiscipline": "执行纪律",
       "explorationFreedom": "探索自由度",
       "lifeStateMatch": "生活状态匹配度",
-      "energyLevel": "能量水平"
+      "energyLevel": "能量水平",
+      "conscientiousness": "尽责性",
+      "neuroticism": "神经质",
+      "extraversion": "外向性",
+      "agreeableness": "宜人性",
+      "openness": "开放性",
+      "educationStatus": "教育状态",
+      "employmentStatus": "就业状态",
+      "financialStability": "财务稳定性",
+      "relationshipStatus": "关系状态",
+      "healthConstraints": "健康限制",
+      "horizonMonths": "目标时间 (月)",
+      "outcomeName": "目标名称",
+      "objectiveDefinition": "客观定义",
+      "successThreshold": "成功阈值",
+      "measurementMethod": "测量方法"
     }
   }
 }
