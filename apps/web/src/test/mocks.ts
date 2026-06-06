@@ -90,6 +90,12 @@ export const mockHooks = {
   useProductStatus: vi.fn(() => mockQuery({ status: 'ok', storage_backend: 'yaml', no_secrets_exposed: true, safe_public_endpoints: ['/health'] })),
   useLocalAppStatus: vi.fn(() => mockQuery({ status: 'ok', frontend_available: true })),
   useRuntimeStatus: vi.fn(() => mockQuery({ mode: 'dev', config_path: '/tmp/config', product_data_dir: '/tmp/data' })),
+  useStartCalibrationConversation: vi.fn(() => mockMutation()),
+  useSendCalibrationMessage: vi.fn(() => mockMutation()),
+  useCalibrationConversation: vi.fn(() => mockQuery(null)),
+  useCalibrationDrafts: vi.fn(() => mockQuery({ drafts: [], count: 0 })),
+  useConfirmCalibrationDraft: vi.fn(() => mockMutation()),
+  useRejectCalibrationDraft: vi.fn(() => mockMutation()),
 }
 
 vi.mock('../hooks/useApi', () => mockHooks)

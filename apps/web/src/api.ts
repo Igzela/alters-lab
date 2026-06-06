@@ -229,3 +229,81 @@ export async function adjustForecast(body: { lookback_weeks?: number; forecast_w
     generated_at: string
   }>
 }
+
+// --- Calibration Conversation ---
+export async function startCalibrationConversation(body?: { branch_id?: string }) {
+  return postJson('/calibration-conversation/start', body ?? {}) as Promise<{
+    status: string
+    conversation: {
+      conversation_id: string
+      status: string
+      messages: Array<{ role: string; content: string; timestamp: string }>
+      draft_ids: string[]
+    }
+  }>
+}
+
+export async function sendCalibrationMessage(conversationId: string, message: string) {
+  return postJson(`/calibration-conversation/${conversationId}/message`, { message }) as Promise<{
+    status: string
+    conversation: {
+      conversation_id: string
+      status: string
+      messages: Array<{ role: string; content: string; timestamp: string }>
+      draft_ids: string[]
+    }
+    draft: {
+      draft_id: string
+      status: string
+      conversation_id: string
+      behavior_metrics: Record<string, unknown> | null
+      rubric_scores: Record<string, unknown> | null
+      external_evidence: Array<Record<string, unknown>>
+      extraction_confidence: string
+      llm_reasoning: string
+    } | null
+  }>
+}
+
+export async function getCalibrationConversation(conversationId: string) {
+  return fetchJson(`/calibration-conversation/${conversationId}`) as Promise<{
+    conversation: {
+      conversation_id: string
+      status: string
+      messages: Array<{ role: string; content: string; timestamp: string }>
+      draft_ids: string[]
+    }
+  }>
+}
+
+export async function getCalibrationDrafts(status?: string) {
+  const qs = status ? `?status=${status}` : ''
+  return fetchJson(`/calibration-conversation/drafts${qs}`) as Promise<{
+    drafts: Array<{
+      draft_id: string
+      status: string
+      conversation_id: string
+      behavior_metrics: Record<string, unknown> | null
+      rubric_scores: Record<string, unknown> | null
+      external_evidence: Array<Record<string, unknown>>
+      extraction_confidence: string
+      llm_reasoning: string
+    }>
+    count: number
+  }>
+}
+
+export async function confirmCalibrationDraft(draftId: string, corrections?: Record<string, unknown>) {
+  return postJson(`/calibration-conversation/drafts/${draftId}/confirm`, { corrections: corrections ?? {} }) as Promise<{
+    status: string
+    draft: Record<string, unknown>
+    records_written: string[]
+  }>
+}
+
+export async function rejectCalibrationDraft(draftId: string) {
+  return postJson(`/calibration-conversation/drafts/${draftId}/reject`, {}) as Promise<{
+    status: string
+    draft: Record<string, unknown>
+  }>
+}

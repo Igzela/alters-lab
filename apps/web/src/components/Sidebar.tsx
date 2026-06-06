@@ -51,6 +51,7 @@ const navGroups: NavGroup[] = [
       { page: 'history', icon: <ChartLineUp size={18} />, labelKey: 'nav.history' },
       { page: 'reality', icon: <Sparkle size={18} />, labelKey: 'nav.realityScore' },
       { page: 'rubric', icon: <ArrowsClockwise size={18} />, labelKey: 'nav.rubricDelta' },
+      { page: 'calibration-conversation', icon: <ChatCircle size={18} />, labelKey: 'nav.calibrationConversation' },
     ],
   },
   {

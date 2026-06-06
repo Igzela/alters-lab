@@ -43,7 +43,8 @@
     "outcomeTargets": "结果目标",
     "branchForecast": "分支预测",
     "forecastCalibration": "预测校准",
-    "publicPriors": "公共先验"
+    "publicPriors": "公共先验",
+    "calibrationConversation": "校准对话"
   },
   "status": {
     "title": "系统状态",
@@ -624,6 +625,43 @@
       "calibrationMetrics": "校准指标",
       "transferRiskDetail": "迁移风险与验证",
       "highRiskWarning": "高迁移风险：校准指标可能无法迁移到您的人群。"
+    }
+  },
+  "calConversation": {
+    "title": "校准对话",
+    "description": "与 LLM 对话以完善你的校准数据。助手帮助你厘清行为、纠正不准确之处，并为验证积累证据。",
+    "placeholder": "描述一个行为或询问你的校准情况...",
+    "send": "发送",
+    "startNew": "开始新对话",
+    "continueChat": "继续对话",
+    "noConversations": "暂无对话。开始一个以完善你的校准。",
+    "draft": {
+      "title": "校准草稿",
+      "behaviorMetrics": "行为指标",
+      "rubricScores": "评分标准分数",
+      "externalEvidence": "外部证据",
+      "confidence": "置信度",
+      "reasoning": "推理",
+      "confirm": "确认草稿",
+      "reject": "拒绝",
+      "continueChat": "继续对话",
+      "noEvidence": "此时间段未找到外部证据。",
+      "corrected": "已纠正"
+    },
+    "fields": {
+      "deepWork": "深度工作时长",
+      "followThrough": "执行完成率",
+      "expenseDays": "超支天数",
+      "sleepNights": "良好睡眠夜数",
+      "exerciseMin": "运动分钟数",
+      "healthRisks": "健康风险",
+      "socialContacts": "社交接触",
+      "abandonedBlocks": "放弃的时间块",
+      "milestoneProgress": "里程碑进展",
+      "executionDiscipline": "执行纪律",
+      "explorationFreedom": "探索自由度",
+      "lifeStateMatch": "生活状态匹配度",
+      "energyLevel": "能量水平"
     }
   }
 }

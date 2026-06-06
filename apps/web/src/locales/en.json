@@ -43,7 +43,8 @@
     "outcomeTargets": "Outcome Targets",
     "branchForecast": "Branch Forecast",
     "forecastCalibration": "Forecast Calibration",
-    "publicPriors": "Public Priors"
+    "publicPriors": "Public Priors",
+    "calibrationConversation": "Cal Conversation"
   },
   "status": {
     "title": "System Status",
@@ -624,6 +625,43 @@
       "calibrationMetrics": "Calibration Metrics",
       "transferRiskDetail": "Transfer Risk & Validation",
       "highRiskWarning": "High transfer risk: calibration metrics may not transfer to your population."
+    }
+  },
+  "calConversation": {
+    "title": "Calibration Conversation",
+    "description": "Chat with an LLM to refine your calibration data. The assistant helps you clarify behaviors, correct inaccuracies, and build evidence for validation.",
+    "placeholder": "Describe a behavior or ask about your calibration...",
+    "send": "Send",
+    "startNew": "Start New Conversation",
+    "continueChat": "Continue Chat",
+    "noConversations": "No conversations yet. Start one to refine your calibration.",
+    "draft": {
+      "title": "Calibration Draft",
+      "behaviorMetrics": "Behavior Metrics",
+      "rubricScores": "Rubric Scores",
+      "externalEvidence": "External Evidence",
+      "confidence": "Confidence",
+      "reasoning": "Reasoning",
+      "confirm": "Confirm Draft",
+      "reject": "Reject",
+      "continueChat": "Continue Chatting",
+      "noEvidence": "No external evidence found for this period.",
+      "corrected": "Corrected"
+    },
+    "fields": {
+      "deepWork": "Deep Work Hours",
+      "followThrough": "Follow-Through Rate",
+      "expenseDays": "Overspending Days",
+      "sleepNights": "Good Sleep Nights",
+      "exerciseMin": "Exercise Minutes",
+      "healthRisks": "Health Risks",
+      "socialContacts": "Social Contacts",
+      "abandonedBlocks": "Abandoned Time Blocks",
+      "milestoneProgress": "Milestone Progress",
+      "executionDiscipline": "Execution Discipline",
+      "explorationFreedom": "Exploration Freedom",
+      "lifeStateMatch": "Life-State Match",
+      "energyLevel": "Energy Level"
     }
   }
 }

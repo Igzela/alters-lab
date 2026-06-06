@@ -25,9 +25,9 @@ alters-lab/
   apps/
     api/                  # FastAPI backend
       src/alters_lab/
-        api/              # 47 route modules
-        services/         # 54 service modules
-        schemas/          # 49 Pydantic schema modules
+        api/              # 58 route modules
+        services/         # 70 service modules
+        schemas/          # 65 Pydantic schema modules
         cli/              # CLI entry point (launcher.py)
         main.py           # App factory, middleware, router registration
         middleware.py      # Rate limiting
@@ -36,7 +36,7 @@ alters-lab/
       pyproject.toml      # Python package config
     web/                  # React frontend
       src/
-        pages/            # 13 page components (12 active routes)
+        pages/            # 20 page components (20 active routes)
         components/       # 13 shared UI components
         hooks/            # useApi.ts (TanStack Query hooks)
         api.ts            # HTTP client functions
@@ -68,7 +68,7 @@ alters-lab/
 
 `GET /health` returns `{"status": "ok", "service": "alters-lab-api"}`. Used by CLI doctor checks and CI.
 
-### API Routers (48 modules)
+### API Routers (58 modules)
 
 All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAPI `APIRouter`. Routers are registered in `main.py` via `app.include_router()`.
 
@@ -94,6 +94,27 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 | `weekly_reminder` | `/weekly-reminder` | Weekly review reminder scheduling |
 | `obsidian_weekly_note` | `/obsidian-weekly-note` | Import/export weekly notes from Obsidian |
 | `calibration_conversation` | `/calibration-conversation` | LLM-driven calibration data extraction via chat |
+| `calibration_divergence` | `/calibration-divergence` | Track divergence between predicted and actual calibration |
+| `calibration_scorecard` | `/calibration-scorecard` | Aggregate calibration accuracy tracking |
+
+#### Forecast Pipeline
+
+| Router | Prefix | Purpose |
+|--------|--------|---------|
+| `branch_forecast` | `/branch-forecast` | Route A + Route B + Adapter combined forecasts |
+| `branch_base_rate_anchor` | `/branch-base-rate-anchor` | Base rate anchoring for branch forecasts |
+| `forecast_snapshot` | `/forecast-snapshot` | Locked immutable forecast records |
+| `external_evidence` | `/external-evidence` | Real-world observation recording |
+| `forecast_evaluation` | `/forecast-evaluation` | Prediction vs outcome comparison |
+| `branch_outcome_targets` | `/branch-outcome-targets` | Measurable outcome goals per branch/domain |
+| `predictor_profile` | `/predictor-profile` | Trait baselines and current context |
+
+#### Population Baseline
+
+| Router | Prefix | Purpose |
+|--------|--------|---------|
+| `public_prior` | `/public-prior` | Population prior integration and management |
+| `literature_priors` | `/literature-priors` | Literature-based prior extraction |
 
 #### Promotion Pipeline
 
@@ -161,7 +182,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Service Layer
 
-54 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
+70 service modules in `apps/api/src/alters_lab/services/` implement business logic. Services are imported by API routers and handle:
 
 - **Persistence**: `alters_persist`, `branches_persist`, `snapshot_persist`, `snapshot_sessions`, `snapshot_export`, `controlled_write`
 - **Data safety**: `data_safety` (backup planning, archive creation)
@@ -171,7 +192,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Schema Layer
 
-49 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router.
+65 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router.
 
 ### Structured Logging
 
@@ -201,22 +222,30 @@ All commands support `--mode dev|packaged` and `--json` for machine-readable out
 
 ### Routing
 
-Hash-based routing (`#/page-name`). No router library. `App.tsx` reads `window.location.hash`, maps to a `Page` type, and conditionally renders the matching component. 12 active routes:
+React Router (`BrowserRouter`) with lazy-loaded page components via `PageRouter.tsx`. 20 active routes:
 
-| Hash | Component | Purpose |
+| Path | Component | Purpose |
 |------|-----------|---------|
-| `#status` | SystemStatus | System health and overview (default) |
-| `#weekly` | WeeklyReview | Weekly review session |
-| `#dialogue` | AlterDialogue | Alter conversation interface |
-| `#reality` | RealityScore | Reality scoring and divergence tracking |
-| `#history` | CalibrationHistory | Historical calibration data |
-| `#rubric` | RubricDelta | Rubric evolution over time |
-| `#checkpoint` | CheckpointPlan | Checkpoint planning and regeneration |
-| `#provider` | ProviderSettings | LLM provider configuration |
-| `#getting-started` | GettingStarted | Onboarding flow |
-| `#patterns` | PatternReview | Pattern analysis across cycles |
-| `#validation` | BehaviorValidation | System behavior validation |
-| `#data` | DataManagement | Data management and retention |
+| `/` | Dashboard | Main dashboard overview |
+| `/dashboard` | Dashboard | Main dashboard overview |
+| `/status` | SystemStatus | System health and overview |
+| `/weekly` | WeeklyReview | Weekly review session |
+| `/dialogue` | AlterDialogue | Alter conversation interface |
+| `/reality` | RealityScore | Reality scoring and divergence tracking |
+| `/history` | CalibrationHistory | Historical calibration data |
+| `/rubric` | RubricDelta | Rubric evolution over time |
+| `/checkpoint` | CheckpointPlan | Checkpoint planning and regeneration |
+| `/provider` | ProviderSettings | LLM provider configuration |
+| `/getting-started` | GettingStarted | Onboarding flow |
+| `/patterns` | PatternReview | Pattern analysis across cycles |
+| `/validation` | BehaviorValidation | System behavior validation |
+| `/data` | DataManagement | Data management and retention |
+| `/predictor-profile` | PredictorProfile | Trait baselines and context |
+| `/outcome-targets` | OutcomeTargets | Measurable outcome goals |
+| `/branch-forecast` | BranchForecast | Combined forecast view |
+| `/forecast-calibration` | ForecastCalibration | Forecast calibration tracking |
+| `/public-priors` | PublicPriors | Population baseline priors |
+| `/calibration-conversation` | CalibrationConversation | LLM-driven calibration chat |
 
 `P6Progress.tsx` exists in `pages/` but is not currently routed.
 

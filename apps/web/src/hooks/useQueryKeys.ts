@@ -27,4 +27,7 @@ export const queryKeys = {
   publicPriorArtifacts: ['public-prior-artifacts'] as const,
   publicPriorModelCards: ['public-prior-model-cards'] as const,
   publicPriorCoverage: ['public-prior-coverage'] as const,
+  calibrationConversations: ['calibration-conversations'] as const,
+  calibrationConversation: (id: string | null) => ['calibration-conversation', id] as const,
+  calibrationDrafts: ['calibration-drafts'] as const,
 } as const
