@@ -139,40 +139,44 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
               {t('calConversation.draft.outcomeTargets')}
             </h5>
             <div className="space-y-2">
-              {outcomeTargets.map((target, i) => (
-                <div key={i} className="rounded p-2 text-xs" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                  {target.outcome_name && (
-                    <p className="font-medium mb-1">{String(target.outcome_name)}</p>
-                  )}
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {target.domain && (
-                      <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                        <span style={{ color: 'var(--color-text-muted)' }}>{t('outcomeTargets.domain')}</span>
-                        <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(target.domain)}</span>
-                      </div>
+              {outcomeTargets.map((target, i) => {
+                const name = target.outcome_name as string | undefined
+                const domain = target.domain as string | undefined
+                const horizon = target.horizon_months as number | undefined
+                const objDef = target.objective_definition as string | undefined
+                const threshold = target.success_threshold as string | undefined
+                const method = target.measurement_method as string | undefined
+                return (
+                  <div key={i} className="rounded p-2 text-xs" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                    {name && <p className="font-medium mb-1">{name}</p>}
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {domain && (
+                        <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
+                          <span style={{ color: 'var(--color-text-muted)' }}>{t('outcomeTargets.domain')}</span>
+                          <span className="font-mono" style={{ color: 'var(--color-text)' }}>{domain}</span>
+                        </div>
+                      )}
+                      {horizon != null && (
+                        <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
+                          <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.horizonMonths')}</span>
+                          <span className="font-mono" style={{ color: 'var(--color-text)' }}>{horizon}</span>
+                        </div>
+                      )}
+                    </div>
+                    {objDef && <p className="mt-1" style={{ color: 'var(--color-text-secondary)' }}>{objDef}</p>}
+                    {threshold && (
+                      <p className="mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                        {t('outcomeTargets.threshold')}: {threshold}
+                      </p>
                     )}
-                    {target.horizon_months != null && (
-                      <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                        <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.horizonMonths')}</span>
-                        <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(target.horizon_months)}</span>
-                      </div>
+                    {method && (
+                      <p className="mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                        {t('outcomeTargets.measurement')}: {method}
+                      </p>
                     )}
                   </div>
-                  {target.objective_definition && (
-                    <p className="mt-1" style={{ color: 'var(--color-text-secondary)' }}>{String(target.objective_definition)}</p>
-                  )}
-                  {target.success_threshold && (
-                    <p className="mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                      {t('outcomeTargets.threshold')}: {String(target.success_threshold)}
-                    </p>
-                  )}
-                  {target.measurement_method && (
-                    <p className="mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                      {t('outcomeTargets.measurement')}: {String(target.measurement_method)}
-                    </p>
-                  )}
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
@@ -205,30 +209,17 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
               <div className="mb-2">
                 <p className="text-xs mb-1" style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.draft.context')}</p>
                 <div className="grid grid-cols-2 gap-1.5 text-xs">
-                  {currentContext.education_status && (
-                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.educationStatus')}</span>
-                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.education_status)}</span>
-                    </div>
-                  )}
-                  {currentContext.employment_status && (
-                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.employmentStatus')}</span>
-                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.employment_status)}</span>
-                    </div>
-                  )}
-                  {currentContext.financial_stability && (
-                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.financialStability')}</span>
-                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.financial_stability)}</span>
-                    </div>
-                  )}
-                  {currentContext.relationship_status && (
-                    <div className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
-                      <span style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.relationshipStatus')}</span>
-                      <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(currentContext.relationship_status)}</span>
-                    </div>
-                  )}
+                  {(['education_status', 'employment_status', 'financial_stability', 'relationship_status'] as const).map(field => {
+                    const val = currentContext[field] as string | undefined
+                    if (!val) return null
+                    const labelKey = field.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase()).replace(/Status$/, 'Status')
+                    return (
+                      <div key={field} className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                        <span style={{ color: 'var(--color-text-muted)' }}>{t(`calConversation.fields.${labelKey}`)}</span>
+                        <span className="font-mono" style={{ color: 'var(--color-text)' }}>{val}</span>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -238,7 +229,7 @@ function DraftCard({ draft, onConfirm, onReject, confirming, rejecting }: DraftC
                 <p className="text-xs mb-1" style={{ color: 'var(--color-text-muted)' }}>{t('calConversation.fields.healthConstraints')}</p>
                 <ul className="space-y-0.5 text-xs list-disc pl-4">
                   {healthConstraints.map((item, i) => (
-                    <li key={i} style={{ color: 'var(--color-text-secondary)' }}>{String(item)}</li>
+                    <li key={i} style={{ color: 'var(--color-text-secondary)' }}>{item}</li>
                   ))}
                 </ul>
               </div>
