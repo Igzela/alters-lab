@@ -70,6 +70,9 @@ Population-level baselines from longitudinal datasets (NLSY97, MIDUS) inform for
 ### Personal Prior Adapter
 Combines Route A (personal evidence), Route B (population priors), and external evidence into per-domain adjusted forecasts. Surfaces conflicts between sources for human judgment. Not a destiny prediction — a decision-support layer.
 
+### LLM-Driven Calibration (In Progress)
+An LLM guides the user through natural conversation to extract calibration data — behavior metrics, rubric scores, external evidence. No manual form-filling required. The LLM asks questions, extracts structured data, and presents a draft for user confirmation before writing to the system.
+
 ## Quick Start
 
 ### 1. Install
@@ -172,9 +175,9 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration
 │  └── 15 pages total                                     │
 ├─────────────────────────────────────────────────────────┤
 │  Backend (Python + FastAPI + Pydantic)                  │
-│  ├── 47 API routers                                     │
-│  ├── 54 service modules                                 │
-│  ├── 49 Pydantic schema modules                         │
+│  ├── 48 API routers                                     │
+│  ├── 55 service modules                                 │
+│  ├── 50 Pydantic schema modules                         │
 │  ├── Route B: population priors (NLSY97 + MIDUS)        │
 │  ├── Personal Prior Adapter                             │
 │  └── Pattern detection, trend analysis, dynamic weights │
@@ -205,7 +208,7 @@ Snapshot → Branch Discovery → Alter Generation → Dialogue → Calibration
 | Storage | YAML + JSON files (no database) |
 | Packaging | Debian `.deb`, Docker |
 | Routing | React Router v6 |
-| Tests | pytest (1931 backend), vitest (81 frontend) |
+| Tests | pytest (1970 backend), vitest (81 frontend) |
 
 ## CLI Commands
 
@@ -280,6 +283,9 @@ Looking for a way to contribute? Check issues labeled `good-first-issue` for tas
 - [x] Route B population priors (NLSY97 + MIDUS, all 5 domains)
 - [x] Personal Prior Adapter (combines Route A + B + external evidence)
 - [x] Forecast snapshots, evaluations, scorecard with per-source tracking
+- [x] LLM-Driven Calibration Phase 1 (schema, service, API)
+- [ ] LLM-Driven Calibration: conversation UI + draft confirmation
+- [ ] LLM-Driven Calibration: external evidence capture
 - [ ] Real user pilot (4-8 weeks of calibration data)
 - [ ] P6 behavior validation gate (collecting evidence)
 - [ ] Relationship domain calibrated model (currently contextual only)

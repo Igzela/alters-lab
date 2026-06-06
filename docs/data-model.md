@@ -582,3 +582,50 @@ Per-source hit rates for comparing Route A, Route B, and Adapter accuracy.
 | `route_b_hit/miss/partial/unknown_count` | int | Route B match counts |
 | `adapter_hit/miss/partial/unknown_count` | int | Adapter match counts |
 | `conflict_outcomes` | dict[str, int] | Conflict level → match result counts |
+
+## LLM-Driven Calibration
+
+### CalibrationConversation (`product/calibration_conversations/`)
+
+A conversation session between user and LLM for calibration data extraction.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `conversation_id` | str | Unique identifier (prefix `conv`) |
+| `created_at` | str | Creation timestamp (UTC) |
+| `status` | Literal["active", "completed"] | Conversation state |
+| `messages` | list[ConversationMessage] | Chat history |
+| `draft_ids` | list[str] | Associated draft IDs |
+
+**ConversationMessage:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `role` | Literal["user", "assistant", "system"] | Message sender |
+| `content` | str | Message text |
+| `timestamp` | str | Message timestamp |
+
+### CalibrationDraft (`product/calibration_drafts/`)
+
+A draft extracted by the LLM from conversation, pending user confirmation.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `draft_id` | str | Unique identifier (prefix `cd`) |
+| `source_type` | Literal["llm_calibration_draft"] | Always this value |
+| `created_at` | str | Creation timestamp (UTC) |
+| `conversation_id` | str | Parent conversation ID |
+| `status` | Literal["pending", "confirmed", "rejected"] | Draft state |
+| `behavior_metrics` | BehaviorMetricsExtract \| None | Extracted behavior data |
+| `rubric_scores` | CalibrationScoreValues \| None | Extracted rubric scores |
+| `external_evidence` | list[ExternalEvidenceExtract] | Extracted evidence items |
+| `llm_model` | str \| None | LLM model used |
+| `extraction_confidence` | Literal["high", "medium", "low"] | LLM's confidence |
+| `llm_reasoning` | str | Why LLM extracted these values |
+| `confirmed_at` | str \| None | Confirmation timestamp |
+| `user_corrections` | dict[str, Any] | User corrections to extracted data |
+
+**BehaviorMetricsExtract** — subset of WeeklyBehaviorMetricsRecord fields the LLM can extract (all optional except notes):
+`week_start`, `week_end`, `branch_id`, `career_education_deep_work_minutes`, `planned_commitment_follow_through_rate`, `expense_logged_days`, `regular_sleep_nights`, `moderate_vigorous_activity_minutes`, `avoidable_health_risk_events`, `meaningful_social_contact_count`, `abandoned_committed_blocks`, `key_milestone_progress_pct`, `notes`.
+
+**ExternalEvidenceExtract** — single evidence item extractable from conversation:
+`domain`, `evidence_type`, `description`, `objective_strength`, `polarity`, `numeric_value`, `unit`.

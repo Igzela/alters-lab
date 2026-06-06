@@ -68,7 +68,7 @@ alters-lab/
 
 `GET /health` returns `{"status": "ok", "service": "alters-lab-api"}`. Used by CLI doctor checks and CI.
 
-### API Routers (44 modules)
+### API Routers (48 modules)
 
 All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAPI `APIRouter`. Routers are registered in `main.py` via `app.include_router()`.
 
@@ -93,6 +93,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 | `weekly_review_assistant` | `/weekly-review-assistant` | AI-assisted weekly review suggestions |
 | `weekly_reminder` | `/weekly-reminder` | Weekly review reminder scheduling |
 | `obsidian_weekly_note` | `/obsidian-weekly-note` | Import/export weekly notes from Obsidian |
+| `calibration_conversation` | `/calibration-conversation` | LLM-driven calibration data extraction via chat |
 
 #### Promotion Pipeline
 
