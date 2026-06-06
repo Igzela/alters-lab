@@ -82,6 +82,7 @@ _ROUTER_MODULES = [
     "external_evidence",
     "forecast_evaluation",
     "calibration_scorecard",
+    "calibration_conversation",
     "public_prior",
 ]
 

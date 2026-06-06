@@ -36,6 +36,8 @@ P6_RUNTIME_AREAS = {
     "forecast_evaluations": "alters/product/forecast_evaluations",
     "model_cards": "alters/product/model_cards",
     "population_prior_artifacts": "alters/product/population_prior_artifacts",
+    "calibration_drafts": "alters/product/calibration_drafts",
+    "calibration_conversations": "alters/product/calibration_conversations",
 }
 
 _SAFE_ID = re.compile(r"^[A-Za-z0-9_.-]+$")

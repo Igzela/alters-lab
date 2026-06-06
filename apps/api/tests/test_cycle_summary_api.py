@@ -172,6 +172,6 @@ def test_main_has_no_generation_routers():
     forbidden_prefixes = ["/branch-discovery", "/alter-generation", "/dialogue", "/value-alignment", "/calibration", "/archive"]
     for prefix in forbidden_prefixes:
         for path in route_paths:
-            if path.startswith("/calibration-loop") or path.startswith("/archive-mechanism"):
+            if path.startswith("/calibration-loop") or path.startswith("/archive-mechanism") or path.startswith("/calibration-conversation"):
                 continue
             assert not path.startswith(prefix), f"Found forbidden route: {path}"

@@ -72,6 +72,14 @@ Complete end-to-end traceability:
 - Provider integration (LLM dialogue is optional, disabled by default)
 - P6 behavior validation (collecting evidence, not yet sealed)
 
+### Next Major Initiative: LLM-Driven Calibration
+
+**Plan: `docs/LDRIVEN_CALIBRATION_PLAN.md`**
+
+目标：LLM 作为主导者，通过自然对话引导用户完成所有校准数据的提取。消除手动填表的使用障碍。
+
+Phase 1（behavior metrics + rubric scores）→ Phase 2（external evidence）→ Phase 3（前端 UI）→ Phase 4（outcome targets + predictor profile）
+
 ### Pilot Results
 
 A seeded realistic pilot (25 tests) verified the full product flow:
