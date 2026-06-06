@@ -37,6 +37,9 @@ export type Page =
   | 'forecast-calibration'
   | 'public-priors'
   | 'calibration-conversation'
+  | 'behavior-metrics'
+  | 'strength-overview'
+  | 'p6-progress'
 
 export const VALID_PAGES: Page[] = [
   'dashboard', 'status', 'weekly', 'dialogue', 'reality', 'history',
@@ -44,4 +47,7 @@ export const VALID_PAGES: Page[] = [
   'validation', 'data', 'predictor-profile', 'outcome-targets',
   'branch-forecast', 'forecast-calibration', 'public-priors',
   'calibration-conversation',
+  'behavior-metrics',
+  'strength-overview',
+  'p6-progress',
 ]

@@ -30,4 +30,5 @@ export const queryKeys = {
   calibrationConversations: ['calibration-conversations'] as const,
   calibrationConversation: (id: string | null) => ['calibration-conversation', id] as const,
   calibrationDrafts: ['calibration-drafts'] as const,
+  behaviorMetricsRecords: ['behavior-metrics-records'] as const,
 } as const

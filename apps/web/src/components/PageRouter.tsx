@@ -21,6 +21,9 @@ const BranchForecast = lazy(() => import('../pages/BranchForecast'))
 const ForecastCalibration = lazy(() => import('../pages/ForecastCalibration'))
 const PublicPriors = lazy(() => import('../pages/PublicPriors'))
 const CalibrationConversation = lazy(() => import('../pages/CalibrationConversation'))
+const BehaviorMetricsDetail = lazy(() => import('../pages/BehaviorMetricsDetail'))
+const StrengthOverview = lazy(() => import('../pages/StrengthOverview'))
+const P6Progress = lazy(() => import('../pages/P6Progress'))
 
 export default function PageRouter() {
   return (
@@ -46,6 +49,9 @@ export default function PageRouter() {
         <Route path="/forecast-calibration" element={<ForecastCalibration />} />
         <Route path="/public-priors" element={<PublicPriors />} />
         <Route path="/calibration-conversation" element={<CalibrationConversation />} />
+        <Route path="/behavior-metrics" element={<BehaviorMetricsDetail />} />
+        <Route path="/strength-overview" element={<StrengthOverview />} />
+        <Route path="/p6-progress" element={<P6Progress />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

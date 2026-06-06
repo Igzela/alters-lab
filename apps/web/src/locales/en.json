@@ -44,7 +44,10 @@
     "branchForecast": "Branch Forecast",
     "forecastCalibration": "Forecast Calibration",
     "publicPriors": "Public Priors",
-    "calibrationConversation": "Cal Conversation"
+    "calibrationConversation": "Cal Conversation",
+    "behaviorMetrics": "Behavior Metrics",
+    "strengthOverview": "Strength Overview",
+    "p6Progress": "P6 Progress"
   },
   "status": {
     "title": "System Status",
@@ -236,7 +239,22 @@
     "verdictAvoidance": "Activity looked productive but avoided the real problem.",
     "verdictRecovery": "You bounced back from a stall or setback. Restorative week.",
     "verdictUnstable": "Inconsistent, but some meaningful progress happened.",
-    "verdictBlocked": "External factors prevented progress despite intention."
+    "verdictBlocked": "External factors prevented progress despite intention.",
+    "calRecords": "Calibration Records",
+    "noCalRecords": "No calibration records yet. Start a calibration conversation to generate records.",
+    "calRecordDetail": "Calibration Record Detail",
+    "confidenceHigh": "High confidence",
+    "confidenceMedium": "Medium confidence",
+    "confidenceLow": "Low confidence",
+    "model": "Model:",
+    "source": "Source:",
+    "sourceLLM": "LLM Calibration Draft",
+    "method": "Method:",
+    "rubricScores": "Rubric Scores",
+    "externalEvidence": "External Evidence",
+    "behaviorMetrics": "Behavior Metrics",
+    "reasoning": "Reasoning:",
+    "noCalData": "No rubric scores or external evidence extracted."
   },
   "rubricDelta": {
     "title": "Rubric Delta",
@@ -627,6 +645,46 @@
       "highRiskWarning": "High transfer risk: calibration metrics may not transfer to your population."
     }
   },
+  "behaviorMetrics": {
+    "title": "Behavior Metrics",
+    "description": "Current week behavior metrics with 4-week trend. Metrics are recorded via weekly reviews and calibration conversations.",
+    "currentWeek": "Current Week",
+    "weekOf": "Week of",
+    "noData": "No behavior metrics recorded yet. Complete a weekly review or calibration conversation to generate metrics.",
+    "metric": "Metric",
+    "value": "Value",
+    "unit": "Unit",
+    "trend": "4-Week Trend",
+    "noTrend": "Not enough data for trend (need at least 2 weeks).",
+    "metrics": {
+      "career_education_deep_work_minutes": "Deep Work",
+      "planned_commitment_follow_through_rate": "Follow-Through Rate",
+      "expense_logged_days": "Overspending Days",
+      "regular_sleep_nights": "Good Sleep Nights",
+      "moderate_vigorous_activity_minutes": "Exercise",
+      "avoidable_health_risk_events": "Health Risk Events",
+      "meaningful_social_contact_count": "Social Contacts",
+      "abandoned_committed_blocks": "Abandoned Time Blocks",
+      "key_milestone_progress_pct": "Milestone Progress"
+    },
+    "units": {
+      "career_education_deep_work_minutes": "min",
+      "planned_commitment_follow_through_rate": "%",
+      "expense_logged_days": "days",
+      "regular_sleep_nights": "nights",
+      "moderate_vigorous_activity_minutes": "min",
+      "avoidable_health_risk_events": "events",
+      "meaningful_social_contact_count": "contacts",
+      "abandoned_committed_blocks": "blocks",
+      "key_milestone_progress_pct": "%"
+    },
+    "trendUp": "Improving",
+    "trendDown": "Declining",
+    "trendStable": "Stable",
+    "noPriorWeeks": "First week recorded",
+    "loading": "Loading behavior metrics...",
+    "weekCount": "{{count}} week recorded"
+  },
   "calConversation": {
     "title": "Calibration Conversation",
     "description": "Chat with an LLM to refine your calibration data. The assistant helps you clarify behaviors, correct inaccuracies, and build evidence for validation.",
@@ -681,6 +739,39 @@
       "objectiveDefinition": "Objective Definition",
       "successThreshold": "Success Threshold",
       "measurementMethod": "Measurement Method"
+    }
+  },
+  "strengthOverview": {
+    "title": "Model Strength Overview",
+    "description": "Dashboard showing all models with their strength levels, calibration status, and recommendation badges.",
+    "domainMatrix": "Domain Strength Matrix",
+    "domain": "Domain",
+    "strengthLevel": "Strength Level",
+    "routeBStatus": "Route B Status",
+    "modelFamily": "Model Family",
+    "confidence": "Confidence",
+    "transferRisk": "Transfer Risk",
+    "artifacts": "Artifacts",
+    "models": "Model Cards",
+    "profiles": "Predictor Profiles",
+    "calibration": "Calibration Status",
+    "calibrationSummary": "{{count}} calibration records available.",
+    "levels": {
+      "strong_calibrated": "Strong Model",
+      "data_backed": "Data-Backed",
+      "contextual": "Contextual",
+      "none": "None"
+    },
+    "stats": {
+      "title": "Summary",
+      "strongModels": "Strong Models",
+      "dataBacked": "Data-Backed",
+      "contextual": "Contextual",
+      "noPrior": "No Prior",
+      "routeBApproved": "Route B Approved",
+      "totalModels": "Total Models",
+      "profiles": "Profiles",
+      "calibrationRecords": "Calibrations"
     }
   }
 }

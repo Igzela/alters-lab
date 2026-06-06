@@ -24,8 +24,9 @@ describe('CalibrationHistory', () => {
     expect(screen.getByText('history.title')).toBeInTheDocument()
   })
 
-  it('shows empty state when no records', () => {
+  it('shows calibration records section', () => {
     renderPage()
-    expect(screen.getByText('history.noRecords')).toBeInTheDocument()
+    expect(screen.getByText((content) => content.startsWith('history.calRecords'))).toBeInTheDocument()
+    expect(screen.getByText('history.noCalRecords')).toBeInTheDocument()
   })
 })

@@ -44,7 +44,10 @@
     "branchForecast": "分支预测",
     "forecastCalibration": "预测校准",
     "publicPriors": "公共先验",
-    "calibrationConversation": "校准对话"
+    "calibrationConversation": "校准对话",
+    "behaviorMetrics": "行为指标",
+    "strengthOverview": "模型强度总览",
+    "p6Progress": "P6 进度"
   },
   "status": {
     "title": "系统状态",
@@ -236,7 +239,22 @@
     "verdictAvoidance": "活动看起来有成效但回避了真正的问题。",
     "verdictRecovery": "你从停滞或挫折中恢复过来。恢复周。",
     "verdictUnstable": "不一致，但发生了一些有意义的进展。",
-    "verdictBlocked": "外部因素阻碍了进展，尽管有意愿。"
+    "verdictBlocked": "外部因素阻碍了进展，尽管有意愿。",
+    "calRecords": "校准记录",
+    "noCalRecords": "暂无校准记录。开始校准对话以生成记录。",
+    "calRecordDetail": "校准记录详情",
+    "confidenceHigh": "高置信度",
+    "confidenceMedium": "中置信度",
+    "confidenceLow": "低置信度",
+    "model": "模型：",
+    "source": "来源：",
+    "sourceLLM": "LLM 校准草稿",
+    "method": "方法：",
+    "rubricScores": "评分标准分数",
+    "externalEvidence": "外部证据",
+    "behaviorMetrics": "行为指标",
+    "reasoning": "推理：",
+    "noCalData": "未提取到评分标准分数或外部证据。"
   },
   "rubricDelta": {
     "title": "评分标准变更",
@@ -627,6 +645,46 @@
       "highRiskWarning": "高迁移风险：校准指标可能无法迁移到您的人群。"
     }
   },
+  "behaviorMetrics": {
+    "title": "行为指标",
+    "description": "本周行为指标及 4 周趋势。指标通过周回顾和校准对话记录。",
+    "currentWeek": "本周",
+    "weekOf": "周起始",
+    "noData": "暂无行为指标记录。完成周回顾或校准对话以生成指标。",
+    "metric": "指标",
+    "value": "数值",
+    "unit": "单位",
+    "trend": "4 周趋势",
+    "noTrend": "数据不足，无法显示趋势（至少需要 2 周数据）。",
+    "metrics": {
+      "career_education_deep_work_minutes": "深度工作",
+      "planned_commitment_follow_through_rate": "执行完成率",
+      "expense_logged_days": "超支天数",
+      "regular_sleep_nights": "良好睡眠夜数",
+      "moderate_vigorous_activity_minutes": "运动",
+      "avoidable_health_risk_events": "健康风险事件",
+      "meaningful_social_contact_count": "社交接触",
+      "abandoned_committed_blocks": "放弃的时间块",
+      "key_milestone_progress_pct": "里程碑进展"
+    },
+    "units": {
+      "career_education_deep_work_minutes": "分钟",
+      "planned_commitment_follow_through_rate": "%",
+      "expense_logged_days": "天",
+      "regular_sleep_nights": "晚",
+      "moderate_vigorous_activity_minutes": "分钟",
+      "avoidable_health_risk_events": "次",
+      "meaningful_social_contact_count": "次",
+      "abandoned_committed_blocks": "块",
+      "key_milestone_progress_pct": "%"
+    },
+    "trendUp": "改善中",
+    "trendDown": "下降中",
+    "trendStable": "稳定",
+    "noPriorWeeks": "首周记录",
+    "loading": "加载行为指标中...",
+    "weekCount": "已记录 {{count}} 周"
+  },
   "calConversation": {
     "title": "校准对话",
     "description": "与 LLM 对话以完善你的校准数据。助手帮助你厘清行为、纠正不准确之处，并为验证积累证据。",
@@ -681,6 +739,39 @@
       "objectiveDefinition": "客观定义",
       "successThreshold": "成功阈值",
       "measurementMethod": "测量方法"
+    }
+  },
+  "strengthOverview": {
+    "title": "模型强度总览",
+    "description": "展示所有模型的强度等级、校准状态和推荐徽章的仪表盘。",
+    "domainMatrix": "领域强度矩阵",
+    "domain": "领域",
+    "strengthLevel": "强度等级",
+    "routeBStatus": "Route B 状态",
+    "modelFamily": "模型族",
+    "confidence": "置信度",
+    "transferRisk": "迁移风险",
+    "artifacts": "工件",
+    "models": "模型卡片",
+    "profiles": "预测器档案",
+    "calibration": "校准状态",
+    "calibrationSummary": "已有 {{count}} 条校准记录。",
+    "levels": {
+      "strong_calibrated": "强模型",
+      "data_backed": "数据支撑",
+      "contextual": "上下文",
+      "none": "无"
+    },
+    "stats": {
+      "title": "总览",
+      "strongModels": "强模型",
+      "dataBacked": "数据支撑",
+      "contextual": "上下文",
+      "noPrior": "无先验",
+      "routeBApproved": "Route B 已批准",
+      "totalModels": "模型总数",
+      "profiles": "档案",
+      "calibrationRecords": "校准记录"
     }
   }
 }

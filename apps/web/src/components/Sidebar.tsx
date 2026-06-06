@@ -20,6 +20,8 @@ import {
   Binoculars,
   Crosshair,
   Books,
+  Pulse,
+  Gauge,
 } from '@phosphor-icons/react'
 import type { Page } from '../types'
 import { useTheme } from './ThemeContext'
@@ -52,6 +54,7 @@ const navGroups: NavGroup[] = [
       { page: 'reality', icon: <Sparkle size={18} />, labelKey: 'nav.realityScore' },
       { page: 'rubric', icon: <ArrowsClockwise size={18} />, labelKey: 'nav.rubricDelta' },
       { page: 'calibration-conversation', icon: <ChatCircle size={18} />, labelKey: 'nav.calibrationConversation' },
+      { page: 'behavior-metrics', icon: <Pulse size={18} />, labelKey: 'nav.behaviorMetrics' },
     ],
   },
   {
@@ -76,12 +79,14 @@ const navGroups: NavGroup[] = [
       { page: 'branch-forecast', icon: <Binoculars size={18} />, labelKey: 'nav.branchForecast' },
       { page: 'forecast-calibration', icon: <Crosshair size={18} />, labelKey: 'nav.forecastCalibration' },
       { page: 'public-priors', icon: <Books size={18} />, labelKey: 'nav.publicPriors' },
+      { page: 'strength-overview', icon: <Gauge size={18} />, labelKey: 'nav.strengthOverview' },
     ],
   },
   {
     labelKey: 'nav.system',
     items: [
       { page: 'checkpoint', icon: <GitBranch size={18} />, labelKey: 'nav.checkpointPlan' },
+      { page: 'p6-progress', icon: <ChartLineUp size={18} />, labelKey: 'nav.p6Progress' },
       { page: 'data', icon: <Database size={18} />, labelKey: 'nav.data' },
     ],
   },

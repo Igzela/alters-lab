@@ -129,6 +129,13 @@ vi.mock('../components/ThemeContext', () => ({
   useTheme: () => ({ theme: 'light' as const, toggleTheme: vi.fn() }),
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
 }))
+vi.mock('../hooks/usePublicPriorHooks', () => ({
+  usePublicPriorArtifacts: vi.fn(() => mockQuery({ artifacts: [] })),
+  usePublicPriorArtifact: vi.fn(() => mockQuery(null)),
+  usePublicPriorModelCards: vi.fn(() => mockQuery({ model_cards: [] })),
+  usePublicPriorModelCard: vi.fn(() => mockQuery(null)),
+  usePublicPriorCoverage: vi.fn(() => mockQuery({})),
+}))
 vi.mock('../hooks/usePredictionHooks', () => ({
   usePredictorProfiles: vi.fn(() => mockQuery({ profiles: [], count: 0 })),
   usePredictorProfile: vi.fn(() => mockQuery(null)),

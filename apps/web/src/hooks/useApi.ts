@@ -16,6 +16,7 @@ export { useFetchJson, useSuggestRubricDelta, useGenerateCheckpointPlan } from '
 export { usePredictorProfiles, usePredictorProfile, useCreatePredictorProfile, useOutcomeTargets, useCreateOutcomeTarget, useEvaluateOutcomeTarget, useBranchForecast, useCalibrationDivergence } from './usePredictionHooks'
 export { useForecastSnapshots, useForecastSnapshot, useCreateForecastSnapshot, useExternalEvidence, useCreateExternalEvidence, useForecastEvaluations, useCreateForecastEvaluation, useForecastScorecard } from './useForecastHooks'
 export { useStartCalibrationConversation, useSendCalibrationMessage, useCalibrationConversation, useCalibrationDrafts, useConfirmCalibrationDraft, useRejectCalibrationDraft } from './useCalibrationConversationHooks'
+export { useBehaviorMetricsRecords } from './useBehaviorMetricsHooks'
 
 // Re-export query key factory for convenience
 export { queryKeys } from './useQueryKeys'

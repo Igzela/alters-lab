@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCalibrationHistory, useWeeklyReviews, useActionAlignmentScores, useTrendAnalysis, useDynamicWeights, usePatternAdjustment } from '../hooks/useApi'
-import { staggerFadeIn } from '../animations'
+import { useCalibrationHistory, useWeeklyReviews, useActionAlignmentScores, useTrendAnalysis, useDynamicWeights, usePatternAdjustment, useCalibrationDrafts } from '../hooks/useApi'
+import { staggerFadeIn, fadeIn } from '../animations'
 import { formatDate } from '../dateFormat'
 import type { ActionAlignmentScore, VerdictLabel } from '../types'
 import { Card } from '../components/Card'
@@ -35,9 +35,132 @@ function getTrend(scores: ActionAlignmentScore[]): 'up' | 'down' | 'stable' | 'f
   return 'stable'
 }
 
+const CONFIDENCE_VARIANTS: Record<string, 'success' | 'warning' | 'error'> = {
+  high: 'success',
+  medium: 'warning',
+  low: 'error',
+}
+
+interface DraftRecord {
+  draft_id: string
+  status: string
+  conversation_id: string
+  source_type?: string
+  created_at?: string
+  extraction_confidence?: string
+  llm_model?: string
+  llm_reasoning?: string
+  behavior_metrics: Record<string, unknown> | null
+  rubric_scores: Record<string, number> | null
+  external_evidence: Array<Record<string, unknown>>
+  confirmed_at?: string
+}
+
+function DraftDetailCard({ draft, t }: { draft: DraftRecord; t: (key: string) => string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => { if (ref.current) fadeIn(ref.current) }, [])
+
+  const confidence = draft.extraction_confidence || 'low'
+  const rubricScores = draft.rubric_scores
+  const externalEvidence = draft.external_evidence || []
+  const behaviorMetrics = draft.behavior_metrics
+  const RUBRIC_KEYS = ['execution_discipline', 'exploration_freedom', 'life_state_match', 'energy_level'] as const
+
+  return (
+    <div ref={ref} className="mt-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
+      <div className="flex items-center gap-2 mb-2">
+        <h4 className="text-sm font-medium">{t('history.calRecordDetail')}</h4>
+        <Badge variant={CONFIDENCE_VARIANTS[confidence] || 'muted'}>
+          {t(`history.confidence${confidence.charAt(0).toUpperCase() + confidence.slice(1)}`)}
+        </Badge>
+      </div>
+
+      {draft.llm_model && (
+        <p className="text-xs mb-1" style={{ color: 'var(--color-text-muted)' }}>
+          <strong>{t('history.model')}</strong> {draft.llm_model}
+        </p>
+      )}
+      <p className="text-xs mb-2" style={{ color: 'var(--color-text-muted)' }}>
+        <strong>{t('history.source')}</strong> {t('history.sourceLLM')}
+      </p>
+
+      {rubricScores && (
+        <div className="mb-3">
+          <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
+            {t('history.rubricScores')}
+          </h5>
+          <div className="grid grid-cols-2 gap-1.5 text-xs">
+            {RUBRIC_KEYS.map(key => {
+              const val = rubricScores[key]
+              if (val == null) return null
+              return (
+                <div key={key} className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                  <span style={{ color: 'var(--color-text-muted)' }}>{key.replace(/_/g, ' ')}</span>
+                  <span className="font-mono" style={{ color: 'var(--color-text)' }}>{val}/5</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {externalEvidence.length > 0 && (
+        <div className="mb-3">
+          <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
+            {t('history.externalEvidence')}
+          </h5>
+          <ul className="space-y-1 text-xs list-disc pl-4">
+            {externalEvidence.map((ev, i) => (
+              <li key={i}>
+                <span className="font-medium">{(ev.domain as string || '').replace(/_/g, ' ')}</span>
+                {': '}
+                <span style={{ color: 'var(--color-text-secondary)' }}>{ev.description as string}</span>
+                {' '}
+                <span style={{ color: 'var(--color-text-muted)' }}>
+                  ({(ev.objective_strength as string) || 'unknown'})
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {externalEvidence.length === 0 && !rubricScores && (
+        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('history.noCalData')}</p>
+      )}
+
+      {behaviorMetrics && (
+        <div className="mb-2">
+          <h5 className="text-xs font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
+            {t('history.behaviorMetrics')}
+          </h5>
+          <div className="grid grid-cols-2 gap-1.5 text-xs">
+            {Object.entries(behaviorMetrics).map(([key, val]) => {
+              if (val == null || val === '') return null
+              return (
+                <div key={key} className="flex justify-between px-2 py-1 rounded" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                  <span style={{ color: 'var(--color-text-muted)' }}>{key.replace(/_/g, ' ')}</span>
+                  <span className="font-mono" style={{ color: 'var(--color-text)' }}>{String(val)}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {draft.llm_reasoning && (
+        <p className="text-xs italic mt-2" style={{ color: 'var(--color-text-muted)' }}>
+          <strong>{t('history.reasoning')}</strong> {draft.llm_reasoning}
+        </p>
+      )}
+    </div>
+  )
+}
+
 export default function CalibrationHistory() {
   const { t, i18n } = useTranslation()
   const [selectedScore, setSelectedScore] = useState<ActionAlignmentScore | null>(null)
+  const [selectedDraft, setSelectedDraft] = useState<string | null>(null)
   const cardsRef = useRef<HTMLDivElement>(null)
 
   const history = useCalibrationHistory()
@@ -46,9 +169,12 @@ export default function CalibrationHistory() {
   const trend = useTrendAnalysis()
   const weights = useDynamicWeights()
   const patternAdj = usePatternAdjustment()
+  const draftsQuery = useCalibrationDrafts()
 
   const error = history.error || reviews.error || scores.error
   const isLoading = history.isLoading || reviews.isLoading || scores.isLoading
+
+  const allDrafts = ((draftsQuery.data as Record<string, unknown>)?.drafts as DraftRecord[]) || []
 
   const actionScores = scores.data?.scores || []
   const weeklyReviewsList = reviews.data?.sessions || []
@@ -105,6 +231,45 @@ export default function CalibrationHistory() {
           <strong> Calibration records</strong> are the raw score data.
         </p>
       </Card>
+
+      <h3 className="text-base font-medium">{t('history.calRecords')} ({allDrafts.length})</h3>
+      {allDrafts.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noCalRecords')}</p>}
+      {allDrafts.map(draft => (
+        <div
+          key={draft.draft_id}
+          data-stagger
+          className="p-3 rounded-xl cursor-pointer transition-all duration-200"
+          style={{
+            backgroundColor: selectedDraft === draft.draft_id ? 'var(--color-surface-raised)' : 'var(--color-surface)',
+            border: selectedDraft === draft.draft_id ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
+          }}
+          onClick={() => setSelectedDraft(selectedDraft === draft.draft_id ? null : draft.draft_id)}
+        >
+          <div className="flex items-center justify-between mb-1">
+            <strong className="text-sm">{draft.draft_id}</strong>
+            <div className="flex items-center gap-2">
+              <Badge variant={CONFIDENCE_VARIANTS[draft.extraction_confidence || 'low'] || 'muted'}>
+                {draft.extraction_confidence || 'low'}
+              </Badge>
+              <Badge variant={draft.status === 'confirmed' ? 'success' : draft.status === 'rejected' ? 'error' : 'info'}>
+                {draft.status}
+              </Badge>
+            </div>
+          </div>
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+            {t('history.method')} {t('history.sourceLLM')}
+          </span>
+          {draft.created_at && (
+            <span className="text-xs ml-2" style={{ color: 'var(--color-text-muted)' }}>
+              {formatDate(draft.created_at, i18n.language)}
+            </span>
+          )}
+
+          {selectedDraft === draft.draft_id && (
+            <DraftDetailCard draft={draft} t={t} />
+          )}
+        </div>
+      ))}
 
       <h3 className="text-base font-medium">{t('history.weeklyReviews')} ({weeklyReviewsList.length})</h3>
       {weeklyReviewsList.length === 0 && <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('history.noReviews')}</p>}
