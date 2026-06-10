@@ -8,7 +8,7 @@ Alters Lab 是个人未来路径模拟和校准系统。不是内容创作工具
 - P6 状态：NOT_VALIDATED / NOT_SEALED
 - LLM-Driven Calibration 全部 4 个 Phase 完成
 - 下一步：真实用户 Pilot / P6 validation gate
-- 1970 backend tests, 84 frontend tests
+- 1980 backend tests, 90 frontend tests
 
 ## 下一个 Session 待办
 

@@ -23,13 +23,13 @@ const DIRECTION_COLORS: Record<string, 'success' | 'error' | 'warning' | 'info' 
   insufficient_data: 'muted',
 }
 
-const ALIGNMENT_LABELS: Record<string, string> = {
-  aligned: 'Aligned',
-  conflicted: 'Conflict Detected',
-  route_a_only: 'Personal Evidence Only',
-  route_b_only: 'Public Prior Only',
-  insufficient_data: 'Insufficient Data',
-}
+const getAlignmentLabels = (t: (key: string) => string): Record<string, string> => ({
+  aligned: t('branchForecast.aligned'),
+  conflicted: t('branchForecast.conflictDetected'),
+  route_a_only: t('branchForecast.personalEvidenceOnly'),
+  route_b_only: t('branchForecast.publicPriorOnly'),
+  insufficient_data: t('branchForecast.insufficientDataLabel'),
+})
 
 const READINESS_VARIANTS: Record<string, 'success' | 'warning' | 'error' | 'muted'> = {
   strong: 'success',
@@ -150,14 +150,14 @@ export default function BranchForecast() {
               const artifactClass = routeB.artifact_class as string
               const strengthLevel = routeB.strength_level as string
               const classBadge = strengthLevel === 'strong_calibrated'
-                ? { variant: 'success' as const, label: 'Strong Calibrated Public Model' }
+                ? { variant: 'success' as const, label: t('branchForecast.strongCalibrated') }
                 : strengthLevel === 'data_backed'
-                  ? { variant: 'warning' as const, label: 'Data-Backed Descriptive Baseline' }
+                  ? { variant: 'warning' as const, label: t('branchForecast.dataBacked') }
                   : strengthLevel === 'contextual'
-                    ? { variant: 'muted' as const, label: 'Contextual Literature Prior' }
+                    ? { variant: 'muted' as const, label: t('branchForecast.contextualLiterature') }
                     : artifactClass === 'mixed'
-                      ? { variant: 'warning' as const, label: 'Mixed (Data + Contextual)' }
-                      : { variant: 'muted' as const, label: 'No Population Data' }
+                      ? { variant: 'warning' as const, label: t('branchForecast.mixedData') }
+                      : { variant: 'muted' as const, label: t('branchForecast.noPopulationData') }
               const calibrationMetrics = routeB.calibration_metrics as Record<string, unknown> | undefined
               return (
                 <div className="space-y-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
@@ -166,7 +166,7 @@ export default function BranchForecast() {
                       {classBadge.label}
                     </Badge>
                     {strengthLevel !== 'strong_calibrated' && strengthLevel !== 'data_backed' && strengthLevel !== 'none' && (
-                      <span style={{ color: 'var(--color-error)' }}>— Population data not fully approved for this forecast</span>
+                      <span style={{ color: 'var(--color-error)' }}>— {t('branchForecast.populationNotApproved')}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -175,9 +175,9 @@ export default function BranchForecast() {
                   </div>
                   <div><strong>{t('branchForecast.transferRisk')}:</strong> {routeB.transfer_risk as string}</div>
                   <div><strong>{t('branchForecast.evidenceStrength')}:</strong> {routeB.evidence_strength as string}</div>
-                  <div><strong>Approved Artifacts:</strong> {routeB.approved_artifact_count as number}</div>
+                  <div><strong>{t('branchForecast.approvedArtifacts')}:</strong> {routeB.approved_artifact_count as number}</div>
                   {(routeB.contextual_prior_ids as string[] || []).length > 0 && (
-                    <div><strong>Contextual Priors:</strong> {(routeB.contextual_prior_ids as string[]).join(', ')} (not driving forecast)</div>
+                    <div><strong>{t('branchForecast.contextualPriors')}:</strong> {(routeB.contextual_prior_ids as string[]).join(', ')} ({t('branchForecast.notDrivingForecast')})</div>
                   )}
                   <p className="mt-1">{routeB.explanation as string}</p>
                   {calibrationMetrics && Object.values(calibrationMetrics).some(v => v != null) && (
@@ -185,19 +185,19 @@ export default function BranchForecast() {
                       backgroundColor: strengthLevel === 'strong_calibrated' ? 'var(--color-accent-bg)' : 'var(--color-surface)',
                       border: strengthLevel === 'strong_calibrated' ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
                     }}>
-                      <div className="font-medium mb-1">Model Performance</div>
+                      <div className="font-medium mb-1">{t('branchForecast.modelPerformance')}</div>
                       <div className="flex gap-4 flex-wrap">
                         {calibrationMetrics.brier_score != null && (
-                          <span className="font-mono">Brier: {Number(calibrationMetrics.brier_score).toFixed(3)}</span>
+                          <span className="font-mono">{t('branchForecast.brier')}: {Number(calibrationMetrics.brier_score).toFixed(3)}</span>
                         )}
                         {calibrationMetrics.calibration_slope != null && (
-                          <span className="font-mono">Slope: {Number(calibrationMetrics.calibration_slope).toFixed(3)}</span>
+                          <span className="font-mono">{t('branchForecast.slope')}: {Number(calibrationMetrics.calibration_slope).toFixed(3)}</span>
                         )}
                         {calibrationMetrics.auc != null && (
-                          <span className="font-mono">AUC: {Number(calibrationMetrics.auc).toFixed(3)}</span>
+                          <span className="font-mono">{t('branchForecast.auc')}: {Number(calibrationMetrics.auc).toFixed(3)}</span>
                         )}
                         {calibrationMetrics.r2 != null && (
-                          <span className="font-mono">R²: {Number(calibrationMetrics.r2).toFixed(3)}</span>
+                          <span className="font-mono">{t('branchForecast.r2')}: {Number(calibrationMetrics.r2).toFixed(3)}</span>
                         )}
                       </div>
                     </div>
@@ -229,7 +229,7 @@ export default function BranchForecast() {
                   <div className="flex items-center gap-2">
                     <span style={{ color: 'var(--color-text-secondary)' }}>{t('branchForecast.evidenceAlignment')}:</span>
                     <Badge variant={DIRECTION_COLORS[adapter.overall_alignment as string] || 'muted'}>
-                      {ALIGNMENT_LABELS[adapter.overall_alignment as string] || adapter.overall_alignment as string}
+                      {getAlignmentLabels(t)[adapter.overall_alignment as string] || adapter.overall_alignment as string}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
@@ -242,7 +242,7 @@ export default function BranchForecast() {
                   {/* Readiness reasons */}
                   {(adapter.readiness_reasons as string[] || []).length > 0 && (
                     <div className="p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                      <div className="font-medium mb-1" style={{ color: 'var(--color-text-secondary)' }}>Reasons</div>
+                      <div className="font-medium mb-1" style={{ color: 'var(--color-text-secondary)' }}>{t('branchForecast.reasons')}</div>
                       {(adapter.readiness_reasons as string[]).map((r, i) => (
                         <div key={i} className="flex gap-1.5"><span style={{ color: 'var(--color-accent)' }}>+</span>{r}</div>
                       ))}
@@ -252,7 +252,7 @@ export default function BranchForecast() {
                   {/* Readiness blockers */}
                   {(adapter.readiness_blockers as string[] || []).length > 0 && (
                     <div className="p-2 rounded" style={{ backgroundColor: 'var(--color-error-bg, var(--color-surface))' }}>
-                      <div className="font-medium mb-1" style={{ color: 'var(--color-error)' }}>Blockers</div>
+                      <div className="font-medium mb-1" style={{ color: 'var(--color-error)' }}>{t('branchForecast.blockers')}</div>
                       {(adapter.readiness_blockers as string[]).map((b, i) => (
                         <div key={i} className="flex gap-1.5"><span style={{ color: 'var(--color-error)' }}>!</span>{b}</div>
                       ))}
@@ -269,16 +269,16 @@ export default function BranchForecast() {
                             {dr.adjusted_forecast_direction as string}
                           </Badge>
                           <Badge variant={DIRECTION_COLORS[dr.alignment as string] || 'muted'}>
-                            {ALIGNMENT_LABELS[dr.alignment as string] || dr.alignment as string}
+                            {getAlignmentLabels(t)[dr.alignment as string] || dr.alignment as string}
                           </Badge>
                           {dr.conflict_level !== 'none' && (
-                            <Badge variant="error">{dr.conflict_level as string} conflict</Badge>
+                            <Badge variant="error">{dr.conflict_level as string} {t('branchForecast.conflict')}</Badge>
                           )}
                         </div>
                         <div className="flex gap-4" style={{ color: 'var(--color-text-secondary)' }}>
                           <span>{t('branchForecast.routeA')}: {dr.route_a_direction as string}</span>
                           <span>{t('branchForecast.routeB')}: {dr.route_b_direction as string} ({dr.route_b_strength_level as string})</span>
-                          <span>Confidence: {dr.adjusted_confidence as string}</span>
+                          <span>{t('branchForecast.confidence')}: {dr.adjusted_confidence as string}</span>
                         </div>
                         {(dr.explanation as string) && (
                           <p className="mt-1" style={{ color: 'var(--color-text-muted)' }}>{dr.explanation as string}</p>
@@ -299,7 +299,7 @@ export default function BranchForecast() {
                         )}
                         {(dr.next_evidence_to_collect as string[] || []).length > 0 && (
                           <div className="mt-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                            Next: {(dr.next_evidence_to_collect as string[]).join('; ')}
+                            {t('branchForecast.next')}: {(dr.next_evidence_to_collect as string[]).join('; ')}
                           </div>
                         )}
                       </div>

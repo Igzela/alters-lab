@@ -1,0 +1,15 @@
+conversation_id: conv_20260606T131200Z_86d6e314
+created_at: '2026-06-06T13:12:00.476431+00:00'
+status: active
+messages:
+- role: assistant
+  content: 这周怎么样？工作、学习、生活各方面有什么想分享的吗？
+  timestamp: '2026-06-06T13:12:00.476442+00:00'
+- role: user
+  content: 这周学了Python，每天大概2小时，做了3个项目。睡眠不太好，大概6小时。没有运动。
+  timestamp: '2026-06-06T13:12:29.533918+00:00'
+- role: assistant
+  content: Provider mode requires base_url and api_key. Configure via ALTERS_PROVIDER_BASE_URL
+    / ALTERS_PROVIDER_API_KEY env vars, or via /provider-config endpoints.
+  timestamp: '2026-06-06T13:12:29.536963+00:00'
+draft_ids: []

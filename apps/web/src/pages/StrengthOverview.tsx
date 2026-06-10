@@ -8,12 +8,15 @@ import { Badge } from '../components/Badge'
 import { Skeleton } from '../components/Skeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
 
-const DOMAIN_LABELS: Record<string, string> = {
-  career_education: 'Career & Education',
-  financial: 'Financial',
-  health: 'Health',
-  relationship: 'Relationship',
-  subjective_wellbeing: 'Subjective Wellbeing',
+function useDomainLabels(): Record<string, string> {
+  const { t } = useTranslation()
+  return useMemo(() => ({
+    career_education: t('strengthOverview.domains.career_education'),
+    financial: t('strengthOverview.domains.financial'),
+    health: t('strengthOverview.domains.health'),
+    relationship: t('strengthOverview.domains.relationship'),
+    subjective_wellbeing: t('strengthOverview.domains.subjective_wellbeing'),
+  }), [t])
 }
 
 const STRENGTH_ORDER = ['strong_calibrated', 'data_backed', 'contextual', 'none'] as const
@@ -51,6 +54,7 @@ export default function StrengthOverview() {
   const modelCards = usePublicPriorModelCards()
   const profiles = usePredictorProfiles()
   const calibration = useCalibrationHistory()
+  const domainLabels = useDomainLabels()
 
   const isLoading = coverage.isLoading || modelCards.isLoading
   const error = coverage.error || modelCards.error
@@ -118,7 +122,7 @@ export default function StrengthOverview() {
                   const level = d.strength_level as StrengthLevel
                   return (
                     <tr key={domain} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                      <td className="py-2 px-2 font-medium">{DOMAIN_LABELS[domain] || domain}</td>
+                      <td className="py-2 px-2 font-medium">{domainLabels[domain] || domain}</td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={STRENGTH_BADGE[level] || 'muted'}>
                           {t(`strengthOverview.levels.${level}`)}
@@ -126,7 +130,7 @@ export default function StrengthOverview() {
                       </td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'muted'}>
-                          {d.route_b_status === 'approved' ? 'Approved' : d.route_b_status === 'contextual_only' ? 'Contextual' : 'None'}
+                          {d.route_b_status === 'approved' ? t('strengthOverview.approved') : d.route_b_status === 'contextual_only' ? t('strengthOverview.contextual') : t('strengthOverview.none')}
                         </Badge>
                       </td>
                       <td className="py-2 px-2 text-center text-xs">{d.model_family}</td>
@@ -203,7 +207,7 @@ export default function StrengthOverview() {
                       {(profile.domains as string[])?.join(', ')}
                     </span>
                   </div>
-                  <Badge variant="info">{(profile.domains as string[])?.length ?? 0} domains</Badge>
+                  <Badge variant="info">{(profile.domains as string[])?.length ?? 0} {t('strengthOverview.domains')}</Badge>
                 </div>
               ))}
             </div>

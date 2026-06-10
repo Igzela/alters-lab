@@ -20,7 +20,7 @@ Every Codex, Claude Code, or other coding-agent session must start by reading:
 - Product is usable as a local personal tool. Sample data ships at `alters/sample/` (load via `alters-lab load-sample`).
 - Docker support: `docker compose up -d` starts the app at http://localhost:18790.
 - Technical hardening done: structured logging, CORS middleware, rate limiting (600 req/min), dependency pinning.
-- 1970 backend tests passing, 81 frontend tests passing, frontend build clean.
+- 1980 backend tests passing, 90 frontend tests passing, frontend build clean.
 
 ## Hard Boundaries
 

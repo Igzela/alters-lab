@@ -97,7 +97,7 @@ function SnapshotsTab() {
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold">{snap.branch_id as string}</span>
               <Badge variant="muted">{snap.snapshot_id as string}</Badge>
-              {Boolean(snap.locked) && <Badge variant="info">locked</Badge>}
+              {Boolean(snap.locked) && <Badge variant="info">{t('forecastCalibration.locked')}</Badge>}
             </div>
             <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
               {snap.created_at as string}

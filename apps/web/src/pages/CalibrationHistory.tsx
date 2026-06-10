@@ -226,9 +226,9 @@ export default function CalibrationHistory() {
         <h4 className="text-sm font-medium mb-1">{t('history.whatShows')}</h4>
         <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t('history.scoreExplanation')}</p>
         <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
-          <strong>{t('history.weeklyReviews')}</strong> are sessions where you reflect on your week.
-          <strong> {t('history.actionAlignment')}</strong> measure how well your actions matched your intentions.
-          <strong> Calibration records</strong> are the raw score data.
+          <strong>{t('history.weeklyReviews')}</strong> {t('history.weeklyReviewsExplanation')}
+          <strong> {t('history.actionAlignment')}</strong> {t('history.alignmentScoresExplanation')}
+          <strong> {t('history.calibrationRecordsLabel')}</strong> {t('history.calibrationRecordsExplanation')}
         </p>
       </Card>
 
@@ -280,7 +280,7 @@ export default function CalibrationHistory() {
             {t('history.note')} {session.weekly_note_record_id}
           </span><br />
           {session.created_at && <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('history.created')} {formatDate(session.created_at, i18n.language)}</span>}<br />
-          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Next correction: {session.next_week_primary_correction || t('history.pending')}</span>
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('history.nextCorrection')} {session.next_week_primary_correction || t('history.pending')}</span>
         </Card>
       ))}
 
@@ -306,7 +306,7 @@ export default function CalibrationHistory() {
           {selectedScore?.score_id === score.score_id && (
             <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
               <h4 className="text-sm font-medium mb-2">{t('history.scoreDetail')}</h4>
-              <p className="text-sm"><strong>{t('history.score')}</strong> {formatScore(score.action_alignment_score)} (0.0 = no alignment, 1.0 = full alignment)</p>
+              <p className="text-sm"><strong>{t('history.score')}</strong> {formatScore(score.action_alignment_score)} {t('history.alignmentScale')}</p>
               <p className="text-sm"><strong>{t('history.verdict')}</strong> {verdictDescriptions[score.verdict_label] || score.verdict_label}</p>
               <p className="text-sm"><strong>{t('history.yourWords')}</strong> {score.verdict_sentence || t('history.none')}</p>
               <p className="text-sm mt-1"><strong>{t('history.dimensions')}</strong></p>
@@ -330,11 +330,11 @@ export default function CalibrationHistory() {
       {/* Trend Analysis */}
       {trendData && trendData.overall_direction !== 'insufficient_data' && (
         <Card accent="amber">
-          <h4 className="text-sm font-medium mb-2">Trend Analysis</h4>
+          <h4 className="text-sm font-medium mb-2">{t('history.trendAnalysis')}</h4>
           <p className="text-sm">
-            <strong>Direction:</strong> {trendArrowText(trendData.overall_direction)}
+            <strong>{t('history.direction')}</strong> {trendArrowText(trendData.overall_direction)}
             <span className="ml-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              ({trendData.confidence_interval.level} confidence, {trendData.confidence_interval.data_count} data points)
+              ({trendData.confidence_interval.level} {t('history.confidence')}, {trendData.confidence_interval.data_count} {t('history.dataPoints')})
             </span>
           </p>
           <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
@@ -342,7 +342,7 @@ export default function CalibrationHistory() {
           </p>
           {trendData.forecast.length > 0 && (
             <div className="mt-2">
-              <p className="text-xs font-medium mb-1">4-Week Forecast:</p>
+              <p className="text-xs font-medium mb-1">{t('history.fourWeekForecast')}</p>
               <div className="flex gap-2 flex-wrap">
                 {trendData.forecast.map(fp => (
                   <div key={fp.week_offset} className="text-xs p-1.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
@@ -354,7 +354,7 @@ export default function CalibrationHistory() {
           )}
           {trendData.dimensions.length > 0 && (
             <div className="mt-2">
-              <p className="text-xs font-medium mb-1">Dimension Trends:</p>
+              <p className="text-xs font-medium mb-1">{t('history.dimensionTrends')}</p>
               <div className="flex gap-2 flex-wrap">
                 {trendData.dimensions.map(d => (
                   <span key={d.dimension} className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
@@ -370,9 +370,9 @@ export default function CalibrationHistory() {
       {/* Dynamic Weights */}
       {weightsData && weightsData.weights.length > 0 && (
         <Card>
-          <h4 className="text-sm font-medium mb-2">Dynamic Rubric Weights</h4>
+          <h4 className="text-sm font-medium mb-2">{t('history.dynamicRubricWeights')}</h4>
           <p className="text-xs mb-2" style={{ color: 'var(--color-text-secondary)' }}>
-            Advisory weights based on alignment score: {weightsData.overall_alignment.toFixed(2)}
+            {t('history.advisoryWeights')} {weightsData.overall_alignment.toFixed(2)}
           </p>
           <div className="grid grid-cols-2 gap-1.5">
             {weightsData.weights.map(w => (
@@ -383,7 +383,7 @@ export default function CalibrationHistory() {
             ))}
           </div>
           <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
-            Recommendation: {weightsData.recommendation}
+            {t('history.recommendation')} {weightsData.recommendation}
           </p>
         </Card>
       )}
@@ -391,14 +391,14 @@ export default function CalibrationHistory() {
       {/* Pattern-Adjusted Forecast */}
       {patternData && patternData.has_patterns && (
         <Card accent="red">
-          <h4 className="text-sm font-medium mb-2">Pattern-Adjusted Forecast</h4>
+          <h4 className="text-sm font-medium mb-2">{t('history.patternAdjustedForecast')}</h4>
           <p className="text-xs mb-2" style={{ color: 'var(--color-text-secondary)' }}>
-            Adjustments applied: {patternData.adjustments_applied.map(a => a.replace(/_/g, ' ')).join(', ')}
+            {t('history.adjustmentsApplied')} {patternData.adjustments_applied.map(a => a.replace(/_/g, ' ')).join(', ')}
           </p>
           <div className="flex gap-2 flex-wrap">
             {patternData.adjusted_forecast.map(fp => (
               <div key={fp.week_offset} className="text-xs p-1.5 rounded" style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}>
-                <strong>W{fp.week_offset}:</strong> {fp.adjusted_score.toFixed(2)} (was {fp.original_score.toFixed(2)})<br />
+                <strong>W{fp.week_offset}:</strong> {fp.adjusted_score.toFixed(2)} ({t('history.was')} {fp.original_score.toFixed(2)})<br />
                 <span style={{ color: 'var(--color-text-muted)' }}>{fp.adjustment_reason}</span>
               </div>
             ))}

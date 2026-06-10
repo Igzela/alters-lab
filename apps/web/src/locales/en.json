@@ -269,19 +269,43 @@
     "externalEvidence": "External Evidence",
     "behaviorMetrics": "Behavior Metrics",
     "reasoning": "Reasoning:",
-    "noCalData": "No standard scores or external evidence extracted."
+    "noCalData": "No standard scores or external evidence extracted.",
+    "weeklyReviewsExplanation": "are sessions where you reflect on your week.",
+    "alignmentScoresExplanation": "measure how well your actions matched your intentions.",
+    "calibrationRecordsLabel": "Calibration records",
+    "calibrationRecordsExplanation": "are the raw score data.",
+    "trendAnalysis": "Trend Analysis",
+    "dataPoints": "data points",
+    "fourWeekForecast": "4-Week Forecast:",
+    "dimensionTrends": "Dimension Trends:",
+    "dynamicRubricWeights": "Dynamic Rubric Weights",
+    "advisoryWeights": "Advisory weights based on alignment score:",
+    "recommendation": "Recommendation:",
+    "patternAdjustedForecast": "Pattern-Adjusted Forecast",
+    "adjustmentsApplied": "Adjustments applied:",
+    "was": "was",
+    "alignmentScale": "0.0 = no alignment, 1.0 = full alignment"
   },
   "rubricDelta": {
     "title": "Standard Updates",
     "description": "Suggestions are pending review only. Cannot apply standards automatically.",
     "generate": "Generate Suggestion",
-    "status": "Status:"
+    "status": "Status:",
+    "suggestions": "Suggestions",
+    "dimension": "Dimension",
+    "currentWeight": "Current Weight",
+    "suggestedWeight": "Suggested Weight",
+    "rationale": "Rationale",
+    "noSuggestions": "No suggestions available"
   },
   "checkpointPlan": {
     "title": "Milestone Plan",
     "description": "Plans are pending review only. Cannot regenerate automatically.",
     "generate": "Generate Plan",
-    "status": "Status:"
+    "status": "Status:",
+    "steps": "Steps",
+    "milestone": "Milestone",
+    "noPlan": "No plan generated yet"
   },
   "provider": {
     "title": "Provider Settings",
@@ -588,7 +612,27 @@
     "provisionalForecast": "Provisional Forecast",
     "usableForecast": "Usable Forecast",
     "strongForecast": "Strong Forecast",
-    "insufficientData": "Insufficient Data"
+    "insufficientData": "Insufficient Data",
+    "aligned": "Aligned",
+    "conflicted": "Conflict Detected",
+    "routeAOnly": "Personal Evidence Only",
+    "routeBOnly": "Public Prior Only",
+    "contextualPrior": "Contextual Literature Prior",
+    "mixed": "Mixed (Data + Contextual)",
+    "noPopulationData": "No Population Data",
+    "populationNotApproved": "Population data not fully approved for this forecast",
+    "approvedArtifacts": "Approved Artifacts:",
+    "contextualPriors": "Contextual Priors:",
+    "notDrivingForecast": "(not driving forecast)",
+    "modelPerformance": "Model Performance",
+    "brier": "Brier:",
+    "slope": "Slope:",
+    "auc": "AUC:",
+    "r2": "R2:",
+    "reasons": "Reasons",
+    "blockers": "Blockers",
+    "conflict": "conflict",
+    "next": "Next:"
   },
   "forecastCalibration": {
     "title": "Forecast Validation",
@@ -634,7 +678,8 @@
     "confidenceNote": "Confidence requires at least 5 evaluations to reach medium, 15 for high.",
     "byDomain": "By Domain",
     "hitRate": "Hit Rate",
-    "signalQuality": "Signal Quality"
+    "signalQuality": "Signal Quality",
+    "locked": "locked"
   },
   "publicPriors": {
     "title": "Population Data",
@@ -643,23 +688,6 @@
       "coverage": "Domain Coverage",
       "artifacts": "Data Artifacts",
       "modelCards": "Model Cards"
-    },
-    "coverage": {
-      "baselineSummary": "Baseline Summary",
-      "domainsApproved": "Domains Approved",
-      "totalArtifacts": "Total Artifacts",
-      "lowRiskDomains": "Low-Risk Domains",
-      "sourceDatasets": "Source Datasets",
-      "domainMatrix": "Domain Coverage Matrix",
-      "domain": "Domain",
-      "status": "Status",
-      "direction": "Direction",
-      "confidence": "Confidence",
-      "transferRisk": "Applicability Risk",
-      "modelFamily": "Model Family",
-      "artifacts": "Artifacts",
-      "routeBSummary": "Population Data Summary",
-      "routeBExplanation": "Population data provides directional anchors from population-level studies. They do NOT predict individual outcomes. Your personal evidence always takes priority when available."
     },
     "artifacts": {
       "empty": "No approved artifacts yet.",
@@ -677,8 +705,64 @@
       "featureMappings": "Feature Mappings / Value Labels",
       "calibrationMetrics": "Validation Metrics",
       "transferRiskDetail": "Applicability Risk & Validation",
-      "highRiskWarning": "High applicability risk: validation metrics may not apply to your population."
-    }
+      "highRiskWarning": "High applicability risk: validation metrics may not apply to your population.",
+      "approvalStatus": "Approval Status",
+      "level": "Level",
+      "class": "Class",
+      "blockers": "Blockers",
+      "primaryValidation": "Primary Validation",
+      "brier": "Brier",
+      "slope": "Slope",
+      "auc": "AUC",
+      "r2": "R²"
+    },
+    "domains": {
+      "careerEducation": "Career & Education",
+      "financial": "Financial",
+      "health": "Health",
+      "relationship": "Relationship",
+      "subjectiveWellbeing": "Subjective Wellbeing"
+    },
+    "coverage": {
+      "baselineSummary": "Baseline Summary",
+      "domainsApproved": "Domains Approved",
+      "totalArtifacts": "Total Artifacts",
+      "lowRiskDomains": "Low-Risk Domains",
+      "sourceDatasets": "Source Datasets",
+      "domainMatrix": "Domain Coverage Matrix",
+      "domain": "Domain",
+      "strength": "Strength",
+      "class": "Class",
+      "status": "Status",
+      "direction": "Direction",
+      "confidence": "Confidence",
+      "transferRisk": "Applicability Risk",
+      "modelFamily": "Model Family",
+      "artifacts": "Artifacts",
+      "routeBSummary": "Population Data Summary",
+      "routeBExplanation": "Population data provides directional anchors from population-level studies. They do NOT predict individual outcomes. Your personal evidence always takes priority when available."
+    },
+    "contextualOnly": "Contextual Only",
+    "strongModel": "Strong Model",
+    "dataBacked": "Data-Backed",
+    "contextual": "Contextual",
+    "none": "None",
+    "calibratedModel": "Calibrated Model",
+    "transferRisk": "Transfer Risk:",
+    "confidence": "Confidence:",
+    "type": "Type:",
+    "direction": "Direction:",
+    "actualData": "Actual Data",
+    "valueLabelsConfirmed": "Value Labels Confirmed",
+    "missingnessReviewed": "Missingness Reviewed",
+    "table": "Table:",
+    "percentile": "Percentile:",
+    "band": "Band:",
+    "approved": "Approved",
+    "labOnly": "Lab Only",
+    "unapproved": "Unapproved",
+    "unknown": "Unknown",
+    "risk": "risk"
   },
   "behaviorMetrics": {
     "title": "Behavior Metrics",
@@ -828,6 +912,15 @@
       "totalModels": "Total Sources",
       "profiles": "Profiles",
       "calibrationRecords": "Validations"
-    }
+    },
+    "careerEducation": "Career & Education",
+    "financial": "Financial",
+    "health": "Health",
+    "relationship": "Relationship",
+    "subjectiveWellbeing": "Subjective Wellbeing",
+    "approved": "Approved",
+    "contextual": "Contextual",
+    "none": "None",
+    "domains": "domains"
   }
 }

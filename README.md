@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/Igzela/alters-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Igzela/alters-lab/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-1970%20backend%20%2B%2084%20frontend-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1980%20backend%20%2B%2090%20frontend-brightgreen)]()
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
 [![React](https://img.shields.io/badge/react-18-61dafb)]()
 
@@ -127,10 +127,10 @@ Pipeline:
 **Run all tests:**
 
 ```bash
-# Backend (1970 tests)
+# Backend (1980 tests)
 PYTHONPATH=apps/api/src python3 -m pytest apps/api/tests/ -q
 
-# Frontend (84 tests)
+# Frontend (90 tests)
 cd apps/web && npm run test
 
 # Frontend build check

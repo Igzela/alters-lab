@@ -29,12 +29,15 @@ const CONFIDENCE_COLORS: Record<string, 'success' | 'warning' | 'error' | 'muted
   low: 'error',
 }
 
-const DOMAIN_LABELS: Record<string, string> = {
-  career_education: 'Career & Education',
-  financial: 'Financial',
-  health: 'Health',
-  relationship: 'Relationship',
-  subjective_wellbeing: 'Subjective Wellbeing',
+function getDomainLabel(t: (key: string) => string, domain: string): string {
+  const labels: Record<string, string> = {
+    career_education: t('publicPriors.domains.careerEducation'),
+    financial: t('publicPriors.domains.financial'),
+    health: t('publicPriors.domains.health'),
+    relationship: t('publicPriors.domains.relationship'),
+    subjective_wellbeing: t('publicPriors.domains.subjectiveWellbeing'),
+  }
+  return labels[domain] || domain
 }
 
 export default function PublicPriors() {
@@ -152,8 +155,8 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                 <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                   <th className="text-left py-2 px-2 font-medium">{t('publicPriors.coverage.domain')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('strengthOverview.routeBStatus')}</th>
-                  <th className="text-center py-2 px-2 font-medium">Strength</th>
-                  <th className="text-center py-2 px-2 font-medium">Class</th>
+                  <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.strength')}</th>
+                  <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.class')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.direction')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.confidence')}</th>
                   <th className="text-center py-2 px-2 font-medium">{t('publicPriors.coverage.transferRisk')}</th>
@@ -165,18 +168,18 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
                   const d = data[domain]
                   return (
                     <tr key={domain} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                      <td className="py-2 px-2 font-medium">{DOMAIN_LABELS[domain] || domain}</td>
+                      <td className="py-2 px-2 font-medium">{getDomainLabel(t, domain)}</td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'muted'}>
-                          {d.route_b_status === 'approved' ? t('strengthOverview.stats.routeBApproved') : d.route_b_status === 'contextual_only' ? 'Contextual Only' : t('strengthOverview.stats.noPrior')}
+                          {d.route_b_status === 'approved' ? t('strengthOverview.stats.routeBApproved') : d.route_b_status === 'contextual_only' ? t('publicPriors.contextualOnly') : t('strengthOverview.stats.noPrior')}
                         </Badge>
                       </td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={d.strength_level === 'strong_calibrated' ? 'success' : d.strength_level === 'data_backed' ? 'warning' : 'muted'}>
-                          {d.strength_level === 'strong_calibrated' ? 'Strong Model' : d.strength_level === 'data_backed' ? 'Data-Backed' : d.strength_level === 'contextual' ? 'Contextual' : 'None'}
+                          {d.strength_level === 'strong_calibrated' ? t('publicPriors.strongModel') : d.strength_level === 'data_backed' ? t('publicPriors.dataBacked') : d.strength_level === 'contextual' ? t('publicPriors.contextual') : t('publicPriors.none')}
                         </Badge>
                       </td>
-                      <td className="py-2 px-2 text-center text-xs">{d.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : d.artifact_class === 'calibrated_model' ? 'Calibrated Model' : d.artifact_class === 'contextual_prior' ? 'Contextual' : d.artifact_class}</td>
+                      <td className="py-2 px-2 text-center text-xs">{d.artifact_class === 'data_backed_baseline' ? t('publicPriors.dataBacked') : d.artifact_class === 'calibrated_model' ? t('publicPriors.calibratedModel') : d.artifact_class === 'contextual_prior' ? t('publicPriors.contextual') : d.artifact_class}</td>
                       <td className="py-2 px-2 text-center capitalize">{d.prior_direction}</td>
                       <td className="py-2 px-2 text-center">
                         <Badge variant={CONFIDENCE_COLORS[d.best_confidence] || 'muted'}>
@@ -208,10 +211,10 @@ function CoverageTab({ coverage }: { coverage: ReturnType<typeof usePublicPriorC
             {domains.map(domain => {
               const d = data[domain]
               const variant = d.route_b_status === 'approved' ? 'success' : d.route_b_status === 'contextual_only' ? 'warning' : 'error'
-              const label = d.route_b_status === 'approved' ? t('strengthOverview.stats.routeBApproved') : d.route_b_status === 'contextual_only' ? 'Contextual Only' : t('strengthOverview.stats.noPrior')
+              const label = d.route_b_status === 'approved' ? t('strengthOverview.stats.routeBApproved') : d.route_b_status === 'contextual_only' ? t('publicPriors.contextualOnly') : t('strengthOverview.stats.noPrior')
               return (
                 <Badge key={domain} variant={variant}>
-                  {DOMAIN_LABELS[domain] || domain}: {label}
+                  {getDomainLabel(t, domain)}: {label}
                 </Badge>
               )
             })}
@@ -267,7 +270,7 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
               <div>
                 <h4 className="font-semibold">{artifact.artifact_id}</h4>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-                  {DOMAIN_LABELS[artifact.domain] || artifact.domain} · {artifact.prior_type} · Model: {artifact.model_id}
+                  {getDomainLabel(t, artifact.domain)} · {artifact.prior_type} · Model: {artifact.model_id}
                 </p>
               </div>
               <div className="flex gap-1.5">
@@ -275,7 +278,7 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
                   {artifact.confidence}
                 </Badge>
                 <Badge variant={RISK_COLORS[artifact.transfer_risk] || 'muted'}>
-                  {artifact.transfer_risk} risk
+                  {artifact.transfer_risk} {t('publicPriors.risk')}
                 </Badge>
               </div>
             </div>
@@ -283,24 +286,24 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
               {artifact.explanation}
             </p>
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="info">Direction: {artifact.prior_direction}</Badge>
+              <Badge variant="info">{t('publicPriors.artifacts.direction')}: {artifact.prior_direction}</Badge>
               {artifact.artifact_class === 'data_backed_baseline' && (
-                <Badge variant="success">Data-Backed</Badge>
+                <Badge variant="success">{t('publicPriors.dataBacked')}</Badge>
               )}
               {artifact.artifact_class === 'calibrated_model' && (
-                <Badge variant="success">Calibrated Model</Badge>
+                <Badge variant="success">{t('publicPriors.calibratedModel')}</Badge>
               )}
               {artifact.artifact_class === 'contextual_prior' && (
-                <Badge variant="warning">Contextual Only</Badge>
+                <Badge variant="warning">{t('publicPriors.contextualOnly')}</Badge>
               )}
               {artifact.actual_data_used && (
-                <Badge variant="success">Actual Data</Badge>
+                <Badge variant="success">{t('publicPriors.actualData')}</Badge>
               )}
               {artifact.value_labels_confirmed && (
-                <Badge variant="info">Value Labels Confirmed</Badge>
+                <Badge variant="info">{t('publicPriors.valueLabelsConfirmed')}</Badge>
               )}
               {artifact.missingness_reviewed && (
-                <Badge variant="info">Missingness Reviewed</Badge>
+                <Badge variant="info">{t('publicPriors.missingnessReviewed')}</Badge>
               )}
               {artifact.baseline_table_id && (
                 <Badge variant="muted">Table: {artifact.baseline_table_id}</Badge>
@@ -316,9 +319,9 @@ function ArtifactsTab({ artifacts }: { artifacts: ReturnType<typeof usePublicPri
             <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
               <div className="font-medium mb-1">{t('publicPriors.artifacts.transferRiskDetail')}</div>
               <div className="flex gap-4">
-                <span>Transfer Risk: <Badge variant={RISK_COLORS[artifact.transfer_risk] || 'muted'}>{artifact.transfer_risk}</Badge></span>
-                <span>Confidence: <Badge variant={CONFIDENCE_COLORS[artifact.confidence] || 'muted'}>{artifact.confidence}</Badge></span>
-                <span>Type: {artifact.prior_type}</span>
+                <span>{t('publicPriors.transferRisk')}: <Badge variant={RISK_COLORS[artifact.transfer_risk] || 'muted'}>{artifact.transfer_risk}</Badge></span>
+                <span>{t('publicPriors.confidence')}: <Badge variant={CONFIDENCE_COLORS[artifact.confidence] || 'muted'}>{artifact.confidence}</Badge></span>
+                <span>{t('publicPriors.type')}: {artifact.prior_type}</span>
               </div>
               {artifact.transfer_risk === 'high' && (
                 <p className="mt-1" style={{ color: 'var(--color-error)' }}>
@@ -410,10 +413,10 @@ function ModelCardsTab({
           >
             {card.model_id}
             {card.approval_level === 'route_b_approved' && (
-              <Badge variant="success" className="ml-1.5">Approved</Badge>
+              <Badge variant="success" className="ml-1.5">{t('publicPriors.approved')}</Badge>
             )}
             {card.approval_level === 'lab_only' && (
-              <Badge variant="warning" className="ml-1.5">Lab Only</Badge>
+              <Badge variant="warning" className="ml-1.5">{t('publicPriors.labOnly')}</Badge>
             )}
           </button>
         ))}
@@ -426,15 +429,15 @@ function ModelCardsTab({
               <h4 className="font-semibold">{selected.model_id}</h4>
               <div className="flex gap-1.5">
                 <Badge variant={selected.approval_level === 'route_b_approved' ? 'success' : selected.approval_level === 'lab_only' ? 'warning' : 'muted'}>
-                  {selected.approval_level === 'route_b_approved' ? t('strengthOverview.stats.routeBApproved') : selected.approval_level === 'lab_only' ? 'Lab Only' : 'Unapproved'}
+                  {selected.approval_level === 'route_b_approved' ? t('strengthOverview.stats.routeBApproved') : selected.approval_level === 'lab_only' ? t('publicPriors.labOnly') : t('publicPriors.unapproved')}
                 </Badge>
                 {selected.artifact_class && (
                   <Badge variant={selected.artifact_class === 'data_backed_baseline' || selected.artifact_class === 'calibrated_model' ? 'success' : selected.artifact_class === 'contextual_prior' ? 'warning' : 'info'}>
-                    {selected.artifact_class === 'data_backed_baseline' ? 'Data-Backed' : selected.artifact_class === 'calibrated_model' ? 'Calibrated Model' : selected.artifact_class === 'contextual_prior' ? 'Contextual' : selected.artifact_class}
+                    {selected.artifact_class === 'data_backed_baseline' ? t('publicPriors.dataBacked') : selected.artifact_class === 'calibrated_model' ? t('publicPriors.calibratedModel') : selected.artifact_class === 'contextual_prior' ? t('publicPriors.contextual') : selected.artifact_class}
                   </Badge>
                 )}
                 <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>
-                  {selected.transfer_risk} risk
+                  {selected.transfer_risk} {t('publicPriors.risk')}
                 </Badge>
               </div>
             </div>
@@ -478,21 +481,21 @@ function ModelCardsTab({
                 <div className="font-medium mb-1 flex items-center gap-2">
                   {t('publicPriors.modelCards.calibrationMetrics')}
                   {selected.artifact_class === 'calibrated_model' && (
-                    <Badge variant="success">Primary Validation</Badge>
+                    <Badge variant="success">{t('publicPriors.modelCards.primaryValidation')}</Badge>
                   )}
                 </div>
                 <div className="flex gap-4 flex-wrap text-xs">
                   {selected.calibration_metrics.brier_score != null && (
-                    <span className="font-mono">Brier: {selected.calibration_metrics.brier_score.toFixed(3)}</span>
+                    <span className="font-mono">{t('publicPriors.modelCards.brier')}: {selected.calibration_metrics.brier_score.toFixed(3)}</span>
                   )}
                   {selected.calibration_metrics.calibration_slope != null && (
-                    <span className="font-mono">Slope: {selected.calibration_metrics.calibration_slope.toFixed(3)}</span>
+                    <span className="font-mono">{t('publicPriors.modelCards.slope')}: {selected.calibration_metrics.calibration_slope.toFixed(3)}</span>
                   )}
                   {selected.calibration_metrics.auc != null && (
-                    <span className="font-mono">AUC: {selected.calibration_metrics.auc.toFixed(3)}</span>
+                    <span className="font-mono">{t('publicPriors.modelCards.auc')}: {selected.calibration_metrics.auc.toFixed(3)}</span>
                   )}
                   {selected.calibration_metrics.r2 != null && (
-                    <span className="font-mono">R²: {selected.calibration_metrics.r2.toFixed(3)}</span>
+                    <span className="font-mono">{t('publicPriors.modelCards.r2')}: {selected.calibration_metrics.r2.toFixed(3)}</span>
                   )}
                 </div>
               </div>
@@ -500,18 +503,18 @@ function ModelCardsTab({
 
             {/* Approval & Transfer Risk */}
             <div className="mt-2 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
-              <div className="font-medium mb-1">Approval Status</div>
+              <div className="font-medium mb-1">{t('publicPriors.modelCards.approvalStatus')}</div>
               <div className="flex gap-4 flex-wrap">
-                <span>Level: <Badge variant={selected.approval_level === 'route_b_approved' ? 'success' : selected.approval_level === 'lab_only' ? 'warning' : 'muted'}>{selected.approval_level || 'unapproved'}</Badge></span>
-                <span>Class: {selected.artifact_class || 'unknown'}</span>
-                <span>Transfer Risk: <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>{selected.transfer_risk}</Badge></span>
+                <span>{t('publicPriors.modelCards.level')}: <Badge variant={selected.approval_level === 'route_b_approved' ? 'success' : selected.approval_level === 'lab_only' ? 'warning' : 'muted'}>{selected.approval_level || t('publicPriors.unapproved')}</Badge></span>
+                <span>{t('publicPriors.modelCards.class')}: {selected.artifact_class || t('publicPriors.unknown')}</span>
+                <span>{t('publicPriors.transferRisk')}: <Badge variant={RISK_COLORS[selected.transfer_risk] || 'muted'}>{selected.transfer_risk}</Badge></span>
               </div>
               {selected.approval_reason && (
                 <p className="mt-1">{selected.approval_reason}</p>
               )}
               {selected.approval_blockers && selected.approval_blockers.length > 0 && (
                 <div className="mt-1">
-                  <span style={{ color: 'var(--color-error)' }}>Blockers: </span>
+                  <span style={{ color: 'var(--color-error)' }}>{t('publicPriors.modelCards.blockers')}: </span>
                   {selected.approval_blockers.join(', ')}
                 </div>
               )}
