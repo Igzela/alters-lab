@@ -65,7 +65,7 @@ alters-lab start
 
 ## API Overview
 
-The API exposes 50+ endpoints across these key areas:
+The API exposes 57+ endpoints across these key areas:
 
 | Area | Endpoints | Description |
 |------|-----------|-------------|
@@ -91,10 +91,10 @@ Full API docs at `http://localhost:18790/docs` (Swagger UI).
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  Frontend  React 18 + TypeScript + Tailwind v4          │
-│  15 pages: Dashboard, Weekly Review, Dialogue, etc.     │
+│  22 pages: Dashboard, Weekly Review, Dialogue, etc.     │
 ├─────────────────────────────────────────────────────────┤
 │  Backend  Python 3.11+ + FastAPI + Pydantic v2          │
-│  50+ API routers, 55 service modules                    │
+│  57 API routers, 70 service modules                     │
 │  Route B population priors (NLSY97 + MIDUS)             │
 │  Personal Prior Adapter + Pattern Detection             │
 ├─────────────────────────────────────────────────────────┤
