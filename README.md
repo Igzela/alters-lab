@@ -10,6 +10,8 @@
 
 Alters Lab is a personal future path simulation and calibration system. It helps you explore structurally different life branches, engage in dialogue with hypothetical versions of yourself, and calibrate which paths actually align with your values — using both population-level evidence and your own weekly calibration data.
 
+> **Who is this for?** People facing major life decisions (career change, relocation, relationship) who want to think it through rigorously — not with spreadsheets or pro/con lists, but by simulating entire versions of themselves and checking predictions against reality over time.
+
 ## Quick Start
 
 ```bash
@@ -154,6 +156,17 @@ alters-lab backup       # Create a data backup
 alters-lab load-sample  # Load sample data for new users
 ```
 
+## What Makes It Different
+
+| | Traditional Tools | Alters Lab |
+|---|---|---|
+| Decision model | Pro/con lists, spreadsheets | Simulated alternate selves you can dialogue with |
+| Prediction | "You'll be happy if you choose X" | Directional forecasts with explicit uncertainty |
+| Feedback loop | None — you decide and forget | Weekly calibration tracks if reality matches intent |
+| Evidence | Your gut feeling | Your data (Route A) + population studies (Route B) |
+| Life score | Single number (misleading) | Multi-dimensional, never reduced to one score |
+| Data | Cloud, accounts, telemetry | Local YAML/JSON files, fully yours |
+
 ## Key Concepts
 
 - **Route A** — Personal evidence from your calibration data
@@ -170,6 +183,12 @@ alters-lab load-sample  # Load sample data for new users
 - [Architecture](docs/architecture.md) — Technical architecture
 - [Data Model](docs/data-model.md) — Schema definitions
 - [Product Spec](docs/product-spec.md) — System design and concepts
+
+## Contributing
+
+Issues and PRs welcome. See [AGENTS.md](AGENTS.md) for development setup and coding conventions.
+
+If you find this useful, a ⭐ helps others discover it.
 
 ## License
 
