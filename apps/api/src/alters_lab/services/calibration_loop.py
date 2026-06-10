@@ -6,6 +6,7 @@ evidence and does not trigger regeneration, archive, promotion, or rubric writes
 
 from __future__ import annotations
 
+import json
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -158,16 +159,86 @@ def calculate_drift(request: DriftCalculationRequest) -> DriftCalculationResult:
     )
 
 
-def list_reality_score_records(repo_root: Path | None = None) -> list[RealityScoreRecord]:
-    directory = score_directory(repo_root)
-    if not directory.exists():
-        return []
+def update_calibration_state(
+    drift_overall: float | None = None,
+    drift_exceeded: bool | None = None,
+    branch_id: str | None = None,
+    repo_root: Path | None = None,
+) -> dict:
+    root = repo_root or get_repo_root()
+    state_path = root / "alters" / "calibration" / "state.json"
 
+    default_state = {
+        "status": "cold_start",
+        "total_cycles": 0,
+        "last_scored_at": None,
+        "current_drift": None,
+        "mode": "cold_start",
+        "branch_id": None,
+    }
+
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            if not isinstance(state, dict):
+                state = dict(default_state)
+        except (json.JSONDecodeError, OSError):
+            state = dict(default_state)
+    else:
+        state = dict(default_state)
+
+    state["total_cycles"] = state.get("total_cycles", 0) + 1
+    state["last_scored_at"] = datetime.now(timezone.utc).isoformat()
+
+    if state.get("status") == "cold_start":
+        state["status"] = "active"
+    if state.get("mode") == "cold_start":
+        state["mode"] = "evidence_accumulation"
+
+    if drift_overall is not None:
+        state["current_drift"] = drift_overall
+    if drift_exceeded is not None:
+        state["drift_exceeded"] = drift_exceeded
+    if branch_id is not None:
+        state["branch_id"] = branch_id
+
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return state
+
+
+def list_reality_score_records(repo_root: Path | None = None) -> list[RealityScoreRecord]:
+    root = repo_root or get_repo_root()
+    seen_ids: set[str] = set()
     records: list[RealityScoreRecord] = []
-    for path in sorted(directory.glob("score_*.yaml")):
-        if path.name == "_template.yaml":
-            continue
-        records.append(load_reality_score_record(path))
+
+    # Primary source: alters/calibration/scores/
+    directory = score_directory(root)
+    if directory.exists():
+        for path in sorted(directory.glob("score_*.yaml")):
+            if path.name == "_template.yaml":
+                continue
+            record = load_reality_score_record(path)
+            if record.id not in seen_ids:
+                seen_ids.add(record.id)
+                records.append(record)
+
+    # Secondary source: alters/product/calibration_records/
+    product_dir = root / "alters" / "product" / "calibration_records"
+    if product_dir.exists():
+        for pattern in ("score_*.yaml", "action_alignment_*.yaml"):
+            for path in sorted(product_dir.glob(pattern)):
+                try:
+                    raw = io.read_yaml(path)
+                except Exception:
+                    continue
+                if not isinstance(raw, dict) or "actual_scores" not in raw:
+                    continue
+                record = load_reality_score_record(path)
+                if record.id not in seen_ids:
+                    seen_ids.add(record.id)
+                    records.append(record)
+
     return records
 
 

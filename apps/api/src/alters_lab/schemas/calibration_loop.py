@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Literal
-
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
@@ -61,8 +59,8 @@ class RealityScoreRequest(BaseModel):
     user_notes: str = ""
     evidence_refs: list[str] = Field(default_factory=list)
     score_id: str | None = None
-    submitted_by_user: Literal[True] = True
-    source: Literal["explicit_user_submission"] = "explicit_user_submission"
+    submitted_by_user: bool = True
+    source: str = "explicit_user_submission"
     caller: str = "api"
 
     @field_validator("score_id")

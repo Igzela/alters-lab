@@ -1,0 +1,32 @@
+draft_id: cd_20260610T155836Z_c27b06ff
+source_type: llm_calibration_draft
+created_at: '2026-06-10T15:58:36.970876+00:00'
+conversation_id: conv_20260610T155705Z_cd4ed6e0
+status: pending
+behavior_metrics:
+  week_start: null
+  week_end: null
+  branch_id: null
+  career_education_deep_work_minutes: 900
+  planned_commitment_follow_through_rate: 0.6
+  expense_logged_days: 0
+  regular_sleep_nights: 0
+  moderate_vigorous_activity_minutes: 0
+  avoidable_health_risk_events: 1
+  meaningful_social_contact_count: 2
+  abandoned_committed_blocks: 3
+  key_milestone_progress_pct: null
+  notes: ''
+rubric_scores:
+  execution_discipline: 3
+  exploration_freedom: 2
+  life_state_match: 2
+  energy_level: 2
+external_evidence: []
+outcome_targets: []
+predictor_profile: null
+llm_model: mimo-v2.5-pro
+extraction_confidence: high
+llm_reasoning: 用户明确提供了所有行为指标的具体数值和评分。深度学习时间由每天2小时数学（14小时）加3次1小时面试准备（3小时）计算得出，约为17小时，但用户自述为15小时，以用户自述为准。外部证据提取了关于睡眠不足导致身体疲劳的具体描述。
+confirmed_at: null
+user_corrections: {}

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from alters_lab.schemas.calibration_loop import (
@@ -196,3 +198,133 @@ def test_schema_extra_forbid():
             actual_scores=_scores(3),
             database=True,
         )
+
+
+# --- Closed-loop integration tests ---
+
+
+def test_calibration_loop_state_update(tmp_path):
+    """update_calibration_state() writes active status, increments cycle, records drift."""
+    from alters_lab.services.calibration_loop import update_calibration_state
+
+    state1 = update_calibration_state(
+        drift_overall=0.3, drift_exceeded=False, branch_id="branch_A", repo_root=tmp_path
+    )
+    state_path = tmp_path / "alters" / "calibration" / "state.json"
+    assert state_path.exists()
+    assert state1["status"] == "active"
+    assert state1["total_cycles"] == 1
+    assert state1["current_drift"] == 0.3
+    assert state1["drift_exceeded"] is False
+    assert state1["branch_id"] == "branch_A"
+    assert state1["mode"] == "evidence_accumulation"
+
+    state2 = update_calibration_state(drift_overall=0.7, drift_exceeded=True, repo_root=tmp_path)
+    assert state2["total_cycles"] == 2
+    assert state2["current_drift"] == 0.7
+    assert state2["drift_exceeded"] is True
+    assert state2["status"] == "active"
+
+
+def test_calibration_loop_reads_product_records(tmp_path):
+    """list_reality_score_records() merges records from both alters/calibration/scores/ and alters/product/calibration_records/."""
+    import yaml
+    from alters_lab.services.calibration_loop import list_reality_score_records, score_directory
+
+    # Write a record to the primary location (alters/calibration/scores/)
+    primary_dir = score_directory(tmp_path)
+    primary_dir.mkdir(parents=True, exist_ok=True)
+    primary_record = {
+        "id": "score_primary_001",
+        "status": "recorded",
+        "created_at": "2026-06-01T00:00:00+00:00",
+        "branch_id": "branch_A",
+        "alter_id": "alter_A",
+        "input_refs": {"alter_ref": "alters/current/alters/alter_A.yaml"},
+        "actual_scores": _scores(3),
+        "submitted_by_user": True,
+        "source": "explicit_user_submission",
+        "caller": "api",
+    }
+    (primary_dir / "score_primary_001.yaml").write_text(
+        yaml.dump(primary_record, allow_unicode=True), encoding="utf-8"
+    )
+
+    # Write a record to the product location (alters/product/calibration_records/)
+    product_dir = tmp_path / "alters" / "product" / "calibration_records"
+    product_dir.mkdir(parents=True, exist_ok=True)
+    product_record = {
+        "id": "score_product_001",
+        "status": "recorded",
+        "created_at": "2026-06-02T00:00:00+00:00",
+        "branch_id": "branch_B",
+        "alter_id": "alter_B",
+        "input_refs": {"alter_ref": "alters/current/alters/alter_B.yaml"},
+        "actual_scores": _scores(4),
+        "submitted_by_user": True,
+        "source": "llm_calibration_draft",
+        "caller": "calibration_conversation",
+    }
+    (product_dir / "score_product_001.yaml").write_text(
+        yaml.dump(product_record, allow_unicode=True), encoding="utf-8"
+    )
+
+    records = list_reality_score_records(repo_root=tmp_path)
+    ids = {r.id for r in records}
+    assert "score_primary_001" in ids
+    assert "score_product_001" in ids
+    assert len(records) == 2
+
+
+def test_confirm_draft_writes_to_both_locations(tmp_path):
+    """confirm_draft() with rubric_scores writes to both product/ and calibration/ locations and updates state.json."""
+    import yaml
+    from alters_lab.schemas.calibration_conversation import CalibrationDraft
+    from alters_lab.schemas.calibration_loop import CalibrationScoreValues
+    from alters_lab.services import calibration_conversation as svc
+
+    draft = CalibrationDraft(
+        conversation_id="conv_test",
+        rubric_scores=CalibrationScoreValues(**_scores(4)),
+    )
+    svc._save_draft(draft, repo_root=tmp_path)
+
+    confirmed = svc.confirm_draft(draft.draft_id, repo_root=tmp_path)
+    assert confirmed.status == "confirmed"
+
+    # Check product/calibration_records/ location
+    product_dir = tmp_path / "alters" / "product" / "calibration_records"
+    assert product_dir.exists()
+    product_files = list(product_dir.glob("score_*.yaml"))
+    assert len(product_files) == 1
+
+    # Check alters/calibration/scores/ location
+    loop_dir = tmp_path / "alters" / "calibration" / "scores"
+    assert loop_dir.exists()
+    loop_files = list(loop_dir.glob("score_*.yaml"))
+    assert len(loop_files) == 1
+
+    # Verify both files have the same score ID
+    product_data = yaml.safe_load(product_files[0].read_text(encoding="utf-8"))
+    loop_data = yaml.safe_load(loop_files[0].read_text(encoding="utf-8"))
+    assert product_data["id"] == loop_data["id"]
+    assert product_data["source"] == "llm_calibration_draft"
+
+    # Verify state.json was updated
+    state_path = tmp_path / "alters" / "calibration" / "state.json"
+    assert state_path.exists()
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert state["status"] == "active"
+    assert state["total_cycles"] >= 1
+
+
+def test_schema_accepts_llm_source():
+    """RealityScoreRequest with source='llm_calibration_draft' validates without error."""
+    request = RealityScoreRequest(
+        score_id="score_llm_001",
+        branch_id="branch_A",
+        alter_id="alter_A",
+        actual_scores=_scores(3),
+        source="llm_calibration_draft",
+    )
+    assert request.source == "llm_calibration_draft"

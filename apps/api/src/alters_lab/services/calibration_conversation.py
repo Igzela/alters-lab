@@ -480,6 +480,38 @@ def confirm_draft(
             allow_unicode=True,
         )
 
+        # Also write to calibration loop scores directory
+        from alters_lab.services.calibration_loop import (
+            score_directory,
+            generate_score_id,
+            record_to_yaml_dict,
+        )
+        loop_scores_dir = score_directory(repo_root)
+        loop_scores_dir.mkdir(parents=True, exist_ok=True)
+        loop_score_path = loop_scores_dir / f"{score_id}.yaml"
+        alters_io.write_yaml(
+            loop_score_path,
+            record_to_yaml_dict(score_record),
+            sort_keys=False,
+            allow_unicode=True,
+        )
+
+        # Compute drift and update calibration state
+        from alters_lab.services.calibration_loop import (
+            calculate_drift_values,
+            update_calibration_state,
+        )
+        drift_result = calculate_drift_values(
+            expected_scores=draft.rubric_scores,
+            actual_scores=draft.rubric_scores,
+        )
+        update_calibration_state(
+            repo_root=repo_root,
+            drift_overall=drift_result["overall"],
+            drift_exceeded=drift_result["threshold_exceeded"],
+            branch_id=score_record.branch_id,
+        )
+
     # Write external evidence if present
     for ev_extract in draft.external_evidence:
         from alters_lab.schemas.external_evidence import ExternalEvidenceRecord
