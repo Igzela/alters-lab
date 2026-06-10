@@ -69,23 +69,15 @@ def test_score_values_reject_out_of_range():
         CalibrationScoreValues(**{**_scores(3), "life_state_match": 0})
 
 
-def test_reality_score_requires_explicit_user_submission():
-    with pytest.raises(Exception):
-        RealityScoreRequest(
-            score_id="score_bad",
-            branch_id="branch_A",
-            alter_id="alter_A",
-            actual_scores=_scores(3),
-            submitted_by_user=False,
-        )
-    with pytest.raises(Exception):
-        RealityScoreRequest(
-            score_id="score_bad",
-            branch_id="branch_A",
-            alter_id="alter_A",
-            actual_scores=_scores(3),
-            source="inferred",
-        )
+def test_reality_score_accepts_llm_source():
+    req = RealityScoreRequest(
+        score_id="score_llm",
+        branch_id="branch_A",
+        alter_id="alter_A",
+        actual_scores=_scores(3),
+        source="llm_calibration_draft",
+    )
+    assert req.source == "llm_calibration_draft"
 
 
 def test_reality_score_rejects_mismatched_alter_branch():

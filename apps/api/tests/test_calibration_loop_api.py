@@ -73,10 +73,13 @@ def test_submit_reality_score_rejects_extra_provider(tmp_path, monkeypatch):
     assert r.status_code == 422
 
 
-def test_submit_reality_score_rejects_non_user_submission(tmp_path, monkeypatch):
+def test_submit_reality_score_accepts_llm_source(tmp_path, monkeypatch):
     monkeypatch.setattr("alters_lab.api.calibration_loop._repo_root", lambda: tmp_path)
-    r = client.post("/calibration-loop/reality-scores", json=_payload(submitted_by_user=False))
-    assert r.status_code == 422
+    r = client.post(
+        "/calibration-loop/reality-scores",
+        json=_payload(source="llm_calibration_draft"),
+    )
+    assert r.status_code == 200
 
 
 def test_submit_reality_score_rejects_invalid_dimension(tmp_path, monkeypatch):
