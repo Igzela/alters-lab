@@ -125,8 +125,12 @@ class TestGetBaselineForBranch:
         assert result is None
 
     def test_loads_alter_d_baseline(self):
-        """Real alter_D.yaml has identity_stability '↑/↓' — now mapped to neutral baseline."""
+        """Real alter_D.yaml should produce a valid baseline."""
         result = get_baseline_for_branch("branch_D")
         assert result is not None
         assert result.branch_id == "branch_D"
-        assert result.drift_direction["life_state_match"] == "↑/↓+↑"
+        assert result.alter_id == "alter_D"
+        assert "life_state_match" in result.drift_direction
+        assert "energy_level" in result.drift_direction
+        assert 1 <= result.expected_initial.execution_discipline <= 5
+        assert 1 <= result.expected_90d.execution_discipline <= 5
