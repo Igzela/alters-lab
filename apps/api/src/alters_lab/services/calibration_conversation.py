@@ -449,21 +449,33 @@ def confirm_draft(
             RealityScoreRecord,
         )
         from alters_lab.services import io as alters_io
+        from alters_lab.services.calibration_loop import (
+            list_reality_score_records,
+        )
         from alters_lab.services.p6_runtime import runtime_dir
+
+        # Find the most recent previous score for this branch as baseline
+        existing_records = list_reality_score_records(repo_root=repo_root)
+        branch_id = (
+            (draft.behavior_metrics.branch_id or "branch_A")
+            if draft.behavior_metrics
+            else "branch_A"
+        )
+        expected_scores = None
+        if existing_records:
+            # Use the most recent score as expected baseline
+            expected_scores = existing_records[-1].actual_scores
 
         score_id = generate_record_id("score")
         score_record = RealityScoreRecord(
             id=score_id,
             status="recorded",
             created_at=utc_now(),
-            branch_id=(
-                (draft.behavior_metrics.branch_id or "branch_A")
-                if draft.behavior_metrics
-                else "branch_A"
-            ),
+            branch_id=branch_id,
             alter_id="alter_A",
             input_refs=CalibrationInputRefs(alter_ref="alter_A"),
             actual_scores=draft.rubric_scores,
+            expected_scores=expected_scores,
             submitted_by_user=True,
             source="llm_calibration_draft",
             caller="calibration_conversation",
@@ -502,7 +514,7 @@ def confirm_draft(
             update_calibration_state,
         )
         drift_result = calculate_drift_values(
-            expected_scores=draft.rubric_scores,
+            expected_scores=expected_scores or draft.rubric_scores,
             actual_scores=draft.rubric_scores,
         )
         update_calibration_state(
