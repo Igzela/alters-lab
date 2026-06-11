@@ -42,13 +42,19 @@ _DIRECTION_SCORES: dict[str, tuple[int, int, int]] = {
     "↓": (3, 2, 1),
 }
 
+_DEFAULT_DIRECTION = "→"
+
 
 def _direction_to_scores(direction: str) -> tuple[int, int, int]:
     """Map a direction string to (initial, 30d, 90d) integer scores."""
     key = direction.strip()
     if key in _DIRECTION_SCORES:
         return _DIRECTION_SCORES[key]
-    raise ValueError(f"Unknown drift direction: {direction!r}")
+    # Fallback: try to match partial patterns
+    for pattern, scores in _DIRECTION_SCORES.items():
+        if pattern in key or key in pattern:
+            return scores
+    return _DIRECTION_SCORES[_DEFAULT_DIRECTION]
 
 
 def _avg_score(direction_a: str, direction_b: str, index: int) -> int:
@@ -71,7 +77,10 @@ def build_baseline_from_alter(alter_data: dict) -> AlterRubricBaseline:
     branch_id: str = alter_data["branch_ref"]
 
     def direction(trait: str) -> str:
-        return drift[trait]["direction"]
+        entry = drift.get(trait)
+        if not entry or not isinstance(entry, dict):
+            return _DEFAULT_DIRECTION
+        return entry.get("direction", _DEFAULT_DIRECTION)
 
     # Per-dimension direction strings for drift_direction field
     drift_direction: dict[str, str] = {

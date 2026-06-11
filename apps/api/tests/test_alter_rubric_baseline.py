@@ -32,9 +32,9 @@ class TestDirectionToScores:
         i, d30, d90 = _direction_to_scores("→/↓")
         assert i == 3 and d30 == 2 and d90 == 2
 
-    def test_unknown_raises_value_error(self):
-        with pytest.raises(ValueError, match="Unknown drift direction"):
-            _direction_to_scores("unknown")
+    def test_unknown_falls_back_to_stable(self):
+        i, d30, d90 = _direction_to_scores("unknown")
+        assert i == 3 and d30 == 3 and d90 == 3
 
 
 class TestBuildBaseline:
