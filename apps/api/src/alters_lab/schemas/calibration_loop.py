@@ -40,6 +40,19 @@ class CalibrationScoreValues(BaseModel):
     energy_level: int = Field(ge=1, le=5)
 
 
+class AlterRubricBaseline(BaseModel):
+    """Alter's predicted rubric trajectory."""
+
+    model_config = ConfigDict(extra="forbid")
+    alter_id: str
+    branch_id: str
+    expected_initial: CalibrationScoreValues
+    expected_30d: CalibrationScoreValues
+    expected_90d: CalibrationScoreValues
+    drift_direction: dict[str, str] = Field(default_factory=dict)
+    reasoning: str = ""
+
+
 class CalibrationInputRefs(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

@@ -145,6 +145,7 @@ class CalibrationDraft(BaseModel):
     source_type: Literal["llm_calibration_draft"] = "llm_calibration_draft"
     created_at: str
     conversation_id: str
+    branch_id: str | None = None
     status: Literal["pending", "confirmed", "rejected"] = "pending"
 
     # Extracted data (all optional — LLM fills what it can)
@@ -200,6 +201,7 @@ class CalibrationConversation(BaseModel):
 
     conversation_id: str
     created_at: str
+    branch_id: str | None = None
     status: Literal["active", "completed"] = "active"
     messages: list[ConversationMessage] = Field(default_factory=list)
     draft_ids: list[str] = Field(default_factory=list)

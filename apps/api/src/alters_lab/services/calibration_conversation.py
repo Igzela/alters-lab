@@ -298,7 +298,7 @@ def start_conversation(
 ) -> CalibrationConversation:
     """Start a new calibration conversation."""
     _ensure_dirs(repo_root=repo_root)
-    conversation = CalibrationConversation()
+    conversation = CalibrationConversation(branch_id=branch_id)
     conversation.messages.append(
         ConversationMessage(role="assistant", content=_MOCK_LLM_REPLY)
     )
@@ -340,6 +340,7 @@ def send_message(
     )
 
     if draft:
+        draft.branch_id = conversation.branch_id
         _save_draft(draft, repo_root=repo_root)
         conversation.draft_ids.append(draft.draft_id)
 
@@ -454,16 +455,42 @@ def confirm_draft(
         )
         from alters_lab.services.p6_runtime import runtime_dir
 
-        # Find the most recent previous score for this branch as baseline
+        # Find alter baseline for expected trajectory
+        from alters_lab.services.alter_rubric_baseline import get_baseline_for_branch
+
         existing_records = list_reality_score_records(repo_root=repo_root)
         branch_id = (
-            (draft.behavior_metrics.branch_id or "branch_A")
-            if draft.behavior_metrics
-            else "branch_A"
+            draft.branch_id
+            or (
+                (draft.behavior_metrics.branch_id or "branch_A")
+                if draft.behavior_metrics
+                else None
+            )
+            or "branch_A"
         )
+        baseline = get_baseline_for_branch(branch_id, repo_root=repo_root)
+
         expected_scores = None
-        if existing_records:
-            # Use the most recent score as expected baseline
+        if baseline:
+            # Determine elapsed time since first score on this branch
+            from datetime import datetime, timezone
+
+            branch_records = [r for r in existing_records if r.branch_id == branch_id]
+            if branch_records:
+                first_date = datetime.fromisoformat(branch_records[0].created_at.replace("Z", "+00:00"))
+                now = datetime.now(timezone.utc)
+                elapsed_days = (now - first_date).days
+            else:
+                elapsed_days = 0
+
+            if elapsed_days <= 15:
+                expected_scores = baseline.expected_initial
+            elif elapsed_days <= 45:
+                expected_scores = baseline.expected_30d
+            else:
+                expected_scores = baseline.expected_90d
+
+        if expected_scores is None and existing_records:
             expected_scores = existing_records[-1].actual_scores
 
         score_id = generate_record_id("score")
