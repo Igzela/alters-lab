@@ -71,6 +71,9 @@ alters/
 | `CalibrationDraft` | `schemas/calibration_conversation.py` | LLM extraction pending confirmation |
 | `BehaviorMetricsExtract` | `schemas/calibration_conversation.py` | Behavior metrics subset for extraction |
 | `ExternalEvidenceExtract` | `schemas/calibration_conversation.py` | Evidence item for extraction |
+| `CalibrationScoreValues` | `schemas/calibration_loop.py` | 4-dimension rubric scores (1-5 each) |
+| `RealityScoreRecord` | `schemas/calibration_loop.py` | Persisted calibration score with drift |
+| `AlterRubricBaseline` | `schemas/calibration_loop.py` | Alter's predicted rubric trajectory (initial/30d/90d) |
 
 ## Population Baseline Schemas
 

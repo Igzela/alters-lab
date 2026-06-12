@@ -130,6 +130,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 | `calibration_conversation` | `/calibration-conversation` | LLM-driven calibration data extraction via chat |
 | `calibration_divergence` | `/calibration-divergence` | Track divergence between predicted and actual calibration |
 | `calibration_scorecard` | `/calibration-scorecard` | Aggregate calibration accuracy tracking |
+| `calibration_loop` (prediction-accuracy) | `/calibration-loop/prediction-accuracy` | Compare alter baseline predictions against actual calibration trajectory |
 
 #### Forecast Pipeline
 
@@ -233,7 +234,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 - **LLM integration**: `provider_adapter`, `provider_gateway`, `provider_dialogue`, `provider_config`, `provider_connectivity`
 - **Runtime**: `runtime_layout`, `p6_runtime`, `local_app`, `local_launcher`
 - **Forecast**: `branch_forecast`, `forecast_snapshot`, `forecast_evaluation`, `personal_prior_adapter`, `public_prior`, `literature_priors`, `external_evidence`, `branch_base_rate_anchor`
-- **Calibration**: `calibration_loop`, `calibration_conversation`, `calibration_divergence`, `calibration_scorecard`, `rubric_delta`
+- **Calibration**: `calibration_loop`, `calibration_conversation`, `calibration_divergence`, `calibration_scorecard`, `rubric_delta`, `alter_rubric_baseline`
 - **Behavior tracking**: `behavior_metrics`, `behavior_metric_trend`, `behavior_validation`, `pattern_review`, `pattern_adjustment`
 - **Core logic**: One service per domain area, mirroring the router structure
 
@@ -398,6 +399,24 @@ User (frontend)
   --> User reviews extracted data
     --> POST /calibration-conversation/confirm
       --> calibration_loop service (updates calibration state)
+```
+
+### Prediction Accuracy Flow
+
+```
+Alter YAML (personality_drift directions)
+  --> alter_rubric_baseline service
+    --> Maps ↑↓→ directions to rubric dimension expected scores
+    --> Produces AlterRubricBaseline (initial/30d/90d predictions)
+
+User calibration scores (from calibration conversation)
+  --> confirm_draft writes RealityScoreRecord with branch_id
+    --> Uses alter baseline as expected_scores (instead of self-vs-self)
+
+GET /calibration-loop/prediction-accuracy?branch_id=branch_D
+  --> Compares alter baseline predictions vs actual trajectory
+  --> Returns per-dimension alignment + overall assessment:
+      on_track / partial_match / diverging / failure_mode_emerging
 ```
 
 ### Simulation / Forecast Flow
