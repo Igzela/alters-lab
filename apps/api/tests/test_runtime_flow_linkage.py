@@ -14,8 +14,8 @@ def _router_route_index(path: str, method: str) -> int:
 
 
 def test_calibration_drafts_route_precedes_dynamic_conversation_route() -> None:
-    assert _router_route_index("/drafts", "GET") < _router_route_index(
-        "/{conversation_id}", "GET"
+    assert _router_route_index("/calibration-conversation/drafts", "GET") < _router_route_index(
+        "/calibration-conversation/{conversation_id}", "GET"
     )
 
 
