@@ -123,6 +123,9 @@ def _load_sample_data(layout: Any, force: bool = False) -> dict[str, Any]:
     if not sample_dir.exists():
         return {"status": "error", "reason": f"Sample data not found: {sample_dir}"}
 
+    current_dir.mkdir(parents=True, exist_ok=True)
+    product_dir.mkdir(parents=True, exist_ok=True)
+
     copied: list[str] = []
 
     # Copy snapshot and branches
