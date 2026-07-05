@@ -11,7 +11,7 @@ import sys
 import webbrowser
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from alters_lab.services.local_app import build_local_app_status
 from alters_lab.services.runtime_layout import RuntimeLayout, resolve_runtime_layout
@@ -125,6 +125,11 @@ def build_uvicorn_command(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT) ->
     return [sys.executable, "-m", "uvicorn", APP_TARGET, "--host", host, "--port", str(port)]
 
 
+def run_foreground_server(command: list[str]) -> int:
+    completed = subprocess.run(command, check=False)
+    return completed.returncode
+
+
 def build_status(layout: RuntimeLayout, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT) -> dict[str, Any]:
     paths = launcher_paths(layout)
     pid_data = read_pid_file(paths.pid_file)
@@ -232,6 +237,7 @@ def start_server(
     port: int = DEFAULT_PORT,
     dry_run: bool = False,
     foreground: bool = False,
+    foreground_runner: Callable[[list[str]], int] | None = None,
 ) -> dict[str, Any]:
     paths = launcher_paths(layout)
     existing = read_pid_file(paths.pid_file)
@@ -255,7 +261,15 @@ def start_server(
 
     paths.logs_dir.mkdir(parents=True, exist_ok=True)
     if foreground:
-        return {"status": "foreground", "running": True, "command": command, "url": build_server_url(host, port)}
+        runner = foreground_runner or run_foreground_server
+        returncode = runner(command)
+        return {
+            "status": "exited",
+            "running": False,
+            "returncode": returncode,
+            "command": command,
+            "url": build_server_url(host, port),
+        }
 
     log_handle = paths.log_file.open("ab")
     process = subprocess.Popen(command, stdout=log_handle, stderr=subprocess.STDOUT, start_new_session=True)

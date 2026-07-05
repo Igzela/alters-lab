@@ -70,32 +70,6 @@ def send_message(conversation_id: str, request: SendMessageRequest):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
-@router.get("/{conversation_id}")
-def get_conversation(conversation_id: str):
-    try:
-        conversation = svc.get_conversation(conversation_id)
-        return conversation.model_dump()
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=str(exc))
-
-
-@router.get("/{conversation_id}/draft")
-def get_conversation_draft(conversation_id: str):
-    try:
-        conversation = svc.get_conversation(conversation_id)
-        if not conversation.draft_ids:
-            return {"drafts": []}
-        drafts = []
-        for did in conversation.draft_ids:
-            try:
-                drafts.append(svc.get_draft(did).model_dump())
-            except FileNotFoundError:
-                pass
-        return {"drafts": drafts}
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=str(exc))
-
-
 @router.get("/drafts", response_model=DraftListResponse)
 def list_drafts(status: str | None = None):
     drafts = svc.list_drafts(status=status)
@@ -147,3 +121,29 @@ def reject_draft(draft_id: str):
         raise HTTPException(status_code=404, detail=str(exc))
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
+
+
+@router.get("/{conversation_id}")
+def get_conversation(conversation_id: str):
+    try:
+        conversation = svc.get_conversation(conversation_id)
+        return conversation.model_dump()
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@router.get("/{conversation_id}/draft")
+def get_conversation_draft(conversation_id: str):
+    try:
+        conversation = svc.get_conversation(conversation_id)
+        if not conversation.draft_ids:
+            return {"drafts": []}
+        drafts = []
+        for did in conversation.draft_ids:
+            try:
+                drafts.append(svc.get_draft(did).model_dump())
+            except FileNotFoundError:
+                pass
+        return {"drafts": drafts}
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))

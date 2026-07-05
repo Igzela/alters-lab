@@ -56,6 +56,26 @@ def test_start_dry_run_returns_uvicorn_command(tmp_path, monkeypatch):
     assert not launcher_paths(layout).pid_file.exists()
 
 
+def test_start_foreground_runs_uvicorn_command_without_pid_file(tmp_path, monkeypatch):
+    layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
+    monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)
+    calls: list[list[str]] = []
+
+    def fake_runner(command: list[str]) -> int:
+        calls.append(command)
+        return 7
+
+    result = start_server(layout, foreground=True, foreground_runner=fake_runner)
+
+    assert result["status"] == "exited"
+    assert result["running"] is False
+    assert result["returncode"] == 7
+    assert result["command"] == calls[0]
+    assert APP_TARGET in result["command"]
+    assert "uvicorn" in result["command"]
+    assert not launcher_paths(layout).pid_file.exists()
+
+
 def test_doctor_missing_frontend_is_warn(tmp_path, monkeypatch):
     layout = resolve_runtime_layout(mode="dev", repo_root=tmp_path)
     monkeypatch.setattr(local_launcher, "is_port_available", lambda host, port: True)

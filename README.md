@@ -75,16 +75,16 @@ The API exposes 57+ endpoints across these key areas:
 | **Branches** | `GET/POST /branches/...` | Discover and manage 3-4 structural life branches |
 | **Alters** | `GET /alters/...` | List and manage generated alter personas |
 | **Dialogue** | `POST /alter-dialogue/{alter_id}/...` | Chat with an alter about their path |
-| **Weekly Review** | `POST /weekly-review-session/...` | 6-step structured weekly calibration flow |
+| **Weekly Review** | `GET/POST /weekly-review/...` | 6-step structured weekly calibration flow |
 | **Calibration** | `POST /calibration-conversation/...` | LLM-guided calibration via natural conversation |
 | **Behavior Metrics** | `GET/POST /behavior-metrics/...` | Weekly structured behavior indicators |
-| **Forecast** | `GET /branch-forecast/...` | Route A + Route B + Adapter combined forecasts |
-| **Snapshots** | `GET /forecast-snapshots/...` | Locked, immutable forecast records |
-| **Evidence** | `POST /external-evidence/...` | Real-world observations that inform forecasts |
-| **Evaluation** | `GET /forecast-evaluation/...` | Hit/miss tracking per domain, per source |
-| **Scorecard** | `GET /calibration-scorecard/...` | Aggregate accuracy with per-source hit rates |
-| **Provider** | `POST /provider-config/...` | Configure LLM provider (OpenAI-compatible) |
-| **Public Priors** | `GET /public-prior/...` | Population-level baselines from NLSY97/MIDUS |
+| **Forecast** | `POST /branch-forecast/...` | Route A + Route B + Adapter combined forecasts |
+| **Snapshots** | `GET/POST /forecast-snapshots/...` | Locked, immutable forecast records |
+| **Evidence** | `GET/POST /external-evidence/...` | Real-world observations that inform forecasts |
+| **Evaluation** | `GET/POST /forecast-evaluations/...` | Hit/miss tracking per domain, per source |
+| **Scorecard** | `GET /forecast-scorecard/...` | Aggregate accuracy with per-source hit rates |
+| **Provider** | `GET/POST /provider-config/...` | Configure LLM provider (OpenAI-compatible) |
+| **Public Priors** | `GET /public-priors/...` | Population-level baselines from NLSY97/MIDUS |
 
 Full API docs at `http://localhost:18790/docs` (Swagger UI).
 
@@ -115,7 +115,7 @@ Pipeline:
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Backend | Python 3.11+, FastAPI, Pydantic v2, PyYAML, uvicorn |
 | Frontend | React 18, TypeScript, Vite, Tailwind CSS v4 |
 | Data | TanStack Query, Recharts, Phosphor Icons |
