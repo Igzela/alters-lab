@@ -84,7 +84,7 @@ The API exposes 57+ endpoints across these key areas:
 | **Evaluation** | `GET /forecast-evaluation/...` | Hit/miss tracking per domain, per source |
 | **Scorecard** | `GET /calibration-scorecard/...` | Aggregate accuracy with per-source hit rates |
 | **Provider** | `POST /provider-config/...` | Configure LLM provider (OpenAI-compatible) |
-| **Public Priors** | `GET /public-prior/...` | Population-level baselines from NLSY97/MIDUS |
+| **Public Priors** | `GET /public-priors/...` | Population-level baselines from NLSY97/MIDUS |
 
 Full API docs at `http://localhost:18790/docs` (Swagger UI).
 
@@ -115,7 +115,7 @@ Pipeline:
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Backend | Python 3.11+, FastAPI, Pydantic v2, PyYAML, uvicorn |
 | Frontend | React 18, TypeScript, Vite, Tailwind CSS v4 |
 | Data | TanStack Query, Recharts, Phosphor Icons |
