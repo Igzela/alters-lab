@@ -30,7 +30,7 @@ alters-lab = "alters_lab.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/Igzela/alters-lab"
-Repository = "https://github.com/Igzela/alters-lab/tree/main/docs"
+Repository = "https://github.com/Igzela/alters-lab"
 Documentation = "https://github.com/Igzela/alters-lab/tree/main/docs"
 Issues = "https://github.com/Igzela/alters-lab/issues"
 
