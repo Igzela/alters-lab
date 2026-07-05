@@ -6,16 +6,21 @@ from alters_lab.api.calibration_conversation import router as calibration_conver
 from alters_lab.services.local_app import should_block_spa_fallback
 
 
-def _router_route_index(path: str, method: str) -> int:
+def _router_endpoint_index(endpoint_name: str, method: str) -> int:
     for index, route in enumerate(calibration_conversation_router.routes):
-        if isinstance(route, APIRoute) and route.path == path and method in route.methods:
+        endpoint = getattr(route, "endpoint", None)
+        if (
+            isinstance(route, APIRoute)
+            and getattr(endpoint, "__name__", None) == endpoint_name
+            and method in route.methods
+        ):
             return index
-    raise AssertionError(f"Route not found: {method} {path}")
+    raise AssertionError(f"Route endpoint not found: {method} {endpoint_name}")
 
 
 def test_calibration_drafts_route_precedes_dynamic_conversation_route() -> None:
-    assert _router_route_index("/calibration-conversation/drafts", "GET") < _router_route_index(
-        "/calibration-conversation/{conversation_id}", "GET"
+    assert _router_endpoint_index("list_drafts", "GET") < _router_endpoint_index(
+        "get_conversation", "GET"
     )
 
 
