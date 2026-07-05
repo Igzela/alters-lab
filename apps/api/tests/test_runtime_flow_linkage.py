@@ -2,20 +2,20 @@
 
 from fastapi.routing import APIRoute
 
-from alters_lab.main import app
+from alters_lab.api.calibration_conversation import router as calibration_conversation_router
 from alters_lab.services.local_app import should_block_spa_fallback
 
 
-def _route_index(path: str, method: str) -> int:
-    for index, route in enumerate(app.routes):
+def _router_route_index(path: str, method: str) -> int:
+    for index, route in enumerate(calibration_conversation_router.routes):
         if isinstance(route, APIRoute) and route.path == path and method in route.methods:
             return index
     raise AssertionError(f"Route not found: {method} {path}")
 
 
 def test_calibration_drafts_route_precedes_dynamic_conversation_route() -> None:
-    assert _route_index("/calibration-conversation/drafts", "GET") < _route_index(
-        "/calibration-conversation/{conversation_id}", "GET"
+    assert _router_route_index("/drafts", "GET") < _router_route_index(
+        "/{conversation_id}", "GET"
     )
 
 
