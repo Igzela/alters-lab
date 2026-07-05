@@ -255,7 +255,15 @@ def start_server(
 
     paths.logs_dir.mkdir(parents=True, exist_ok=True)
     if foreground:
-        return {"status": "foreground", "running": True, "command": command, "url": build_server_url(host, port)}
+        process = subprocess.Popen(command)
+        returncode = process.wait()
+        return {
+            "status": "exited",
+            "running": False,
+            "returncode": returncode,
+            "command": command,
+            "url": build_server_url(host, port),
+        }
 
     log_handle = paths.log_file.open("ab")
     process = subprocess.Popen(command, stdout=log_handle, stderr=subprocess.STDOUT, start_new_session=True)
