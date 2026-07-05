@@ -36,7 +36,7 @@ export default function Dashboard() {
   const textColor = theme === 'dark' ? '#a8a29e' : '#78716c'
   const borderColor = theme === 'dark' ? '#3a3a3a' : '#e8e6e1'
 
-  const providerMode = (providerStatus.data as Record<string, unknown>)?.mode as string ?? t('dashboard.statusUnknown')
+  const providerMode = (providerStatus.data as Record<string, unknown>)?.provider_mode as string ?? t('dashboard.statusUnknown')
   const providerModeLabel = providerMode === 'disabled' ? t('dashboard.providerDisabled') : providerMode === 'mock' ? t('dashboard.providerMock') : providerMode === 'live' ? t('dashboard.providerLive') : providerMode
   const providerBadgeVariant = providerMode === 'live' ? 'success' : providerMode === 'mock' ? 'amber' : 'muted'
 
