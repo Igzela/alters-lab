@@ -63,7 +63,16 @@ jobs:
           "
 
       - name: Run tests
-        run: PYTHONPATH=apps/api/src python -m pytest apps/api/tests/ -q
+        run: |
+          set -o pipefail
+          PYTHONPATH=apps/api/src python -m pytest apps/api/tests/ -q 2>&1 | tee backend-pytest.log
+
+      - name: Upload backend pytest log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-pytest-log
+          path: backend-pytest.log
 
   frontend:
     name: Frontend Build
