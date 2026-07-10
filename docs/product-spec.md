@@ -1,16 +1,16 @@
 # Product Specification
 
-## Alters Lab -- Public-Prior + Personal-Calibration Life Trajectory Forecasting System
+## Alters Lab -- Personal Calibration Life Trajectory Forecasting System
 
 ### 1. Overview
 
-Alters Lab is a public-prior + personal-calibration life trajectory forecasting system. It captures a snapshot of your current life state, discovers structural branching decisions, generates coherent alter versions of yourself for each branch, and calibrates which paths best align with your values and energy through ongoing weekly review cycles.
+Alters Lab is a personal calibration and life trajectory reflection system. It captures a snapshot of your current life state, discovers structural branching decisions, generates coherent alter versions of yourself for each branch, and calibrates which paths best align with your values and energy through ongoing weekly review cycles.
 
-The system combines two evidence streams:
-- **Route A (Personal Evidence)** — your own predictor profile, behavior metrics, and weekly calibration scores
-- **Route B (Population Prior)** — directional priors from literature and (future) population baseline datasets
+The system combines evidence streams without presenting any one stream as authoritative:
+- **Route A (Personal Evidence)** — your own predictor profile, behavior metrics, weekly reviews, and calibration scores
+- **Route B (Optional Reference Context)** — documented external reference material or approved offline artifacts, when legally usable and appropriate
 
-Population baselines carry explicit transfer risk labels. The system does not claim to predict individual destiny. See `docs/PRODUCT_POSITIONING.md` for the full positioning statement and `docs/VALIDATION_STANDARD.md` for the integration gates.
+Reference context carries explicit applicability-risk labels. The system does not claim to predict individual destiny. See `docs/PRODUCT_POSITIONING.md` for the full positioning statement and `docs/VALIDATION_STANDARD.md` for the integration gates.
 
 The system runs locally on your machine as a web application served at `http://127.0.0.1:18790`. All data is stored as YAML and JSON files in the `alters/` directory. No database is required.
 
@@ -154,7 +154,7 @@ View, export, and delete product data:
 | Command | Description |
 |---------|-------------|
 | `alters-lab start` | Start the local server (opens browser automatically) |
-| `alters-lab stop` | Stop the local server |
+| `alters-lab stop` | Stop a running server |
 | `alters-lab status` | Show server status |
 | `alters-lab doctor` | Run health checks |
 | `alters-lab open` | Open the app in a browser (starts server if not running) |
@@ -168,6 +168,7 @@ View, export, and delete product data:
 - **Local-only by default** -- The application runs on `127.0.0.1:18790`. No external network calls are made unless the user explicitly configures a live provider.
 - **Provider output is advisory** -- LLM-generated content is never treated as authoritative. Users must manually review and copy any provider output that becomes part of their data.
 - **No auto-inference from dialogue** -- Reality scores require explicit user submission. The system does not infer scores from conversation content.
+- **No source-file redistribution by default** -- Third-party raw data, processed data, and offline artifacts must not be committed, bundled, or marketed unless their source terms explicitly allow that use.
 
 ### 7. Sample Data
 
