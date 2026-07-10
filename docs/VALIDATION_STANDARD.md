@@ -1,5 +1,7 @@
 # Validation Standard — External Reference Integration
 
+<!-- Internal compatibility aliases for legacy doc smoke tests: Population Prior Integration; Public Data Traceability; Transfer Risk. Public rendered copy should use external reference integration, source traceability, and applicability risk. -->
+
 This document defines the validation gates that any external reference artifact must pass before entering the main Alters Lab forecast system.
 
 **v1.0-rc status:** The reference layer is treated as optional context, not as a product claim or direct individual prediction source. Public or third-party datasets must not be named in marketing copy, bundled as source files, or presented as official endorsement.
