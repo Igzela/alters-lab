@@ -75,9 +75,9 @@ alters/
 | `RealityScoreRecord` | `schemas/calibration_loop.py` | Persisted calibration score with drift |
 | `AlterRubricBaseline` | `schemas/calibration_loop.py` | Alter's predicted rubric trajectory (initial/30d/90d) |
 
-## External Reference Schemas
+## Population Baseline Schemas
 
-The current schema names retain `population_baseline` for API compatibility, but public product language should describe this layer as optional external reference context.
+The current schema names retain `population_baseline` for API compatibility. Public product language should describe this layer as optional external reference context rather than as a named dataset-backed prediction feature.
 
 | Schema | File | Purpose |
 |--------|------|---------|
