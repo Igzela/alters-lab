@@ -26,8 +26,11 @@ def validation_text() -> str:
 
 
 class TestRequiredPhrases:
-    def test_public_prior_personal_calibration(self, positioning_text):
-        assert "public-prior + personal-calibration" in positioning_text
+    def test_personal_calibration_positioning(self, positioning_text):
+        assert "personal calibration" in positioning_text.lower()
+
+    def test_optional_external_reference_context(self, positioning_text):
+        assert "optional external reference context" in positioning_text.lower()
 
     def test_calibration_first(self, positioning_text):
         assert "calibration-first" in positioning_text
@@ -41,8 +44,8 @@ class TestRequiredPhrases:
     def test_hit_miss_partial_unknown(self, positioning_text):
         assert "hit/miss/partial/unknown" in positioning_text
 
-    def test_transfer_risk(self, positioning_text):
-        assert "transfer risk" in positioning_text.lower()
+    def test_applicability_risk(self, positioning_text):
+        assert "applicability" in positioning_text.lower()
 
     def test_not_trained_ml_model(self, positioning_text):
         assert "not a trained ml model" in positioning_text.lower()
@@ -76,19 +79,24 @@ class TestForbiddenPhrases:
     def test_no_trained_nlsy_in_production(self, positioning_text):
         assert "trained NLSY model in production" not in positioning_text
 
+    def test_no_named_dataset_marketing_claims(self, positioning_text):
+        lowered = positioning_text.lower()
+        assert "nlsy97" not in lowered
+        assert "midus" not in lowered
+
 
 # --- Validation standard tests ---
 
 
 class TestValidationStandardPhrases:
-    def test_gate_1_public_data_traceability(self, validation_text):
-        assert "Public Data Traceability" in validation_text or "public data traceability" in validation_text
+    def test_gate_1_source_traceability(self, validation_text):
+        assert "Source Traceability" in validation_text or "source traceability" in validation_text
 
     def test_gate_2_model_calibration(self, validation_text):
         assert "Model Calibration" in validation_text
 
-    def test_gate_3_transfer_risk(self, validation_text):
-        assert "Transfer Risk" in validation_text
+    def test_gate_3_applicability_risk(self, validation_text):
+        assert "Applicability Risk" in validation_text
 
     def test_gate_4_hybrid_integration(self, validation_text):
         assert "Hybrid Integration" in validation_text
@@ -98,3 +106,8 @@ class TestValidationStandardPhrases:
 
     def test_gate_6_calibration_module_preserved(self, validation_text):
         assert "Calibration Module Preserved" in validation_text or "calibration module preserved" in validation_text
+
+    def test_distribution_and_commercial_use_rule(self, validation_text):
+        assert "Distribution and Commercial-Use Rule" in validation_text
+        assert "raw data" in validation_text.lower()
+        assert "processed data" in validation_text.lower()

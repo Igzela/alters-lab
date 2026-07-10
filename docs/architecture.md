@@ -2,7 +2,9 @@
 
 ## System Overview
 
-Alters Lab is a personal future-path simulation and calibration system. It helps users explore structurally different life branches, engage in dialogue with hypothetical "alter" versions of themselves, score branches against their values, and calibrate predictions over time. All data is stored as YAML/JSON files on disk -- no database.
+Alters Lab is a personal future-path simulation and calibration system. It helps users explore structurally different life branches, engage in dialogue with hypothetical "alter" versions of themselves, score branches against their values, and calibrate predictions over time. All user data is stored as YAML/JSON files on disk -- no database.
+
+The main evidence source is the user's own data: weekly reviews, behavior metrics, explicit scores, outcome targets, and real-world observations. Optional external reference context can be used only as background context when source terms, validation, and applicability limits are clear. It must not be presented as official endorsement, a direct individual prediction, or a commercial proof point.
 
 ```
 +------------------------------------------------------+
@@ -25,8 +27,8 @@ Alters Lab is a personal future-path simulation and calibration system. It helps
                             |
                             v
 +------------------------------------------------------+
-|                External LLM Provider                   |
-|  (OpenAI, Anthropic, etc. via provider_adapter)      |
+|                Optional LLM Provider                  |
+|  Disabled by default; advisory output only            |
 +------------------------------------------------------+
 ```
 
@@ -41,7 +43,7 @@ Alters Lab is a personal future-path simulation and calibration system. It helps
 | Fonts | Outfit (body), JetBrains Mono (code) |
 | i18n | i18next with English and Chinese |
 | Storage | YAML + JSON files under `alters/` directory |
-| Packaging | Debian `.deb`, CLI entry point `alters-lab` |
+| Packaging | Docker, Debian `.deb`, CLI entry point `alters-lab` |
 | CI | GitHub Actions (backend tests + frontend build) |
 
 ## Project Layout
@@ -60,9 +62,9 @@ alters-lab/
         errors.py                 # AppError exception hierarchy
         middleware.py             # Rate limiting
         logging_config.py         # Structured logging
-      tests/                      # pytest + httpx tests (1970 tests)
+      tests/                      # pytest + httpx tests
       pyproject.toml              # Python package config
-    web/                          # React frontend (84 tests)
+    web/                          # React frontend
       src/
         pages/                    # 21 page components (21 active routes)
         components/               # 22 shared UI components
@@ -89,8 +91,8 @@ alters-lab/
 
 ### Middleware Stack
 
-1. **CORS** -- `CORSMiddleware`. Dev mode allows `["*"]`; packaged mode restricts to `localhost:18790`.
-2. **Rate Limiting** -- Custom `RateLimitMiddleware` (per-IP sliding window, 600 requests per 60 seconds). Returns 429 with JSON error body when exceeded.
+1. **CORS** -- `CORSMiddleware`. Dev mode allows local development origins; packaged mode restricts to local app origins.
+2. **Rate Limiting** -- Custom `RateLimitMiddleware` with per-IP sliding window limits. Returns 429 with JSON error body when exceeded.
 
 ### Error Handling
 
@@ -137,7 +139,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 | Router | Prefix | Purpose |
 |--------|--------|---------|
 | `branch_forecast` | `/branch-forecast` | Route A + Route B + Adapter combined forecasts |
-| `branch_base_rate_anchor` | `/branch-base-rate-anchor` | Base rate anchoring for branch forecasts |
+| `branch_base_rate_anchor` | `/branch-base-rate-anchor` | Base-rate anchoring for branch forecasts |
 | `forecast_snapshot` | `/forecast-snapshot` | Locked immutable forecast records |
 | `external_evidence` | `/external-evidence` | Real-world observation recording |
 | `forecast_evaluation` | `/forecast-evaluation` | Prediction vs outcome comparison |
@@ -146,10 +148,12 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 #### Population Baseline
 
+This heading and the `population_baseline` naming remain as internal compatibility terms for existing schemas and API modules. Public-facing product copy should describe this layer as optional external reference context, not as a dataset-backed personal prediction feature.
+
 | Router | Prefix | Purpose |
 |--------|--------|---------|
-| `public_prior` | `/public-prior` | Population prior integration and management |
-| `literature_priors` | `/literature-priors` | Literature-based prior extraction |
+| `public_prior` | `/public-prior` | Optional reference context integration and management |
+| `literature_priors` | `/literature-priors` | Literature/reference extraction for internal use |
 
 #### Promotion Pipeline
 
@@ -217,7 +221,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Data Repository
 
-`apps/api/src/alters_lab/repositories/data_repo.py` implements a `DataRepo` class that provides unified, atomic I/O for all YAML/JSON data operations. Services receive a `DataRepo` instance via FastAPI `Depends()`. This replaces 35+ scattered `yaml.safe_load`/`safe_dump` call sites with a single interface that handles:
+`apps/api/src/alters_lab/repositories/data_repo.py` implements a `DataRepo` class that provides unified, atomic I/O for all YAML/JSON data operations. Services receive a `DataRepo` instance via FastAPI `Depends()`. This replaces scattered `yaml.safe_load`/`safe_dump` call sites with a single interface that handles:
 
 - Path resolution via `RuntimeLayout` (dev vs packaged mode)
 - Atomic writes (write to temp file, then rename)
@@ -240,7 +244,7 @@ All routers live in `apps/api/src/alters_lab/api/`. Each module defines a FastAP
 
 ### Schema Layer
 
-64 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router. Notable schemas include `calibration_conversation` (LLM-driven calibration chat), `personal_prior_adapter` (strength-aware forecast blending), and `population_baseline` (public prior management).
+64 Pydantic schema modules in `apps/api/src/alters_lab/schemas/` define request/response models. Each schema module typically corresponds to one API router. Notable schemas include `calibration_conversation` (LLM-driven calibration chat), `personal_prior_adapter` (strength-aware forecast blending), and `population_baseline` (internal compatibility naming for optional reference context management).
 
 ### Structured Logging
 
@@ -306,7 +310,7 @@ React Router (`BrowserRouter`) with lazy-loaded page components via `PageRouter.
 | `/outcome-targets` | OutcomeTargets | Measurable outcome goals |
 | `/branch-forecast` | BranchForecast | Combined forecast view |
 | `/forecast-calibration` | ForecastCalibration | Forecast calibration tracking |
-| `/public-priors` | PublicPriors | Population baseline priors |
+| `/public-priors` | PublicPriors | Optional reference context compatibility page |
 | `/calibration-conversation` | CalibrationConversation | LLM-driven calibration chat |
 | `/behavior-metrics` | BehaviorMetricsDetail | Behavioral metrics detail view |
 
@@ -343,7 +347,7 @@ Hook modules are split by domain:
 | `useForecastHooks.ts` | Forecasting | 8 hooks for forecast pipeline |
 | `usePredictionHooks.ts` | Predictions | 8 hooks for prediction pipeline |
 | `useCalibrationConversationHooks.ts` | Calibration chat | 6 hooks for LLM-driven calibration |
-| `usePublicPriorHooks.ts` | Population priors | 5 hooks for public prior management |
+| `usePublicPriorHooks.ts` | Public priors | 5 hooks for optional reference context management |
 | `usePatternReviewHooks.ts` | Pattern review | 3 hooks for pattern analysis |
 | `useBehaviorMetricsHooks.ts` | Behavior metrics | `useBehaviorMetrics` |
 | `useBehaviorValidationHooks.ts` | Validation | 2 hooks for behavior validation |
@@ -401,6 +405,8 @@ User (frontend)
       --> calibration_loop service (updates calibration state)
 ```
 
+Provider output is advisory. It cannot auto-submit reality scores or silently modify active user data.
+
 ### Prediction Accuracy Flow
 
 ```
@@ -432,8 +438,8 @@ User requests forecast
       --> POST /branch-forecast/calculate
         --> branch_forecast service
           --> Route A: behavior_metric_trend (within-person trends)
-          --> Route B: public_prior (population baseline) + personal_prior_adapter (strength-aware blending)
-          --> Combined forecast with confidence intervals
+          --> Route B: optional reference context + personal_prior_adapter (strength-aware blending)
+          --> Combined directional forecast with confidence and applicability labels
           --> forecast_snapshot service (locks result)
 
 User records external evidence
@@ -448,10 +454,10 @@ User evaluates forecast
 ### Prior Update Flow
 
 ```
-Population prior pipeline:
+Optional reference pipeline:
   literature_priors --> public_prior --> personal_prior_adapter
     --> Strength-aware blending with Route A predictions
-    --> public_prior router manages CRUD for population baselines
+    --> public_prior router manages CRUD for internal reference artifacts
     --> personal_prior_adapter adjusts blend weight based on forecast strength
 
 Individual prior pipeline:
@@ -467,7 +473,7 @@ Individual prior pipeline:
 
 2. **Dependency injection via FastAPI** -- Services receive `DataRepo` via `Depends()`, enabling testability and decoupling from filesystem.
 
-3. **Dual forecast routes** -- Route A (within-person behavioral trends) and Route B (population baseline with personal prior adapter) are combined with strength-aware blending. Strong forecasts use more Route B; weak forecasts lean on Route A.
+3. **Dual forecast routes** -- Route A (within-person behavioral trends) and Route B (optional reference context with personal prior adapter) are combined with strength-aware blending. Reference context is background context, not an individual prediction or marketing proof point.
 
 4. **LLM-driven calibration** -- Rather than manual data entry, the calibration conversation endpoint uses an LLM to extract structured calibration data from natural language dialogue.
 
@@ -518,10 +524,14 @@ Key data entities (defined in `docs/data-model.md`):
 - **RealityTrace**: Observation of how reality diverges from predicted branch
 - **RealityScore**: Multi-dimensional scoring of branches against user rubric
 - **ForecastSnapshot**: Locked immutable forecast record with confidence intervals
-- **PublicPrior**: Population baseline probability for a branch/domain
+- **PublicPrior**: Internal compatibility object for optional reference context, not a public marketing claim
 - **CalibrationConversation**: LLM-driven calibration dialogue session
 
 ## Packaging and Deployment
+
+### Docker
+
+The root `Dockerfile` builds the Vite frontend, installs the FastAPI backend, copies the frontend build into the packaged app, and starts uvicorn on port `18790`.
 
 ### Debian Package
 
