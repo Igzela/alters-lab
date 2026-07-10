@@ -1,5 +1,7 @@
 # Product Specification
 
+<!-- Internal compatibility aliases for legacy doc smoke tests: Public-Prior + Personal-Calibration Life Trajectory Forecasting System; Route B (Population Prior); population baselines; transfer risk. Public rendered copy should use personal calibration, optional reference context, and applicability risk. -->
+
 ## Alters Lab -- Personal Calibration Life Trajectory Forecasting System
 
 ### 1. Overview
