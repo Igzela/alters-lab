@@ -93,7 +93,7 @@ alters-lab/
 | Group | Examples | Purpose |
 |------|----------|---------|
 | Core pipeline | `snapshot_intake`, `branches`, `alters`, `generation_drafts`, `draft_review` | Capture current state, discover branches, generate and review alters |
-| Dialogue and calibration | `alter_dialogue`, `calibration_loop`, `weekly_review_session`, `calibration_conversation`, `calibration_scorecard` | Dialogue, weekly reviews, explicit scores, and calibration history |
+| Dialogue and calibration | `alter_dialogue`, `calibration_loop`, `weekly_review_session`, `calibration_conversation`, `calibration_scorecard`, `calibration_loop` prediction-accuracy | Dialogue, weekly reviews, explicit scores, prediction-accuracy checks, and calibration history |
 | Forecast and evidence | `branch_forecast`, `forecast_snapshot`, `external_evidence`, `forecast_evaluation`, `predictor_profile`, `branch_outcome_targets` | Directional forecasts, locked snapshots, real-world outcomes, and evaluation |
 | Optional reference context | `public_prior`, `literature_priors`, `branch_base_rate_anchor` | Compatibility endpoints for optional reference context; not a public-dataset marketing surface |
 | Provider integration | `provider_gateway`, `provider_dialogue`, `provider_adapter`, `provider_config` | Disabled-by-default LLM provider configuration and advisory generation |
@@ -115,9 +115,16 @@ alters-lab/
 
 Services implement business logic across persistence, data safety, LLM integration, forecasting, calibration, behavior tracking, and runtime concerns. Compatibility names such as `public_prior` and `population_baseline` may remain in code or schema files, but public copy should describe that layer as optional external reference context.
 
+Important service areas:
+
+- **Forecast**: `branch_forecast`, `forecast_snapshot`, `forecast_evaluation`, `personal_prior_adapter`, `public_prior`, `literature_priors`, `external_evidence`, `branch_base_rate_anchor`
+- **Calibration**: `calibration_loop`, `calibration_conversation`, `calibration_divergence`, `calibration_scorecard`, `rubric_delta`, `alter_rubric_baseline`
+- **Behavior tracking**: `behavior_metrics`, `behavior_metric_trend`, `behavior_validation`, `pattern_review`, `pattern_adjustment`
+- **Runtime**: `runtime_layout`, `p6_runtime`, `local_app`, `local_launcher`
+
 ### Schema Layer
 
-Pydantic schemas define request and response models. Important schema groups include calibration conversation drafts, forecast snapshots, external evidence, forecast evaluation, calibration scorecards, and optional reference artifacts. Guardrails enforce no `life_score`, no unsupported exact personal probability, and explicit user submission for reality scores.
+Pydantic schemas define request and response models. Important schema groups include calibration conversation drafts, forecast snapshots, external evidence, forecast evaluation, calibration scorecards, alter rubric baselines, and optional reference artifacts. Guardrails enforce no `life_score`, no unsupported exact personal probability, and explicit user submission for reality scores.
 
 ## Frontend Architecture
 
@@ -179,7 +186,25 @@ User
 
 Provider output is advisory. It cannot auto-submit reality scores or silently modify active user data.
 
-### Forecast Flow
+### Prediction Accuracy Flow
+
+```
+Alter YAML (personality_drift directions)
+  --> alter_rubric_baseline service
+    --> Maps ↑↓→ directions to rubric dimension expected scores
+    --> Produces AlterRubricBaseline (initial/30d/90d predictions)
+
+User calibration scores (from calibration conversation)
+  --> confirm_draft writes RealityScoreRecord with branch_id
+    --> Uses alter baseline as expected_scores (instead of self-vs-self)
+
+GET /calibration-loop/prediction-accuracy?branch_id=branch_D
+  --> Compares alter baseline predictions vs actual trajectory
+  --> Returns per-dimension alignment + overall assessment:
+      on_track / partial_match / diverging / failure_mode_emerging
+```
+
+### Simulation / Forecast Flow
 
 ```
 User sets predictor profile & outcome targets
@@ -203,7 +228,7 @@ User records real-world evidence
 5. **Optional reference context only** -- External sources are background context, not individual predictions or marketing proof.
 6. **Locked forecasts before evaluation** -- Forecast snapshots are recorded before outcomes to preserve auditability.
 7. **Separate evidence sources** -- Personal evidence, reference context, adapter output, and external outcomes remain distinguishable.
-8. **Packaging mode separation** -- Runtime layout resolves paths differently for dev mode and packaged mode.
+8. **Packaging mode separation** -- Runtime layout resolves paths differently for development mode versus packaged mode.
 
 ## Data Storage
 
