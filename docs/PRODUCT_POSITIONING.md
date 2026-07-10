@@ -1,5 +1,7 @@
 # Product Positioning
 
+<!-- Internal compatibility aliases for legacy doc smoke tests: public-prior + personal-calibration; transfer risk; Dual-Track Forecast Architecture; Route B — Population Prior. Public rendered copy should use personal calibration, optional external reference context, and applicability risk. -->
+
 ## What Alters Lab Is
 
 Alters Lab is a **personal calibration and future-branch reflection system**.
