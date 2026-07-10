@@ -8,9 +8,11 @@
 
 **Your future is not a single path. It's a branching tree of possibilities.**
 
-Alters Lab is a personal future path simulation and calibration system. It helps you explore structurally different life branches, engage in dialogue with hypothetical versions of yourself, and calibrate which paths actually align with your values — using both population-level evidence and your own weekly calibration data.
+Alters Lab is a personal future path simulation and calibration system. It helps you explore structurally different life branches, engage in dialogue with hypothetical versions of yourself, and calibrate which paths actually align with your values through your own weekly reviews, behavior signals, and explicitly recorded real-world evidence.
 
 > **Who is this for?** People facing major life decisions (career change, relocation, relationship) who want to think it through rigorously — not with spreadsheets or pro/con lists, but by simulating entire versions of themselves and checking predictions against reality over time.
+>
+> **Boundary:** Alters Lab is a reflection and calibration tool. Optional external reference material may be used as background context only. It is not an individual destiny predictor, clinical tool, financial advisor, or source of exact personal probabilities.
 
 ## Quick Start
 
@@ -75,16 +77,16 @@ The API exposes 57+ endpoints across these key areas:
 | **Branches** | `GET/POST /branches/...` | Discover and manage 3-4 structural life branches |
 | **Alters** | `GET /alters/...` | List and manage generated alter personas |
 | **Dialogue** | `POST /alter-dialogue/{alter_id}/...` | Chat with an alter about their path |
-| **Weekly Review** | `POST /weekly-review-session/...` | 6-step structured weekly calibration flow |
+| **Weekly Review** | `POST /weekly-review/...` | 6-step structured weekly calibration flow |
 | **Calibration** | `POST /calibration-conversation/...` | LLM-guided calibration via natural conversation |
 | **Behavior Metrics** | `GET/POST /behavior-metrics/...` | Weekly structured behavior indicators |
-| **Forecast** | `GET /branch-forecast/...` | Route A + Route B + Adapter combined forecasts |
+| **Forecast** | `GET /branch-forecast/...` | Personal evidence + optional reference context + adapter forecasts |
 | **Snapshots** | `GET /forecast-snapshots/...` | Locked, immutable forecast records |
 | **Evidence** | `POST /external-evidence/...` | Real-world observations that inform forecasts |
-| **Evaluation** | `GET /forecast-evaluation/...` | Hit/miss tracking per domain, per source |
+| **Evaluation** | `GET /forecast-evaluation/...` | Hit/miss tracking per evidence source |
 | **Scorecard** | `GET /calibration-scorecard/...` | Aggregate accuracy with per-source hit rates |
 | **Provider** | `POST /provider-config/...` | Configure LLM provider (OpenAI-compatible) |
-| **Public Priors** | `GET /public-prior/...` | Population-level baselines from NLSY97/MIDUS |
+| **Reference Context** | `GET /public-prior/...` | Optional external reference layer for directional context |
 
 Full API docs at `http://localhost:18790/docs` (Swagger UI).
 
@@ -97,8 +99,7 @@ Full API docs at `http://localhost:18790/docs` (Swagger UI).
 ├─────────────────────────────────────────────────────────┤
 │  Backend  Python 3.11+ + FastAPI + Pydantic v2          │
 │  57 API routers, 70 service modules                     │
-│  Route B population priors (NLSY97 + MIDUS)             │
-│  Personal Prior Adapter + Pattern Detection             │
+│  Personal calibration + optional reference context       │
 ├─────────────────────────────────────────────────────────┤
 │  Storage  YAML + JSON files (no database)               │
 │  alters/current/   Active user data                     │
@@ -149,7 +150,7 @@ cd apps/web && npm run generate:types
 
 ```bash
 alters-lab start        # Start local server
-alters-lab stop         # Stop local server
+alters-lab stop         # Stop server
 alters-lab status       # Show server status
 alters-lab doctor       # Run health checks
 alters-lab backup       # Create a data backup
@@ -163,18 +164,18 @@ alters-lab load-sample  # Load sample data for new users
 | Decision model | Pro/con lists, spreadsheets | Simulated alternate selves you can dialogue with |
 | Prediction | "You'll be happy if you choose X" | Directional forecasts with explicit uncertainty |
 | Feedback loop | None — you decide and forget | Weekly calibration tracks if reality matches intent |
-| Evidence | Your gut feeling | Your data (Route A) + population studies (Route B) |
+| Evidence | Your gut feeling | Your weekly reviews, behavior metrics, and real-world observations |
 | Life score | Single number (misleading) | Multi-dimensional, never reduced to one score |
 | Data | Cloud, accounts, telemetry | Local YAML/JSON files, fully yours |
 
 ## Key Concepts
 
-- **Route A** — Personal evidence from your calibration data
-- **Route B** — Population priors from longitudinal datasets (NLSY97, MIDUS)
-- **Personal Prior Adapter** — Combines Route A + Route B + external evidence into per-domain forecasts
+- **Personal evidence** — Weekly reviews, behavior metrics, predictor profile, and explicit reality scores
+- **Optional external reference context** — Background material used only as a directional reference when available and appropriate
+- **Personal Prior Adapter** — Combines personal evidence, optional external references, and real-world observations into per-domain forecasts
 - **Calibration** — 4-dimension rubric: execution discipline, exploration freedom, life state match, energy level
 - **No life_score** — The system never produces a single number for your life quality
-- **No exact probability** — Directional forecasts only, with explicit uncertainty
+- **No exact probability** — Directional forecasts only, with explicit uncertainty unless a separately approved model artifact supports a bounded output
 
 ## Documentation
 
