@@ -50,13 +50,13 @@ alters/
 | Calibration Draft | `schemas/calibration_conversation.py` | `product/calibration_drafts/` |
 | Conversation | `schemas/calibration_conversation.py` | `product/calibration_conversations/` |
 | Model Card | `schemas/population_baseline.py` | `product/model_cards/` |
-| Prior Artifact | `schemas/population_baseline.py` | `product/population_prior_artifacts/` |
+| Reference Artifact | `schemas/population_baseline.py` | `product/population_prior_artifacts/` |
 
 ## Forecast Pipeline Schemas
 
 | Schema | File | Purpose |
 |--------|------|---------|
-| `BranchForecastResult` | `schemas/branch_forecast.py` | Full forecast with Route A + B + Adapter |
+| `BranchForecastResult` | `schemas/branch_forecast.py` | Full forecast with personal evidence + optional reference context + adapter |
 | `ForecastSnapshotRecord` | `schemas/forecast_snapshot.py` | Locked immutable forecast record |
 | `ExternalEvidenceRecord` | `schemas/external_evidence.py` | Real-world observation |
 | `ForecastEvaluationRecord` | `schemas/forecast_evaluation.py` | Prediction vs outcome comparison |
@@ -75,14 +75,16 @@ alters/
 | `RealityScoreRecord` | `schemas/calibration_loop.py` | Persisted calibration score with drift |
 | `AlterRubricBaseline` | `schemas/calibration_loop.py` | Alter's predicted rubric trajectory (initial/30d/90d) |
 
-## Population Baseline Schemas
+## External Reference Schemas
+
+The current schema names retain `population_baseline` for API compatibility, but public product language should describe this layer as optional external reference context.
 
 | Schema | File | Purpose |
 |--------|------|---------|
-| `PublicDatasetSource` | `schemas/population_baseline.py` | Dataset registry |
-| `PopulationBaselineModelCard` | `schemas/population_baseline.py` | Model card with calibration metrics |
-| `PopulationPriorArtifact` | `schemas/population_baseline.py` | Prior derived from model |
-| `PublicPriorIntegrationContract` | `schemas/public_prior_contract.py` | Guards for Route B integration |
+| `PublicDatasetSource` | `schemas/population_baseline.py` | Internal source registry |
+| `PopulationBaselineModelCard` | `schemas/population_baseline.py` | Model card with validation metrics |
+| `PopulationPriorArtifact` | `schemas/population_baseline.py` | Reference artifact derived from an approved source/model |
+| `PublicPriorIntegrationContract` | `schemas/public_prior_contract.py` | Guards for reference integration |
 
 ## Key Invariants
 
@@ -93,4 +95,5 @@ alters/
 - Rubric: `auto_modify` always `false`, changes require human approval
 - No `life_score` field anywhere (enforced by tests + schema)
 - No exact probability without calibrated model approval
+- Third-party raw data, processed data, and offline artifacts are not product data and must not be committed or bundled by default
 - `submitted_by_user: Literal[True]` on reality scores — LLM cannot auto-submit
