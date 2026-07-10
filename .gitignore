@@ -99,7 +99,7 @@ alters/product/external_evidence/*
 alters/product/forecast_evaluations/*
 !alters/product/forecast_evaluations/.gitkeep
 
-# Population Baseline Lab — raw data and artifacts (NEVER commit)
+# Offline reference-analysis lab — raw data and artifacts (NEVER commit)
 labs/population_baseline/data/raw/*
 labs/population_baseline/data/processed/*
 labs/population_baseline/artifacts/*
