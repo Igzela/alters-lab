@@ -175,7 +175,7 @@ alters-lab backup --include-secrets --confirm-include-secrets include-secrets-in
 | `alters-lab start --foreground` | Start in foreground mode |
 | `alters-lab stop` | Stop the local server |
 | `alters-lab status` | Show server status |
-| `alters-lab doctor` | Run health checks |
+| `alters-lab doctor` | Run a read-only health check |
 | `alters-lab open` | Open the app in a browser (starts server if needed) |
 | `alters-lab backup` | Create a data backup |
 
