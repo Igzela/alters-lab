@@ -10,6 +10,10 @@ from alters_lab.schemas.calibration_loop import CalibrationScoreValues
 from alters_lab.services.p6_runtime import generate_record_id, utc_now
 
 
+# API contract regression coverage is maintained alongside the calibration conversation
+# schemas so route-level tests can import the same contract definitions.
+
+
 # --- Extraction subsets (what the LLM can extract) ---
 
 
